@@ -1800,13 +1800,6 @@ $(document).ready(function(){
 		</div>
 		
 	</div>
-
-
-	<div class="footer-copyright footer-pb" style="color: gray;padding-bottom: 5px;">
-		<%--尊重开源、保留声明，感谢您的大力支持--%>
-		Powered by <a href="http://www.diaowen.net" style="text-decoration: none;color: gray;">DWSurvey</a>&nbsp;
-	</div>
-
 </div>
 
 

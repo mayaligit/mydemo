@@ -52,11 +52,6 @@
   <div data-role="content">
    <p>${msg }</p>
   </div>
-
-  <div data-role="footer">
-      <%--尊重开源、保留声明，感谢您的大力支持--%>
-  <h3>Powered by <a href="http://www.diaowen.net/index-m.jsp" style="text-decoration: none;" rel="external">DWSurvey</a> </h3>
-  </div>
 </div> 
 
 <%@ include file="/WEB-INF/page/layouts/other.jsp"%>

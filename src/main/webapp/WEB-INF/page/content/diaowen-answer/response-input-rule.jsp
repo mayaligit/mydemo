@@ -25,11 +25,6 @@
 			</form>
 			<div style="font-size: 12px;color: #323232;text-align: right;display: none;"><p>	如有疑问可以与管理员&nbsp;<a href="#" class="msg1" style="color: rgb(53, 117, 136);">联系</a>&nbsp;！</p></div>
 		</div>
-		
-		<div class="footer-copyright" style="color: gray;">
-			<%--尊重开源、保留声明，感谢您的大力支持--%>
-				 <a href="http://www.diaowen.net" style="text-decoration: none;color: rgb(53, 117, 136);">调问网</a> 提供支持
-		</div>
 	</div>
 	<%@ include file="/WEB-INF/page/layouts/other.jsp"%>
 </body>

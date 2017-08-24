@@ -1,4 +1,10 @@
-CREATE DATABASE  IF NOT EXISTS `dwsurvey` /*!40100 DEFAULT CHARACTER SET utf8 */;
+# drop database if exists oa_survey2;
+# create database oa_survey2 default character set utf8 collate utf8_general_ci;
+#
+# create user oaSurvey2 identified by 'oaSurvey2#123';
+#
+# grant all on oa_survey2.* to oaSurvey2@'%' identified by 'oaSurvey2#123' with grant option;
+
 USE `dwsurvey`;
 -- MySQL dump 10.13  Distrib 5.6.22, for osx10.8 (x86_64)
 --
@@ -1190,7 +1196,7 @@ CREATE TABLE `t_user` (
 
 LOCK TABLES `t_user` WRITE;
 /*!40000 ALTER TABLE `t_user` DISABLE KEYS */;
-INSERT INTO `t_user` VALUES ('1',NULL,'2013-03-21 21:15:21',NULL,NULL,'2013-03-21 21:15:21',1,'service@diaowen.net',NULL,NULL,'2013-03-21 21:15:34','dwsurvey','柯远',NULL,1,'7c4a8d09ca3762af61e59520943dc26494f8941b',2,1);
+INSERT INTO `t_user` VALUES ('1',NULL,'2013-03-21 21:15:21',NULL,NULL,'2013-03-21 21:15:21',1,'rcs@139.com',NULL,NULL,'2017-08-24 21:15:34','rcs','rcs',NULL,1,'7c4a8d09ca3762af61e59520943dc26494f8941b',2,1);
 /*!40000 ALTER TABLE `t_user` ENABLE KEYS */;
 UNLOCK TABLES;
 

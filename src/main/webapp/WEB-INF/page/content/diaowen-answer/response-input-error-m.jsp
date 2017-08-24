@@ -55,11 +55,6 @@
 		<a href="${ctx }/wenjuan/${sId}.html" class="msg1" style="color: rgb(53, 117, 136);">返回重新填写</a>
 	</p>
   </div>
-
-  <div data-role="footer">
-      <%--尊重开源、保留声明，感谢您的大力支持--%>
-  <h3><a href="http://www.diaowen.net/index-m.jsp" style="text-decoration: none;" rel="external">调问网</a> 提供支持</h3>
-  </div>
 </div> 
 
 <%@ include file="/WEB-INF/page/layouts/other.jsp"%>

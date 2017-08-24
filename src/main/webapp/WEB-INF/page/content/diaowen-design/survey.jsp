@@ -48,7 +48,6 @@
 <div id="tools">
 <div class="tools_tabs">
 	<div class="tools_tabs_left"><ul><li class="current" id="tools_tab1_li">基本</li><li id="tools_tab2_li">常用</li></ul></div>
-	<div class="tools_tabs_right"><ul><li style="padding: 0px;font: 12px;line-height: 22px;"><a href="http://support.diaowen.net/" target="_black" style="text-decoration: none;color: gray;">帮助</a></li></ul></div>
 </div>
 
 <div class="tools_contents">
@@ -3414,9 +3413,7 @@
 <div style="text-align: center;">
 <div class="dw_foot" style="padding-bottom: 30px;">
 	<div class="footer-copyright" style="color: gray;padding-top: 0px;font-size: 16px;">
-		Powered by <a href="http://www.dwsurvey.net" target="_blank" style="text-decoration: none;color: gray;">DWSurvey</a>&nbsp;&nbsp;&nbsp;
 		Copyright © 2012-2017
-		<a href="http://www.diaowen.net" target="_blank" style="text-decoration: none;color: rgb(53, 117, 136);">调问网</a>
 	</div>
 </div>
 </div>
