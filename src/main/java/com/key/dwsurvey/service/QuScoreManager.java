@@ -1,9 +1,9 @@
 package com.key.dwsurvey.service;
 
-import java.util.List;
-
 import com.key.common.service.BaseService;
 import com.key.dwsurvey.entity.QuScore;
+
+import java.util.List;
 
 /**
  * 评分题

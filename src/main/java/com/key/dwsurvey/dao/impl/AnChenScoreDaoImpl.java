@@ -1,14 +1,13 @@
 package com.key.dwsurvey.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.key.common.dao.BaseDaoImpl;
 import com.key.dwsurvey.dao.AnChenScoreDao;
 import com.key.dwsurvey.entity.AnChenScore;
 import com.key.dwsurvey.entity.Question;
 import org.springframework.stereotype.Repository;
 
-import com.key.common.dao.BaseDaoImpl;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 矩陈评分 dao

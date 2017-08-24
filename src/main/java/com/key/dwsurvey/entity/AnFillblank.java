@@ -1,9 +1,9 @@
 package com.key.dwsurvey.entity;
 
+import com.key.common.base.entity.IdEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import com.key.common.base.entity.IdEntity;
 
 /**
  * 答卷  多选题保存表
