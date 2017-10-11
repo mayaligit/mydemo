@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.key.common.QuType;
-import com.key.common.utils.web.Struts2Utils;
+import com.key.common.utils.web.SpringUtils;
 import com.key.dwsurvey.dao.SurveyAnswerDao;
 import com.key.dwsurvey.entity.AnChenFbk;
 import com.key.dwsurvey.entity.SurveyDetail;

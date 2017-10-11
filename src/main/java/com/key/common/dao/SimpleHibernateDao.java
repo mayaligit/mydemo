@@ -40,7 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SimpleHibernateDao<T, ID extends Serializable> implements ISimpleHibernateDao<T, ID> {
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
-
+	
+	@Autowired
 	protected SessionFactory sessionFactory;
 
 	protected Class<T> entityClass;
@@ -70,7 +71,6 @@ public class SimpleHibernateDao<T, ID extends Serializable> implements ISimpleHi
 	 * @see com.key.common.orm.hibernate.ISimpleHibernateDao#setSessionFactory(org.hibernate.SessionFactory)
 	 */
 	@Override
-	@Autowired
 	public void setSessionFactory(final SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
@@ -273,7 +273,8 @@ public class SimpleHibernateDao<T, ID extends Serializable> implements ISimpleHi
 	 */
 	@Override
 	public Criteria createCriteria(final Criterion... criterions) {
-		Criteria criteria = getSession().createCriteria(entityClass);
+	    
+		Criteria criteria =getSession().createCriteria(entityClass);
 		for (Criterion c : criterions) {
 			criteria.add(c);
 		}

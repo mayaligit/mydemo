@@ -49,7 +49,7 @@
 		            	<div class="w-sel" style="margin-top: 16px;">
 		                	<div class="selc">
 		                    	<div class="selcc tbtag">
-		                            <div class="seli"><a class="nx-1" href="${ctx }/ic/user!myaccount.action">修改密码</a></div>
+		                            <div class="seli"><a class="nx-1" href="${ctx }/sy/user/user-admin.action?id="+${user.id}>修改密码</a></div>
 		                            <div class="seli"><a class="nx-8" href="${ctx }/login!logout.action">退出</a></div>
 		                        </div>
 		                    </div>

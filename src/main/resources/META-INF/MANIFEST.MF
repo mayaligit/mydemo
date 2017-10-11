@@ -1,0 +1,67 @@
+Manifest-Version: 1.0
+Class-Path: libs/xssProtect-0.1.jar libs/tomcat-embed-jasper-8.5.11.ja
+ r libs/logback-classic-1.1.9.jar libs/commons-lang-2.6.jar libs/sprin
+ g-boot-starter-1.5.1.RELEASE.jar libs/jcl-over-slf4j-1.7.22.jar libs/
+ xbean-spring-3.12.jar libs/spring-boot-starter-activemq-1.5.1.RELEASE
+ .jar libs/geronimo-jms_1.1_spec-1.1.1.jar libs/shiro-web-1.2.2.jar li
+ bs/spring-tx-4.3.6.RELEASE.jar libs/commons-lang3-3.4.jar libs/proton
+ -j-0.16.0.jar libs/bcmail-jdk14-138.jar libs/spring-jms-4.3.6.RELEASE
+ .jar libs/slf4j-api-1.7.22.jar libs/hibernate-core-5.0.11.Final.jar l
+ ibs/sitemesh-3.0-alpha-2.jar libs/antlr-2.7.7.jar libs/spring-messagi
+ ng-4.3.6.RELEASE.jar libs/dozer-5.3.2.jar libs/spring-orm-4.3.6.RELEA
+ SE.jar libs/log4j-over-slf4j-1.7.22.jar libs/guava-17.0.jar libs/cgli
+ b-nodep-2.2.2.jar libs/log4j-api-2.7.jar libs/javax.transaction-api-1
+ .2.jar libs/spring-boot-autoconfigure-1.5.1.RELEASE.jar libs/httpclie
+ nt-4.5.2.jar libs/shiro-ehcache-1.2.2.jar libs/spring-beans-4.3.6.REL
+ EASE.jar libs/spring-boot-starter-aop-1.5.1.RELEASE.jar libs/quartz-1
+ .5.1.jar libs/activemq-broker-5.14.3.jar libs/javassist-3.21.0-GA.jar
+  libs/ezmorph-1.0.6.jar libs/ehcache-core-2.5.0.jar libs/jcaptcha-all
+ -1.0-RC6.jar libs/activemq-amqp-5.14.3.jar libs/ehcache-2.10.3.jar li
+ bs/scala-library-2.11.0.jar libs/json-20160810.jar libs/xmlworker-5.4
+ .3.jar libs/urlrewritefilter-4.0.3.jar libs/spring-webmvc-4.3.6.RELEA
+ SE.jar libs/bcprov-jdk14-1.38.jar libs/xercesImpl-2.5.0.jar libs/spri
+ ng-core-4.3.6.RELEASE.jar libs/poi-3.7.jar libs/mail-1.4.4.jar libs/s
+ tandard-1.1.2.jar libs/tomcat-jdbc-8.5.11.jar libs/ueditor-1.1.2.jar 
+ libs/commons-beanutils-1.9.2.jar libs/itextpdf-5.4.3.jar libs/mysql-c
+ onnector-java-5.1.40.jar libs/Tidy-1.jar libs/httpcore-4.4.5.jar libs
+ /spring-boot-starter-data-jpa-1.5.1.RELEASE.jar libs/spring-context-s
+ upport-4.3.6.RELEASE.jar libs/jul-to-slf4j-1.7.22.jar libs/spring-jdb
+ c-4.3.6.RELEASE.jar libs/core-renderer-R8.jar libs/freemarker-2.3.25-
+ incubating.jar libs/commons-io-2.4.jar libs/activeio-core-3.1.4.jar l
+ ibs/hibernate-entitymanager-5.0.11.Final.jar libs/concurrent-1.3.4.ja
+ r libs/activemq-openwire-legacy-5.14.3.jar libs/commons-codec-1.4.jar
+  libs/bctsp-jdk14-1.38.jar libs/jandex-2.0.0.Final.jar libs/hibernate
+ -jpa-2.1-api-1.0.0.Final.jar libs/bcmail-jdk14-1.38.jar libs/httpasyn
+ cclient-4.1.2.jar libs/jackson-databind-2.7.5.jar libs/tomcat-embed-e
+ l-8.5.11.jar libs/QRCode.jar libs/aspectjweaver-1.8.9.jar libs/shiro-
+ spring-1.2.2.jar libs/spring-aop-4.3.6.RELEASE.jar libs/stringtemplat
+ e-3.1-b1.jar libs/geronimo-j2ee-management_1.1_spec-1.0.1.jar libs/ht
+ tpclient-cache-4.5.2.jar libs/spring-boot-starter-jdbc-1.5.1.RELEASE.
+ jar libs/classmate-1.3.3.jar libs/spring-context-4.3.6.RELEASE.jar li
+ bs/activation-1.1.jar libs/jackson-annotations-2.7.5.jar libs/itext-2
+ .1.7.jar libs/spring-web-4.3.6.RELEASE.jar libs/logback-core-1.1.9.ja
+ r libs/validation-api-1.1.0.Final.jar libs/hsqldb-1.8.0.7.jar libs/co
+ mmons-pool-1.6.jar libs/ecj-4.5.1.jar libs/commons-dbcp-1.4.jar libs/
+ jackson-core-2.7.5.jar libs/jstl-1.2.jar libs/slf4j-log4j12-1.6.0.jar
+  libs/snakeyaml-1.17.jar libs/hawtbuf-1.11.jar libs/itext-asian-5.2.0
+ .jar libs/spring-expression-4.3.6.RELEASE.jar libs/hamcrest-core-1.1.
+ jar libs/spring-boot-starter-web-1.5.1.RELEASE.jar libs/tomcat-embed-
+ core-8.5.11.jar libs/antlr-runtime-3.0.1.jar libs/spring-boot-starter
+ -freemarker-1.5.1.RELEASE.jar libs/velocity-1.7.jar libs/xmlParserAPI
+ s-2.2.1.jar libs/spring-boot-1.5.1.RELEASE.jar libs/bcprov-jdk14-138.
+ jar libs/jersey-core-1.19.1.jar libs/spring-data-jpa-1.11.0.RELEASE.j
+ ar libs/log4j-core-2.7.jar libs/httpcore-nio-4.4.5.jar libs/hibernate
+ -commons-annotations-5.0.1.Final.jar libs/dom4j-1.6.1.jar libs/mimepu
+ ll-1.4.jar libs/bce-java-sdk-0.10.5.jar libs/jsr311-api-1.1.1.jar lib
+ s/activemq-all-5.8.0.jar libs/hibernate-validator-5.3.4.Final.jar lib
+ s/spring-boot-starter-logging-1.5.1.RELEASE.jar libs/jsoup-1.7.2.jar 
+ libs/jdom-1.1.jar libs/commons-httpclient-3.0.1.jar libs/commons-logg
+ ing-1.2.jar libs/joda-time-2.9.7.jar libs/jboss-logging-3.3.0.Final.j
+ ar libs/shiro-core-1.2.2.jar libs/spring-data-commons-1.13.0.RELEASE.
+ jar libs/aliyun-sdk-oss-2.0.3.jar libs/httpmime-4.5.2.jar libs/common
+ s-collections-3.2.2.jar libs/xml-security-impl-1.0.jar libs/log4j-1.2
+ .17.jar libs/json-lib-2.4-jdk15.jar libs/tomcat-juli-8.5.11.jar libs/
+ jersey-client-1.19.1.jar libs/spring-aspects-4.3.6.RELEASE.jar libs/a
+ ctivemq-client-5.14.3.jar libs/spssw-1.66.jar
+Main-Class: com.key.Application
+

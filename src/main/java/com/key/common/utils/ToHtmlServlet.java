@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.Properties;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,13 +13,13 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import com.itextpdf.text.log.SysoCounter;
 import com.key.common.plugs.aliyun.AliyunOSS;
 import com.key.common.plugs.baiduyun.BaiduBOS;
-import com.key.common.utils.web.Struts2Utils;
+import com.key.common.utils.web.SpringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
+@WebServlet(urlPatterns="/toHtml", description="Servlet的说明")
 public class ToHtmlServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = -9118659583515649615L;
@@ -44,6 +45,16 @@ public class ToHtmlServlet extends HttpServlet {
 			public void write(int b) throws IOException {
 				os.write(b);
 			}
+
+            @Override
+            public boolean isReady() {
+                return false;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener listener) {
+                
+            }
 
 		};
 

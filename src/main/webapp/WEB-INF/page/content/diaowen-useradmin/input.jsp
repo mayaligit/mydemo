@@ -82,7 +82,7 @@ $(document).ready(function(){
 			<div class="surveyCollectMiddle">
 				
 				<form id="inputForm" action="${ctx }/sy/user/nosm/user-admin!save.action" method="post" >
-				<input type="hidden" name="id" value="${id }" >
+				<input type="hidden" name="id" value="${user.id }" >
 				<div class="surveyCollectMiddleContent">
 					<div style="padding: 25px 45px;overflow: auto;padding-top: 35px;">
 							<div style="border-bottom: 1px solid #DFDFDF;padding: 5px;color: #666565;">账号信息</div>
@@ -93,25 +93,25 @@ $(document).ready(function(){
 											<table class="ac-form-table">
 												<tr>
 													<td width="80" align="right"><span class="red-color">*&nbsp;</span>昵称</td>
-													<td class="ac-input-td"><input type="text"  name="name" value="${loginName }"  > </td>
+													<td class="ac-input-td"><input type="text"  name="name" value="${user.loginName }"  > </td>
 												</tr>
 												<tr>
 													<td width="80" align="right"><span class="red-color">*&nbsp;</span>登录名</td>
-													<td class="ac-input-td"><input type="text"  name="loginName" value="${loginName }"  > </td>
+													<td class="ac-input-td"><input type="text"  name="loginName" value="${user.loginName }"  > </td>
 												</tr>
 												<tr>
 													<td width="80" align="right"><span class="red-color">*&nbsp;</span>邮箱</td>
-													<td class="ac-input-td"><input type="text"  name="email" value="${email }" > </td>
+													<td class="ac-input-td"><input type="text"  name="email" value="${user.email }" > </td>
 												</tr>
 
-												<c:if test="${empty(id) }">
+												<c:if test="${empty(user.id) }">
 												<tr>
 													<td width="80" align="right"><span class="red-color">*&nbsp;</span>登录密码</td>
 													<td class="ac-input-td"><input type="password" name="pwd" value="" id="pwd">
 													</td>
 												</tr>
 												</c:if>
-												<c:if test="${!empty(id) }">
+												<c:if test="${!empty(user.id) }">
 													<tr>
 														<td width="80" align="right"><span class="red-color">*&nbsp;</span>状态</td>
 														<td class="ac-input-td">

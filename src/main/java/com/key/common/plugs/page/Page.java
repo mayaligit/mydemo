@@ -202,6 +202,17 @@ public class Page<T> extends PageRequest implements Iterable<T> {
 		this.endpage = endpage;
 	}
 	
+	/**
+     * 设置当前页的页号, 序号从1开始, 低于1时自动调整为1.
+     */
+    public void setPageNo(final int pageNo) {
+        this.pageNo = pageNo;
+
+        if (pageNo < 1) {
+            this.pageNo = 1;
+        }
+    }
+    
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

@@ -12,23 +12,24 @@ import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.struts2.ServletActionContext;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import com.key.common.utils.web.Struts2Utils;
+import com.key.common.utils.web.SpringUtils;
 
 public class JspToHtml {
 	
 	public void postJspToHtml(String postUrl, String filePath,String fileName) throws Exception{
-		HttpServletRequest request=Struts2Utils.getRequest();
+		HttpServletRequest request=SpringUtils.getRequest();
 		//${pageContext.request.scheme}://${pageContext.request.serverName }:${pageContext.request.serverPort} pageContext.request.contextPath
 		String reqTarget = request.getScheme()+"://"+request.getServerName()+(request.getServerPort()==80?"":":"+request.getServerPort())+request.getContextPath();
+		
 		reqTarget =reqTarget+"/toHtml";
 		//?url="+postUrl+"&filePath="+filePath+"&fileName="+fileName;
 		Map<String, String> map=new HashMap<String, String>();
@@ -42,9 +43,9 @@ public class JspToHtml {
 	}
 	
 	public void jspWriteToHtml(String url, String filePath,String fileName) throws Exception {
-		HttpServletRequest request = Struts2Utils.getRequest();
-		HttpServletResponse response = Struts2Utils.getResponse();
-		ServletContext sc = ServletActionContext.getServletContext();
+		HttpServletRequest request = SpringUtils.getRequest();
+		HttpServletResponse response = SpringUtils.getResponse();
+		ServletContext sc = SpringUtils.getRequest().getServletContext();
 		url = "/my-survey-design!previewDev.action?surveyId=402880ea4675ac62014675ac7b3a0000";
 		// 这是生成的html文件名,如index.htm
 		filePath = filePath.replace("/", File.separator);
@@ -61,6 +62,16 @@ public class JspToHtml {
 			public void write(int b) throws IOException {
 				os.write(b);
 			}
+
+            @Override
+            public boolean isReady() {
+                return false;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener listener) {
+                
+            }
 		};
 
 		final PrintWriter pw = new PrintWriter(new OutputStreamWriter(os,

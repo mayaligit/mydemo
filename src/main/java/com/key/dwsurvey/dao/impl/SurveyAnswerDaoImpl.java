@@ -7,6 +7,7 @@ import com.key.dwsurvey.dao.SurveyAnswerDao;
 import com.key.dwsurvey.service.SurveyStatsManager;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import com.key.common.dao.BaseDaoImpl;
@@ -37,6 +38,7 @@ import com.key.dwsurvey.entity.SurveyStats;
  */
 
 @Repository
+@Lazy
 public class SurveyAnswerDaoImpl extends BaseDaoImpl<SurveyAnswer, String> implements SurveyAnswerDao {
 
 	@Autowired

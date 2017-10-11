@@ -241,6 +241,16 @@ public class User extends IdEntity {
 	public void setFindPwdUrl(String findPwdUrl) {
 		this.findPwdUrl = findPwdUrl;
 	}
+
+    @Override
+    public String toString() {
+        return "User [loginName=" + loginName + ", shaPassword=" + shaPassword + ", name=" + name + ", email=" + email
+                + ", birthday=" + birthday + ", eduQuali=" + eduQuali + ", sex=" + sex + ", status=" + status
+                + ", version=" + version + ", createTime=" + createTime + ", createBy=" + createBy + ", lastLoginTime="
+                + lastLoginTime + ", cellphone=" + cellphone + ", activationCode=" + activationCode + ", findPwdCode="
+                + findPwdCode + ", findPwdLastDate=" + findPwdLastDate + ", salt=" + salt + ", plainPassword="
+                + plainPassword + ", pwd=" + pwd + ", roleId=" + roleId + ", findPwdUrl=" + findPwdUrl + "]";
+    }
 	
 	
 	

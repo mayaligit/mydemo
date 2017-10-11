@@ -213,7 +213,7 @@ var options={
 $('a[data-toggle=tooltip]').tooltip(options);
 
 //delete
-$(".deleteSurvey").click(function(){
+/*$(".deleteSurvey").click(function(){
 	if(confirm("确认删除吗？")){
 		var th=$(this);
 		var url=$(this).attr("href");
@@ -233,7 +233,72 @@ $(".deleteSurvey").click(function(){
 		});
 	}
 	return false;
-});
+});*/
+$(".deleteSurvey").click(function(e){
+    if ( e && e.preventDefault ) {
+        e.preventDefault();
+    }
+    else {
+        window.event.returnValue = false;
+    }
+    var th=$(this);
+    var url=$(this).attr("href");
+    var data="";
+    $("body").append("<div id=\"myDialogRoot\"><div class='dialogMessage' style='padding-top:40px;margin-left:20px;padding-bottom:0px;'>"+
+        "</div></div>");
+
+    var myDialog=$( "#myDialogRoot" ).dialog({
+        width:500,
+        height:220,
+        autoOpen: true,
+        modal:true,
+        position:["center","center"],
+        title:"确认删除该问卷吗？",
+        resizable:false,
+        draggable:false,
+        closeOnEscape:false,
+        show: {effect:"blind",direction:"up",duration: 500},
+        hide: {effect:"blind",direction:"left",duration: 200},
+        buttons: {
+            "OK":{
+                text: "确认删除",
+                addClass:'dialogMessageButton dialogBtn1',
+                click: function() {
+                    var dialogobj=$(this);
+                    $.ajax({
+                        url:url,
+                        data:data,
+                        type:"post",
+                        success:function(msg){
+                            if(msg==="true"){
+                                th.parents("tr").hide("slow");
+                                th.parents("tr").remove();
+                            }else{
+                                alert("删除失败，未登录或没有权限！");
+                            }
+                            dialogobj.dialog( "close" );
+                        }
+                    });
+                }
+            },
+            "CENCEL":{
+                text: "取消",
+                addClass:"dialogBtn1 dialogBtn1Cencel",
+                click: function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+        },
+        open:function(event,ui){
+           // $(".ui-dialog-titlebar-close").hide();
+            //$("#surTitleTemp").val(titleValue+"－副本");
+        },
+        close:function(event,ui){
+            $("#myDialogRoot").remove();
+        }
+    });
+
+})
 
 $(".copySurvey").click(function(){
 

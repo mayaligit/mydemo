@@ -104,7 +104,7 @@ label.error{
 						</div>
 						
 					<div class="loginFormContent">
-						
+						<!--  -->
 						<form id="loginForm" action="${ctx }/login.jsp" method="post">
 						<div id="loginTabContent" >
 							<div id="login-error" class="errorMsg" style="color: red;padding-left: 60px;">&nbsp;

@@ -16,10 +16,12 @@
 	 <import resource="schedule/applicationContext-executor.xml" />
 	<import resource="schedule/applicationContext-quartz-cron-local.xml" />
 	<import resource="schedule/applicationContext-quartz-timer-cluster.xml" /> -->
-	<import resource="security/applicationContext-shiro.xml" />
+	<!-- <import resource="security/applicationContext-shiro.xml" /> -->
 	<!-- <import resource="webservice/applicationContext-rs-server.xml" />-->
-	
 	<import resource="jcaptcha/applicationContext-jcaptcha-1.xml"/>
+	<!-- <import resource="spring-mvc.xml"/> -->
+	<!-- <import resource="site/sitemesh3.xml"/>
+	<import resource="urlrewrite.xml"/> -->
     <!-- <import resource="jms/applicationContext-jms.xml" /> -->
 
 </beans>

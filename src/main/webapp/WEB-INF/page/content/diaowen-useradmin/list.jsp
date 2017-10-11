@@ -121,10 +121,10 @@ $(document).ready(function(){
 														<td align="left">${en.loginName }</td>
 														<%--<td align="left">${en.email }</td>--%>
 														<td align="left"><fmt:formatDate value="${en.createTime }" pattern="yyyy年MM月dd日 HH:mm"/></td>
-														<td align="left"><fmt:formatDate value="${en.createTime }" pattern="yyyy年MM月dd日 HH:mm"/></td>
+														<td align="left"><fmt:formatDate value="${en.lastLoginTime }" pattern="yyyy年MM月dd日 HH:mm"/></td>
 														<td align="left">${en.status ne 0 ? '可用':'不可用' }</td>
 														<td align="center">
-															<a class="btn btn-default" href="${ctx }/sy/user/nosm/user-admin!input.action?id=${en.id}" title="编辑"data-toggle="tooltip" data-placement="top" ><i class="fa fa-pencil-square-o"></i></a>
+															<a class="btn btn-default" href="${ctx }/sy/user/updateUser?id=${en.id}" title="编辑"data-toggle="tooltip" data-placement="top" ><i class="fa fa-pencil-square-o"></i></a>
 															<a class="btn btn-default disUser_a" href="${ctx }/sy/user/nosm/user-admin!delete.action?id=${en.id}" title="禁用"data-toggle="tooltip" data-placement="top" ><i class="fa fa-trash-o" aria-hidden="true"></i></a>
 														</td>
 													</tr>

@@ -7,8 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.key.common.utils.web.Struts2Utils;
-import org.apache.struts2.ServletActionContext;
+import com.key.common.utils.web.SpringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
@@ -70,7 +69,6 @@ public class DiaowenProperty extends
 */
 	public void diaowenInit(){
 		System.out.println("系统初始化方法。。。");
-		System.out.println(ServletActionContext.getContext());
 	}
 
 }

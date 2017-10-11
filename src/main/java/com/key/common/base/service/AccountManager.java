@@ -16,8 +16,8 @@ import com.key.common.base.dao.UserDao;
 import com.key.common.exception.ServiceException;
 import com.key.common.plugs.page.Page;
 import com.key.common.plugs.page.PropertyFilter;
-import com.key.common.plugs.security.ShiroDbRealm;
 import com.key.common.utils.security.DigestUtils;
+import com.key.dwsurvey.shiro.ShiroDbRealm;
 
 /**
  * 
@@ -36,7 +36,8 @@ public class AccountManager {
 //	@Autowired
 //	private NotifyMessageProducer notifyMessageProducer;//JMS消息推送
 	
-	private ShiroDbRealm shiroRealm;
+	@Autowired
+	private ShiroDbRealm authRealm;
 
 	/**
 	 * 在保存用户时,发送用户修改通知消息, 由消息接收者异步进行较为耗时的通知邮件发送.
@@ -58,8 +59,8 @@ public class AccountManager {
 		user.setShaPassword(shaPassword);
 		boolean bool=user.getId()==null?true:false;
 		userDao.save(user);
-		if (shiroRealm != null) {
-			shiroRealm.clearCachedAuthorizationInfo(user.getLoginName());
+		if (authRealm != null) {
+		    authRealm.clearCachedAuthorizationInfo(user.getLoginName());
 		}
 		/*if(bool){
 //			Email email=new Email();

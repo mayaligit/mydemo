@@ -22,7 +22,6 @@ public interface ISimpleHibernateDao<T, ID extends Serializable> {
 	/**
 	 * 采用@Autowired按类型注入SessionFactory, 当有多个SesionFactory的时候在子类重载本函数.
 	 */
-	@Autowired
 	public abstract void setSessionFactory(final SessionFactory sessionFactory);
 
 	/**

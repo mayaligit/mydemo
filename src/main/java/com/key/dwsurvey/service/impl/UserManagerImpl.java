@@ -25,6 +25,7 @@ import com.key.common.utils.security.DigestUtils;
  * http://dwsurvey.net
  */
 @Service
+@Transactional
 public class UserManagerImpl extends BaseServiceImpl<User, String> implements UserManager {
 
 	@Autowired

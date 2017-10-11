@@ -18,7 +18,7 @@ import com.key.common.utils.AssertUtils;
  * 分页参数封装类.
  */
 public class PageRequest {
-	protected int pageNo = 1;
+	public int pageNo = 1;
 	protected int pageSize = 10;
 
 	protected String orderBy = null;

@@ -37,6 +37,17 @@ $(document).ready(function(){
 	$("#login_bg_div img[src='${ctx}${loginBgImg}']").addClass("active_img");
 });
 
+function quxiao(){
+	var clickresult=false;
+	 clickresult=window.confirm("你确定放弃更改吗？");
+	if(clickresult){ 
+		window.location.href="${ctx}/sy/system/sys-property!input.action";
+	 }else{
+		
+	} 
+	
+	
+}
 	
 </script>
 <style type="text/css">
@@ -57,6 +68,7 @@ $(document).ready(function(){
 	padding: 6px;
 }
 </style>
+
 </head>
 <body>
 	<input type="hidden" id="id" name="id" value="${survey.id }">
@@ -153,7 +165,7 @@ $(document).ready(function(){
 									<tr>
 										<td height="50">
 											<input type="submit" value="保存修改" class="sbtn25 sbtn25_0" style="margin-left: 125px;">
-											<input type="button" value="放弃修改" class="sbtn24 sbtn24_1" style="margin-left: 35px;">
+											<input type="button" value="放弃修改" onclick="quxiao()" class="sbtn24 sbtn24_1" style="margin-left: 35px;">
 										</td>
 										<td class="ac-input-td"> </td>
 									</tr>
@@ -170,4 +182,8 @@ $(document).ready(function(){
 		</div>
 	</div>
 </body>
+
+<script type="text/javascript">
+	
+</script>
 </html>

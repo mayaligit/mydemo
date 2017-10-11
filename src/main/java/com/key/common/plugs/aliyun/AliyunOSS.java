@@ -15,7 +15,6 @@ import com.aliyun.oss.model.ObjectListing;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import com.key.common.utils.DiaowenProperty;
-import org.apache.struts2.dispatcher.multipart.UploadedFile;
 
 /**
  * @author keyuan(keyuan258@gmail.com)
