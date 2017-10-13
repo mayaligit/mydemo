@@ -48,7 +48,7 @@ public class SysPropertyAction{
 		String fileName="site.properties";
 		ServletContext sc = SpringUtils.getSession().getServletContext();
 		//String filePath = "conf/site/".replace("/", File.separator);
-		String filePath = "conf/site/".replace("/", File.separator);
+		String filePath = "conf/".replace("/", File.separator);
 		String fileRealPath = sc.getRealPath("/")+filePath+fileName;
 		File file=new File(fileRealPath);
 		InputStreamReader fr = new InputStreamReader(new FileInputStream(file),"UTF-8");
@@ -90,7 +90,7 @@ public class SysPropertyAction{
 		//网站备案信息代码
 		String loginBgImg = SpringUtils.getParameter("loginBgImg");
 
-		String siteFilePath = "conf/site/site.properties".replace("/", File.separator);
+		String siteFilePath = "conf/site.properties".replace("/", File.separator);
 
 		Properties props = new Properties();
 		props.put("adminEmail",adminEmail!=null?adminEmail:"");
