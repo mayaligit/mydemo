@@ -224,17 +224,20 @@ public class SurveyDirectoryManagerImpl extends BaseServiceImpl<SurveyDirectory,
 	@Override
 	@Transactional
 	public void delete(String id) {
-		//设为不可见
-		SurveyDirectory parentDirectory=get(id);
-		parentDirectory.setVisibility(0);
-		surveyDirectoryDao.save(parentDirectory);
-		Criterion criterion=Restrictions.eq("parentId", parentDirectory.getId());
-		List<SurveyDirectory> directories=findList(criterion);
-		if(directories!=null){
-			for (SurveyDirectory surveyDirectory : directories) {
-				delete(surveyDirectory);
-			}
-		}
+	//设为不可见
+	//SurveyDirectory parentDirectory=get(id);
+	//parentDirectory.setVisibility(0);
+	//surveyDirectoryDao.save(parentDirectory);
+	//Criterion criterion=Restrictions.eq("parentId", parentDirectory.getId());
+	//List<SurveyDirectory> directories=findList(criterion);
+	/*if(directories!=null){
+	     for (SurveyDirectory surveyDirectory : directories) {
+	           delete(surveyDirectory);
+	         }
+	  }*/
+	 if(id!=null){
+	     surveyDirectoryDao.delete(id);
+	  }
 	}
 	
 	@Transactional

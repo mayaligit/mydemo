@@ -3,7 +3,7 @@
  <modelVersion>4.0.0</modelVersion>
   <groupId>keyuan</groupId>
   <artifactId>diaowen2</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>diaowen Maven Webapp</name>
   <url>https://github.com/wkeyuan/DWSurvey</url>
@@ -55,7 +55,7 @@
     <dependency>  
            <groupId>javax.servlet</groupId>  
            <artifactId>javax.servlet-api</artifactId>  
-           <scope>provided</scope>  
+          <!--  <scope>provided</scope>   -->
     </dependency> 
     <dependency>
 		    <groupId>javax.servlet</groupId>
@@ -421,11 +421,11 @@
                 <artifactId>jackson-annotations</artifactId>  
                 <version>2.7.5</version>  
 		</dependency>
-            <dependency>
+        <dependency>
             	<groupId>org.scala-lang</groupId>
             	<artifactId>scala-library</artifactId>
             	<version>2.11.0</version>
-            </dependency>
+        </dependency>
   </dependencies>
   <!-- 指定远程私库地址 -->
   <repositories>
@@ -442,15 +442,22 @@
         </repository>
   </repositories>
   <build>  
-       <finalName>spring-boot-jsp</finalName>  
-       <plugins>  
-           <plugin>  
-              <artifactId>maven-compiler-plugin</artifactId>  
-              <configuration>  
-                  <source>1.8</source>  
-                  <target>1.8</target>  
-              </configuration>  
-           </plugin>
+       <finalName>survey2-1.0.0</finalName>  
+       <plugins>
+		   <plugin>
+			   <groupId>org.springframework.boot</groupId>
+			   <artifactId>spring-boot-maven-plugin</artifactId>
+			  <!-- <configuration>
+				   <mainClass>org.rainbow.spring.boot.Application</mainClass>
+			   </configuration>
+			   <executions>
+				   <execution>
+					   <goals>
+						   <goal>repackage</goal>
+					   </goals>
+				   </execution>
+			   </executions>-->
+		   </plugin>
        </plugins>
 	  <resources>
 		  <resource>
@@ -460,8 +467,13 @@
 			  </includes>
 		  </resource>
 		  <resource>
+			  <directory>src/main/resources</directory>
+			  <includes>
+				  <include>**/**</include>
+			  </includes>
+		  </resource>
+		 <resource>
 			  <directory>src/main/webapp</directory>
-			  <targetPath>META-INF/resources</targetPath>
 			  <includes>
 				  <include>**/**</include>
 			  </includes>

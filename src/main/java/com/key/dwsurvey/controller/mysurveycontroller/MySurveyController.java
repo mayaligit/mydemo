@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -64,6 +66,7 @@ public class MySurveyController {
     @ResponseBody
     public String delete(@RequestParam("id")String id) throws Exception {
         HttpServletResponse response=SpringUtils.getResponse();
+        String path = SpringUtils.getRequest().getServletContext().getRealPath("/");
         String result="false";
         try{
             User user = accountManager.getCurUser();
@@ -71,6 +74,21 @@ public class MySurveyController {
                 String userId=user.getId();
                 SurveyDirectory surveyDirectory=surveyDirectoryManager.getSurveyByUser(id,userId);
                 if(surveyDirectory!=null){
+                    //删除生成的静态页面包括手机端和pc端
+                    String htmlPath = surveyDirectory.getHtmlPath();
+                    File file1 = new File(path + htmlPath);
+                    file1.delete();
+                    String p = htmlPath.substring(0,18)+"m_" + htmlPath.substring(18);
+                    File file2 = new File(path + p);
+                    file2.delete();
+
+                    //删除没有文件的文件夹
+                    File dir = new File(path + htmlPath.substring(0,18));
+                    File[] files = dir.listFiles();
+                    if(files.length==0){
+                        dir.delete();
+                    }
+                    //根据id删除问卷
                     surveyDirectoryManager.delete(id);
                     result="true";
                 }
@@ -78,8 +96,7 @@ public class MySurveyController {
         }catch (Exception e) {
             result="false";
         }
-        response.getWriter().write(result);
-        return null;
+        return result;
     }
     
     //问卷壮态设置
@@ -115,19 +132,23 @@ public class MySurveyController {
      * @throws Exception
      */
     @RequestMapping(value = "/my-survey!attrs")
+    @ResponseBody
     public String attrs(@RequestParam("id")String id) throws Exception {
         HttpServletRequest request=SpringUtils.getRequest();
         HttpServletResponse response=SpringUtils.getResponse();
+        String result="";
         try{
             SurveyDirectory survey=surveyDirectoryManager.getSurvey(id);
             JsonConfig cfg = new JsonConfig();
             cfg.setExcludes(new String[]{"handler","hibernateLazyInitializer"});
             JSONObject jsonObject=JSONObject.fromObject(survey,cfg);
-            response.getWriter().write(jsonObject.toString());
+            /*response.getWriter().write(jsonObject.toString());*/
+            response.getWriter().println(jsonObject.toString());
+            result=jsonObject.toString();
         }catch(Exception e){
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
     protected final static String COLLECT1="collect1";
