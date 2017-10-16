@@ -3,7 +3,7 @@
  <modelVersion>4.0.0</modelVersion>
   <groupId>keyuan</groupId>
   <artifactId>diaowen2</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>diaowen Maven Webapp</name>
   <url>https://github.com/wkeyuan/DWSurvey</url>
