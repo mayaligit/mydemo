@@ -31,7 +31,7 @@ public class IPSeeker {
 	}
 
 	private static final String IP_FILE = IPSeeker.class.getResource(
-			"qqwry.dat").toString().substring(5);
+			"/qqwry.dat").toString().substring(5);
 	// 一些固定常量，比如记录长度等等
 	private static final int IP_RECORD_LENGTH = 7;
 	private static final byte AREA_FOLLOWED = 0x01;
@@ -64,7 +64,7 @@ public class IPSeeker {
 		try {
 			ipFile = new RandomAccessFile(IP_FILE, "r");
 		} catch (FileNotFoundException e) {
-			System.out.println(IPSeeker.class.getResource("qqwry.dat")
+			System.out.println(IPSeeker.class.getResource("/qqwry.dat")
 					.toString());
 			System.out.println(IP_FILE);
 			System.out.println("IP地址信息文件没有找到，IP显示功能将无法使用");

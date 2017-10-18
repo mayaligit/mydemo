@@ -12,6 +12,7 @@ import com.key.dwsurvey.entity.AnRadio;
 import com.key.dwsurvey.entity.SurveyDetail;
 import com.key.dwsurvey.service.SurveyDirectoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,7 +93,7 @@ public class ResponseController {
 	private AccountManager accountManager;
 	// @Autowired
 	// private GenericManageableCaptchaService captchaService;
-	@Autowired
+	@Qualifier("imageCaptchaService")
 	private ImageCaptchaService imageCaptchaService;
 
 	/**

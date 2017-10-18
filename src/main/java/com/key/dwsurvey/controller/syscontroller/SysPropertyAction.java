@@ -89,9 +89,7 @@ public class SysPropertyAction{
 		String icpCode = SpringUtils.getParameter("icpCode");
 		//网站备案信息代码
 		String loginBgImg = SpringUtils.getParameter("loginBgImg");
-
 		String siteFilePath = "conf/site.properties".replace("/", File.separator);
-
 		Properties props = new Properties();
 		props.put("adminEmail",adminEmail!=null?adminEmail:"");
 		props.put("adminQQ",adminQQ!=null?adminQQ:"");

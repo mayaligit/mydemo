@@ -61,7 +61,14 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		String tokenPassword=new String(token.getPassword());
 		//获取teken中的信息
 		String principal = (String) token.getPrincipal();
-		User user = accountManager.findUserByLoginNameOrEmail(token.getUsername());
+		User user=null;
+		try {
+			user = accountManager.findUserByLoginNameOrEmail(token.getUsername());
+		}catch (Exception e){
+			e.printStackTrace();
+			throw new AuthenticationException("cu");
+		}
+
 		//user.getStandardLock()==1 
 		if (user != null &&  user.getStatus().intValue()!=0 && !user.getLoginName().endsWith("@chacuo.net")) {
 			 return new SimpleAuthenticationInfo(user.getLoginName(), user.getShaPassword() , getName());
