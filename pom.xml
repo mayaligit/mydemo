@@ -384,8 +384,22 @@
             <version>2.11.0</version>
         </dependency>
     </dependencies>
+    <!-- 指定远程私库地址 -->
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>nexus-mirror</name>
+            <url>http://192.168.185.164:8081/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <build>
-        <finalName>spring-boot</finalName>
+        <finalName>survey2-1.0.0</finalName>
         <plugins>
             <!-- <plugin>
              <artifactId>maven-compiler-plugin</artifactId>

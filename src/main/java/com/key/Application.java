@@ -30,6 +30,7 @@ import javax.annotation.Resources;
 @SpringBootApplication
 @ServletComponentScan(basePackages="com.key.common.utils")
 @ImportResource(locations= {
+        "classpath*:conf/applicationContext.xml",
         "classpath*:conf/applicationContext-dwsurvey.xml",
         "classpath*:conf/jcaptcha/applicationContext-jcaptcha-1.xml"
         })
@@ -59,16 +60,7 @@ public class Application extends SpringBootServletInitializer  {
     public HibernateJpaSessionFactoryBean sessionFactory() {
         return new HibernateJpaSessionFactoryBean();
     }
-    
-    /**
-     * http://localhost:8080/wenjuan/vqcas8.html 
-     * 注册Servlet.不需要添加注解：@ServletComponentScan
-     * @return
-     
-     @Bean
-     public ServletRegistrationBean MyServlet1(){
-         return new ServletRegistrationBean(new com.key.webmodule.servlet.MyServlet1(),"/wenjuan/*");
-     }*/
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
     }
