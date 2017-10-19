@@ -133,7 +133,8 @@ public class MySurveyStyleController {
 			HttpServletResponse response=SpringUtils.getResponse();
 			SurveyStyle surveyStyle=surveyStyleManager.get(styleModelId);
 			String jsonObj= JSONObject.fromObject(surveyStyle).toString();
-			response.getWriter().write(jsonObj);
+			/*response.getWriter().write(jsonObj);*/
+			return jsonObj;
 		 }catch (Exception e) {
 			e.printStackTrace();
 		 }

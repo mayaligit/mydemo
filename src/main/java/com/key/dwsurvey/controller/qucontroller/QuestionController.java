@@ -43,8 +43,7 @@ public class QuestionController {
 		}catch (Exception e) {
 			responseStr="false";
 		}
-		response.getWriter().write(responseStr);
-		return null;
+		return responseStr;
 	}
 	
 }

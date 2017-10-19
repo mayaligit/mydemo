@@ -52,13 +52,14 @@ public class QuMultiFillblankController {
 			Question entity=ajaxBuildSaveOption(request);
 			questionManager.save(entity);
 			String resultJson=buildResultJson(entity);
-			response.getWriter().write(resultJson);
+			/*response.getWriter().write(resultJson);*/
+			return resultJson;
 			//返回各部分ID
 		}catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().write("error");
+			/*response.getWriter().write("error");*/
+			return "error";
 		}
-		return null;
 	}
 	
 	private Question ajaxBuildSaveOption(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -198,12 +199,13 @@ public class QuMultiFillblankController {
 		try{
 			String quItemId=request.getParameter("quItemId");
 			quMultiFillblankManager.ajaxDelete(quItemId);
-			response.getWriter().write("true");
+			/*response.getWriter().write("true");*/
+			return "true";
 		}catch(Exception e){
 			e.printStackTrace();
-			response.getWriter().write("error");
+			/*response.getWriter().write("error");*/
+			return "error";
 		}
-		return null;
 	}
 
 }

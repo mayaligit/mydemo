@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 import com.key.common.base.entity.User;
@@ -619,8 +620,8 @@ public class ResponseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		response.getWriter().write(ajaxResult);
-		return null;
+		/*response.getWriter().write(ajaxResult);*/
+		return ajaxResult;
 	}
 
 

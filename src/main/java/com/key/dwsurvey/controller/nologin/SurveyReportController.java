@@ -84,7 +84,8 @@ public class SurveyReportController {
             Question question=new Question();
             question.setId(questionId);
             surveyStatsManager.questionDateCross(question);
-            response.getWriter().write(question.getStatJson());
+            /*response.getWriter().write(question.getStatJson());*/
+            return question.getStatJson();
         }
         return null;
     }

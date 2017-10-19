@@ -57,12 +57,13 @@ public class QuChenController {
 			Question entity=ajaxBuildSaveOption(request);
 			questionManager.save(entity);
 			String resultJson=buildResultJson(entity);
-			response.getWriter().write(resultJson);
+			/*response.getWriter().write(resultJson);*/
+			return  resultJson;
 		}catch (Exception e) {
 			e.printStackTrace();
 			response.getWriter().write("error");
+			return "error";
 		}
-		return null;
 	}
 	
 	private Question ajaxBuildSaveOption(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -232,11 +233,12 @@ public class QuChenController {
 			String quItemId=request.getParameter("quItemId");
 			quChenColumnManager.ajaxDelete(quItemId);
 			response.getWriter().write("true");
+			return "true";
 		}catch(Exception e){
 			e.printStackTrace();
 			response.getWriter().write("error");
+			return "error";
 		}
-		return null;
 	}
 
 	/**
@@ -252,11 +254,10 @@ public class QuChenController {
 		try{
 			String quItemId=request.getParameter("quItemId");
 			quChenRowManager.ajaxDelete(quItemId);
-			response.getWriter().write("true");
+			return "true";
 		}catch(Exception e){
 			e.printStackTrace();
-			response.getWriter().write("error");
+			return "error";
 		}
-		return null;
 	}
 }

@@ -45,17 +45,19 @@ public class QuFillblankController {
 	public String ajaxSave() throws Exception {
 		HttpServletRequest request= SpringUtils.getRequest();
 		HttpServletResponse response=SpringUtils.getResponse();
+		String resultJson=null;
 		try{
 			Question entity=ajaxBuildSaveOption(request);
 			questionManager.save(entity);
-			String resultJson=buildResultJson(entity);
-			response.getWriter().write(resultJson);
+			resultJson=buildResultJson(entity);
+			/*response.getWriter().write(resultJson);*/
 			//返回各部分ID
 		}catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().write("error");
+			/*response.getWriter().write("error");*/
+			resultJson="error";
 		}
-		return null;
+		return resultJson;
 	}
 	
 	private Question ajaxBuildSaveOption(HttpServletRequest request) throws UnsupportedEncodingException {

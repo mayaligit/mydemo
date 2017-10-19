@@ -58,13 +58,13 @@ public class QuCheckboxController {
 			Question entity=ajaxBuildSaveOption(request);
 			questionManager.save(entity);
 			String resultJson=buildResultJson(entity);
-			response.getWriter().write(resultJson);
+			return resultJson;
 			//返回各部分ID
 		}catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().write("error");
+			/*response.getWriter().write("error");*/
+			return "error";
 		}
-		return null;
 	}
 	
 	private Question ajaxBuildSaveOption(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -217,12 +217,13 @@ public class QuCheckboxController {
 		try{
 			String quItemId=request.getParameter("quItemId");
 			quCheckboxManager.ajaxDelete(quItemId);
-			response.getWriter().write("true");
+			/*response.getWriter().write("true");*/
+			return "true";
 		}catch(Exception e){
 			e.printStackTrace();
-			response.getWriter().write("error");
+			/*response.getWriter().write("error");*/
+			return "error";
 		}
-		return null;
 	}
 
 	
