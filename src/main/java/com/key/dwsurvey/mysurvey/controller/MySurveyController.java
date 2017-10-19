@@ -73,27 +73,35 @@ public class MySurveyController {
             if(user!=null){
                 String userId=user.getId();
                 SurveyDirectory surveyDirectory=surveyDirectoryManager.getSurveyByUser(id,userId);
-                if(surveyDirectory!=null){
+                if(surveyDirectory!=null && surveyDirectory.getSurveyState()==1){
                     //删除生成的静态页面包括手机端和pc端
                     String htmlPath = surveyDirectory.getHtmlPath();
-                    File file1 = new File(path + htmlPath);
-                    file1.delete();
-                    String p = htmlPath.substring(0,18)+"m_" + htmlPath.substring(18);
-                    File file2 = new File(path + p);
-                    file2.delete();
+                    //对可能静态文件丢失造成的异常进行处理
+                    try{
+                        File file1 = new File(path + htmlPath);
+                        file1.delete();
+                        String p = htmlPath.substring(0,18)+"m_" + htmlPath.substring(18);
+                        File file2 = new File(path + p);
+                        file2.delete();
+                        //删除没有文件的文件夹
+                        File dir = new File(path + htmlPath.substring(0,18));
+                        File[] files = dir.listFiles();
+                        if(files.length==0){
+                            dir.delete();
+                        }
+                    }catch (Exception e){
 
-                    //删除没有文件的文件夹
-                    File dir = new File(path + htmlPath.substring(0,18));
-                    File[] files = dir.listFiles();
-                    if(files.length==0){
-                        dir.delete();
                     }
                     //根据id删除问卷
+                    surveyDirectoryManager.delete(id);
+                    result="true";
+                }else if(surveyDirectory.getSurveyState()==0) {
                     surveyDirectoryManager.delete(id);
                     result="true";
                 }
             }
         }catch (Exception e) {
+            e.printStackTrace();
             result="false";
         }
         //response.getWriter().write(result);
