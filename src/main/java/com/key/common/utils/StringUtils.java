@@ -45,9 +45,4 @@ public class StringUtils {
         return string.toString();
     }
 
-    public static void main(String[] args){
-        String uni = string2Unicode("转换出每232-22一个icp-223代码点");
-        System.out.println(uni);
-        System.out.println(unicode2String(uni));
-    }
 }

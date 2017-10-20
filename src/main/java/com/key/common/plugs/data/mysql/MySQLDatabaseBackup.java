@@ -48,11 +48,11 @@ public class MySQLDatabaseBackup {
 		return false;
 	}
 
-	public static void main(String[] args) throws InterruptedException {
+	/*public static void main(String[] args) throws InterruptedException {
 		if (exportDatabaseTool("localhost", "root", "", "/Users/keyuan/Documents/", "2016.sql", "test")) {
 			System.out.println("数据库备份成功！！！");
 		} else {
 			System.out.println("数据库备份失败！！！");
 		}
-	}
+	}*/
 }

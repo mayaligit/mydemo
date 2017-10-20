@@ -6,7 +6,7 @@ import com.pmstation.spss.*;
 public class Demo {
 
   // Entrance point
-  public static void main(String args[]) {
+/*  public static void main(String args[]) {
     try {
     	String fileName="F:\\source code\\spss\\spssw-1.66\\spss\\test.csv";
       // Parse the command line
@@ -101,7 +101,7 @@ public class Demo {
       exOb.printStackTrace(System.out);
       return;
     }
-  }
+  }*/
 
   private static void printUsageAndExit() {
     System.err.println("Usage:");

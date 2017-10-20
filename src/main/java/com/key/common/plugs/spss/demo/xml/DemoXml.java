@@ -6,7 +6,7 @@ import com.key.common.plugs.spss.demo.csv.DemoCsv;
 import com.pmstation.spss.*;
 
 public class DemoXml {
-  public static void main(String[] args){
+  /*public static void main(String[] args){
     // Parse the command line
     if (args.length != 2) {
         printUsageAndExit();
@@ -22,7 +22,7 @@ public class DemoXml {
     } catch (Exception e){
       e.printStackTrace();
     }
-  }
+  }*/
 
   private static void printUsageAndExit() {
     System.err.println("Usage:");

@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 public class NsLookup {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		String name="www.sun.com";
 		try {
 			InetAddress address = InetAddress.getByName(name);
@@ -14,5 +14,5 @@ public class NsLookup {
 		}catch (UnknownHostException uhe) {
 			System.err.println("Unable to find: " + name);
 		}
-	}
+	}*/
 }

@@ -34,12 +34,12 @@ import javax.annotation.Resources;
         "classpath*:conf/applicationContext-dwsurvey.xml",
         "classpath*:conf/jcaptcha/applicationContext-jcaptcha-1.xml"
         })
-public class Application extends SpringBootServletInitializer  {
+public class Application {
 
-    @Override
+   /* @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(Application.class);
-    }
+    }*/
     //注册SessionInViewFilter 
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {

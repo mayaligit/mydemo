@@ -31,12 +31,12 @@ public class Utils {
         return ret;
     }
     
-    public static void main(String args[]){
+    /*public static void main(String args[]){
          byte[] a=getIpByteArrayFromString(args[0]);
           for(int i=0;i< a.length;i++)
                 System.out.println(a[i]);
           System.out.println(getIpStringFromBytes(a)); 
-    }
+    }*/
     /**
      * 对原始字符串进行编码转换，如果失败，返回原始的字符串
      * @param s 原始字符串

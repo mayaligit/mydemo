@@ -1,8 +1,6 @@
 package com.key.common.plugs.ipaddr;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -30,8 +28,7 @@ public class IPSeeker {
 		}
 	}
 
-	private static final String IP_FILE = IPSeeker.class.getResource(
-			"/qqwry.dat").toString().substring(5);
+	private final String IP_FILE = "qqwry.dat";
 	// 一些固定常量，比如记录长度等等
 	private static final int IP_RECORD_LENGTH = 7;
 	private static final byte AREA_FOLLOWED = 0x01;
@@ -62,10 +59,11 @@ public class IPSeeker {
 		b4 = new byte[4];
 		b3 = new byte[3];
 		try {
+		/*	String path = Thread.currentThread().getContextClassLoader().getResource("").getPath();    //添加
+			String IP_pa=path+"conf/site/qqwry.dat";
+			System.out.println(IP_pa);*/
 			ipFile = new RandomAccessFile(IP_FILE, "r");
 		} catch (FileNotFoundException e) {
-			System.out.println(IPSeeker.class.getResource("/qqwry.dat")
-					.toString());
 			System.out.println(IP_FILE);
 			System.out.println("IP地址信息文件没有找到，IP显示功能将无法使用");
 			ipFile = null;
@@ -620,7 +618,7 @@ public class IPSeeker {
 		return address.trim();
 	}
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		IPSeeker aa = new IPSeeker();
 		List<String> ips = new ArrayList<String>();
 		ips.add("198.41.0.4");
@@ -642,7 +640,6 @@ public class IPSeeker {
 		for (String string : ips) {
 			// 124.72.237.255  福建省福州市 电信
 			// 124.72.238.0    124.72.239.255  福建省福州市 (连江县)电信ADSL
-			
 			//省..市
 			//..市
 			//..省..
@@ -651,11 +648,10 @@ public class IPSeeker {
 			//内蒙古..市
 			//内蒙古..
 			//广西..市
-			
 			System.out.println(string + "[" + aa.getAddress(string) + "]"+aa.getCountry(string));
 			
 			// System.out.println(string+"["+aa.getCountry(string)+"]");
 		}
 
-	}
+	}*/
 }

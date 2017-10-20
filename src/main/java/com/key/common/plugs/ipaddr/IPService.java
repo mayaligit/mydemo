@@ -122,8 +122,8 @@ public class IPService {
 		return city;
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		String ip="111.206.20.59, 123.151.42.46, 121.42.17.215，";
 		System.out.println(ip.substring(0,ip.indexOf(",")));
-	}
+	}*/
 }

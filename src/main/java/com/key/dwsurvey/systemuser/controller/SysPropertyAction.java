@@ -40,7 +40,11 @@ import com.key.common.utils.web.SpringUtils;
 @Controller
 @RequestMapping("/sy/system")
 public class SysPropertyAction{
-	
+
+	//配置文件的路径
+	private String path = Thread.currentThread().getContextClassLoader().getResource("").getPath();    //添加
+	private  File af=new File(path+"/conf/site/site.properties");
+
     @RequestMapping("sys-property!input.action")
 	public ModelAndView input() throws Exception {
         ModelAndView mv =new ModelAndView("page/content/diaowen-system/property-input");
@@ -48,9 +52,10 @@ public class SysPropertyAction{
 		String fileName="site.properties";
 		ServletContext sc = SpringUtils.getSession().getServletContext();
 		//String filePath = "conf/site/".replace("/", File.separator);
-		String filePath = "conf/".replace("/", File.separator);
-		String fileRealPath = sc.getRealPath("/")+filePath+fileName;
-		File file=new File(fileRealPath);
+		/*String filePath = "conf/".replace("/", File.separator);
+		String fileRealPath = sc.getRealPath("/")+filePath+fileName;*/
+		File file=new File(fileName);
+
 		InputStreamReader fr = new InputStreamReader(new FileInputStream(file),"UTF-8");
 		
 		Properties p = new Properties();  
@@ -89,7 +94,7 @@ public class SysPropertyAction{
 		String icpCode = SpringUtils.getParameter("icpCode");
 		//网站备案信息代码
 		String loginBgImg = SpringUtils.getParameter("loginBgImg");
-		String siteFilePath = "conf/site.properties".replace("/", File.separator);
+		String siteFilePath = "site.properties".replace("/", File.separator);
 		Properties props = new Properties();
 		props.put("adminEmail",adminEmail!=null?adminEmail:"");
 		props.put("adminQQ",adminQQ!=null?adminQQ:"");

@@ -37,7 +37,7 @@ public class Demo4URL2PDF {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		String blogURL = "http://www.micmiu.com/os/linux/shell-dev-null/";
 
 		// 直接把网页内容转为PDF文件
@@ -47,7 +47,7 @@ public class Demo4URL2PDF {
 		// 把网页内容转为PDF中的Elements
 		String pdfFile2 = "D:/Documents/demo-URL2.pdf";
 		Demo4URL2PDF.parseURL2PDFElement(pdfFile2, blogURL);
-	}
+	}*/
 
 	/**
 	 * 根据URL提前blog的基本信息，返回结果>>:[主题 ,分类,日期,内容]等.

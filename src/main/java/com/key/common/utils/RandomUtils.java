@@ -6,13 +6,13 @@ import java.util.Random;
 
 public class RandomUtils {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		System.out.println(randomWord(5, 12));;
 		System.out.println(randomStr(5,12));;
-		/*for (int i = 0; i < 1000; i++) {
+		*//*for (int i = 0; i < 1000; i++) {
 			System.out.println(randomWordNum(5));;
-		}*/
-		/*ChineseNameUtils chineseName = new ChineseNameUtils();
+		}*//*
+		*//*ChineseNameUtils chineseName = new ChineseNameUtils();
 		for (int i = 0; i < 1000; i++) {
 			chineseName.getName();
 		    String names=chineseName.getNames();
@@ -20,12 +20,12 @@ public class RandomUtils {
 		    System.out.println(names+":"+pids);
 		    System.out.println(randomNum(2,4));
 //			 System.out.println(pids.replace(",", ""));
-		}*/
+		}*//*
 //		for (int i = 0; i < 100; i++) {
 //			String randomStr = randomWord();
 //			System.out.println(randomStr);
 //		}
-	}
+	}*/
 	
 	public static String randomWord(int min,int max) {
 		String randomStr = "";

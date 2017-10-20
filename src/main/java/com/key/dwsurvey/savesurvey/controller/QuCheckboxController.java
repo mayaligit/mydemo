@@ -43,6 +43,8 @@ public class QuCheckboxController {
 	private QuestionManager questionManager;
 	@Autowired
 	private QuCheckboxManager quCheckboxManager;
+	private HttpServletResponse response;
+	private HttpServletResponse httpServletResponse;
 
 	/**
 	 * 保存选题

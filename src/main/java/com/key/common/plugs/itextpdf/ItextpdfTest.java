@@ -16,14 +16,14 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 public class ItextpdfTest {
 	
-			public static void main(String[] args) {
+			/*public static void main(String[] args) {
 				try{
 					ItextpdfTest.writeSimplePdf();
 					ItextpdfTest.writeCharpter();
 				}catch(Exception e){
 					e.printStackTrace();
 				}
-			}
+			}*/
 			
 			public static void writeSimplePdf() throws Exception{
 				//1.新建document对象

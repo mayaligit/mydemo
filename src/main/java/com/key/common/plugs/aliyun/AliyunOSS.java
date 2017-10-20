@@ -139,7 +139,7 @@ public class AliyunOSS {
 		 */
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 
 		List<OSSObjectSummary> objectSummaries = AliyunOSS.getObjectList(
 				DiaowenProperty.UPLOADFILE_BACKET, "ueditor/jsp/upload/image/", 4, 2);
@@ -148,5 +148,5 @@ public class AliyunOSS {
 			System.out.println(ossObjectSummary.getKey() + ":"
 					+ ossObjectSummary.getSize());
 		}
-	}
+	}*/
 }

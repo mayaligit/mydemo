@@ -188,8 +188,8 @@ public class TwoDimensionCode {
 		return content;
 	}
 
-	public static void main(String[] args) {
-	/*
+	/*public static void main(String[] args) {
+	*//*
 		String imgPath = "G:/twoDim/Michael_QRCode.png";
 //		String encoderContent = "Hello 大大、小小,welcome to QRCode!" + "\nMyblog [ http://sjsky.iteye.com ]" + "\nEMail [ sjsky007@gmail.com ]";
 		String encoderContent = "http://localhost:8080/";
@@ -207,6 +207,6 @@ public class TwoDimensionCode {
 		System.out.println("解析结果如下：");
 		System.out.println(decoderContent);
 		System.out.println("========decoder success!!!");
-		*/
-	}
+		*//*
+	}*/
 }

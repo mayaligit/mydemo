@@ -78,7 +78,7 @@ public class WordTest {
 		return buffer.toString(); 
 	}
 
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		new WordTest().writeWordFile("D:/ttpp.htm");
-	}
+	}*/
 }

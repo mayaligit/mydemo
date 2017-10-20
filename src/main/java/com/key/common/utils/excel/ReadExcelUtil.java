@@ -93,7 +93,7 @@ public class ReadExcelUtil {
 	public static int getCellSize(HSSFRow sfRow){
 		return sfRow.getLastCellNum();
 	}
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		reader("F://terchers.xls");
-	}
+	}*/
 }

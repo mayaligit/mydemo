@@ -21,7 +21,7 @@ import com.itextpdf.text.pdf.BaseFont;
 
 public class PDFUtil {
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		String url="http://localhost:8080/survey/pdfTest.jsp";
 		try {
 			PDFUtil.exportPdfFile(url);
@@ -29,7 +29,7 @@ public class PDFUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	// 导出pdf add by huangt 2012.6.1
 	public static File exportPdfFile(String urlStr) throws Exception {

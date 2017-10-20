@@ -141,11 +141,11 @@ public class BaiduBOS {
 	}
 	
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		
 //		 BaiduBOS.getObjectList(BaiduBOS.UPLOADFILE_BACKET, "ueditor/jsp/upload/image/",4,2);
 		 
 		BaiduBOS.getObject(DiaowenProperty.WENJUANHTML_BACKET, "index.html");
-	}
+	}*/
 }
 

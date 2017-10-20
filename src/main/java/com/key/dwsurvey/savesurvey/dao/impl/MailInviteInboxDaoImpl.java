@@ -8,5 +8,5 @@ import com.key.common.dao.BaseDaoImpl;
 
 @Repository
 public class MailInviteInboxDaoImpl extends BaseDaoImpl<MailInviteInbox, String> implements MailInviteInboxDao {
-    
+
 }

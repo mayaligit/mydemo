@@ -4,7 +4,7 @@ import java.io.*;
 import com.pmstation.spss.*;
 
 public class DemoCsv {
-  public static void main(String[] args){
+  /*public static void main(String[] args){
     // Parse the command line
     if (args.length != 2) {
         printUsageAndExit();
@@ -20,7 +20,7 @@ public class DemoCsv {
     } catch (Exception e){
       e.printStackTrace();
     }
-  }
+  }*/
   
   private static void printUsageAndExit() {
     System.err.println("Usage:");
