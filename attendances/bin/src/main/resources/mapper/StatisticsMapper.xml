@@ -1,0 +1,106 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.StatisticsDao">
+    <sql id="statisticsColumns">
+        a.statistics_id AS "statisticsId",
+        a.late_time AS "lateTime",
+        a.early_time AS "earlyTime",
+        a.office_time AS "officeTime",
+        a.daily_time AS "dailyTime",
+        a.create_by AS "createBy.id",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy.id",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="statisticsJoins">
+    </sql>
+
+    <select id="get" resultType="Statistics">
+        SELECT
+        <include refid="statisticsColumns"/>
+        FROM t_statistics a
+        <include refid="statisticsJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Statistics">
+        SELECT
+        <include refid="statisticsColumns"/>
+        FROM t_statistics a
+        <include refid="statisticsJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Statistics">
+        SELECT
+        <include refid="statisticsColumns"/>
+        FROM t_statistics a
+        <include refid="statisticsJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_statistics(
+            statistics_id,
+            late_time,
+            early_time,
+            office_time,
+            daily_time,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        ) VALUES (
+            #{statisticsId},
+            #{lateTime},
+            #{earlyTime},
+            #{officeTime},
+            #{dailyTime},
+            #{createBy.id},
+            #{createTime},
+            #{updateBy.id},
+            #{updateTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_statistics SET
+        update_by = #{updateBy.id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_statistics SET
+        <if test="statisticsId != null and statisticsId != ''">
+        statistics_id = #{statisticsId},
+        </if>
+        <if test="lateTime != null and lateTime != ''">
+        late_time = #{lateTime},
+        </if>
+        <if test="earlyTime != null and earlyTime != ''">
+        early_time = #{earlyTime},
+        </if>
+        <if test="officeTime != null and officeTime != ''">
+        office_time = #{officeTime},
+        </if>
+        <if test="dailyTime != null and dailyTime != ''">
+        daily_time = #{dailyTime},
+        </if>
+        <if test="createTime != null and createTime != ''">
+        create_time = #{createTime},
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+        update_time = #{updateTime},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_statistics
+        WHERE id = #{id}
+    </delete>
+</mapper>

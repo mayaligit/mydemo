@@ -1,0 +1,166 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.ClazzesDao">
+    <sql id="clazzesColumns">
+        a.id AS "id",
+        a.nomal_address AS "nomalAddress",
+        a.nomal_start_time AS "nomalStartTime",
+        a.nomal_end_time AS "nomalEndTime",
+        a.class_group_id AS "classGroupId",
+        a.class_group AS "classGroup",
+        a.create_by AS "createBy.id",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy.id",
+        a.update_time AS "updateTime",
+        a.username AS "username",
+        a.total AS "total"
+    </sql>
+
+    <sql id="clazzesJoins">
+    </sql>
+
+    <select id="get" resultType="Clazzes">
+        SELECT
+        <include refid="clazzesColumns"/>
+        FROM t_clazzes a
+        <include refid="clazzesJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Clazzes">
+        SELECT
+        <include refid="clazzesColumns"/>
+        FROM t_clazzes a
+        <include refid="clazzesJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Clazzes">
+        SELECT
+        <include refid="clazzesColumns"/>
+        FROM t_clazzes a
+        <include refid="clazzesJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_clazzes(
+            id,
+            nomal_address,
+            nomal_start_time,
+            nomal_end_time,
+            class_group_id,
+            class_group,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            username,
+            total
+        ) VALUES (
+            #{id},
+            #{nomalAddress},
+            #{nomalStartTime},
+            #{nomalEndTime},
+            #{classGroupId},
+            #{classGroup},
+            #{createBy.id},
+            #{createTime},
+            #{updateBy.id},
+            #{updateTime},
+            #{username},
+            #{total}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_clazzes SET
+        nomal_address = #{nomalAddress},
+        nomal_start_time = #{nomalStartTime},
+        nomal_end_time = #{nomalEndTime},
+        class_group_id = #{classGroupId},
+        class_group = #{classGroup},
+        create_by = #{createBy.id},
+        create_time = #{createTime},
+        update_by = #{updateBy.id},
+        update_time = #{updateTime},
+        username = #{username},
+        total = #{total}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_clazzes SET
+        <if test="nomalAddress != null  and nomalAddress != ''">
+        nomal_address = #{nomalAddress},
+        </if>
+        <if test="nomalStartTime != null  and nomalStartTime != ''">
+        nomal_start_time = #{nomalStartTime},
+        </if>
+        <if test="nomalEndTime != null  and nomalEndTime != ''">
+        nomal_end_time = #{nomalEndTime},
+        </if>
+        <if test="classGroupId != null  and classGroupId != ''">
+        class_group_id = #{classGroupId},
+        </if>
+        <if test="classGroup != null  and classGroup != ''">
+        class_group = #{classGroup},
+        </if>
+        <if test="createTime != null ">
+        create_time = #{createTime},
+        </if>
+        <if test="updateTime != null ">
+        update_time = #{updateTime},
+        </if>
+        <if test="username != null  and username != ''">
+        username = #{username},
+        </if>
+        <if test="total != null  and total != ''">
+        total = #{total},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_clazzes
+        WHERE id = #{id}
+    </delete>
+    <!--根据ID获取实体-->
+    <select id="getClazzesById" resultType="Clazzes">
+        SELECT
+        <include refid="clazzesColumns"/>
+        FROM t_clazzes a
+        <include refid="clazzesJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getTotalById"  resultType="Clazzes">
+        SELECT
+        a.total total
+        FROM t_clazzes a
+        WHERE a.id = #{id}
+    </select>
+
+
+    <select id="startWork"  resultType="int">
+        SELECT
+        COUNT(id)
+        FROM t_clazzes
+        WHERE 1=1
+        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), nomal_start_time)  &gt; "00:00:00"
+    </select>
+
+    <select id="endWork"  resultType="int">
+        SELECT
+        COUNT(id)
+        FROM t_clazzes
+        WHERE 1=1
+        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), nomal_end_time)  &gt; "00:00:00"
+    </select>
+
+
+
+</mapper>

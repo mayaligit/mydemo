@@ -1,0 +1,7 @@
+logging:
+  level:
+    com:
+      cmic:
+        base:
+          handler:
+            ApiVesrsionHandler: ERROR

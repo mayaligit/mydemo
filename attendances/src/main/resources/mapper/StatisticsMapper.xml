@@ -1,0 +1,156 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.StatisticsDao">
+    <sql id="statisticsColumns">
+        a.id AS "id",
+        a.late_time AS "lateTime",
+        a.early_time AS "earlyTime",
+        a.office_time AS "officeTime",
+        a.daily_time AS "dailyTime",
+        a.create_by AS "createBy.id",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy.id",
+        a.update_time AS "updateTime",
+        a.username AS "username"
+    </sql>
+
+    <sql id="statisticsJoins">
+    </sql>
+
+    <select id="get" resultType="Statistics">
+        SELECT
+        <include refid="statisticsColumns"/>
+        FROM t_statistics a
+        <include refid="statisticsJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Statistics">
+        SELECT
+        <include refid="statisticsColumns"/>
+        FROM t_statistics a
+        <include refid="statisticsJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Statistics">
+        SELECT
+        <include refid="statisticsColumns"/>
+        FROM t_statistics a
+        <include refid="statisticsJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_statistics(
+        id,
+        late_time,
+        early_time,
+        office_time,
+        daily_time,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        username
+        ) VALUES (
+        #{id},
+        #{lateTime},
+        #{earlyTime},
+        #{officeTime},
+        #{dailyTime},
+        #{createBy.id},
+        #{createTime},
+        #{updateBy.id},
+        #{updateTime},
+        #{username}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_statistics SET
+        late_time = #{lateTime},
+        early_time = #{earlyTime},
+        office_time = #{officeTime},
+        daily_time = #{dailyTime},
+        create_by = #{createBy.id},
+        create_time = #{createTime},
+        update_by = #{updateBy.id},
+        update_time = #{updateTime},
+        username = #{username}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_statistics SET
+        <if test="lateTime != null  and lateTime != ''">
+            late_time = #{lateTime},
+        </if>
+        <if test="earlyTime != null  and earlyTime != ''">
+            early_time = #{earlyTime},
+        </if>
+        <if test="officeTime != null  and officeTime != ''">
+            office_time = #{officeTime},
+        </if>
+        <if test="dailyTime != null  and dailyTime != ''">
+            daily_time = #{dailyTime},
+        </if>
+        <if test="createTime != null ">
+            create_time = #{createTime},
+        </if>
+        <if test="updateTime != null ">
+            update_time = #{updateTime},
+        </if>
+        <if test="username != null  and username != ''">
+            username = #{username},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_statistics
+        WHERE id = #{id}
+    </delete>
+
+
+    <select id="checkAttendanceHardworkingByDay"  parameterType="String" resultType="java.util.HashMap" >
+
+     SELECT create_by ,ROUND((UNIX_TIMESTAMP(end_time)-UNIX_TIMESTAMP(start_time))/3600,2) workHour
+     FROM t_attendance a
+     WHERE  a.`end_time` IS NOT NULL
+     and a.`start_time` IS NOT NULL
+     and DATE(a.create_time) = #{date}
+    </select>
+
+
+
+    <select id="checkAttendanceHardworkingByMonth"  parameterType="String" resultType="java.util.HashMap">
+
+        SELECT round(SUM(office_time)/60,2) workHour,a.create_by
+        FROM t_statistics a
+        WHERE
+        1=1 and MONTH(a.create_time) = #{date}
+        GROUP BY a.create_by
+    </select>
+
+
+    <select id="checkAttendanceLatterByMonth" parameterType="String" resultType="java.util.HashMap">
+
+        SELECT SUM(late_time) lateTime,a.create_by
+        FROM t_statistics a
+        WHERE
+        late_time IS NOT NULL and MONTH(a.create_time) = #{date}
+        GROUP BY a.create_by
+    </select>
+
+    <select id="checkAttendanceByCreateByAndCreateTime" resultType="Statistics">
+        SELECT
+        <include refid="statisticsColumns"/>
+        FROM t_statistics a
+        WHERE a.create_by=#{createBy} AND DATE(a.create_time)=#{createTime}
+    </select>
+
+</mapper>

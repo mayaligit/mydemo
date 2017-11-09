@@ -1,0 +1,142 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.AuditDao">
+    <sql id="auditColumns">
+        a.audit_id AS "auditId",
+        a.submit_time AS "submitTime",
+        a.audit_content AS "auditContent",
+        a.audit_user_id AS "auditUserId",
+        a.audit_user_name AS "auditUserName",
+        a.audit_status AS "auditStatus",
+        a.audit_time AS "auditTime",
+        a.attendance_id AS "attendanceId",
+        a.audit_suggestion AS "auditSuggestion",
+        a.business_type AS "businessType",
+        a.create_by AS "createBy.id",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy.id",
+        a.update_time AS "updateTime",
+        a.audit_detail AS "auditDetail"
+    </sql>
+
+    <sql id="auditJoins">
+    </sql>
+
+    <select id="get" resultType="Audit">
+        SELECT
+        <include refid="auditColumns"/>
+        FROM t_audit a
+        <include refid="auditJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Audit">
+        SELECT
+        <include refid="auditColumns"/>
+        FROM t_audit a
+        <include refid="auditJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Audit">
+        SELECT
+        <include refid="auditColumns"/>
+        FROM t_audit a
+        <include refid="auditJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_audit(
+            audit_id,
+            submit_time,
+            audit_content,
+            audit_user_id,
+            audit_user_name,
+            audit_status,
+            audit_time,
+            attendance_id,
+            audit_suggestion,
+            business_type,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            audit_detail
+        ) VALUES (
+            #{auditId},
+            #{submitTime},
+            #{auditContent},
+            #{auditUserId},
+            #{auditUserName},
+            #{auditStatus},
+            #{auditTime},
+            #{attendanceId},
+            #{auditSuggestion},
+            #{businessType},
+            #{createBy.id},
+            #{createTime},
+            #{updateBy.id},
+            #{updateTime},
+            #{auditDetail}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_audit SET
+        update_by = #{updateBy.id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_audit SET
+        <if test="auditId != null and auditId != ''">
+        audit_id = #{auditId},
+        </if>
+        <if test="submitTime != null and submitTime != ''">
+        submit_time = #{submitTime},
+        </if>
+        <if test="auditContent != null and auditContent != ''">
+        audit_content = #{auditContent},
+        </if>
+        <if test="auditUserId != null and auditUserId != ''">
+        audit_user_id = #{auditUserId},
+        </if>
+        <if test="auditUserName != null and auditUserName != ''">
+        audit_user_name = #{auditUserName},
+        </if>
+        <if test="auditStatus != null and auditStatus != ''">
+        audit_status = #{auditStatus},
+        </if>
+        <if test="auditTime != null and auditTime != ''">
+        audit_time = #{auditTime},
+        </if>
+        <if test="attendanceId != null and attendanceId != ''">
+        attendance_id = #{attendanceId},
+        </if>
+        <if test="auditSuggestion != null and auditSuggestion != ''">
+        audit_suggestion = #{auditSuggestion},
+        </if>
+        <if test="businessType != null and businessType != ''">
+        business_type = #{businessType},
+        </if>
+        <if test="createTime != null and createTime != ''">
+        create_time = #{createTime},
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+        update_time = #{updateTime},
+        </if>
+        <if test="auditDetail != null and auditDetail != ''">
+        audit_detail = #{auditDetail},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_audit
+        WHERE id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.DailyRecordDao">
+    <sql id="dailyRecordColumns">
+        a.attendance_id AS "attendanceId",
+        a.user_name AS "userName",
+        a.location AS "location",
+        a.create_by AS "createBy.id",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy.id",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="dailyRecordJoins">
+    </sql>
+
+    <select id="get" resultType="DailyRecord">
+        SELECT
+        <include refid="dailyRecordColumns"/>
+        FROM t_daily_record a
+        <include refid="dailyRecordJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="DailyRecord">
+        SELECT
+        <include refid="dailyRecordColumns"/>
+        FROM t_daily_record a
+        <include refid="dailyRecordJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="DailyRecord">
+        SELECT
+        <include refid="dailyRecordColumns"/>
+        FROM t_daily_record a
+        <include refid="dailyRecordJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_daily_record(
+            attendance_id,
+            user_name,
+            location,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        ) VALUES (
+            #{attendanceId},
+            #{userName},
+            #{location},
+            #{createBy.id},
+            #{createTime},
+            #{updateBy.id},
+            #{updateTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_daily_record SET
+        update_by = #{updateBy.id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_daily_record SET
+        <if test="attendanceId != null and attendanceId != ''">
+        attendance_id = #{attendanceId},
+        </if>
+        <if test="userName != null and userName != ''">
+        user_name = #{userName},
+        </if>
+        <if test="location != null and location != ''">
+        location = #{location},
+        </if>
+        <if test="createTime != null and createTime != ''">
+        create_time = #{createTime},
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+        update_time = #{updateTime},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_daily_record
+        WHERE id = #{id}
+    </delete>
+</mapper>

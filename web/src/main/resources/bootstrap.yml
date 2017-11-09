@@ -1,0 +1,47 @@
+sys:
+  title: 考勤系统
+  module: biz  #模块
+  name: attendance  #应用
+
+spring:
+  application:
+    name: ${sys.module}-${sys.name}
+  profiles:
+    active: dev #环境配置- local：本地 dev：开发环境 qa：测试环境 uat：用户测试 pd：生产环境
+  cloud:
+    config:
+      name: ${spring.application.name}
+      profile: ${spring.profiles.active}
+      label: master
+      uri: ${saas.server-center.url}/config/
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${saas.server-center.url}/eureka/
+    enabled: ${saas.server-center.enabled}
+
+logging:
+  logstash:
+    host: 127.0.0.1
+    port: 9250
+  level:
+    com:
+      cmic: DEBUG
+    org:
+      mybatis: WARN            #MyBatis
+      springframework:
+        web: WARN             #Spring框架
+        data:
+          mongodb:
+            core: DEBUG       #Mongobd
+      apache:
+        tomcat: WARN            #Tomcat
+        catalina: WARN
+    springfox: ERROR
+
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.cmic.${sys.name}.model,com.cmic.base.handler
+  configuration:
+    call-setters-on-nulls: true   # 设置MyBatis查询返回Map时设置值为null的字段也在结果集中

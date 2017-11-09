@@ -1,0 +1,112 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.ClazzesDao">
+    <sql id="clazzesColumns">
+        a.class_id AS "classId",
+        a.nomal_address AS "nomalAddress",
+        a.nomal_start_time AS "nomalStartTime",
+        a.nomal_end_time AS "nomalEndTime",
+        a.class_group_id AS "classGroupId",
+        a.class_group AS "classGroup",
+        a.create_by AS "createBy.id",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy.id",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="clazzesJoins">
+    </sql>
+
+    <select id="get" resultType="Clazzes">
+        SELECT
+        <include refid="clazzesColumns"/>
+        FROM t_clazzes a
+        <include refid="clazzesJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Clazzes">
+        SELECT
+        <include refid="clazzesColumns"/>
+        FROM t_clazzes a
+        <include refid="clazzesJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Clazzes">
+        SELECT
+        <include refid="clazzesColumns"/>
+        FROM t_clazzes a
+        <include refid="clazzesJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_clazzes(
+            class_id,
+            nomal_address,
+            nomal_start_time,
+            nomal_end_time,
+            class_group_id,
+            class_group,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        ) VALUES (
+            #{classId},
+            #{nomalAddress},
+            #{nomalStartTime},
+            #{nomalEndTime},
+            #{classGroupId},
+            #{classGroup},
+            #{createBy.id},
+            #{createTime},
+            #{updateBy.id},
+            #{updateTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_clazzes SET
+        update_by = #{updateBy.id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_clazzes SET
+        <if test="classId != null and classId != ''">
+        class_id = #{classId},
+        </if>
+        <if test="nomalAddress != null and nomalAddress != ''">
+        nomal_address = #{nomalAddress},
+        </if>
+        <if test="nomalStartTime != null and nomalStartTime != ''">
+        nomal_start_time = #{nomalStartTime},
+        </if>
+        <if test="nomalEndTime != null and nomalEndTime != ''">
+        nomal_end_time = #{nomalEndTime},
+        </if>
+        <if test="classGroupId != null and classGroupId != ''">
+        class_group_id = #{classGroupId},
+        </if>
+        <if test="classGroup != null and classGroup != ''">
+        class_group = #{classGroup},
+        </if>
+        <if test="createTime != null and createTime != ''">
+        create_time = #{createTime},
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+        update_time = #{updateTime},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_clazzes
+        WHERE id = #{id}
+    </delete>
+</mapper>

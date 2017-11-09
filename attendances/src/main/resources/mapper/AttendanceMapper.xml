@@ -1,0 +1,338 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.AttendanceDao">
+    <sql id="attendanceColumns">
+        a.id AS "id",
+        a.attendance_user AS "attendanceUser",
+        a.start_time AS "startTime",
+        a.end_time AS "endTime",
+        a.attendance_status AS "attendanceStatus",
+        a.attendance_desc AS "attendanceDesc",
+        a.attendance_month AS "attendanceMonth",
+        a.start_location AS "startLocation",
+        a.end_location AS "endLocation",
+        a.start_signal AS "startSignal",
+        a.end_signal AS "endSignal",
+        a.daily_status AS "dailyStatus",
+        a.attendance_group AS "attendanceGroup",
+        a.end_time_status AS "endTimeStatus",
+        a.start_time_status AS "startTimeStatus",
+        a.create_by AS "createBy.id",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy.id",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="attendanceJoins">
+    </sql>
+
+    <select id="get" resultType="Attendance">
+        SELECT
+        <include refid="attendanceColumns"/>
+        FROM t_attendance a
+        <include refid="attendanceJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Attendance">
+        SELECT
+        <include refid="attendanceColumns"/>
+        FROM t_attendance a
+        <include refid="attendanceJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Attendance">
+        SELECT
+        <include refid="attendanceColumns"/>
+        FROM t_attendance a
+        <include refid="attendanceJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_attendance(
+        id,
+        attendance_user,
+        start_time,
+        end_time,
+        attendance_status,
+        attendance_desc,
+        attendance_month,
+        start_location,
+        end_location,
+        start_signal,
+        end_signal,
+        daily_status,
+        attendance_group,
+        end_time_status,
+        start_time_status,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+        ) VALUES (
+        #{id},
+        #{attendanceUser},
+        #{startTime},
+        #{endTime},
+        #{attendanceStatus},
+        #{attendanceDesc},
+        #{attendanceMonth},
+        #{startLocation},
+        #{endLocation},
+        #{startSignal},
+        #{endSignal},
+        #{dailyStatus},
+        #{attendanceGroup},
+        #{endTimeStatus},
+        #{startTimeStatus},
+        #{createBy.id},
+        #{createTime},
+        #{updateBy.id},
+        #{updateTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_attendance SET
+        attendance_user = #{attendanceUser},
+        start_time = #{startTime},
+        end_time = #{endTime},
+        attendance_status = #{attendanceStatus},
+        attendance_desc = #{attendanceDesc},
+        attendance_month = #{attendanceMonth},
+        start_location = #{startLocation},
+        end_location = #{endLocation},
+        start_signal = #{startSignal},
+        end_signal = #{endSignal},
+        daily_status = #{dailyStatus},
+        attendance_group = #{attendanceGroup},
+        end_time_status = #{endTimeStatus},
+        start_time_status = #{startTimeStatus},
+        create_by = #{createBy.id},
+        create_time = #{createTime},
+        update_by = #{updateBy.id},
+        update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_attendance SET
+        <if test="attendanceUser != null and attendanceUser != ''">
+            attendance_user = #{attendanceUser},
+        </if>
+        <if test="startTime != null and startTime != ''">
+            start_time = #{startTime},
+        </if>
+        <if test="endTime != null and endTime != ''">
+            end_time = #{endTime},
+        </if>
+        <if test="attendanceStatus != null and attendanceStatus != ''">
+            attendance_status = #{attendanceStatus},
+        </if>
+        <if test="attendanceDesc != null and attendanceDesc != ''">
+            attendance_desc = #{attendanceDesc},
+        </if>
+        <if test="attendanceMonth != null and attendanceMonth != ''">
+            attendance_month = #{attendanceMonth},
+        </if>
+        <if test="startLocation != null and startLocation != ''">
+            start_location = #{startLocation},
+        </if>
+        <if test="endLocation != null and endLocation != ''">
+            end_location = #{endLocation},
+        </if>
+        <if test="startSignal != null and startSignal != ''">
+            start_signal = #{startSignal},
+        </if>
+        <if test="endSignal != null and endSignal != ''">
+            end_signal = #{endSignal},
+        </if>
+        <if test="dailyStatus != null and dailyStatus != ''">
+            daily_status = #{dailyStatus},
+        </if>
+        <if test="attendanceGroup != null and attendanceGroup != ''">
+            attendance_group = #{attendanceGroup},
+        </if>
+        <if test="endTimeStatus != null and endTimeStatus != ''">
+            end_time_status = #{endTimeStatus},
+        </if>
+        <if test="startTimeStatus != null and startTimeStatus != ''">
+            start_time_status = #{startTimeStatus},
+        </if>
+        <if test="createTime != null and createTime != ''">
+            create_time = #{createTime},
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+            update_time = #{updateTime},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_attendance
+        WHERE id = #{id}
+    </delete>
+
+    <update id="updateAttendance">
+        UPDATE t_attendance SET
+        <if test="dailyStatus != null and dailyStatus != ''">
+            daily_status = #{dailyStatus},
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+
+            update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        WHERE attendance_id = #{attendanceId}
+    </update>
+
+    <select id="checkAttendanceByDay" parameterType="java.lang.String"  resultType="Map">
+        SELECT
+        DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
+        a.create_by AS "userName"
+        FROM t_attendance a
+        WHERE
+            1=1 and  date_format(a.start_time, '%Y-%m-%d') = #{value}
+    </select>
+    <select id="getAttendanceByCreatebyAndCreateTime" resultType="Attendance">
+        SELECT
+        <include refid="attendanceColumns"/>
+        FROM t_attendance a
+        <include refid="attendanceJoins"/>
+        WHERE a.create_by = #{createBy} AND DATE(a.create_time)=#{createTime}
+    </select>
+    <select id="checkAttendanceLatterByDay" parameterType="Map" resultType="java.util.HashMap">
+
+        SELECT
+        DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
+        a.create_by AS "userName"
+        FROM t_attendance a
+        WHERE 1=1 and a.`start_time` IS NOT NULL
+        AND DATE(a.start_time) = #{date}
+        AND SUBSTRING(a.start_time,11,18)-#{nomalStartTime} &gt; "00:00:00"
+    </select>
+
+    <select id="getWorkCount" parameterType="String" resultType="int">
+        SELECT
+        COUNT(a.`id`) workCount
+        FROM t_attendance a
+        WHERE a.`start_time` IS NOT NULL
+        and DATE(a.`start_time`) = #{date}
+    </select>
+
+
+    <select id="getLatterCount" parameterType="Map" resultType="int">
+
+        SELECT
+        COUNT(a.`id`) latterCount
+        FROM t_attendance a
+        WHERE 1=1 AND a.start_time is NOT NULL
+        and  DATE(a.start_time) = #{date}
+        AND SUBSTRING(a.start_time,11,18)-#{nomalStartTime} &gt; "00:00:00"
+    </select>
+
+
+    <select id="getOutworkCount" parameterType="String" resultType="int">
+        SELECT
+        COUNT(a.`id`) outworkCount
+        FROM t_attendance a
+        WHERE 1 = 1
+        and a.attendance_status = "2"
+        and DATE(a.`create_time`) = #{date}
+    </select>
+
+    <select id="selectAttendances" parameterType="attendance" resultType="map">
+        SELECT
+            a.id AS "id",
+            a.attendance_user AS "attendanceUser",
+            date_format(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
+            date_format(a.end_time,'%Y-%m-%d %H:%i') AS "endTime",
+            a.attendance_status AS "attendanceStatus",
+            a.daily_status AS "dailyStatus",
+            a.start_time_status AS "startTimeStatus",
+            a.end_time_status AS "endTimeStatus",
+            a.attendance_desc AS "attendanceDesc",
+             date_format(a.create_time,'%Y-%m-%d %H:%i') AS "createTime",
+            b.daily_desc AS "dailyDesc"
+        FROM
+            t_attendance a
+            LEFT JOIN t_daily b ON a.id=b.attendance_id
+        <where>
+            <if test="attendanceUser != null and attendanceUser != ''">
+                attendance_user = #{attendanceUser}
+            </if>
+            <if test="attendanceStatus != null and attendanceStatus != ''">
+                and attendance_status = #{attendanceStatus}
+            </if>
+            <if test="attendanceMonth != null and attendanceMonth != ''">
+                and  attendance_month = #{attendanceMonth}
+            </if>
+            <if test="dailyStatus != null and dailyStatus != ''">
+                and  daily_status = #{dailyStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="findAttendanceList" parameterType="map" resultMap="attendanceMap">
+        SELECT
+        a.id AS "id" , a.attendance_status AS "attendanceStatus" ,
+        a.attendance_desc AS attendanceDesc , a.create_time AS "createTime" ,
+        a.daily_status AS "dailyStatus" , b.daily_title AS "dailyTitle" ,
+        b.id AS "dailyId" ,d.id AS "auditId"
+        FROM
+        t_attendance a
+
+        LEFT JOIN t_daily b ON a.id=b.attendance_id
+        LEFT JOIN t_audit d ON a.id=d.attendance_id
+        WHERE a.attendance_month=#{attendanceMonth} AND a.create_by= #{createBy}
+    </select>
+
+    <resultMap id="attendanceMap" type="Attendance">
+        <id column="id" property="id" />
+        <result column="attendanceStatus" property="attendanceStatus"/>
+        <result column="createTime" property="createTime"/>
+        <result column="attendanceDesc" property="attendanceDesc"/>
+        <result column="dailyStatus" property="dailyStatus"/>
+        <association property="audit" javaType="Audit">
+            <id column="auditId" property="id"/>
+        </association>
+        <association property="daily" javaType="Daily">
+            <id column="dailyId" property="id"/>
+            <result column="dailyTitle" property="dailyTitle"/>
+        </association>
+    </resultMap>
+
+    <select id="selectExportAttendanceData" parameterType="attendance" resultType="map">
+        SELECT
+        a.id AS "id",
+        a.attendance_user AS "attendanceUser",
+        a.start_time AS "startTime",
+        a.end_time AS "endTime",
+        a.attendance_status AS "attendanceStatus",
+        a.start_location AS "startLocation",
+        a.end_location AS "endLocation",
+        a.daily_status AS "dailyStatus"
+        FROM
+        t_attendance a
+        <where>
+            <if test="attendanceUser != null and attendanceUser != ''">
+                attendance_user = #{attendanceUser}
+            </if>
+            <if test="attendanceStatus != null and attendanceStatus != ''">
+                and attendance_status = #{attendanceStatus}
+            </if>
+            <if test="attendanceMonth != null and attendanceMonth != ''">
+                and  attendance_month = #{attendanceMonth}
+            </if>
+            <if test="dailyStatus != null and dailyStatus != ''">
+                and  daily_status = #{dailyStatus}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

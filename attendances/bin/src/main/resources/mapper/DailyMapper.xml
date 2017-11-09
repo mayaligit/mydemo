@@ -1,0 +1,142 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.DailyDao">
+    <sql id="dailyColumns">
+        a.daily_id AS "dailyId",
+        a.attendance_id AS "attendanceId",
+        a.daily_desc AS "dailyDesc",
+        a.submit_time AS "submitTime",
+        a.daily_title AS "dailyTitle",
+        a.finished_work AS "finishedWork",
+        a.unfinished_work AS "unfinishedWork",
+        a.submit_location AS "submitLocation",
+        a.examiner AS "examiner",
+        a.examine_time AS "examineTime",
+        a.suggestion_status AS "suggestionStatus",
+        a.create_by AS "createBy.id",
+        a.create_time AS "createTime",
+        a.update_by AS "updateBy.id",
+        a.update_time AS "updateTime"
+    </sql>
+
+    <sql id="dailyJoins">
+    </sql>
+
+    <select id="get" resultType="Daily">
+        SELECT
+        <include refid="dailyColumns"/>
+        FROM t_daily a
+        <include refid="dailyJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Daily">
+        SELECT
+        <include refid="dailyColumns"/>
+        FROM t_daily a
+        <include refid="dailyJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Daily">
+        SELECT
+        <include refid="dailyColumns"/>
+        FROM t_daily a
+        <include refid="dailyJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_daily(
+            daily_id,
+            attendance_id,
+            daily_desc,
+            submit_time,
+            daily_title,
+            finished_work,
+            unfinished_work,
+            submit_location,
+            examiner,
+            examine_time,
+            suggestion_status,
+            create_by,
+            create_time,
+            update_by,
+            update_time
+        ) VALUES (
+            #{dailyId},
+            #{attendanceId},
+            #{dailyDesc},
+            #{submitTime},
+            #{dailyTitle},
+            #{finishedWork},
+            #{unfinishedWork},
+            #{submitLocation},
+            #{examiner},
+            #{examineTime},
+            #{suggestionStatus},
+            #{createBy.id},
+            #{createTime},
+            #{updateBy.id},
+            #{updateTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_daily SET
+        update_by = #{updateBy.id}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_daily SET
+        <if test="dailyId != null and dailyId != ''">
+        daily_id = #{dailyId},
+        </if>
+        <if test="attendanceId != null and attendanceId != ''">
+        attendance_id = #{attendanceId},
+        </if>
+        <if test="dailyDesc != null and dailyDesc != ''">
+        daily_desc = #{dailyDesc},
+        </if>
+        <if test="submitTime != null and submitTime != ''">
+        submit_time = #{submitTime},
+        </if>
+        <if test="dailyTitle != null and dailyTitle != ''">
+        daily_title = #{dailyTitle},
+        </if>
+        <if test="finishedWork != null and finishedWork != ''">
+        finished_work = #{finishedWork},
+        </if>
+        <if test="unfinishedWork != null and unfinishedWork != ''">
+        unfinished_work = #{unfinishedWork},
+        </if>
+        <if test="submitLocation != null and submitLocation != ''">
+        submit_location = #{submitLocation},
+        </if>
+        <if test="examiner != null and examiner != ''">
+        examiner = #{examiner},
+        </if>
+        <if test="examineTime != null and examineTime != ''">
+        examine_time = #{examineTime},
+        </if>
+        <if test="suggestionStatus != null and suggestionStatus != ''">
+        suggestion_status = #{suggestionStatus},
+        </if>
+        <if test="createTime != null and createTime != ''">
+        create_time = #{createTime},
+        </if>
+        <if test="updateTime != null and updateTime != ''">
+        update_time = #{updateTime},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_daily
+        WHERE id = #{id}
+    </delete>
+</mapper>
