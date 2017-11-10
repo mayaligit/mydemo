@@ -120,7 +120,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             attendanceVo.setAttendanceStatus("1");
             attendanceVo.setAttendanceDesc("地点异常");
         }*/
-        //比较地点 范围内有效数据
+            //比较地点 范围内有效数据
             String StnomalDistance = clazzes.getNomalAddress();
             String Stardistance = attendanceVo.getDistance();
             if (null ==Stardistance){
@@ -337,10 +337,32 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 lock.unlock();;
             }
             */
-           //插入数据 并返回处理结果
+            //插入数据 并返回处理结果
             AttendanceEndVo AttendanceEndVo=EndTmieMesg(attendanceEndVo,"");
-           //插入计算统计时长的问题方法
-
+            //插入计算统计时长的问题方法
+            try{
+                InsetEndStaticBo insetStatic = new InsetEndStaticBo();
+                insetStatic.setCreateBy(attendanceEndVo.getPhone());
+                //当日的数据 2017-11-2
+                insetStatic.setCreateTime(attendanceEndVo.getAttendanceMonth());
+                insetStatic.setUserName(attendanceEndVo.getUsername());
+                insetStatic.setOfftime(attendanceEndVo.getOfftime());
+                //获取当天的上班时间
+                Attendance DBattendance = checkAttendance(attendanceEndVo.getPhone(), attendanceEndVo.getAttendanceMonth());
+                String startTime=null;
+                if (null !=DBattendance){
+                    Date DBstartTime=DBattendance.getStartTime();
+                    if (DBstartTime!=null){
+                        String dateToStrings = DateUtils.getDateToStrings(DBstartTime);
+                        String[] split1 = dateToStrings.split(" ");
+                        startTime=split1[1];
+                    }
+                }
+                insetStatic.setStartTime(startTime);
+                insetEndMStatic(insetStatic);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             return AttendanceEndVo;
         }else if (hourTime<14){
             //早于14点打下班卡
@@ -368,6 +390,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     }
                 }
                 insetStatic.setStartTime(startTime);
+
                 insetEndStatic(insetStatic);
             }catch (Exception e){
                 e.printStackTrace();
@@ -839,6 +862,75 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }
             responseMap.put("attendanceList",attendList);
             return responseMap;
+        }
+    }
+
+
+    //统计正常下班数据 只更新数据不做迟到计算
+    public void  insetEndMStatic(InsetEndStaticBo insetEndStaticBo) {
+        Statistics DBstatistics =
+                statisticsService.checkAttendanceByCreateByAndCreateTime(insetEndStaticBo.getCreateBy()
+                        , insetEndStaticBo.getCreateTime());
+        if (null ==DBstatistics){
+            //产生统计数据
+            Statistics saveStatistics = new Statistics();
+            //如果没打上班卡，使用默认时间来统计时长 14点开始上班 早于 12点打下班卡
+            Date date=new Date();
+            String dates = DateUtils.getDateToStrings(date);
+            String Hour = dates.split(" ")[1].split(":")[0];
+            int Hours=Integer.parseInt(Hour);
+            String startTime=null;
+
+            if (null==insetEndStaticBo.getStartTime() && Hours>=14){
+                startTime = "14:00:00";
+            }else if (null==insetEndStaticBo.getStartTime() && Hours<=14){
+                startTime=insetEndStaticBo.getStartTime();
+            }else {
+                startTime=insetEndStaticBo.getStartTime();
+            }
+            String[] startTimeArry = startTime.split(":");
+            int starHour=Integer.parseInt(startTimeArry[0]);
+            int starMinute=Integer.parseInt(startTimeArry[1]);
+            int starTime=starHour*60+starMinute;
+            String offtime = insetEndStaticBo.getOfftime();
+            String[]offtimeArry = offtime.split(":");
+            int offHour=Integer.parseInt(offtimeArry[0]);
+            int offMinute=Integer.parseInt(offtimeArry[1]);
+            int offTime=offHour*60+offMinute;
+            int saveTime=offTime-starTime;
+            saveStatistics.setOfficeTime(saveTime);
+            saveStatistics.setUsername(insetEndStaticBo.getUserName());
+            statisticsService.save(saveStatistics);
+        }else {
+            //如果没打上班卡，使用默认时间来统计时长 14点开始上班 早于
+            Date date=new Date();
+            String dates = DateUtils.getDateToStrings(date);
+            String Hour = dates.split(" ")[1].split(":")[0];
+            int Hours=Integer.parseInt(Hour);
+            String startTime3=null;
+            if (null==insetEndStaticBo.getStartTime() && Hours>=14){
+                startTime3 = "14:00:00";
+            }else if (null==insetEndStaticBo.getStartTime() && Hours<14){
+                startTime3=insetEndStaticBo.getStartTime();
+            }else {
+                startTime3=insetEndStaticBo.getStartTime();
+            }
+            String[] startTimeArry = startTime3.split(":");
+            int starHour=Integer.parseInt(startTimeArry[0]);
+            int starMinute=Integer.parseInt(startTimeArry[1]);
+            int starTime=starHour*60+starMinute;
+            //如果是负数则为0
+            String offtime = insetEndStaticBo.getOfftime();
+            String[] offtimeArry = offtime.split(":");
+            int offHour=Integer.parseInt(offtimeArry[0]);
+            int offMinute=Integer.parseInt(offtimeArry[1]);
+            /*int offSecond=Integer.parseInt(offtimeArry[2]);
+            int offCreated=offHour*3600*1000+offMinute*60*1000+offSecond*1000;*/
+            int offTime=offHour*60+ offMinute;
+            int saveTime=offTime-starTime;
+            DBstatistics.setOfficeTime(saveTime);
+            DBstatistics.setUsername(insetEndStaticBo.getUserName());
+            statisticsService.save(DBstatistics);
         }
     }
 }

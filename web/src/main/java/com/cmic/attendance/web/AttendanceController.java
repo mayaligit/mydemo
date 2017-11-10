@@ -101,7 +101,9 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         user2.setName("18503096229");
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO",user2);*/
         //测试数据结束*/
+        log.debug("user+数据前");
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        log.debug("user+数据前"+user.getId());
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToString(serverTime);
@@ -126,11 +128,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setIsAttendanceStart("0");
             //判断是否打过下班卡了
             if ( DBattendance.getEndTime() !=null){
-                attendanceVo.setIsAttendanceStart("0");
+                attendanceVo.setIsAttendanceEnd("0");
             }else {
-                attendanceVo.setIsAttendanceStart("1");
+                attendanceVo.setIsAttendanceEnd("1");
             }
-        }else if (null !=DBattendance && DBattendance.getEndTime()!=null){
+        }
+
+        if (null !=DBattendance && DBattendance.getEndTime()!=null){
             //打过下班卡
             /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
             Date dat= DBattendance.getEndTime();
@@ -172,6 +176,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         AttendanceVo resultattendanceVo = service.punchCard(attendanceVo);
         return resultattendanceVo;
     }
+
+
     //TODO 下班卡业务
     /**
      * 下班卡 AttendanceEndVo
@@ -215,19 +221,19 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceEndVo attendanceEndVo = new AttendanceEndVo();
         if (null !=DBattendance && null!=DBattendance.getEndTime()){
-                /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
-                Date dat= DBattendance.getEndTime();
-                String dates=DateUtils.getDateToStrings(dat);
-                String datass=dates.split(" ")[1];
-                attendanceEndVo.setAttendanceId(DBattendance.getId());
-                attendanceEndVo.setOfftime(datass);
-                attendanceEndVo.setLocation(DBattendance.getEndLocation());
-                attendanceEndVo.setDailyStatus(DBattendance.getDailyStatus());
-                attendanceEndVo.setAttendanceStatus(DBattendance.getDailyStatus());
-                attendanceEndVo.setEndTimeStatus(DBattendance.getEndTimeStatus());
-                attendanceEndVo.setIsAttendanceEnd("0");
+            /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
+            Date dat= DBattendance.getEndTime();
+            String dates=DateUtils.getDateToStrings(dat);
+            String datass=dates.split(" ")[1];
+            attendanceEndVo.setAttendanceId(DBattendance.getId());
+            attendanceEndVo.setOfftime(datass);
+            attendanceEndVo.setLocation(DBattendance.getEndLocation());
+            attendanceEndVo.setDailyStatus(DBattendance.getDailyStatus());
+            attendanceEndVo.setAttendanceStatus(DBattendance.getDailyStatus());
+            attendanceEndVo.setEndTimeStatus(DBattendance.getEndTimeStatus());
+            attendanceEndVo.setIsAttendanceEnd("0");
         }else {
-                 attendanceEndVo.setIsAttendanceEnd("1");
+            attendanceEndVo.setIsAttendanceEnd("1");
         }
         attendanceEndVo.setUsername(user.getName());
         attendanceEndVo.setPhone(user.getName());
