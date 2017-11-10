@@ -2,6 +2,7 @@ package com.cmic.attendance.admin;
 
 import com.cmic.attendance.model.Statistics;
 import com.cmic.attendance.service.StatisticsService;
+import com.cmic.attendance.utils.DateUtils;
 import com.cmic.saas.base.web.BaseRestController;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -115,5 +119,28 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
         return map;
     }
 
+    /**
+     * @author 何家来
+     * @return
+     * 获取当前系统时间
+     */
+    @ApiOperation(value = "获取当前系统时间", notes = "获取当前系统时间", httpMethod = "GET")
+    @RequestMapping(value="/getNowDate",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getNowDate(HttpServletResponse response) {
+
+//        response.setHeader("Access-Control-Allow-Origin", "*");
+        Date date = new Date();
+        String nowDate = DateUtils.getDateToString(date);
+        Calendar c=Calendar.getInstance();
+        c.setTime(date);
+        int weekday=c.get(Calendar.DAY_OF_WEEK)-1;
+        String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+
+        Map map = new HashMap<String,Object>();
+        map.put("nowDate",nowDate);
+        map.put("weekday",weekDays[weekday]);
+        return map;
+    }
 
 }

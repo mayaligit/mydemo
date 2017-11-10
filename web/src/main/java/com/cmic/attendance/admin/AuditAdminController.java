@@ -39,7 +39,7 @@ public class AuditAdminController extends BaseRestController<AuditService> {
     @RequestMapping(value = "/audit",method = RequestMethod.POST)
     public String updateAudit(@RequestBody Audit audit){
         if(StringUtils.isBlank(audit.getId()) || StringUtils.isBlank(audit.getAuditSuggestion())){
-            return "请求参数错误";
+            return "审批意见不能为空";
         }
         service.updateAudit(audit);
         return "审批成功";
