@@ -90,7 +90,8 @@ public class DailyService extends CrudService<DailyDao, Daily> {
                 attendance.setAttendanceUser(user.getName());
                 dailyVo.setUsername(user.getName());
             }
-   //         attendance.setAttendanceUser("隔壁小姐姐");  //测试数据
+   //       attendance.setAttendanceUser("隔壁小姐姐");  //测试数据
+//            dailyVo.setUsername("老牛");  //测试数据
             attendance.setAttendanceStatus("1");
             attendance.setDailyStatus("1");
             Calendar cal = Calendar.getInstance();
@@ -104,7 +105,6 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         }
         dailyVo.setAttendanceId(attendance.getId());
         dailyVo.setExamineTime(dailyVo.getCreateTime());
- //       dailyVo.setUsername("老牛");  //测试数据
         this.save(dailyVo);
 
     }
