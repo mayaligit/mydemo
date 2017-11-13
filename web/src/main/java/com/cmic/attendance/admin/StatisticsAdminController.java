@@ -127,7 +127,7 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
     @ApiOperation(value = "获取当前系统时间", notes = "获取当前系统时间", httpMethod = "GET")
     @RequestMapping(value="/getNowDate",method = RequestMethod.GET)
     @ResponseBody
-    public Map getNowDate(HttpServletResponse response) {
+    public Map getNowDate() {
 
 //        response.setHeader("Access-Control-Allow-Origin", "*");
         Date date = new Date();
