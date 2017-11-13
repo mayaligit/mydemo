@@ -78,6 +78,6 @@ certify:
     path: http://192.168.185.250:9010/certify  # 获取用户信息的接口路径
     userInfo: /user/info
 index:
-  server: http://192.168.185.250:8180/attendance/index.html  # 前端远程入口
+  server: http://221.176.34.113:8180/attendance/index.html  # 前端远程入口
 clazzesService:
  id: c2310c7ec996409b8e91f12daa428a98
