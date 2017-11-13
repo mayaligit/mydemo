@@ -22,7 +22,7 @@ import java.util.Map;
 */
 @Api(description = "统计表管理")
 @RestController
-@RequestMapping("/adminStatistics")
+@RequestMapping("/attendance")
 public class StatisticsAdminController extends BaseRestController<StatisticsService> {
 
     @ApiOperation(value = "查询", notes = "查询统计表列表", httpMethod = "GET")
