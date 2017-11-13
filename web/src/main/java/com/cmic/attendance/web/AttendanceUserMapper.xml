@@ -1,0 +1,111 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.AttendanceUserDao">
+    <sql id="attendanceUserColumns">
+        a.id AS "id",
+        a.username AS "username",
+        a.password AS "password",
+        a.enterprise_id AS "enterpriseId",
+        a.enterprise_name AS "enterpriseName",
+        a.actived AS "actived",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate"
+    </sql>
+
+    <sql id="attendanceUserJoins">
+    </sql>
+
+    <select id="get" resultType="AttendanceUser">
+        SELECT
+        <include refid="attendanceUserColumns"/>
+        FROM t_attendance_user a
+        <include refid="attendanceUserJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="AttendanceUser">
+        SELECT
+        <include refid="attendanceUserColumns"/>
+        FROM t_attendance_user a
+        <include refid="attendanceUserJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="AttendanceUser">
+        SELECT
+        <include refid="attendanceUserColumns"/>
+        FROM t_attendance_user a
+        <include refid="attendanceUserJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_attendance_user(
+            id,
+            username,
+            password,
+            enterprise_id,
+            enterprise_name,
+            actived,
+            create_by,
+            create_date,
+            update_by,
+            update_date
+        ) VALUES (
+            #{id},
+            #{username},
+            #{password},
+            #{enterpriseId},
+            #{enterpriseName},
+            #{actived},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_attendance_user SET
+        username = #{username},
+        password = #{password},
+        enterprise_id = #{enterpriseId},
+        enterprise_name = #{enterpriseName},
+        actived = #{actived},
+        create_by = #{createBy.id},
+        create_date = #{createDate},
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_attendance_user SET
+        <if test="username != null  and username != ''">
+        username = #{username},
+        </if>
+        <if test="password != null  and password != ''">
+        password = #{password},
+        </if>
+        <if test="enterpriseId != null  and enterpriseId != ''">
+        enterprise_id = #{enterpriseId},
+        </if>
+        <if test="enterpriseName != null  and enterpriseName != ''">
+        enterprise_name = #{enterpriseName},
+        </if>
+        <if test="actived != null  and actived != ''">
+        actived = #{actived},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_attendance_user
+        WHERE id = #{id}
+    </delete>
+</mapper>
