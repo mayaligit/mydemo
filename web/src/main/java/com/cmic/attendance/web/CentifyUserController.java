@@ -40,25 +40,25 @@ public class CentifyUserController {
     private String index;
 
     /**
+     * +
      * 考勤系统入口
      *
      * @param rcsToken 封装请求数据
-     * @param request
+     * @param request+
      * @return
      */
     @RequestMapping("/info")
-    public String info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getSession().getId();
-        /*response.setHeader("Access-Control-Allow-Origin", "*");*/
+        response.setHeader("Access-Control-Allow-Origin", "*");
         log.debug("token:" + rcsToken.getToken());
         //校验token , 并将获取到的用户信息放到session域中
-//        this.certifyToken(request, rcsToken);
+        this.certifyToken(request, rcsToken);
         //判断session中是否有登陆用户
         UserBo user = this.getSessionUser(request);
         ModelAndView mav = new ModelAndView();
-//        mav.setViewName("forward:"+index);
-
-        return "forward:"+index;
+        mav.setViewName("redirect:" + index);
+        return mav;
     }
 
     private BaseAdminEntity certifyToken(HttpServletRequest request, RcsToken rcsToken) {
@@ -67,11 +67,11 @@ public class CentifyUserController {
         paramMap.add("contactId", rcsToken.getContactId());
         paramMap.add("enterId", rcsToken.getEnterId());
         //用户名的获取;
+
         String userStr = this.restTemplate.postForObject(Constant.certifyServicePath + Constant.userINfo, paramMap, String.class);
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
-
         //解析请求数据 , 获取用户电话和用户名
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject) parser.parse(userStr);
@@ -86,19 +86,21 @@ public class CentifyUserController {
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         adminEntity.setName(username);
-        UserBo user = new UserBo();
+        /*UserBo user = new UserBo();
         user.setSessionId(sessionId);
         user.setMsisdn(phone);
         user.setEnterId(enterId);
-       user.setEnterName(enterName);
+       user.setEnterName(enterName);*/
 
         //暂时写死测试用
-        user.setEnterId("10086");
+       /* user.setEnterId("10086");
         user.setEnterName("中国移动");
+        */
        /* user.setUsername(username);*/
         //SaasConstant.DEFAULT_SYSTEM_ADMIN
       /*  request.getSession().setAttribute(Constant.LOGIN_SESSION_KEY, user);*/
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO", adminEntity);
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
+
         return adminEntity;
     }
 
