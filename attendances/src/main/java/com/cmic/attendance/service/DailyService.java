@@ -88,6 +88,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
                 throw  new RestException("登陆超时,请重新登陆");
             }
             if(StringUtils.isNotBlank(user.getName())){
+
                 attendance.setAttendanceUser(user.getName());
                 dailyVo.setUsername(user.getName());
             }

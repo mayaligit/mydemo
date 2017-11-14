@@ -65,7 +65,7 @@ public class DailyController extends BaseRestController<DailyService> {
             service.insertDailyAndAttendance(dailyVo);
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("status",false);
+            map.put("status",1);
             throw new RestException(e);
         }
         return map;
