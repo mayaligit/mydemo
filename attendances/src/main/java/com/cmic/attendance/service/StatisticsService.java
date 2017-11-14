@@ -89,8 +89,8 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
         }
         PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workHour DESC");
 
-        int i = date.indexOf("-");
-        String substring = date.substring(i + 1, i + 3);
+        int i = date.lastIndexOf("-");
+        String substring = date.substring(0, i);
         List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceHardworkingByMonth(substring);
 
         Map<String, Object> map = new HashMap<>();
@@ -116,8 +116,8 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
         int pageSize = page.getPageSize();
         PageHelper.startPage(pageNum, pageSize,"lateTime DESC");
 
-        int i = date.indexOf("-");
-        String substring = date.substring(i + 1, i + 3);
+        int i = date.lastIndexOf("-");
+        String substring = date.substring(0, i);
         List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByMonth(substring);
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();

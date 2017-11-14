@@ -64,15 +64,16 @@ public class UserController {
         g.setFont(new Font("黑体", Font.BOLD,30));
         Random random = new Random();
         //干扰线
-                 for(int i=0;i<10;i++){
+                 for(int i=0;i<20;i++){
                             int x=random.nextInt(width);
                               int y=random.nextInt(height);
                           int x1=random.nextInt(width);
                              int y1=random.nextInt(height);
                           g.drawLine(x, y, x+x1, y+y1);
                          }
+        g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
         //向图片上写入验证码
-        g.drawString(checkCode,15,25);
+        g.drawString(checkCode,15,29);
 
 
         //将内存中的图片输出到浏览器
@@ -111,21 +112,20 @@ public class UserController {
      21      * @return
      22      */
    private static Color getRandomColor(int minColor, int maxColor) {
-
-    Random random = new Random();
+        Random random = new Random();
           // 保存minColor最大不会超过255
-            if (minColor > 255)
-                    minColor = 255;
+       if (minColor > 255)
+           minColor = 255;
        // 保存minColor最大不会超过255
-     if (maxColor > 255)
-                      maxColor = 255;
+        if (maxColor > 255)
+            maxColor = 255;
               // 获得红色的随机颜色值
-            int red = minColor + random.nextInt(maxColor - minColor);
+        int red = minColor + random.nextInt(maxColor - minColor);
              // 获得绿色的随机颜色值
-          int green = minColor + random.nextInt(maxColor - minColor);
+        int green = minColor + random.nextInt(maxColor - minColor);
               // 获得蓝色的随机颜色值
-              int blue = minColor + random.nextInt(maxColor - minColor);
-              return new Color(red, green, blue);
+        int blue = minColor + random.nextInt(maxColor - minColor);
+         return new Color(red, green, blue);
 
-           }
+    }
 }
