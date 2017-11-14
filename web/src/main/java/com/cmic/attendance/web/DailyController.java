@@ -4,7 +4,6 @@ import com.cmic.attendance.model.Daily;
 import com.cmic.attendance.service.DailyService;
 import com.cmic.attendance.vo.DailyVo;
 import com.cmic.saas.base.web.BaseRestController;
-import com.cmic.saas.base.web.RestException;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
@@ -61,10 +60,8 @@ public class DailyController extends BaseRestController<DailyService> {
             return map;
         }
 
-        try {
-            service.insertDailyAndAttendance(dailyVo);
-        } catch (RestException e) {
-            e.printStackTrace();
+        String msg = service.insertDailyAndAttendance(dailyVo);
+        if(StringUtils.isNotBlank(msg)){
             map.put("status",1);
         }
         return map;
