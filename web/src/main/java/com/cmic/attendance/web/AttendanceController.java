@@ -89,7 +89,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
      * 上班打卡页面初始化需要的是数据
      */
     @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "POST")
-    @RequestMapping(value="/getStartServerMesg")
+    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.POST)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
@@ -196,8 +196,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
      * 返回服务器当前时间,
      * 返回用户名，手机号
      */
-    @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "POST")
-    @RequestMapping(value="/getEndServerMesg",method = RequestMethod.POST)
+    @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "GET")
+    @RequestMapping(value="/getEndServerMesg",method = RequestMethod.GET)
     @ResponseBody
     public AttendanceEndVo getEndServerMesg() {
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();

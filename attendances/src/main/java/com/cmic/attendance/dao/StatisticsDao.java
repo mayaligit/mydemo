@@ -20,5 +20,6 @@ public interface StatisticsDao extends CrudDao<Statistics> {
 
     List<Map> checkAttendanceLatterByMonth(String date);
 
-    Statistics  checkAttendanceByCreateByAndCreateTime(@Param("createBy") String createBy, @Param("createTime")String createTime);
+    Statistics  checkAttendanceByCreateByAndCreateTime(@Param("createBy") String createBy,
+                                                       @Param("createTime")String createTime);
 }
