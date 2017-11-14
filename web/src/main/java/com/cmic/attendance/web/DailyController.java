@@ -21,7 +21,7 @@ import java.util.Map;
 */
 @Api(description = "日报表管理")
 @RestController
-@RequestMapping("/daily")
+@RequestMapping("/attendance/daily")
 public class DailyController extends BaseRestController<DailyService> {
 
     @ApiOperation(value = "查询", notes = "查询日报表列表", httpMethod = "GET")
