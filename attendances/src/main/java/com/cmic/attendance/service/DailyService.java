@@ -80,33 +80,29 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         dailyVo.preInsert();
 
         Attendance attendance = attendanceService.get(dailyVo.getAttendanceId());
-        logger.info("=====user.getName()的值========：" + user.getName());
 //        考勤不存在则插入
         if (attendance==null){
             attendance = new Attendance();
             if (null == user ){
                 throw  new RestException("登陆超时,请重新登陆");
             }
-            if(StringUtils.isNotBlank(user.getName())){
 
-                attendance.setAttendanceUser(user.getName());
-                dailyVo.setUsername(user.getName());
-            }
-   //       attendance.setAttendanceUser("隔壁小姐姐");  //测试数据
-//            dailyVo.setUsername("老牛");  //测试数据
             attendance.setAttendanceStatus("1");
             attendance.setDailyStatus("1");
             Calendar cal = Calendar.getInstance();
             Integer month = cal.get(Calendar.MONTH )+1;
             attendance.setAttendanceMonth(cal.get(Calendar.YEAR )+"-"+month.toString());
+            attendance.setAttendanceUser(user.getName());
             attendanceService.save(attendance);
         }else{
             attendance.setUpdateTime(new Date());
             attendance.setDailyStatus("1");
+            attendance.setAttendanceUser(user.getName());
             attendanceService.update(attendance);
         }
         dailyVo.setAttendanceId(attendance.getId());
         dailyVo.setExamineTime(dailyVo.getCreateTime());
+        dailyVo.setUsername(user.getName());
         this.save(dailyVo);
 
     }

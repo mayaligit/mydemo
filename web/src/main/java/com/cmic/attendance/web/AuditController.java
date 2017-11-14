@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Api(description = "审批表管理")
 @RestController
-@RequestMapping("/audit")
+@RequestMapping("/attendance/audit")
 public class AuditController extends BaseRestController<AuditService> {
 
     @ApiOperation(value = "查询", notes = "查询审批表列表", httpMethod = "GET")
