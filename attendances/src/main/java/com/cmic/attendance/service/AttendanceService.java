@@ -99,13 +99,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         AttendanceVo resultAttendanceVo = new AttendanceVo();
         Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
         Attendance saveAttendance = new Attendance();
-        String nomalAddress = clazzes.getNomalAddress();
         String location = attendanceVo.getLocation();
         Date serverTime=new Date();
-        String attendanceTime = DateUtils.getDateToStringHMS(serverTime);
-
-        //打卡的上班时间
-        String[] attendanceTimeArry = attendanceTime.split(":");
+        String attendanceTime = DateUtils.getDateToStrings(serverTime);
+        String[] split1 = attendanceTime.split(" ");
+        //打卡的上班时间 并设置上班时间
+        attendanceVo.setAttendanceHour(split1[1]);
+        String[] attendanceTimeArry = split1[1].split(":");
         int hourTime = Integer.parseInt(attendanceTimeArry[0]);
         int minuteTime = Integer.parseInt(attendanceTimeArry[1]);
         //获取考勤的打卡的时间
@@ -251,10 +251,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     public AttendanceEndVo punchCardEnd(AttendanceEndVo attendanceEndVo ){
 
         Date serverTime=new Date();
-        String offtime = DateUtils.getDateToStringHMS(serverTime);
-        String[] offtimeArry = offtime.split(":");
+        String offtime = DateUtils.getDateToStrings(serverTime);
+        String[] split2 = offtime.split(" ");
+        String[] offtimeArry = split2[1].split(":");
         int hourTime = Integer.parseInt(offtimeArry[0]);
         int minuteTime = Integer.parseInt(offtimeArry[1]);
+        attendanceEndVo.setOfftime(split2[1]);
         //从班次表中获取获取考勤时间 考勤地址 比较服务器时间
         Clazzes clazzes = clazzesService.getClazzesById(attendanceEndVo.getClazzesId());
         String dateString = clazzes.getNomalEndTime();
