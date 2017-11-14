@@ -160,7 +160,7 @@
     <select id="getAuditById" parameterType="String" resultType="Audit">
         SELECT
         id ,username ,submit_time AS "submitTime" ,audit_content AS "auditContent" , audit_detail AS "auditDetail",
-        audit_status AS "auditStatus"
+        audit_status AS "auditStatus",audit_suggestion AS "auditSuggestion"
         FROM t_audit
         WHERE id = #{auditId}
     </select>
