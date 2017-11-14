@@ -101,65 +101,47 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Attendance saveAttendance = new Attendance();
         String nomalAddress = clazzes.getNomalAddress();
         String location = attendanceVo.getLocation();
-        String attendanceTime = attendanceVo.getAttendanceHour();
+        Date serverTime=new Date();
+        String attendanceTime = DateUtils.getDateToStringHMS(serverTime);
 
-        if (!StringUtils.isEmpty(attendanceTime)) {
-            String hourMillisecondTime=attendanceVo.getAttendanceHour();
-            String[] attendanceTimeArry = hourMillisecondTime.split(":");
-            int hourTime = Integer.parseInt(attendanceTimeArry[0]);
-            int minuteTime = Integer.parseInt(attendanceTimeArry[1]);
-            String date = clazzes.getNomalStartTime();
-            String[] saArry = date.split(":");
-            int attendanceHourTime = Integer.parseInt(saArry[0]);
-            int attendanceMinuteTime = Integer.parseInt(saArry[1]);
-            /*//比较地点 固定地点打卡代码
-            String StnomalAddress = clazzes.getNomalAddress();
-            if (attendanceVo.getLocation().equals(StnomalAddress)){
-                attendanceVo.setAttendanceStatus("0");
+        //打卡的上班时间
+        String[] attendanceTimeArry = attendanceTime.split(":");
+        int hourTime = Integer.parseInt(attendanceTimeArry[0]);
+        int minuteTime = Integer.parseInt(attendanceTimeArry[1]);
+        //获取考勤的打卡的时间
+        String date = clazzes.getNomalStartTime();
+        String[] saArry = date.split(":");
+        int attendanceHourTime = Integer.parseInt(saArry[0]);
+        int attendanceMinuteTime = Integer.parseInt(saArry[1]);
+        //比较地点 范围内有效数据
+        String StnomalDistance = clazzes.getNomalAddress();
+        String Stardistance = attendanceVo.getDistance();
+        if (null ==Stardistance){
+            attendanceVo.setAttendanceStatus("0");
+        }else {
+            String[] split = Stardistance.split("\\.");
+            String distances=split[0];
+            if (Integer.parseInt(distances)>=Integer.parseInt(StnomalDistance)){
+                //地点异常
+                attendanceVo.setAttendanceStatus("1");
+                attendanceVo.setAttendanceDesc("地点异常");
             }else {
-            attendanceVo.setAttendanceStatus("1");
-            attendanceVo.setAttendanceDesc("地点异常");
-        }*/
-            //比较地点 范围内有效数据
-            String StnomalDistance = clazzes.getNomalAddress();
-            String Stardistance = attendanceVo.getDistance();
-            if (null ==Stardistance){
                 attendanceVo.setAttendanceStatus("0");
-            }else {
-                String[] split = Stardistance.split("\\.");
-                String distances=split[0];
-                if (Integer.parseInt(distances)>=Integer.parseInt(StnomalDistance)){
-                    //地点异常
-                    attendanceVo.setAttendanceStatus("1");
-                    attendanceVo.setAttendanceDesc("地点异常");
-                }else {
-                    attendanceVo.setAttendanceStatus("0");
-                }
             }
-            /*正常打卡时间*/
-            if (hourTime < attendanceHourTime) {
+        }
+
+        /*正常打卡时间*/
+        if (hourTime < attendanceHourTime) {
+            attendanceVo.setStartTimeStatus("0");
+            AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
+            return resultattendanceVo;
+                //考勤小时相同 比较分
+        } else if (hourTime == attendanceHourTime) {
+            if (minuteTime < attendanceMinuteTime) {
                 attendanceVo.setStartTimeStatus("0");
                 AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
                 return resultattendanceVo;
-                //考勤小时相同 比较分
-            } else if (hourTime == attendanceHourTime) {
-                if (minuteTime < attendanceMinuteTime) {
-                    attendanceVo.setStartTimeStatus("0");
-                    AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
-                    return resultattendanceVo;
-                } else {
-                    attendanceVo.setStartTimeStatus("1");
-                    AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
-                    //此处代码待优化，插入统计表数据
-                    try {
-                        this.insetStartStatic(attendanceVo.getPhone(),attendanceVo.getAttendanceMonth(),
-                                attendanceVo.getUsername());
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    return resultattendanceVo;
-                }
-            } else if (hourTime > attendanceHourTime && hourTime < 12) {
+            } else {
                 attendanceVo.setStartTimeStatus("1");
                 AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
                 //此处代码待优化，插入统计表数据
@@ -167,16 +149,28 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     this.insetStartStatic(attendanceVo.getPhone(),attendanceVo.getAttendanceMonth(),
                             attendanceVo.getUsername());
                 }catch (Exception e){
-                    e.printStackTrace();
+                        e.printStackTrace();
                 }
                 return resultattendanceVo;
-                //12点-14点打卡
-            }else if (hourTime > 12 && hourTime<=14){
-                attendanceVo.setStartTimeStatus("0");
-                AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
-                return resultattendanceVo;
             }
+        } else if (hourTime > attendanceHourTime && hourTime < 12) {
+            attendanceVo.setStartTimeStatus("1");
+            AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
+            //此处代码待优化，插入统计表数据
+            try {
+                this.insetStartStatic(attendanceVo.getPhone(),attendanceVo.getAttendanceMonth(),
+                        attendanceVo.getUsername());
+            }catch (Exception e){
+                    e.printStackTrace();
+            }
+            return resultattendanceVo;
+                //12点-14点打卡
+        }else if (hourTime > 12 && hourTime<=14){
+            attendanceVo.setStartTimeStatus("0");
+            AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
+            return resultattendanceVo;
         }
+
         return null;
     }
     //TODO 上班打卡业务并返回数据
@@ -255,7 +249,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      */
     @Transactional(readOnly = false)
     public AttendanceEndVo punchCardEnd(AttendanceEndVo attendanceEndVo ){
-        String offtime=attendanceEndVo.getOfftime();
+
+        Date serverTime=new Date();
+        String offtime = DateUtils.getDateToStringHMS(serverTime);
         String[] offtimeArry = offtime.split(":");
         int hourTime = Integer.parseInt(offtimeArry[0]);
         int minuteTime = Integer.parseInt(offtimeArry[1]);

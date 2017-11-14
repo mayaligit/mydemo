@@ -32,6 +32,16 @@ public class DateUtils {
     }
 
     /**
+     * 获取年月日yyyy-MM-dd的字符串
+     * @param date
+     * @return  String
+     */
+    public  static String getDateToStringHMS(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        String dateString=formatter.format(date);
+        return dateString;
+    }
+    /**
             * 将时间格式转换成为  yyyy-MM-dd的日期格式
      * @param  stingTodate
      * @return date

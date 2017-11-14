@@ -101,9 +101,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         user2.setName("18503096229");
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO",user2);*/
         //测试数据结束*/
-        log.debug("user+数据前");
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        log.debug("user+数据前"+user.getId());
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToString(serverTime);
