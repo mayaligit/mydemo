@@ -2,8 +2,11 @@ package com.cmic.attendance.web;/**
  * Created by pc on 2017/11/14.
  */
 
+import com.cmic.attendance.model.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,15 +17,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
  * @author 何家来
  * @create 2017-11-14 8:39
  **/
-@Api(description = "统计表管理")
+@Api(description = "后台用户登录")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/attandence/user")
 public class UserController {
 
 
@@ -39,10 +44,9 @@ public class UserController {
         //参数一：长
         //参数二：宽
         //参数三：颜色
-        int width = 100;
-        int height = 40;
+        int width = 150;
+        int height = 60;
         BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
-
 
         //获取画笔
         Graphics g = image.getGraphics();
@@ -51,30 +55,27 @@ public class UserController {
         //填充图片
         g.fillRect(0,0, width,height);
 
-
         //产生4个随机验证码
         String checkCode = getCheckCode();
         //将验证码放入HttpSession中
         request.getSession().setAttribute("checkCodeServer",checkCode);
 
         //设置画笔颜色为黄色
-//        g.setColor(Color.YELLOW);
         g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
         //设置字体的小大
-        g.setFont(new Font("黑体", Font.BOLD,30));
+        g.setFont(new Font("黑体", Font.BOLD,55));
         Random random = new Random();
         //干扰线
-                 for(int i=0;i<20;i++){
-                            int x=random.nextInt(width);
-                              int y=random.nextInt(height);
-                          int x1=random.nextInt(width);
-                             int y1=random.nextInt(height);
-                          g.drawLine(x, y, x+x1, y+y1);
-                         }
+        for(int i=0;i<20;i++){
+            int x=random.nextInt(width);
+            int y=random.nextInt(height);
+            int x1=random.nextInt(width);
+            int y1=random.nextInt(height);
+            g.drawLine(x, y, x+x1, y+y1);
+        }
         g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
         //向图片上写入验证码
-        g.drawString(checkCode,15,29);
-
+        g.drawString(checkCode,15,50);
 
         //将内存中的图片输出到浏览器
         //参数一：图片对象
@@ -106,26 +107,47 @@ public class UserController {
         return sb.toString();
     }
     /**
-     18      * 获取随机颜色值
-     19      * @param minColor
-     20      * @param maxColor
-     21      * @return
-     22      */
+    * 获取随机颜色值
+    * @param minColor
+    * @param maxColor
+    * @return
+     */
    private static Color getRandomColor(int minColor, int maxColor) {
-        Random random = new Random();
+       Random random = new Random();
           // 保存minColor最大不会超过255
        if (minColor > 255)
-           minColor = 255;
+       minColor = 255;
        // 保存minColor最大不会超过255
-        if (maxColor > 255)
-            maxColor = 255;
+       if (maxColor > 255)
+       maxColor = 255;
               // 获得红色的随机颜色值
-        int red = minColor + random.nextInt(maxColor - minColor);
+       int red = minColor + random.nextInt(maxColor - minColor);
              // 获得绿色的随机颜色值
-        int green = minColor + random.nextInt(maxColor - minColor);
+       int green = minColor + random.nextInt(maxColor - minColor);
               // 获得蓝色的随机颜色值
-        int blue = minColor + random.nextInt(maxColor - minColor);
-         return new Color(red, green, blue);
+       int blue = minColor + random.nextInt(maxColor - minColor);
+       return new Color(red, green, blue);
 
+    }
+
+    @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
+    @RequestMapping(value="/login", method = RequestMethod.GET)
+    public Map login(HttpServletRequest request,String checkCode,@RequestBody User user){
+
+        Map map = new HashMap<>();
+//        验证码是否为空
+        if(StringUtils.isBlank(checkCode)) {
+            map.put("checkCodeError", 0);
+            return map;
+        }
+        String checkCodeServer = (String)request.getSession().getAttribute("checkCodeServer");
+        if(StringUtils.isNotBlank(checkCodeServer)){
+//            验证码是否正确
+            if(!checkCode.equals(checkCodeServer)){
+                map.put("checkCodeError",1);
+                return map;
+            }
+        }
+        return map;
     }
 }

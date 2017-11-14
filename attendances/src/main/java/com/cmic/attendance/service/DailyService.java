@@ -63,12 +63,12 @@ public class DailyService extends CrudService<DailyDao, Daily> {
     private AttendanceService attendanceService;
 
     @Transactional(readOnly = false)
-    public void insertDailyAndAttendance(DailyVo dailyVo){
+    public String insertDailyAndAttendance(DailyVo dailyVo){
 
         HttpServletRequest request = WebUtils.getRequest();
 
         if(this.dao.getDailyByAttendanceId(dailyVo.getAttendanceId())!=null){
-            throw new RestException("日报已存在");
+            return "日报已存在";
         }
 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
@@ -84,10 +84,10 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         if (attendance==null){
             attendance = new Attendance();
             if (null == user ){
-                throw  new RestException("登陆超时,请重新登陆");
+                throw new RestException("登陆超时,请重新登陆");
             }
+
             attendance.setAttendanceStatus("1");
-            attendance.setAttendanceUser(user.getName());
             attendance.setDailyStatus("1");
             Calendar cal = Calendar.getInstance();
             Integer month = cal.get(Calendar.MONTH )+1;
@@ -104,7 +104,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         dailyVo.setExamineTime(dailyVo.getCreateTime());
         dailyVo.setUsername(user.getName());
         this.save(dailyVo);
-
+        return null;
     }
 
     /**
