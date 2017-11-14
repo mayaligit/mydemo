@@ -80,6 +80,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         dailyVo.preInsert();
 
         Attendance attendance = attendanceService.get(dailyVo.getAttendanceId());
+        logger.info("=====user.getName()的值========：" + user.getName());
 //        考勤不存在则插入
         if (attendance==null){
             attendance = new Attendance();
