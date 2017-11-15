@@ -2,7 +2,10 @@ package com.cmic.attendance.web;
 
 import com.cmic.attendance.model.Audit;
 import com.cmic.attendance.service.AuditService;
+import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
+import com.cmic.saas.base.web.RestException;
+import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
@@ -92,6 +95,15 @@ public class AuditController extends BaseRestController<AuditService> {
         }
         audit.setCreateTime(audit.getSubmitTime());
         audit.setUpdateTime(audit.getSubmitTime());
+
+        //设置用户名
+        Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        if(null == obj || !(obj instanceof BaseAdminEntity)){
+            throw new RestException("登陆超时,请重新登陆");
+        }
+        BaseAdminEntity user = (BaseAdminEntity)obj;
+        audit.setUsername(user.getName());
+
         service.save(audit);
 
         map.put("msg", "申请提交成功");
