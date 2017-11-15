@@ -50,8 +50,7 @@ public class CentifyUserController {
     @RequestMapping("/info")
     public ModelAndView info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getSession().getId();
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        log.debug("token:" + rcsToken.getToken());
+        /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         //校验token , 并将获取到的用户信息放到session域中
         this.certifyToken(request, rcsToken);
         //判断session中是否有登陆用户
@@ -86,21 +85,8 @@ public class CentifyUserController {
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         adminEntity.setName(username);
-        /*UserBo user = new UserBo();
-        user.setSessionId(sessionId);
-        user.setMsisdn(phone);
-        user.setEnterId(enterId);
-       user.setEnterName(enterName);*/
-
-        //暂时写死测试用
-       /* user.setEnterId("10086");
-        user.setEnterName("中国移动");
-        */
-       /* user.setUsername(username);*/
-        //SaasConstant.DEFAULT_SYSTEM_ADMIN
-      /*  request.getSession().setAttribute(Constant.LOGIN_SESSION_KEY, user);*/
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-
+        log.debug("adminEntity:" + adminEntity.toString());
         return adminEntity;
     }
 
