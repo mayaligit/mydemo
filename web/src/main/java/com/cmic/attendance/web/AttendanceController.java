@@ -88,8 +88,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     /**
      * 上班打卡页面初始化需要的是数据
      */
-    @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "POST")
-    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.POST)
+    @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "GET")
+    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
@@ -121,7 +121,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setAttendanceHour(datass);
             attendanceVo.setLocation(DBattendance.getStartLocation());
             attendanceVo.setDailyStatus(DBattendance.getDailyStatus());
-            attendanceVo.setAttendanceStatus(DBattendance.getDailyStatus());
+            attendanceVo.setAttendanceStatus(DBattendance.getAttendanceStatus());
             attendanceVo.setStartTimeStatus(DBattendance.getStartTimeStatus());
             attendanceVo.setIsAttendanceStart("0");
             //判断是否打过下班卡了
@@ -142,7 +142,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setOfftime(datass);
             attendanceVo.setEndLocation(DBattendance.getEndLocation());
             attendanceVo.setDailyStatus(DBattendance.getDailyStatus());
-            attendanceVo.setAttendanceStatus(DBattendance.getDailyStatus());
+            attendanceVo.setAttendanceStatus(DBattendance.getAttendanceStatus());
             attendanceVo.setEndTimeStatus(DBattendance.getEndTimeStatus());
             attendanceVo.setIsAttendanceEnd("0");
             //判断是否打过上班卡了
@@ -170,7 +170,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         HttpServletResponse response =WebUtils.getRequestAttributes().getResponse();
       /*  response.setHeader("Access-Control-Allow-Origin", "*");*/
         attendanceVo.setClazzesId(this.clazzesId);
-        log.debug("AttendanceVo"+attendanceVo.toString());
         AttendanceVo resultattendanceVo = service.punchCard(attendanceVo);
         return resultattendanceVo;
     }
@@ -190,56 +189,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         AttendanceEndVo resultAttendance= service.punchCardEnd(attendanceEndVo);
         return resultAttendance;
     }
-    /**
-     * 下班初始化数据接口
-     * @return
-     * 返回服务器当前时间,
-     * 返回用户名，手机号
-     */
-    @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "GET")
-    @RequestMapping(value="/getEndServerMesg",method = RequestMethod.GET)
-    @ResponseBody
-    public AttendanceEndVo getEndServerMesg() {
-        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
-        HttpServletRequest request = WebUtils.getRequest();
-       /* response.setHeader("Access-Control-Allow-Origin", "*");*/
-       /* //测试数据
-        UserBo user2=new UserBo();
-        user2.setMsisdn("a0001");
-        user2.setUsername("a0001");
-        request.getSession().setAttribute(Constant.LOGIN_SESSION_KEY,user2);
-        //测试数据结束*/
-        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        Date serverTime=new Date();
-        Long serverTimes=serverTime.getTime();
-        String serverDate=DateUtils.getDateToString(serverTime);//年月日
-        String houst=serverDate.split("-")[1];
-        int houstTime=Integer.parseInt(houst);
-        //检查当前用户是否已经打卡
-        Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
-        AttendanceEndVo attendanceEndVo = new AttendanceEndVo();
-        if (null !=DBattendance && null!=DBattendance.getEndTime()){
-            /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
-            Date dat= DBattendance.getEndTime();
-            String dates=DateUtils.getDateToStrings(dat);
-            String datass=dates.split(" ")[1];
-            attendanceEndVo.setAttendanceId(DBattendance.getId());
-            attendanceEndVo.setOfftime(datass);
-            attendanceEndVo.setLocation(DBattendance.getEndLocation());
-            attendanceEndVo.setDailyStatus(DBattendance.getDailyStatus());
-            attendanceEndVo.setAttendanceStatus(DBattendance.getDailyStatus());
-            attendanceEndVo.setEndTimeStatus(DBattendance.getEndTimeStatus());
-            attendanceEndVo.setIsAttendanceEnd("0");
-        }else {
-            attendanceEndVo.setIsAttendanceEnd("1");
-        }
-        attendanceEndVo.setUsername(user.getName());
-        attendanceEndVo.setPhone(user.getName());
-        attendanceEndVo.setDate(serverDate);
-        attendanceEndVo.setServerTime(serverTimes.toString());
-        return attendanceEndVo;
-    }
-
 
     /**
      *
