@@ -37,6 +37,8 @@ public class Audit extends DataEntity<Audit> {
     protected String auditDetail;
     @ApiModelProperty(value = "")
     protected String username;
+    @ApiModelProperty(value = "审批意见备注")
+    protected String suggestionRemarks;
 
     public Audit(){
 
@@ -149,5 +151,11 @@ public class Audit extends DataEntity<Audit> {
         this.username = username;
     }
 
+    public String getSuggestionRemarks() {
+        return suggestionRemarks;
+    }
 
+    public void setSuggestionRemarks(String suggestionRemarks) {
+        this.suggestionRemarks = suggestionRemarks;
+    }
 }

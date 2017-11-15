@@ -66,13 +66,13 @@ public class DailyService extends CrudService<DailyDao, Daily> {
     public String insertDailyAndAttendance(DailyVo dailyVo){
 
         HttpServletRequest request = WebUtils.getRequest();
-
+        System.out.println("===========================考勤id======================= = " + dailyVo.getAttendanceId());
         if(this.dao.getDailyByAttendanceId(dailyVo.getAttendanceId())!=null){
             return "日报已存在";
         }
 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        dailyVo.setSuggestionStatus("2");
+        dailyVo.setSuggestionStatus("1");//意见状态设置为未阅
         if(StringUtils.isBlank(dailyVo.getFinishedWork()) && StringUtils.isBlank(dailyVo.getDailyDesc())){
             dailyVo.setDailyDesc("有未完成工作");
         }

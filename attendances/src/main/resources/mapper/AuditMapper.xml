@@ -65,7 +65,8 @@
             update_by,
             update_time,
             audit_detail,
-            username
+            username,
+            suggestion_remarks
         ) VALUES (
             #{id},
             #{submitTime},
@@ -82,7 +83,8 @@
             #{updateBy.id},
             #{updateTime},
             #{auditDetail},
-            #{username}
+            #{username},
+            #{suggestionRemarks}
         )
     </insert>
 
@@ -102,7 +104,8 @@
         update_by = #{updateBy.id},
         update_time = #{updateTime},
         audit_detail = #{auditDetail},
-        username = #{username}
+        username = #{username},
+        suggestion_remarks = #{suggestionRemarks}
         WHERE id = #{id}
     </update>
 
@@ -147,6 +150,9 @@
         <if test="username != null  and username != ''">
         username = #{username},
         </if>
+        <if test="suggestion_remarks != null  and suggestion_remarks != ''">
+            suggestion_remarks = #{suggestionRemarks},
+        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -160,7 +166,7 @@
     <select id="getAuditById" parameterType="String" resultType="Audit">
         SELECT
         id ,username ,submit_time AS "submitTime" ,audit_content AS "auditContent" , audit_detail AS "auditDetail",
-        audit_status AS "auditStatus",audit_suggestion AS "auditSuggestion"
+        audit_status AS "auditStatus",audit_suggestion AS "auditSuggestion",suggestion_remarks AS "suggestionRemarks"
         FROM t_audit
         WHERE id = #{auditId}
     </select>
@@ -175,6 +181,9 @@
         </if>
         <if test="auditTime != null and auditTime != ''">
             audit_time=#{auditTime},
+        </if>
+        <if test="suggestionRemarks != null and suggestionRemarks != ''">
+            suggestion_remarks=#{suggestionRemarks},
         </if>
         update_by=#{updateBy},
         update_time=#{updateTime}

@@ -167,7 +167,7 @@
     <select id="getDailyById" parameterType="String" resultType="Daily">
         SELECT
         id ,username ,submit_time AS "submitTime",daily_title AS "dailyTitle",finished_work AS "finishedWork",
-        suggestion_status AS "suggestionStatus"
+        suggestion_status AS "suggestionStatus",daily_desc AS "dailyDesc",unfinished_work AS "unfinishedWork"
         FROM t_daily
         WHERE id = #{dailyId}
     </select>

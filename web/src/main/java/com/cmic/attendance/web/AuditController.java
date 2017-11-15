@@ -87,7 +87,7 @@ public class AuditController extends BaseRestController<AuditService> {
         audit.setSubmitTime(new Date());
         //暂时硬编码审批人
         audit.setAuditUserName("陈华龙");
-        audit.setAuditStatus("2");  //设置审批状态为未处理
+        audit.setAuditStatus("1");  //设置审批状态为未处理
 
         //判断是否是考勤补卡,考勤补卡则设置业务类型为 考勤补卡类
         if (StringUtils.isNotBlank(audit.getAttendanceId())) {
