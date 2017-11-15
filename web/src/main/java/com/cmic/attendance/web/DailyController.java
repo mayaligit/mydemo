@@ -7,6 +7,7 @@ import com.cmic.saas.base.web.BaseRestController;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -22,6 +23,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/attendance/daily")
 public class DailyController extends BaseRestController<DailyService> {
+
+    private static Logger log = Logger.getLogger(CentifyUserController.class);
 
     @ApiOperation(value = "查询", notes = "查询日报表列表", httpMethod = "GET")
     @ApiImplicitParams({
@@ -42,6 +45,8 @@ public class DailyController extends BaseRestController<DailyService> {
 //        response.setHeader("Access-Control-Allow-Origin", "*");
         HashMap<String, Object> map = new HashMap<>();
         map.put("status",true);
+
+        log.debug("测试前端是否传考勤ID上来"+dailyVo.getAttendanceId());
 
         if(StringUtils.isBlank(dailyVo.getDailyTitle())){
             map.put("dailyTitledWorkError","标题不能为空");

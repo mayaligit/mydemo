@@ -5,6 +5,7 @@ import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.attendance.model.DailyRecord;
 import com.cmic.attendance.service.DailyRecordService;
 import io.swagger.annotations.*;
+import org.apache.log4j.Logger;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -16,6 +17,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/record")
 public class DailyRecordController extends BaseRestController<DailyRecordService> {
+
+    private static Logger log = Logger.getLogger(CentifyUserController.class);
 
     @ApiOperation(value = "查询", notes = "查询日志表列表", httpMethod = "GET")
     @ApiImplicitParams({
