@@ -46,7 +46,7 @@ public class DailyController extends BaseRestController<DailyService> {
         HashMap<String, Object> map = new HashMap<>();
         map.put("status",true);
 
-        log.debug("测试前端是否传考勤ID上来"+dailyVo.getAttendanceId());
+        log.debug("==========测试前端是否传考勤ID上来==="+dailyVo.getAttendanceId()+"=====");
 
         if(StringUtils.isBlank(dailyVo.getDailyTitle())){
             map.put("dailyTitledWorkError","标题不能为空");
