@@ -277,18 +277,12 @@
         </where>
     </select>
 
-    <select id="findAttendanceList" parameterType="map" resultMap="attendanceMap">
-        SELECT
-        a.id AS "id" , a.attendance_status AS "attendanceStatus" ,
-        a.attendance_desc AS attendanceDesc , a.create_time AS "createTime" ,
-        a.daily_status AS "dailyStatus" , b.daily_title AS "dailyTitle" ,
-        b.id AS "dailyId" ,d.id AS "auditId"
-        FROM
-        t_attendance a
-
-        LEFT JOIN t_daily b ON a.id=b.attendance_id
-        LEFT JOIN t_audit d ON a.id=d.attendance_id
-        WHERE a.attendance_month=#{attendanceMonth} AND a.create_by= #{createBy}
+    <select id="findAttendanceList" parameterType="map" resultType="Map">
+       SELECT a.id ,a.attendance_status AS "attendanceStatus" , a.daily_status AS "dailyStatus" ,
+               DATE_FORMAT(a.create_time ,'%m月%d日') AS "createTime" , b.office_time/60 AS "officeTime"
+       FROM t_attendance a,t_statistics b
+       WHERE a.create_by=b.create_by AND DATE_FORMAT(a.create_time,'%Y-%m-%d') = DATE_FORMAT(b.create_time,'%Y-%m-%d')
+              AND a.attendance_month = #{attaendanceMonth} AND a.create_by=#{createBy}
     </select>
 
     <resultMap id="attendanceMap" type="Attendance">

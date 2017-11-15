@@ -32,7 +32,7 @@ public interface AttendanceDao extends CrudDao<Attendance> {
 
     List<Map> selectAttendances(Attendance attendance);
 
-    List<Attendance> findAttendanceList(Map<String,Object> paramMap);
+    List<Map> findAttendanceList(Map<String,Object> paramMap);
 
     List<Attendance> selectExportAttendanceData(Attendance attendance);
 }

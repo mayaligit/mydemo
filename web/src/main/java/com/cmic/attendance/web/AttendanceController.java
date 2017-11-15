@@ -211,7 +211,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         String userPhone = user.getId();*/
 
         //开发测试使用
-        String userPhone = "001";
+        String userPhone = "13802885145";
 
         return service.getMonthAttendanceData(paramMap,userPhone);
 

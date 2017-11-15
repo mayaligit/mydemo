@@ -4,7 +4,6 @@ import com.cmic.attendance.bo.InsetEndStaticBo;
 import com.cmic.attendance.dao.AttendanceDao;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Clazzes;
-import com.cmic.attendance.model.Daily;
 import com.cmic.attendance.model.Statistics;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceEndVo;
@@ -806,8 +805,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         PageHelper.startPage(pageNum,pageSize,"a.create_time ASC");
         paramMap.put("createBy",phone);
 
+        String attaendanceMonth = (String)paramMap.get("attaendanceMonth");
+        paramMap.put("attaendanceMonth",attaendanceMonth.replace("/","-"));
         //分页查询并获取分页信息
-        List<Attendance> attendanceList = dao.findAttendanceList(paramMap);
+        List<Map> attendanceList = dao.findAttendanceList(paramMap);
         PageInfo<Attendance> pageInfo =  new PageInfo(attendanceList);
 
         //创建对象对相应数据进行封装
@@ -817,50 +818,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         //获取总页数和总记录数
         responseMap.put("totalPages",pageInfo.getPages());
         responseMap.put("totalCount",pageInfo.getTotal());
+        responseMap.put("attendanceList",pageInfo.getList());
+        return responseMap;
 
-        //判断是否查询到数据
-        if (attendanceList==null || attendanceList.size()==0){
-            responseMap.put("attendanceList",attendanceList);
-            return  responseMap;
-        }else {
-
-            for (Attendance attendance:attendanceList) {
-                Map<String,Object> attendanceMap = new HashMap<String,Object>();
-                //判断是否是打卡异常
-                if (attendance.getAttendanceStatus().trim().equals("1")){
-
-                    //判断打卡异常后没有提交审批
-                    if (attendance.getAudit() == null ){
-                        attendanceMap.put("attendanceDesc","未提审批");
-                        attendanceMap.put("attendanceStatus","异常");
-                    }else {
-                        //异常打卡并且提交了审批
-                        attendanceMap.put("attendanceDesc","已提审批");
-                        attendanceMap.put("attendanceStatus","正常");
-                    }
-                }else {
-                    //设置正常打卡是返回的数据信息
-                    attendanceMap.put("attendanceStatus","正常");
-                    attendanceMap.put("attendanceDesc","");
-                }
-
-                //判断日报是否有填写,并进行相应的处理
-                Daily daily = attendance.getDaily();
-                if(daily==null){
-                    //日报未填写
-                    attendanceMap.put("dailyDesc","日报未填");
-                }else {
-                    //日报已填写,日报描述显示日报标题
-                    attendanceMap.put("dailyDesc", daily.getDailyTitle());
-                }
-                //返回考勤记录的创建时间
-                attendanceMap.put("createTime",attendance.getCreateTime());
-
-                attendList.add(attendanceMap);
-            }
-            responseMap.put("attendanceList",attendList);
-            return responseMap;
-        }
     }
 
 
