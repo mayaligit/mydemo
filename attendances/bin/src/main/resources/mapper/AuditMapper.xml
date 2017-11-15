@@ -16,7 +16,8 @@
         a.create_time AS "createTime",
         a.update_by AS "updateBy.id",
         a.update_time AS "updateTime",
-        a.audit_detail AS "auditDetail"
+        a.audit_detail AS "auditDetail",
+        a.username AS "username"
     </sql>
 
     <sql id="auditJoins">
@@ -63,7 +64,8 @@
             create_time,
             update_by,
             update_time,
-            audit_detail
+            audit_detail,
+            username
         ) VALUES (
             #{auditId},
             #{submitTime},
@@ -79,7 +81,8 @@
             #{createTime},
             #{updateBy.id},
             #{updateTime},
-            #{auditDetail}
+            #{auditDetail},
+            #{username}
         )
     </insert>
 
@@ -129,6 +132,9 @@
         </if>
         <if test="auditDetail != null and auditDetail != ''">
         audit_detail = #{auditDetail},
+        </if>
+        <if test="username != null and username != ''">
+            username = #{username},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
