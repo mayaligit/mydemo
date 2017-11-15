@@ -60,16 +60,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     @Transactional(readOnly = false)
     public Audit getAuditById(String auditId){
         Audit audit =  dao.getAuditById(auditId);
-
-        Map<String,Object> paraMap = new HashMap<String,Object>();
-        //还没确定怎么获取审批人的电话号码, 暂时硬编码
-        paraMap.put("updateBy","1008");
-        paraMap.put("updateTime",new Date());
-        paraMap.put("auditStatus","0"); //设置审批意见状态为 已阅
-        paraMap.put("auditId",auditId);
-        //更新 审批状态为 已阅
-        dao.updateAudit(paraMap);
-
         return audit;
     }
 
@@ -80,9 +70,10 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("updateBy","10086");
         paraMap.put("updateTime",new Date());
         paraMap.put("auditTime", DateUtils.getDateToStrings(new Date()));
-        paraMap.put("auditStatus","1"); //设置审批意见状态为 已处理
+        paraMap.put("auditStatus","0"); //设置审批意见状态为 已处理
         paraMap.put("auditId",audit.getId());
         paraMap.put("auditSuggestion",audit.getAuditSuggestion());
+        paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());
         //更新 审批状态为 已处理
         dao.updateAudit(paraMap);
     }
