@@ -47,8 +47,8 @@ public class UserController {
         //参数一：长
         //参数二：宽
         //参数三：颜色
-        int width = 150;
-        int height = 60;
+        int width = 200;
+        int height = 45;
         BufferedImage image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
 
         //获取画笔
@@ -66,7 +66,7 @@ public class UserController {
         //设置画笔颜色为黄色
         g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
         //设置字体的小大
-        g.setFont(new Font("黑体", Font.BOLD,55));
+        g.setFont(new Font("黑体", Font.BOLD,30));
         Random random = new Random();
         //干扰线
         for(int i=0;i<20;i++){
