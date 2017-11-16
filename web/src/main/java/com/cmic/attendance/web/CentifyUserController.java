@@ -95,13 +95,14 @@ public class CentifyUserController {
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
         AttendanceUserVo attendanceUser=new AttendanceUserVo();
         //拦截器不拦截，这个session无其他作用
-        redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set(adminEntity);
+        redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set("_CURRENT_ADMIN_INFO");
         redisTemplate.expire("_CURRENT_ADMIN_INFO", 30,TimeUnit.MINUTES);
 
-        redisTemplate.boundValueOps("attendanceUser").set(attendanceUser);
+        redisTemplate.boundValueOps("attendanceUser").set("_CURRENT_ADMIN_INFO");
+
         redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);
 
-        attendanceUser.setAttendanceUsername(phone);
+        log.debug("redis缓存中的"+"_CURRENT_ADMIN_INFO");
         return adminEntity;
     }
 

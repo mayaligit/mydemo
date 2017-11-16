@@ -14,7 +14,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
+@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 public class LogFilter implements Filter {
 
     private static Logger log = Logger.getLogger(LogFilter.class);
@@ -39,7 +39,7 @@ public class LogFilter implements Filter {
         //只拦电脑端
         log.debug("手机端session"+">>>"+current_admin_info+"<<<");
         log.debug("服务器session"+">>>"+loginUser+"<<<");
-        if(loginUser == null && current_admin_info==null){
+        if(loginUser == null ){
             if (url.equals("/attendance/user/login") ||
                     url.equals("/attendance/info")
                     ||url.equals("/attandence/user/getCheckCode")){
