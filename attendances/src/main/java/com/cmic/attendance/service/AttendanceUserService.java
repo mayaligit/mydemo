@@ -2,6 +2,8 @@ package com.cmic.attendance.service;
 
 import com.cmic.attendance.exception.LoginExeptions;
 import com.cmic.attendance.model.AttendanceUser;
+import com.cmic.attendance.utils.MD5Util;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.github.pagehelper.PageInfo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
@@ -56,8 +58,8 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
     }
 
     @Transactional(readOnly = false)
-    public Map<String, String> login(AttendanceUser attendanceUser){
-        AttendanceUser checkUser = checkUserByName(attendanceUser.getAttendanceUsername());
+    public HashMap<String, String> login(AttendanceUserVo attendanceUserVo){
+        AttendanceUser checkUser = checkUserByName(attendanceUserVo.getAttendanceUsername());
         HashMap<String,String> result=new HashMap<String,String>();
 
         if (null==checkUser){
@@ -67,9 +69,10 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
             return result;
         }
 
-        String attendancePassword = attendanceUser.getAttendancePassword();
-
-        if (!checkUser.getAttendancePassword().equals(attendancePassword)){
+        String attendancePassword = attendanceUserVo.getAttendancePassword();
+        String md5Password = MD5Util.md5(attendancePassword);
+        System.out.println("md5Password"+md5Password);
+        if (!checkUser.getAttendancePassword().equals(md5Password)){
             result.put("msg","密码错误");
             result.put("status","2");
             return result;

@@ -1,6 +1,8 @@
 package com.cmic.attendance.web;
 
 import com.cmic.attendance.model.AttendanceUser;
+import com.cmic.attendance.vo.AttendanceUserVo;
+import com.cmic.saas.utils.StringUtils;
 import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import com.cmic.saas.base.web.BaseRestController;
@@ -10,8 +12,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
 * 考勤后台管理表Controller
@@ -72,13 +81,29 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @RequestMapping(value="/login", method = RequestMethod.POST)
-    public Map login(@RequestBody AttendanceUser attendanceUser){
-        HashMap<String,String> result=new HashMap<String,String>();
-
-        Map<String, String> login = service.login(attendanceUser);
-        if ("0".equals(login.get("status"))){
-            WebUtils.getSession().setAttribute("attendanceUser",attendanceUser);
+    @ResponseBody
+    public HashMap<String,String> login(@RequestBody AttendanceUserVo attendanceUserVo){
+        HashMap<String,String> map = new HashMap<>();
+//        验证码是否为空
+        if(StringUtils.isBlank(attendanceUserVo.getCheckCode())) {
+            map.put("status", "4");
+            return map;
         }
-        return result;
+        String checkCode = (String)WebUtils.getSession().getAttribute("checkCode");
+
+        if(StringUtils.isNotBlank(checkCode)){
+//            验证码是否不正在正确
+            if(!attendanceUserVo.getCheckCode().equals(checkCode)){
+
+                map.put("status","3");
+                return map;
+            }
+        }
+
+        HashMap<String, String> login = service.login(attendanceUserVo);
+        if ("0".equals(login.get("status"))){
+            WebUtils.getSession().setAttribute("attendanceUser",attendanceUserVo);
+        }
+        return login;
     }
 }

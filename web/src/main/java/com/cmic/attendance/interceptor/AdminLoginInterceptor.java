@@ -5,12 +5,13 @@ import com.cmic.attendance.model.User;
 import com.cmic.attendance.web.AttendanceController;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+@Component
 public class AdminLoginInterceptor extends HandlerInterceptorAdapter {
 
     private static Logger log = Logger.getLogger(AttendanceController.class);
@@ -35,11 +36,6 @@ public class AdminLoginInterceptor extends HandlerInterceptorAdapter {
         System.out.println("=================方法执行行进行了拦截测试==================");
         log.debug("post URL："+url);
         System.out.println("=================方法执行行进行了拦截测试==================");
-        if (url.equals("/attendance/user/login")){
-            //放行登录连接
-            log.debug("放行登录连接");
-            return true;
-        }
         if(!url.equals("")){
             //判斷是否已登录
             AttendanceUser loginUser = (AttendanceUser)request.getSession().getAttribute("attendanceUser");

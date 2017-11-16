@@ -4,6 +4,7 @@ package com.cmic.attendance.web;/**
 
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.User;
+import com.cmic.saas.utils.WebUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -34,7 +36,7 @@ public class UserController {
 
     @ApiOperation(value = "获取验证码", notes = "获取验证码", httpMethod = "GET")
     @RequestMapping(value="/getCheckCode", method = RequestMethod.GET)
-    public void getCheckCode(HttpServletRequest request, HttpServletResponse response){
+    public void getCheckCode(HttpServletResponse response){
 
         //服务器通知浏览器不要缓存
         response.setHeader("pragma","no-cache");
@@ -59,8 +61,8 @@ public class UserController {
         //产生4个随机验证码
         String checkCode = getCheckCode();
         //将验证码放入HttpSession中
-        request.getSession().setAttribute("checkCodeServer",checkCode);
-
+        HttpSession session = WebUtils.getSession();
+        session.setAttribute("checkCode",checkCode);
         //设置画笔颜色为黄色
         g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
         //设置字体的小大
@@ -131,27 +133,4 @@ public class UserController {
 
     }
 
-    @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
-    @RequestMapping(value="/login", method = RequestMethod.GET)
-    public Map login( @RequestBody AttendanceUser attendanceUser){
-
-       /* Map map = new HashMap<>();
-//        验证码是否为空
-        if(StringUtils.isBlank(checkCode)) {
-            map.put("checkCodeError", 0);
-            return map;
-        }
-        String checkCodeServer = (String)request.getSession().getAttribute("checkCodeServer");
-        if(StringUtils.isNotBlank(checkCodeServer)){
-//            验证码是否正确
-            if(!checkCode.equals(checkCodeServer)){
-                map.put("checkCodeError",1);
-                return map;
-            }
-        }
-
-        return map;*/
-
-        return null;
-    }
 }

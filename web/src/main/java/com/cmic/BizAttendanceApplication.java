@@ -1,23 +1,28 @@
 package com.cmic;
 
 import com.cmic.attendance.filter.SimpleCORSFilter;
+import com.cmic.attendance.interceptor.AdminLoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.logging.Filter;
 
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableCircuitBreaker
-public class BizAttendanceApplication implements ExitCodeGenerator {
+@ServletComponentScan
+public class BizAttendanceApplication implements ExitCodeGenerator{
 
     /**
      * 配置过滤器
