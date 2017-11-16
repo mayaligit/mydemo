@@ -109,7 +109,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
         }
         HashMap<String, String> login = service.login(attendanceUserVo);
         if ("0".equals(login.get("status"))){
-            redisTemplate.boundValueOps("attendanceUser").set(attendanceUserVo);
+            redisTemplate.boundValueOps("attendanceUser").set("attendanceUser");
             redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);
             log.debug("登录成功的session"+attendanceUserVo.toString());
         }
