@@ -29,7 +29,7 @@ public class LogFilter implements Filter {
         log.debug("请求 URL："+url);
         //判斷是否已登录
         Object current_admin_info = request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        Object loginUser = WebUtils.getSession().getAttribute("attendanceUser");
+        Object loginUser = request.getSession().getAttribute("attendanceUser");
         //只拦电脑端
         log.debug("手机端session"+">>>current_admin_info<<<");
         log.debug("服务器session"+">>>loginUser<<<");
