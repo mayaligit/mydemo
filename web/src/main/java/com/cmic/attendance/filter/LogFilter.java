@@ -29,18 +29,20 @@ public class LogFilter implements Filter {
         if(loginUser == null && !url.equals("/attendance/user/login")){
             //無session則是未登录狀態
             log.debug("post URL"+">>>未登录，請重新登录<<<");
-            response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
-        }
-        if (loginUser == null && !url.equals("/attendance/info")){
+            request.getRequestDispatcher("http://192.168.3.6:80/attendance/login.html").forward(request, response);
+            return;
+        }else if (loginUser == null && !url.equals("/attendance/info")){
+            log.debug("post URL"+">>>未登录，請重新登录<<<");
+            request.getRequestDispatcher("http://192.168.3.6:80/attendance/login.html").forward(request, response);
+            return;
+        }else if (loginUser == null && !url.equals("/attandence/user/getCheckCode")){
             log.debug("post URL"+">>>未登录，請重新登录<<<");
             response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
-        }
-        if (loginUser == null && !url.equals("/attandence/user/getCheckCode")){
-            log.debug("post URL"+">>>未登录，請重新登录<<<");
-            response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
+            return;
+        }else {
+            filterChain.doFilter(servletRequest,servletResponse);
         }
 
-        filterChain.doFilter(servletRequest,servletResponse);
     }
 
     @Override
