@@ -28,7 +28,7 @@ public class LogFilter implements Filter {
         log.debug("请求 URL："+url);
         //判斷是否已登录
         Object current_admin_info = request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        AttendanceUserVo loginUser = (AttendanceUserVo)request.getSession().getAttribute("attendanceUser");
+        Object loginUser = request.getSession().getAttribute("attendanceUser");
         if(loginUser == null && current_admin_info==null){
             if (url.equals("/attendance/user/login") ||
                     url.equals("/attendance/info")
