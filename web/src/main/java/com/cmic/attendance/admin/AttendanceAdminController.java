@@ -11,9 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -75,42 +72,28 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @PostMapping("/exportExcel")
     public void exportExcel( Attendance attendance,HttpServletResponse response){
         //返回的是excel的临时
-        File file = service.exportExcel( attendance);
+        String data = service.exportExcel( attendance);
 
         //判断
-        if (file != null){
+        if (data != null){
             //先建立一个文件读取流去读取这个临时excel文件
-            BufferedReader br = null;
             PrintWriter out = null;
             try {
 
-                br = new BufferedReader(new FileReader(file));
                 //这个一定要设定，告诉浏览器这次请求是一个下载的数据流
                 response.setContentType("APPLICATION/OCTET-STREAM");
                 response.setHeader("Content-type", "text/html;charset=UTF-8");
-
+                response.setCharacterEncoding("UTF-8");
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + attendance.getAttendanceMonth()+".xls" + "\"");
                 //获取输出流
                 out = response.getWriter();
-                int b = 0;
-                char[] c = new char[1024];
-                while ((b=br.read(c))!=-1) {
-                    out.write(c, 0, b);
-                }
+                out.write(data);
 
             } catch (Exception e) {
                 e .printStackTrace();
                  throw new RestException("导出失败!");
             }finally {
-
-                try {
-                    br.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }finally {
-                    out.close();
-                }
-
+                out.close();
             }
 
         }
