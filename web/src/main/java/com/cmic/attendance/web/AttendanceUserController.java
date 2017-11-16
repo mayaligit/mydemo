@@ -10,6 +10,7 @@ import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.attendance.service.AttendanceUserService;
 import io.swagger.annotations.*;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
     private static Logger log = Logger.getLogger(AttendanceUserController.class);
 
+    @Autowired
     private RedisTemplate redisTemplate;
 
     @ApiOperation(value = "查询", notes = "查询考勤后台管理表列表", httpMethod = "GET")
