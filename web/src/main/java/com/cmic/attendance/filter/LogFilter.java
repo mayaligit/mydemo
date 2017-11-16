@@ -11,7 +11,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
+@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 public class LogFilter implements Filter {
 
     private static Logger log = Logger.getLogger(LogFilter.class);
@@ -25,7 +25,7 @@ public class LogFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request=(HttpServletRequest) servletRequest;
         String url = request.getServletPath();
-        log.debug("inser URL："+url);
+        log.debug("请求 URL："+url);
         //判斷是否已登录
         AttendanceUserVo loginUser = (AttendanceUserVo)request.getSession().getAttribute("attendanceUser");
         if(loginUser == null ){
@@ -36,7 +36,7 @@ public class LogFilter implements Filter {
 
             }else {
                 log.debug("post URL"+">>>未登录，請重新登录<<<");
-                response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
+                response.sendRedirect("http://192.168.185.250:8180/admin_attendance/login.html");
             }
         }else {
             //已经登录
