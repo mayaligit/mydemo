@@ -11,8 +11,9 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
+@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 public class LogFilter implements Filter {
+
     private static Logger log = Logger.getLogger(LogFilter.class);
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -27,21 +28,20 @@ public class LogFilter implements Filter {
         log.debug("inser URL："+url);
         //判斷是否已登录
         AttendanceUserVo loginUser = (AttendanceUserVo)request.getSession().getAttribute("attendanceUser");
-        if(loginUser == null && !url.equals("/attendance/user/login")){
-            //無session則是未登录狀態
-            log.debug("post URL"+">>>未登录，請重新登录<<<");
-            response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
+        if(loginUser == null ){
+            if (url.equals("/attendance/user/login") ||
+                    url.equals("/attendance/info")
+                    ||url.equals("/attandence/user/getCheckCode")){
+                filterChain.doFilter(servletRequest,servletResponse);
 
-        }else if (loginUser == null && !url.equals("/attendance/info")){
-            log.debug("post URL"+">>>未登录，請重新登录<<<");
-            response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
-        }else if (loginUser == null && !url.equals("/attandence/user/getCheckCode")){
-            log.debug("post URL"+">>>未登录，請重新登录<<<");
-            response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
+            }else {
+                log.debug("post URL"+">>>未登录，請重新登录<<<");
+                response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
+            }
         }else {
+            //已经登录
             filterChain.doFilter(servletRequest,servletResponse);
         }
-
     }
 
     @Override
