@@ -32,7 +32,9 @@ public class AdminLoginInterceptor extends HandlerInterceptorAdapter {
             throws Exception {
         request.setCharacterEncoding("UTF-8");
         String url = request.getServletPath();
+        System.out.println("=================方法执行行进行了拦截测试==================");
         log.debug("post URL："+url);
+        System.out.println("=================方法执行行进行了拦截测试==================");
         if (url.equals("/attendance/user/login")){
             //放行登录连接
             log.debug("放行登录连接");
