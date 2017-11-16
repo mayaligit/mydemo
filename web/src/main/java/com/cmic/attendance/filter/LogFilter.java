@@ -23,22 +23,26 @@ public class LogFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request=(HttpServletRequest) servletRequest;
         String url = request.getServletPath();
-        System.out.println("=================方法执行行进行了拦截测试==================");
-        log.debug("post URL："+url);
-        System.out.println("=================方法执行行进行了拦截测试==================");
+        log.debug("inser URL："+url);
         if (!url.equals("")){
+            BaseAdminEntity adminEntity=(BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+            if (null !=adminEntity){
+                log.debug("post URL"+url);
+                filterChain.doFilter(servletRequest,servletResponse);
+            }
+            
             if ("/attendance/user/login".equals(url) || "/attendance/info".equals(url)
                     || "/attandence/user/getCheckCode".equals(url)){
-                System.out.println("=================测试方法是否被放行==================");
+               log.debug("post URL"+url);
                 filterChain.doFilter(servletRequest,servletResponse);
 
             }else {
                 //判斷是否已登录
                 AttendanceUser loginUser = (AttendanceUser)request.getSession().getAttribute("attendanceUser");
-                BaseAdminEntity adminEntity=(BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+
                 if(loginUser == null){
                     //無session則是未登录狀態
-                    System.out.println(">>>未登录，請重新登录<<<");
+                    log.debug("post URL"+">>>未登录，請重新登录<<<");
                     response.sendRedirect("http://192.168.3.6:80/attendance/login.html");
                 }
             }
