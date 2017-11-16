@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 何荣
@@ -34,6 +36,9 @@ import javax.servlet.http.HttpSession;
 public class CentifyUserController {
 
     private static Logger log = Logger.getLogger(CentifyUserController.class);
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     @Autowired
     private RestTemplate restTemplate;
@@ -90,8 +95,13 @@ public class CentifyUserController {
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
         AttendanceUserVo attendanceUser=new AttendanceUserVo();
         //拦截器不拦截，这个session无其他作用
+        redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set(adminEntity);
+        redisTemplate.expire("_CURRENT_ADMIN_INFO", 30,TimeUnit.MINUTES);
+
+        redisTemplate.boundValueOps("attendanceUser").set(attendanceUser);
+        redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);
+
         attendanceUser.setAttendanceUsername(phone);
-        request.getSession().setAttribute("attendanceUser",attendanceUser);
         return adminEntity;
     }
 

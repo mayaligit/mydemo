@@ -10,6 +10,7 @@ import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.attendance.service.AttendanceUserService;
 import io.swagger.annotations.*;
 import org.apache.log4j.Logger;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
 * 考勤后台管理表Controller
@@ -33,6 +35,8 @@ import java.util.Random;
 public class AttendanceUserController extends BaseRestController<AttendanceUserService> {
 
     private static Logger log = Logger.getLogger(AttendanceUserController.class);
+
+    private RedisTemplate redisTemplate;
 
     @ApiOperation(value = "查询", notes = "查询考勤后台管理表列表", httpMethod = "GET")
     @ApiImplicitParams({
@@ -105,7 +109,8 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
         }
         HashMap<String, String> login = service.login(attendanceUserVo);
         if ("0".equals(login.get("status"))){
-            WebUtils.getSession().setAttribute("attendanceUser",attendanceUserVo);
+            redisTemplate.boundValueOps("attendanceUser").set(attendanceUserVo);
+            redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);
             log.debug("登录成功的session"+attendanceUserVo.toString());
         }
         return login;

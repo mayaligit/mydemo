@@ -6,16 +6,22 @@ import com.cmic.attendance.web.AttendanceController;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.utils.WebUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
+@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 public class LogFilter implements Filter {
 
     private static Logger log = Logger.getLogger(LogFilter.class);
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -28,8 +34,8 @@ public class LogFilter implements Filter {
         String url = request.getServletPath();
         log.debug("请求 URL："+url);
         //判斷是否已登录
-        Object current_admin_info = request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        Object loginUser = request.getSession().getAttribute("attendanceUser");
+        String current_admin_info = (String) redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
+        String loginUser = (String) redisTemplate.boundValueOps("attendanceUser").get();
         //只拦电脑端
         log.debug("手机端session"+">>>"+current_admin_info+"<<<");
         log.debug("服务器session"+">>>"+loginUser+"<<<");
