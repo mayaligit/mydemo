@@ -31,8 +31,8 @@ public class LogFilter implements Filter {
         Object current_admin_info = request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Object loginUser = request.getSession().getAttribute("attendanceUser");
         //只拦电脑端
-        log.debug("手机端session"+">>>current_admin_info<<<");
-        log.debug("服务器session"+">>>loginUser<<<");
+        log.debug("手机端session"+">>>"+current_admin_info+"<<<");
+        log.debug("服务器session"+">>>"+loginUser+"<<<");
         if(loginUser == null && current_admin_info==null){
             if (url.equals("/attendance/user/login") ||
                     url.equals("/attendance/info")
