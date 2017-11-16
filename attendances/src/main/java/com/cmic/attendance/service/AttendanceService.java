@@ -766,6 +766,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             bufferedWriter = new BufferedWriter(stringWriter);
             template.process(dataModel,bufferedWriter);
 
+            return stringWriter.toString() ;
         }catch (Exception e){
             e.printStackTrace();
             throw new RestException("导出失败!");
@@ -775,9 +776,15 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            }finally {
+                try {
+                    stringWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        return stringWriter.toString() ;
+
     }
 
     /**
