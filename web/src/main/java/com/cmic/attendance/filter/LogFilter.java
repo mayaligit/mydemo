@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
+//@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 public class LogFilter implements Filter {
     private static Logger log = Logger.getLogger(LogFilter.class);
     @Override
@@ -30,7 +30,7 @@ public class LogFilter implements Filter {
                 log.debug("post URL"+url);
                 filterChain.doFilter(servletRequest,servletResponse);
             }
-            
+
             if ("/attendance/user/login".equals(url) || "/attendance/info".equals(url)
                     || "/attandence/user/getCheckCode".equals(url)){
                log.debug("post URL"+url);
@@ -39,7 +39,6 @@ public class LogFilter implements Filter {
             }else {
                 //判斷是否已登录
                 AttendanceUser loginUser = (AttendanceUser)request.getSession().getAttribute("attendanceUser");
-
                 if(loginUser == null){
                     //無session則是未登录狀態
                     log.debug("post URL"+">>>未登录，請重新登录<<<");
