@@ -1,6 +1,7 @@
 package com.cmic.attendance.web;
 
 import com.cmic.attendance.Constant.Constant;
+import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.RcsToken;
 import com.cmic.attendance.model.UserBo;
 import com.cmic.saas.base.model.BaseAdminEntity;
@@ -86,7 +87,10 @@ public class CentifyUserController {
         adminEntity.setId(phone);
         adminEntity.setName(username);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-        log.debug("adminEntity:" + adminEntity.toString());
+        AttendanceUser attendanceUser=new AttendanceUser();
+        //拦截器不拦截，这个session无其他作用
+        attendanceUser.setAttendanceUsername(phone);
+        request.getSession().setAttribute("attendanceUser",attendanceUser);
         return adminEntity;
     }
 

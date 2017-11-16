@@ -2,6 +2,7 @@ package com.cmic.attendance.web;/**
  * Created by pc on 2017/11/14.
  */
 
+import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -132,9 +133,9 @@ public class UserController {
 
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @RequestMapping(value="/login", method = RequestMethod.GET)
-    public Map login(HttpServletRequest request,String checkCode,@RequestBody User user){
+    public Map login( @RequestBody AttendanceUser attendanceUser){
 
-        Map map = new HashMap<>();
+       /* Map map = new HashMap<>();
 //        验证码是否为空
         if(StringUtils.isBlank(checkCode)) {
             map.put("checkCodeError", 0);
@@ -148,6 +149,9 @@ public class UserController {
                 return map;
             }
         }
-        return map;
+
+        return map;*/
+
+        return null;
     }
 }

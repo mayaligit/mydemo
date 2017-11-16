@@ -1,7 +1,7 @@
 package com.cmic.attendance.dao;
 
-import com.cmic.saas.base.dao.CrudDao;
 import com.cmic.attendance.model.AttendanceUser;
+import com.cmic.saas.base.dao.CrudDao;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,4 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AttendanceUserDao extends CrudDao<AttendanceUser> {
 
+    AttendanceUser checkUserByName(String userName);
 }

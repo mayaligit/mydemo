@@ -170,7 +170,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
             return resultattendanceVo;
         }
-
         return null;
     }
     //TODO 上班打卡业务并返回数据
@@ -317,7 +316,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //插入数据到统计表
                 insetEndStatic(insetEndStaticBo);
             }catch (Exception e){
-                e.printStackTrace();
+                log.debug("插入数据到统计表失败"+e.getMessage());
             }
             return AttendanceEndVo;
             /*正常*/
@@ -359,7 +358,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 insetStatic.setStartTime(startTime);
                 insetEndMStatic(insetStatic);
             }catch (Exception e){
-                e.printStackTrace();
+                log.debug("插入数据到统计表失败"+e.getMessage());
             }
             return AttendanceEndVo;
         }else if (hourTime<14){
@@ -388,10 +387,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     }
                 }
                 insetStatic.setStartTime(startTime);
-
                 insetEndStatic(insetStatic);
             }catch (Exception e){
-                e.printStackTrace();
+                log.debug("插入数据到统计表失败"+e.getMessage());
             }
             return AttendanceEndVo;
         }
@@ -499,8 +497,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          }else {
              resultAttendance.setAttendanceStatus(Dbattendance.getAttendanceStatus());
          }
-
-
        /* resultAttendance.setIsAttendanceEnd(attendanceEndBo.getIsAttendanceEnd()); 是否打卡不需要*/
         resultAttendance.setOfftime(attendanceEndBo.getOfftime());
         resultAttendance.setLocation(attendanceEndBo.getLocation());
@@ -697,7 +693,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             int starHour=Integer.parseInt(startTimeArry[0]);
             int starMinute=Integer.parseInt(startTimeArry[1]);
             int starTime=starHour*60+starMinute;
-
             //如果是负数则为0
             String offtime = insetEndStaticBo.getOfftime();
             String[] offtimeArry = offtime.split(":");

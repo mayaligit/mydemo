@@ -3,11 +3,14 @@
 <mapper namespace = "com.cmic.attendance.dao.AttendanceUserDao">
     <sql id="attendanceUserColumns">
         a.id AS "id",
-        a.username AS "username",
-        a.password AS "password",
+        a.attendance_username AS "attendanceUsername",
+        a.attendance_password AS "attendancePassword",
+        a.attendance_group AS "attendanceGroup",
         a.enterprise_id AS "enterpriseId",
         a.enterprise_name AS "enterpriseName",
+        a.user_type AS "userType",
         a.actived AS "actived",
+        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
@@ -42,39 +45,55 @@
         <include refid="attendanceUserJoins"/>
     </select>
 
+    <select id="checkUserByName" resultType="AttendanceUser">
+        SELECT
+        <include refid="attendanceUserColumns"/>
+        FROM t_attendance_user a
+        WHERE  a.attendance_username=#{userName}
+    </select>
+
     <insert id="insert">
         INSERT INTO t_attendance_user(
-            id,
-            username,
-            password,
-            enterprise_id,
-            enterprise_name,
-            actived,
-            create_by,
-            create_date,
-            update_by,
-            update_date
+        id,
+        attendance_username,
+        attendance_password,
+        attendance_group,
+        enterprise_id,
+        enterprise_name,
+        user_type,
+        actived,
+        remarks,
+        create_by,
+        create_date,
+        update_by,
+        update_date
         ) VALUES (
-            #{id},
-            #{username},
-            #{password},
-            #{enterpriseId},
-            #{enterpriseName},
-            #{actived},
-            #{createBy.id},
-            #{createDate},
-            #{updateBy.id},
-            #{updateDate}
+        #{id},
+        #{attendanceUsername},
+        #{attendancePassword},
+        #{attendanceGroup},
+        #{enterpriseId},
+        #{enterpriseName},
+        #{userType},
+        #{actived},
+        #{remarks},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_attendance_user SET
-        username = #{username},
-        password = #{password},
+        attendance_username = #{attendanceUsername},
+        attendance_password = #{attendancePassword},
+        attendance_group = #{attendanceGroup},
         enterprise_id = #{enterpriseId},
         enterprise_name = #{enterpriseName},
+        user_type = #{userType},
         actived = #{actived},
+        remarks = #{remarks},
         create_by = #{createBy.id},
         create_date = #{createDate},
         update_by = #{updateBy.id},
@@ -84,20 +103,26 @@
 
     <update id="dynamicUpdate">
         UPDATE t_attendance_user SET
-        <if test="username != null  and username != ''">
-        username = #{username},
+        <if test="attendanceUsername != null  and attendanceUsername != ''">
+            attendance_username = #{attendanceUsername},
         </if>
-        <if test="password != null  and password != ''">
-        password = #{password},
+        <if test="attendancePassword != null  and attendancePassword != ''">
+            attendance_password = #{attendancePassword},
+        </if>
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            attendance_group = #{attendanceGroup},
         </if>
         <if test="enterpriseId != null  and enterpriseId != ''">
-        enterprise_id = #{enterpriseId},
+            enterprise_id = #{enterpriseId},
         </if>
         <if test="enterpriseName != null  and enterpriseName != ''">
-        enterprise_name = #{enterpriseName},
+            enterprise_name = #{enterpriseName},
+        </if>
+        <if test="userType != null  and userType != ''">
+            user_type = #{userType},
         </if>
         <if test="actived != null  and actived != ''">
-        actived = #{actived},
+            actived = #{actived},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}

@@ -1,15 +1,18 @@
 package com.cmic.attendance.service;
 
+import com.cmic.attendance.exception.LoginExeptions;
+import com.cmic.attendance.model.AttendanceUser;
 import com.github.pagehelper.PageInfo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
 import com.cmic.attendance.dao.AttendanceUserDao;
-import com.cmic.attendance.model.AttendanceUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -50,6 +53,36 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         }
         super.delete(id);
         logger.info("删除后台y用户表：" + attendanceUser.toJSONString());
+    }
+
+    @Transactional(readOnly = false)
+    public Map<String, String> login(AttendanceUser attendanceUser){
+        AttendanceUser checkUser = checkUserByName(attendanceUser.getAttendanceUsername());
+        HashMap<String,String> result=new HashMap<String,String>();
+
+        if (null==checkUser){
+            //当前用户不存在
+            result.put("msg","当前用户不存在");
+            result.put("status","1");
+            return result;
+        }
+
+        String attendancePassword = attendanceUser.getAttendancePassword();
+
+        if (!checkUser.getAttendancePassword().equals(attendancePassword)){
+            result.put("msg","密码错误");
+            result.put("status","2");
+            return result;
+        }
+
+        result.put("msg","登录成功");
+        result.put("status","0");
+        return result;
+    }
+
+    //检查当前用户是否存在
+    public AttendanceUser checkUserByName(String userName){
+        return this.dao.checkUserByName(userName);
     }
 
 }
