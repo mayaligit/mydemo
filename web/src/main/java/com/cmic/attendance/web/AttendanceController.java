@@ -7,6 +7,7 @@ import com.cmic.attendance.vo.AttendanceEndVo;
 import com.cmic.attendance.vo.AttendanceVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
+import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -203,15 +204,15 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }
 
         //以下注释 在生产及联合测试的环境中使用
-       /* Object obj = WebUtils.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        Object obj = WebUtils.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if(obj == null || !(obj instanceof BaseAdminEntity)){
             throw new RestException("用户登陆异常");
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
-        String userPhone = user.getId();*/
+        String userPhone = user.getId();
 
         //开发测试使用
-        String userPhone = "13802885145";
+       /* String userPhone = "13802885145";*/
 
         return service.getMonthAttendanceData(paramMap,userPhone);
 
