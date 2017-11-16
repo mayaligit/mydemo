@@ -22,9 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -743,12 +741,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      *          filePath   保存的路径
      * @return 状态码 0
      */
-    public File exportExcel( Attendance attendance){
+    public String exportExcel( Attendance attendance){
         //获取数据
         List<Attendance> attendanceList = dao.selectExportAttendanceData(attendance);
         Configuration configuration = null;
-        File file = null;
-        FileWriter filterWriter = null;
+
+        StringWriter stringWriter = null;
+        BufferedWriter bufferedWriter = null ;
         try {
 
             /** 创建Configuration配置信息对象,需要指定版本号 */
@@ -762,29 +761,23 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             /** 设置数据 */
             dataModel.put("attendanceList", attendanceList);
             dataModel.put("currMonth",attendance.getAttendanceMonth());
-            /**
-             * 填充模版，生成文件
-             * 第一个参数：数据模型
-             * 第二个参数：输出流
-             * */
-            String path = this.getClass().getResource("/templates").getPath().toString();
-            //创建文件
-            file = new File(path+"/"+UUID.randomUUID().toString()+".xls");
-            filterWriter = new FileWriter(file);
 
-            template.process(dataModel, new FileWriter(file));
+            stringWriter = new StringWriter();
+            bufferedWriter = new BufferedWriter(stringWriter);
+            template.process(dataModel,bufferedWriter);
 
         }catch (Exception e){
             e.printStackTrace();
             throw new RestException("导出失败!");
         }finally {
             try {
-                filterWriter.close();
+                bufferedWriter.flush();
+                bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return file ;
+        return stringWriter.toString() ;
     }
 
     /**

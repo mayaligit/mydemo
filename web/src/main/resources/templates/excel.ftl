@@ -76,7 +76,7 @@
             <Column ss:AutoFitWidth="0" ss:Width="166.2"/>
             <Column ss:AutoFitWidth="0" ss:Width="85.2" ss:Span="1"/>
             <Row ss:AutoFitHeight="0" ss:Height="30" ss:StyleID="s68">
-                <Cell ss:Index="2" ss:MergeAcross="7" ss:StyleID="s70"><Data ss:Type="String">${currMonth} 考勤打卡</Data></Cell>
+                <Cell ss:Index="2" ss:MergeAcross="7" ss:StyleID="s70"><Data ss:Type="String">${currMonth!} 考勤打卡</Data></Cell>
             </Row>
             <Row ss:AutoFitHeight="0" ss:Height="22.05" ss:StyleID="s68">
                 <Cell ss:Index="2" ss:StyleID="s72"><Data ss:Type="String">编号</Data></Cell>
