@@ -34,8 +34,8 @@ public class LogFilter implements Filter {
         String url = request.getServletPath();
         log.debug("请求 URL："+url);
         //判斷是否已登录
-        String current_admin_info = (String) redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
-        String loginUser = (String) redisTemplate.boundValueOps("attendanceUser").get();
+        Object current_admin_info = (Object) redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
+        Object loginUser = (Object) redisTemplate.boundValueOps("attendanceUser").get();
         //只拦电脑端
         log.debug("手机端session"+">>>"+current_admin_info+"<<<");
         log.debug("服务器session"+">>>"+loginUser+"<<<");
