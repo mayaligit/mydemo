@@ -2,7 +2,9 @@ package com.cmic.attendance.interceptor;
 
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.User;
+import com.cmic.attendance.web.AttendanceController;
 import com.cmic.saas.base.model.BaseAdminEntity;
+import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AdminLoginInterceptor extends HandlerInterceptorAdapter {
+
+    private static Logger log = Logger.getLogger(AttendanceController.class);
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
@@ -28,7 +32,12 @@ public class AdminLoginInterceptor extends HandlerInterceptorAdapter {
             throws Exception {
         request.setCharacterEncoding("UTF-8");
         String url = request.getServletPath();
-        System.out.println("post URL："+url);
+        log.debug("post URL："+url);
+        if (url.equals("/attendance/user/login")){
+            //放行登录连接
+            log.debug("放行登录连接");
+            return true;
+        }
         if(!url.equals("")){
             //判斷是否已登录
             AttendanceUser loginUser = (AttendanceUser)request.getSession().getAttribute("attendanceUser");
