@@ -4,6 +4,7 @@ import com.cmic.attendance.Constant.Constant;
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.RcsToken;
 import com.cmic.attendance.model.UserBo;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.RestException;
 import com.google.gson.JsonObject;
@@ -87,7 +88,7 @@ public class CentifyUserController {
         adminEntity.setId(phone);
         adminEntity.setName(username);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-        AttendanceUser attendanceUser=new AttendanceUser();
+        AttendanceUserVo attendanceUser=new AttendanceUserVo();
         //拦截器不拦截，这个session无其他作用
         attendanceUser.setAttendanceUsername(phone);
         request.getSession().setAttribute("attendanceUser",attendanceUser);

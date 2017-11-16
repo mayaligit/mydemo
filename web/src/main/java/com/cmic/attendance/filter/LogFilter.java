@@ -1,6 +1,7 @@
 package com.cmic.attendance.filter;
 
 import com.cmic.attendance.model.AttendanceUser;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.web.AttendanceController;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import org.apache.log4j.Logger;
@@ -25,7 +26,7 @@ public class LogFilter implements Filter {
         String url = request.getServletPath();
         log.debug("inser URL："+url);
         //判斷是否已登录
-        AttendanceUser loginUser = (AttendanceUser)request.getSession().getAttribute("attendanceUser");
+        AttendanceUserVo loginUser = (AttendanceUserVo)request.getSession().getAttribute("attendanceUser");
         if(loginUser == null && !url.equals("/attendance/user/login")){
             //無session則是未登录狀態
             log.debug("post URL"+">>>未登录，請重新登录<<<");
