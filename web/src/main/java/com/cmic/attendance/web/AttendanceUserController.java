@@ -1,5 +1,6 @@
 package com.cmic.attendance.web;
 
+import com.cmic.attendance.filter.LogFilter;
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.utils.StringUtils;
@@ -8,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.attendance.service.AttendanceUserService;
 import io.swagger.annotations.*;
+import org.apache.log4j.Logger;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -29,6 +31,8 @@ import java.util.Random;
 @RestController
 @RequestMapping("/attendance/user")
 public class AttendanceUserController extends BaseRestController<AttendanceUserService> {
+
+    private static Logger log = Logger.getLogger(AttendanceUserController.class);
 
     @ApiOperation(value = "查询", notes = "查询考勤后台管理表列表", httpMethod = "GET")
     @ApiImplicitParams({
@@ -99,10 +103,10 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
                 return map;
             }
         }
-
         HashMap<String, String> login = service.login(attendanceUserVo);
         if ("0".equals(login.get("status"))){
             WebUtils.getSession().setAttribute("attendanceUser",attendanceUserVo);
+            log.debug("登录成功的session"+attendanceUserVo.toString());
         }
         return login;
     }
