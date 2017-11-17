@@ -46,7 +46,7 @@ public class LogFilter implements Filter {
             if (url.equals("/attendance/user/login")
                     || url.equals("/attendance/info")
                     || url.equals("/attandence/user/getCheckCode")
-                    || current_admin!=null){
+                    || current_admin_info!=null){
                 filterChain.doFilter(servletRequest,servletResponse);
 
             }else {
