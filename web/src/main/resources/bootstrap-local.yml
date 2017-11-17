@@ -80,4 +80,4 @@ certify:
 index:
   server: http://221.176.34.113:8180/attendance/index.html  # 前端远程入口
 clazzesService:
- id: c2310c7ec996409b8e91f12daa428a98
+  id: c2310c7ec996409b8e91f12daa428a98
