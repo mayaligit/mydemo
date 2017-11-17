@@ -93,10 +93,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      */
     @Transactional(readOnly = false)
     public AttendanceVo punchCard(AttendanceVo attendanceVo) {
-        AttendanceVo resultAttendanceVo = new AttendanceVo();
+
         Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
-        Attendance saveAttendance = new Attendance();
-        String location = attendanceVo.getLocation();
         Date serverTime=new Date();
         String attendanceTime = DateUtils.getDateToStrings(serverTime);
         String[] split1 = attendanceTime.split(" ");
@@ -127,6 +125,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }
         }
 
+        log.debug("当前打卡时间"+split1[1]);
         /*正常打卡时间*/
         if (hourTime < attendanceHourTime) {
             attendanceVo.setStartTimeStatus("0");
@@ -162,11 +161,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }
             return resultattendanceVo;
                 //12点-14点打卡
-        }else if (hourTime > 12 && hourTime<=14){
+        }else if (hourTime >= 12 && hourTime<=14){
             attendanceVo.setStartTimeStatus("0");
             AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
             return resultattendanceVo;
         }
+        log.debug("上班卡打卡异常");
         return null;
     }
     //TODO 上班打卡业务并返回数据

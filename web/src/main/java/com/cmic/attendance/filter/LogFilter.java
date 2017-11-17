@@ -44,7 +44,6 @@ public class LogFilter implements Filter {
                     url.equals("/attendance/info")
                     ||url.equals("/attandence/user/getCheckCode")){
                 filterChain.doFilter(servletRequest,servletResponse);
-
             }else {
                 log.debug("post URL"+">>>未登录，請重新登录<<<");
                 response.sendRedirect("http://192.168.185.250:8180/admin_attendance/login.html");

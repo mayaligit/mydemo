@@ -172,6 +172,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
       /*  response.setHeader("Access-Control-Allow-Origin", "*");*/
         attendanceVo.setClazzesId(this.clazzesId);
         AttendanceVo resultattendanceVo = service.punchCard(attendanceVo);
+        log.debug("打上班卡返回数据"+resultattendanceVo.toString());
         return resultattendanceVo;
     }
 
