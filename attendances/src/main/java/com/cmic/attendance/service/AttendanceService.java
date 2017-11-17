@@ -162,7 +162,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return resultattendanceVo;
                 //12点-14点打卡
         }else if (hourTime >= 12 && hourTime<=14){
-            attendanceVo.setStartTimeStatus("0");
+            attendanceVo.setStartTimeStatus("1");
             AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
             return resultattendanceVo;
         }
