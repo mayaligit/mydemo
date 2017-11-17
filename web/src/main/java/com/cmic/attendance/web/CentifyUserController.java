@@ -98,9 +98,9 @@ public class CentifyUserController {
         redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set("_CURRENT_ADMIN_INFO");
         redisTemplate.expire("_CURRENT_ADMIN_INFO", 30,TimeUnit.MINUTES);
 
-        redisTemplate.boundValueOps("attendanceUser").set("_CURRENT_ADMIN_INFO");
+       /* redisTemplate.boundValueOps("attendanceUser").set("_CURRENT_ADMIN_INFO");
 
-        redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);
+        redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);*/
 
         log.debug("redis缓存中的"+"_CURRENT_ADMIN_INFO");
         return adminEntity;
