@@ -35,20 +35,20 @@ public class LogFilter implements Filter {
         log.debug("请求 URL："+url);
         //判斷是否已登录
         Object current_admin_info = (Object) redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
-        Object loginUser = (Object) redisTemplate.boundValueOps("attendanceUser").get();
         //只拦电脑端
+        Object current_admin = request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Object attendanceUserVo = request.getSession().getAttribute("attendanceUserVo");
-        log.debug("手机端session"+">>>"+current_admin_info+"<<<");
-        log.debug("服务器session"+">>>"+loginUser+"<<<");
+        log.debug("手机端session"+">>>"+current_admin+"<<<");
+        log.debug("服务器session"+">>>"+attendanceUserVo+"<<<");
 
         if(attendanceUserVo == null ){
             //需要放行的代码
             if (url.equals("/attendance/user/login")
                     || url.equals("/attendance/info")
                     ||url.equals("/attandence/user/getCheckCode")
-                    || current_admin_info !=null)
-            {
+                    ||current_admin!=null){
                 filterChain.doFilter(servletRequest,servletResponse);
+
             }else {
                 log.debug("拦截 URL"+">>>未登录，請重新登录<<<");
                 request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);
