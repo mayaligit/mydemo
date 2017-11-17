@@ -116,20 +116,21 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
         }
         HashMap<String, String> login = service.login(attendanceUserVo,request);
 
-        if ("0".equals(login.get("status"))){
+        /*if ("0".equals(login.get("status"))){
             redisTemplate.boundValueOps("attendanceUser").set("attendanceUser");
             redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);
             log.debug("登录成功的session"+attendanceUserVo.toString());
-        }
+        }*/
         return login;
     }
 
     @ApiOperation(value = "用户退出", notes = "用户退出", httpMethod = "GET")
     @RequestMapping(value="/loginout", method = RequestMethod.GET)
-    public ModelAndView loginOut(){
+    public ModelAndView loginOut(HttpServletRequest request){
 
         ModelAndView mv=new ModelAndView();
-        redisTemplate.delete("attendanceUser");
+       /* redisTemplate.delete("attendanceUser");*/
+        request.getSession().removeAttribute("attendanceUserVo");
         log.debug("系统管理员退出 跳转地址"+login);
         mv.setViewName("redirect:" + login);
         return mv;
