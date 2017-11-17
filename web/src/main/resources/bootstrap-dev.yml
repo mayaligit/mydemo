@@ -78,7 +78,7 @@ certify:
     userInfo: /user/info
 index:
   server: http://221.176.34.113:8180/attendance/index.html  # 手机端前端远程入口
-index:
+indexs:
   login: http://192.168.185.250:8180/admin_attendance/login.html  # PC端远程入口
 
 clazzesService:

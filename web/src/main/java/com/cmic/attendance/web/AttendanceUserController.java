@@ -39,7 +39,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
     private static Logger log = Logger.getLogger(AttendanceUserController.class);
 
-    @Value("${index.login}")
+    @Value("${indexs.login}")
     private  String login;
 
     @Autowired
