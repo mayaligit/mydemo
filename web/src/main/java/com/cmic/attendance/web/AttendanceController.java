@@ -207,7 +207,11 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         //以下注释 在生产及联合测试的环境中使用
         Object obj = WebUtils.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if(obj == null || !(obj instanceof BaseAdminEntity)){
-            throw new RestException("用户登陆异常");
+            /*throw new RestException("用户登陆异常");*/
+            paramMap.put("status","0");
+            paramMap.put("meg","用户登录时间过期");
+            return paramMap;
+
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
         String userPhone = user.getId();
