@@ -40,15 +40,18 @@ public class LogFilter implements Filter {
         log.debug("手机端session"+">>>"+current_admin_info+"<<<");
         log.debug("服务器session"+">>>"+loginUser+"<<<");
         if(loginUser == null ){
-            if (url.equals("/attendance/user/login") ||
-                    url.equals("/attendance/info")
-                    ||url.equals("/attandence/user/getCheckCode")){
+            if (url.equals("/attendance/user/login")
+                    || url.equals("/attendance/info")
+                    ||url.equals("/attandence/user/getCheckCode")
+                    || current_admin_info !=null)
+            {
                 filterChain.doFilter(servletRequest,servletResponse);
             }else {
                 log.debug("拦截 URL"+">>>未登录，請重新登录<<<");
-                request.getRequestDispatcher("/attendance/admin_attendance/login.html").forward(request,response);
+                request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);
                 log.debug("执行了重定向");
             }
+
         }else {
             //已经登录
             log.debug("post URL"+">>>放行<<<");
