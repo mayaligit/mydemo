@@ -39,21 +39,26 @@ public class LogFilter implements Filter {
         Object current_admin = request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Object attendanceUserVo = request.getSession().getAttribute("attendanceUserVo");
         log.debug("手机端session"+">>>"+current_admin+"<<<");
-        log.debug("服务器session"+">>>"+attendanceUserVo+"<<<");
-
         if(attendanceUserVo == null ){
+            log.debug("服务器session"+">>>"+attendanceUserVo+"<<<");
             //需要放行的代码
-            if (url.equals("/attendance/user/login")
-                    || url.equals("/attendance/info")
-                    || url.equals("/attandence/user/getCheckCode")
-                    || current_admin_info!=null){
+            if (url.equals("/attendance/user/login") ||url.equals("/attandence/user/getCheckCode")
+                        ){
                 filterChain.doFilter(servletRequest,servletResponse);
 
-            }else {
+            }else if(url.equals("/attendance/info")){
+
+                filterChain.doFilter(servletRequest,servletResponse);
+
+            } else if(current_admin_info!=null){
+                filterChain.doFilter(servletRequest,servletResponse);
+            }
+            else {
                 log.debug("拦截 URL"+">>>未登录，請重新登录<<<"+url);
                 response.sendRedirect("http://192.168.185.250:8180/admin_attendance/login.html");
                 /*request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);*/
                 log.debug("执行了重定向");
+                response.setStatus(302);
             }
 
         }else {
