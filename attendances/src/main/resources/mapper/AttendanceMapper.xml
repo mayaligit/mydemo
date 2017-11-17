@@ -279,7 +279,8 @@
 
     <select id="findAttendanceList" parameterType="map" resultType="Map">
        SELECT a.id ,a.attendance_status AS "attendanceStatus" , a.daily_status AS "dailyStatus" ,
-               DATE_FORMAT(a.create_time ,'%m月%d日') AS "createTime" , b.office_time/60 AS "officeTime"
+               DATE_FORMAT(a.create_time ,'%m月%d日') AS "createTime" , b.office_time/60 AS "officeTime" ,
+               DATE_FORMAT(a.create_time ,'%d') AS "order"
        FROM t_attendance a,t_statistics b
        WHERE a.create_by=b.create_by AND DATE_FORMAT(a.create_time,'%Y-%m-%d') = DATE_FORMAT(b.create_time,'%Y-%m-%d')
               AND a.attendance_month = #{attaendanceMonth} AND a.create_by=#{createBy}
