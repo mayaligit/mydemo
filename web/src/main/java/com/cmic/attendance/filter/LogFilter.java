@@ -45,11 +45,13 @@ public class LogFilter implements Filter {
                     ||url.equals("/attandence/user/getCheckCode")){
                 filterChain.doFilter(servletRequest,servletResponse);
             }else {
-                log.debug("post URL"+">>>未登录，請重新登录<<<");
+                log.debug("拦截 URL"+">>>未登录，請重新登录<<<");
                 response.sendRedirect("http://192.168.185.250:8180/admin_attendance/login.html");
+                log.debug("执行了重定向");
             }
         }else {
             //已经登录
+            log.debug("post URL"+">>>放行<<<");
             filterChain.doFilter(servletRequest,servletResponse);
         }
     }
