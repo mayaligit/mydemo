@@ -68,7 +68,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         HttpServletRequest request = WebUtils.getRequest();
         System.out.println("===========================考勤id======================= = " + dailyVo.getAttendanceId());
         if(this.dao.getDailyByAttendanceId(dailyVo.getAttendanceId())!=null){
-            return "日报已存在";
+            return "0";
         }
 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
@@ -83,10 +83,9 @@ public class DailyService extends CrudService<DailyDao, Daily> {
 //        考勤不存在则插入
         if (attendance==null){
             attendance = new Attendance();
-            if (null == user ){
-                throw new RestException("登陆超时,请重新登陆");
+            if (null == user ) {
+                return "1";
             }
-
             attendance.setAttendanceStatus("1");
             attendance.setDailyStatus("1");
             Calendar cal = Calendar.getInstance();
@@ -106,6 +105,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         this.save(dailyVo);
         return null;
     }
+
 
     /**
      * 获取单条日报详情

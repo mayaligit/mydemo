@@ -44,13 +44,13 @@ public class DailyController extends BaseRestController<DailyService> {
 
 //        response.setHeader("Access-Control-Allow-Origin", "*");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("status",true);
+        map.put("status",0);
 
         log.debug("==========测试前端是否传考勤ID上来==="+dailyVo.getAttendanceId()+"=====");
 
         if(StringUtils.isBlank(dailyVo.getDailyTitle())){
             map.put("dailyTitledWorkError","标题不能为空");
-            map.put("status",false);
+            map.put("status",1);
             return map;
         }
 
@@ -61,13 +61,19 @@ public class DailyController extends BaseRestController<DailyService> {
             if(StringUtils.isBlank(dailyVo.getFinishedWork())){
                 map.put("unFinishedWorkError","未完成工作不能为空");
             }
-            map.put("status",false);
+            map.put("status",2);
             return map;
         }
 
         String msg = service.insertDailyAndAttendance(dailyVo);
         if(StringUtils.isNotBlank(msg)){
-            map.put("status",1);
+            if(msg.equals("0")){
+                map.put("status",3);
+            }
+            if(msg.equals("1")){
+                map.put("status",4);
+            }
+
         }
         return map;
     }
