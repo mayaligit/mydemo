@@ -72,12 +72,14 @@ spring:
       min-idle: 0 #最小空闲连接
       max-active: 10  #最大连接数
       max-wait: -1  #最大阻塞等待时间
-
 certify:
   server:
     path: http://192.168.185.250:9010/certify  # 获取用户信息的接口路径
     userInfo: /user/info
 index:
-  server: http://221.176.34.113:8180/attendance/index.html  # 前端远程入口
+  server: http://221.176.34.113:8180/attendance/index.html  # 手机端前端远程入口
+index:
+  login: http://192.168.185.250:8180/admin_attendance/login.html  # PC端远程入口
+
 clazzesService:
  id: c2310c7ec996409b8e91f12daa428a98

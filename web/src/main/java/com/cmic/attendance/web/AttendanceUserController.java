@@ -11,9 +11,11 @@ import com.cmic.attendance.service.AttendanceUserService;
 import io.swagger.annotations.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.imageio.ImageIO;
@@ -36,6 +38,9 @@ import java.util.concurrent.TimeUnit;
 public class AttendanceUserController extends BaseRestController<AttendanceUserService> {
 
     private static Logger log = Logger.getLogger(AttendanceUserController.class);
+
+    @Value("${index.login}")
+    private  String login;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -116,5 +121,16 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
             log.debug("登录成功的session"+attendanceUserVo.toString());
         }
         return login;
+    }
+
+    @ApiOperation(value = "用户退出", notes = "用户退出", httpMethod = "GET")
+    @RequestMapping(value="/loginout", method = RequestMethod.GET)
+    public ModelAndView loginOut(){
+
+        ModelAndView mv=new ModelAndView();
+        redisTemplate.delete("attendanceUser");
+        log.debug("系统管理员退出");
+        mv.setViewName("redirect:" + login);
+        return mv;
     }
 }
