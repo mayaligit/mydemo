@@ -35,4 +35,13 @@ public class AttendanceUserVo implements Serializable {
     public void setCheckCode(String checkCode) {
         this.checkCode = checkCode;
     }
+
+    @Override
+    public String toString() {
+        return "AttendanceUserVo{" +
+                "attendanceUsername='" + attendanceUsername + '\'' +
+                ", attendancePassword='" + attendancePassword + '\'' +
+                ", checkCode='" + checkCode + '\'' +
+                '}';
+    }
 }
