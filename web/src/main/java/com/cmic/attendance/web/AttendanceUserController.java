@@ -129,7 +129,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
         ModelAndView mv=new ModelAndView();
         redisTemplate.delete("attendanceUser");
-        log.debug("系统管理员退出");
+        log.debug("系统管理员退出 跳转地址"+login);
         mv.setViewName("redirect:" + login);
         return mv;
     }
