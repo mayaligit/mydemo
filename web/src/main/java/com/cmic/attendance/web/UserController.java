@@ -78,7 +78,7 @@ public class UserController {
         }
         g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
         //向图片上写入验证码
-        g.drawString(checkCode,60,20);
+        g.drawString(checkCode,60,30);
 
         //将内存中的图片输出到浏览器
         //参数一：图片对象

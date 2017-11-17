@@ -37,9 +37,12 @@ public class LogFilter implements Filter {
         Object current_admin_info = (Object) redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
         Object loginUser = (Object) redisTemplate.boundValueOps("attendanceUser").get();
         //只拦电脑端
+        Object attendanceUserVo = request.getSession().getAttribute("attendanceUserVo");
         log.debug("手机端session"+">>>"+current_admin_info+"<<<");
         log.debug("服务器session"+">>>"+loginUser+"<<<");
-        if(loginUser == null ){
+
+        if(attendanceUserVo == null ){
+            //需要放行的代码
             if (url.equals("/attendance/user/login")
                     || url.equals("/attendance/info")
                     ||url.equals("/attandence/user/getCheckCode")

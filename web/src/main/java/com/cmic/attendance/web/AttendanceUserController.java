@@ -97,7 +97,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @RequestMapping(value="/login", method = RequestMethod.POST)
     @ResponseBody
-    public HashMap<String,String> login(@RequestBody AttendanceUserVo attendanceUserVo){
+    public HashMap<String,String> login(@RequestBody AttendanceUserVo attendanceUserVo,HttpServletRequest request){
         HashMap<String,String> map = new HashMap<>();
 //        验证码是否为空
         if(StringUtils.isBlank(attendanceUserVo.getCheckCode())) {
@@ -114,7 +114,8 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
                 return map;
             }
         }
-        HashMap<String, String> login = service.login(attendanceUserVo);
+        HashMap<String, String> login = service.login(attendanceUserVo,request);
+
         if ("0".equals(login.get("status"))){
             redisTemplate.boundValueOps("attendanceUser").set("attendanceUser");
             redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);
