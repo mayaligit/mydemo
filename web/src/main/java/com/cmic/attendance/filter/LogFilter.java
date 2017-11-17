@@ -51,7 +51,8 @@ public class LogFilter implements Filter {
 
             }else {
                 log.debug("拦截 URL"+">>>未登录，請重新登录<<<");
-                request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);
+                response.sendRedirect("http://192.168.185.250:8180/admin_attendance/login.html");
+                /*request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);*/
                 log.debug("执行了重定向");
             }
 
