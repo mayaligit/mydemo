@@ -40,34 +40,17 @@ public class LogFilter implements Filter {
         Object current_admin = request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Object attendanceUserVo = request.getSession().getAttribute("attendanceUserVo");
 
-        if( null== attendanceUserVo || "".equals(attendanceUserVo)){
-            //需要放行的代码
-            if (url.equals("/attendance/user/login") ||url.equals("/attandence/user/getCheckCode")
-                        ){
-                filterChain.doFilter(servletRequest,servletResponse);
-
-            }else if(url.equals("/attendance/info")){
-
-                filterChain.doFilter(servletRequest,servletResponse);
-
-            } else if(null !=current_admin) {
-               //放行手机端
-                log.debug(">>>>被拦截的URL："+url);
-                filterChain.doFilter(servletRequest,servletResponse);
-
-            }else if (url.equals("/attendance/getStartServerMesg")){
-
-                filterChain.doFilter(servletRequest,servletResponse);
-
-            } else {
-                //用户没有登录,转发跳转到
-                log.debug(">>>>被拦截的URL："+url);
-                response.sendRedirect("/attendance/user/noLogint");
-            }
-
-        }else if (null !=attendanceUserVo){
-
+        log.debug(">>>>手机端session："+current_admin);
+        log.debug(">>>>电脑端session："+attendanceUserVo);
+        if (null !=current_admin
+                || null !=attendanceUserVo
+                || null !="/attendance/user/login"
+                || url.equals("/attandence/user/getCheckCode")
+                || url.equals("/attendance/info")){
             filterChain.doFilter(servletRequest,servletResponse);
+        }else {
+            log.debug(">>>>转发："+current_admin);
+            request.getRequestDispatcher("/attandence/user/noLogint").forward(servletRequest, servletResponse);
         }
     }
 
