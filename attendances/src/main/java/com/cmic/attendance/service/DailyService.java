@@ -73,9 +73,6 @@ public class DailyService extends CrudService<DailyDao, Daily> {
 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         dailyVo.setSuggestionStatus("1");//意见状态设置为未阅
-        if(StringUtils.isBlank(dailyVo.getFinishedWork()) && StringUtils.isBlank(dailyVo.getDailyDesc())){
-            dailyVo.setDailyDesc("有未完成工作");
-        }
         dailyVo.setExaminer("陈华龙");
         dailyVo.preInsert();
 
@@ -92,16 +89,19 @@ public class DailyService extends CrudService<DailyDao, Daily> {
             Integer month = cal.get(Calendar.MONTH )+1;
             attendance.setAttendanceMonth(cal.get(Calendar.YEAR )+"-"+month.toString());
             attendance.setAttendanceUser(user.getName());
+//            attendance.setAttendanceUser("陈华龙");//测试数据
             attendanceService.save(attendance);
         }else{
             attendance.setUpdateTime(new Date());
             attendance.setDailyStatus("1");
             attendance.setAttendanceUser(user.getName());
+//            attendance.setAttendanceUser("陈华龙");//测试数据
             attendanceService.update(attendance);
         }
         dailyVo.setAttendanceId(attendance.getId());
         dailyVo.setExamineTime(dailyVo.getCreateTime());
         dailyVo.setUsername(user.getName());
+//        dailyVo.setUsername("陈华龙");//测试数据
         this.save(dailyVo);
         return null;
     }

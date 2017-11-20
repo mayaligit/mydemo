@@ -49,29 +49,22 @@ public class DailyController extends BaseRestController<DailyService> {
         log.debug("==========测试前端是否传考勤ID上来==="+dailyVo.getAttendanceId()+"=====");
 
         if(StringUtils.isBlank(dailyVo.getDailyTitle())){
-            map.put("dailyTitledWorkError","标题不能为空");
-            map.put("status",1);
+            map.put("status",1);//标题为空
             return map;
         }
 
-        if(StringUtils.isBlank(dailyVo.getFinishedWork()) && StringUtils.isBlank(dailyVo.getUnfinishedWork())){
-            if(StringUtils.isBlank(dailyVo.getFinishedWork())){
-                map.put("finishedWorkError","今日完成工作不能为空");
-            }
-            if(StringUtils.isBlank(dailyVo.getFinishedWork())){
-                map.put("unFinishedWorkError","未完成工作不能为空");
-            }
-            map.put("status",2);
+        if(StringUtils.isBlank(dailyVo.getTodayDaily())){
+            map.put("status",2);//今日日报为空
             return map;
         }
 
         String msg = service.insertDailyAndAttendance(dailyVo);
         if(StringUtils.isNotBlank(msg)){
             if(msg.equals("0")){
-                map.put("status",3);
+                map.put("status",3);//日报已存在
             }
             if(msg.equals("1")){
-                map.put("status",4);
+                map.put("status",4);//登录超时
             }
 
         }
