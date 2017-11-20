@@ -50,25 +50,22 @@ public class LogFilter implements Filter {
 
             }else if(url.equals("/attendance/info")){
                 filterChain.doFilter(servletRequest,servletResponse);
-            } else if(current_admin!=null){
+            } else if(current_admin!=null) {
                 //判断是否是手机端访问 如果是则放行
 
                 String requestHeader = request.getHeader("user-agent");
-                if(isMobileDevice(requestHeader)){
+                if (isMobileDevice(requestHeader)) {
                     //使用手机端
                     log.debug(">>>>放行手机端<<<<");
-                    filterChain.doFilter(servletRequest,servletResponse);
-                }else{
+                    filterChain.doFilter(servletRequest, servletResponse);
+                } else if (!isMobileDevice(requestHeader)){
                     //电脑端
                    /* response.sendRedirect("http://192.168.156.184:8180/admin_attendance/login.html");*/
                     /*request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);*/
                     log.debug("执行了重定向电脑端重定向项");
-                    new RestException(2,"用户没登录");
+                    throw  new RestException(2, "用户没登录");
                 }
 
-            } else {
-                log.debug("执行了重定向电脑端重定向项");
-                new RestException(2,"用户没登录");
             }
 
         }else if (null !=attendanceUserVo){
