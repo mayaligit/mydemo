@@ -58,13 +58,13 @@ public class LogFilter implements Filter {
                     //电脑端
                    /* response.sendRedirect("http://192.168.156.184:8180/admin_attendance/login.html");*/
                     /*request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);*/
-                    log.debug("被拦截的URL："+url);
+                    log.debug(">>>>放行手机端<<<< 被拦截的URL："+url);
                     throw  new RestException(2, "用户没登录");
                 }
 
             }else {
-                log.debug("被拦截的URL："+url);
-                throw  new RestException(2, "用户没登录");
+                log.debug("被拦截的URLhttp://192.168.156.184:8180/admin_attendance/login.html："+url);
+                response.sendRedirect("http://192.168.3.6/attendance/login.html");
             }
 
         }else if (null !=attendanceUserVo){
