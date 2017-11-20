@@ -4,6 +4,7 @@ import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.web.AttendanceController;
 import com.cmic.saas.base.model.BaseAdminEntity;
+import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.WebUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,28 +50,25 @@ public class LogFilter implements Filter {
 
             }else if(url.equals("/attendance/info")){
                 filterChain.doFilter(servletRequest,servletResponse);
-            } else if(current_admin_info!=null){
+            } else if(current_admin!=null){
                 //判断是否是手机端访问 如果是则放行
 
                 String requestHeader = request.getHeader("user-agent");
                 if(isMobileDevice(requestHeader)){
                     //使用手机端
+                    log.debug(">>>>放行手机端<<<<");
                     filterChain.doFilter(servletRequest,servletResponse);
                 }else{
                     //电脑端
-                    response.sendRedirect("http://192.168.185.250:8180/admin_attendance/login.html");
+                   /* response.sendRedirect("http://192.168.156.184:8180/admin_attendance/login.html");*/
                     /*request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);*/
-                    log.debug("执行了重定向 有reids+ 电脑端重定向项");
-                    response.setStatus(302);
-
+                    log.debug("执行了重定向电脑端重定向项");
+                    new RestException(2,"用户没登录");
                 }
 
             } else {
-                log.debug("拦截 URL"+">>>未登录，請重新登录<<<"+url);
-                response.sendRedirect("http://192.168.185.250:8180/admin_attendance/login.html");
-                /*request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);*/
-                log.debug("执行了重定向");
-                response.setStatus(302);
+                log.debug("执行了重定向电脑端重定向项");
+                new RestException(2,"用户没登录");
             }
 
         }else if (null !=attendanceUserVo){
