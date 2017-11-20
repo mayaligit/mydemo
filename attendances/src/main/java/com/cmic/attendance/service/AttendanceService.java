@@ -101,12 +101,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         //获取规则表固定
         Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
-        if (false){
+        if (clazzes==null){
             //不在考勤日期内直接返回
             return null;
         }else {
             //开始读取考勤组考勤的方式
             Integer groupAttendanceWay = 1;
+            System.out.println("进行打卡业务1");
             //一、固定时长
             if ("1".equals(groupAttendanceWay)) {
                 //判断当前地点是否异常
@@ -170,44 +171,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 } catch (Exception e) {
                     log.debug("插入统计表失败" + e.getMessage());
                 }
-
+                System.out.println("进行打卡业务结束");
                 //返回数据页面
                 return saveAttendance;
             } else {
-              /*  //二、自由模式
-                //判断当前地点是否异常
-                Attendance saveAttendance = new Attendance();
 
-                Integer groupAttendanceScope = groupRule.getGroupAttendanceScope();
-                if (Integer.parseInt(attendanceVo.getDistance())>groupAttendanceScope){
-                    saveAttendance.setAttendanceStatus("1");
-                    saveAttendance.setAttendanceDesc("地点异常");
-
-                }else {
-                    //地址重合则会是null或小于都走这里的逻辑
-                    saveAttendance.setAttendanceStatus("0");
-                }
-                //自由模式不做时间校验直接插入数据
-                //插入数据
-                Date startDate=new Date();
-                saveAttendance.setStartTimeStatus("0");
-                saveAttendance.setAttendanceUser(attendanceVo.getUsername());
-                Date startTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
-                saveAttendance.setStartTime(startTime);
-                //年月日
-                String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
-                String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
-                saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
-                        dateToYearMonthDayArry[1]);
-                saveAttendance.setStartLocation(attendanceVo.getLocation());
-                saveAttendance.setDailyStatus("0");
-                saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());
-                this.save(saveAttendance);
-
-                //自由模式不会向数据插入数据
-                //insetStartStatic(attendanceVo.getPhone(),dateToYearMonthDay,attendanceVo.getUsername());
-                //返回数据页面
-                return saveAttendance;*/
                 return null;
             }
         }
