@@ -42,17 +42,25 @@ public class LogFilter implements Filter {
 
         log.debug(">>>>手机端session："+current_admin);
         log.debug(">>>>电脑端session："+attendanceUserVo);
-        if (null !=current_admin
-                || null !=attendanceUserVo
-                || null !="/attendance/user/login"
-                || url.equals("/attandence/user/getCheckCode")
-                || url.equals("/attendance/info")){
-            log.debug(">>>>放行的URL："+url);
+        if (null !=current_admin){
+            //手机端放行
+            filterChain.doFilter(servletRequest,servletResponse);
+        } else if (url.equals("/attendance/info")) {
+            //认证用户中心放行
+            filterChain.doFilter(servletRequest,servletResponse);
+        }else if (url.equals("/attendance/user/login")){
+            //电脑端登录放行
+            filterChain.doFilter(servletRequest,servletResponse);
+        }else if (url.equals("/attandence/user/getCheckCode")){
+            //验证码端放行
             filterChain.doFilter(servletRequest,servletResponse);
         }else {
-            log.debug(">>>>转发："+current_admin);
+
+            //进行拦截
+            log.debug(">>>>转发：" + attendanceUserVo);
             request.getRequestDispatcher("/attandence/user/noLogint").forward(servletRequest, servletResponse);
         }
+
     }
 
     @Override
