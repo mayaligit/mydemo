@@ -103,6 +103,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
         if (clazzes==null){
             //不在考勤日期内直接返回
+            System.out.println("进行打卡业务0");
             return null;
         }else {
             //开始读取考勤组考勤的方式
@@ -171,11 +172,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 } catch (Exception e) {
                     log.debug("插入统计表失败" + e.getMessage());
                 }
-                System.out.println("进行打卡业务结束");
+                System.out.println("进行打卡业务结束3");
                 //返回数据页面
                 return saveAttendance;
             } else {
-
+                System.out.println("进行打卡业务4");
                 return null;
             }
         }
