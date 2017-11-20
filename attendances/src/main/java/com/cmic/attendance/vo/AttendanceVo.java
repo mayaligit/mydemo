@@ -1,5 +1,6 @@
 package com.cmic.attendance.vo;
 
+import com.cmic.attendance.model.Attendance;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 
@@ -10,7 +11,7 @@ import java.util.Date;
  * 打卡系统的vo
  * 传递数据的javabean
  */
-public class AttendanceVo {
+public class AttendanceVo{
 
     /*打卡uuid*/
     private String attendanceId;
@@ -219,25 +220,4 @@ public class AttendanceVo {
         this.endLocation = endLocation;
     }
 
-    @Override
-    public String toString() {
-        return "AttendanceVo{" +
-                "attendanceId='" + attendanceId + '\'' +
-                ", username='" + username + '\'' +
-                ", phone='" + phone + '\'' +
-                ", attendanceStatus='" + attendanceStatus + '\'' +
-                ", attendanceDesc='" + attendanceDesc + '\'' +
-                ", dailyStatus='" + dailyStatus + '\'' +
-                ", location='" + location + '\'' +
-                ", startTimeStatus='" + startTimeStatus + '\'' +
-                ", attendanceMonth='" + attendanceMonth + '\'' +
-                ", locationStatus='" + locationStatus + '\'' +
-                ", attendanceHour='" + attendanceHour + '\'' +
-                ", isAttendanceStart='" + isAttendanceStart + '\'' +
-                ", serverTime='" + serverTime + '\'' +
-                ", date='" + date + '\'' +
-                ", distance='" + distance + '\'' +
-                ", clazzesId='" + clazzesId + '\'' +
-                '}';
-    }
 }

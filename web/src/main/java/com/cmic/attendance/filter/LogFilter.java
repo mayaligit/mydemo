@@ -58,8 +58,7 @@ public class LogFilter implements Filter {
             //电脑端已经登记放行
             filterChain.doFilter(servletRequest,servletResponse);
         } else {
-
-            //进行拦截
+            //进行拦截转发到登录页面接口
             request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
            /* response.sendRedirect("/attendance/user/noLogint");*/
 

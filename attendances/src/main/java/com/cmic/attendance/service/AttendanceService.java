@@ -90,84 +90,128 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     /**
      * @param attendanceVo 封装前台数据的bean
      * @return AttendanceVo 封装统一返回信息的bean
+     * //获取规则表
+    Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
      */
     @Transactional(readOnly = false)
-    public AttendanceVo punchCard(AttendanceVo attendanceVo) {
+    public Attendance punchCard(AttendanceVo attendanceVo) {
 
+        /*读取规则gui*/
+       /* GroupRule groupRule = groupRuleService.getByGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);*/
+
+        //获取规则表固定
         Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
-        Date serverTime=new Date();
-        String attendanceTime = DateUtils.getDateToStrings(serverTime);
-        String[] split1 = attendanceTime.split(" ");
-        //打卡的上班时间 并设置上班时间
-        attendanceVo.setAttendanceHour(split1[1]);
-        String[] attendanceTimeArry = split1[1].split(":");
-        int hourTime = Integer.parseInt(attendanceTimeArry[0]);
-        int minuteTime = Integer.parseInt(attendanceTimeArry[1]);
-        //获取考勤的打卡的时间
-        String date = clazzes.getNomalStartTime();
-        String[] saArry = date.split(":");
-        int attendanceHourTime = Integer.parseInt(saArry[0]);
-        int attendanceMinuteTime = Integer.parseInt(saArry[1]);
-        //比较地点 范围内有效数据
-        String StnomalDistance = clazzes.getNomalAddress();
-        String Stardistance = attendanceVo.getDistance();
-        if (null ==Stardistance){
-            attendanceVo.setAttendanceStatus("0");
+        if (false){
+            //不在考勤日期内直接返回
+            return null;
         }else {
-            String[] split = Stardistance.split("\\.");
-            String distances=split[0];
-            if (Integer.parseInt(distances)>=Integer.parseInt(StnomalDistance)){
-                //地点异常
-                attendanceVo.setAttendanceStatus("1");
-                attendanceVo.setAttendanceDesc("地点异常");
-            }else {
-                attendanceVo.setAttendanceStatus("0");
-            }
-        }
+            //开始读取考勤组考勤的方式
+            Integer groupAttendanceWay = 1;
+            //一、固定时长
+            if ("1".equals(groupAttendanceWay)) {
+                //判断当前地点是否异常
+                Attendance saveAttendance = new Attendance();
+                Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
 
-        log.debug("当前打卡时间"+split1[1]);
-        /*正常打卡时间*/
-        if (hourTime < attendanceHourTime) {
-            attendanceVo.setStartTimeStatus("0");
-            AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
-            return resultattendanceVo;
-                //考勤小时相同 比较分
-        } else if (hourTime == attendanceHourTime) {
-            if (minuteTime < attendanceMinuteTime) {
-                attendanceVo.setStartTimeStatus("0");
-                AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
-                return resultattendanceVo;
-            } else {
-                attendanceVo.setStartTimeStatus("1");
-                AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
-                //此处代码待优化，插入统计表数据
-                try {
-                    this.insetStartStatic(attendanceVo.getPhone(),attendanceVo.getAttendanceMonth(),
-                            attendanceVo.getUsername());
-                }catch (Exception e){
-                        e.printStackTrace();
+                if (Integer.parseInt(attendanceVo.getDistance()) > groupAttendanceScope) {
+                    saveAttendance.setAttendanceStatus("1");
+                    saveAttendance.setAttendanceDesc("地点异常");
+
+                } else {
+                    //地址重合则会是null或小于都走这里的逻辑
+                    saveAttendance.setAttendanceStatus("0");
                 }
-                return resultattendanceVo;
+
+                //服务器时间
+                Date startDate = new Date();
+                String compareTime = DateUtils.getDateToHourMinuteS(startDate);
+                String[] compareTimeArry = compareTime.split(":");
+                Integer compareHour = Integer.parseInt(compareTimeArry[0]);
+                Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
+
+                //设计考勤时间
+                /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
+                String groupAttendanceStart = clazzes.getNomalStartTime();
+                String[] AttendanceStartArry = groupAttendanceStart.split(":");
+                Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
+                Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
+
+                //根据考勤时间不同插入状态码
+                if (compareHour < groupAttendanceHour) {
+                    //正常考勤
+                    saveAttendance.setStartTimeStatus("0");
+                } else if (compareHour == groupAttendanceHour) {
+                    //正常考勤
+                    if (compareMinute < groupAttendanceMinute) {
+                        saveAttendance.setStartTimeStatus("0");
+                    } else {
+                        saveAttendance.setStartTimeStatus("1");
+                    }
+                } else if (compareHour > groupAttendanceHour) {
+                    saveAttendance.setStartTimeStatus("1");
+                }
+                //插入数据
+                saveAttendance.setAttendanceUser(attendanceVo.getUsername());
+                Date startTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+                saveAttendance.setStartTime(startTime);
+                //年月日
+                String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
+                String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
+                saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0] + "-" +
+                        dateToYearMonthDayArry[1]);
+                saveAttendance.setStartLocation(attendanceVo.getLocation());
+                saveAttendance.setDailyStatus("0");
+                /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
+                this.save(saveAttendance);
+
+
+                try {
+                    //向统计表插入数据 String CreateBy,String createTime,String userName
+                    insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());
+                } catch (Exception e) {
+                    log.debug("插入统计表失败" + e.getMessage());
+                }
+
+                //返回数据页面
+                return saveAttendance;
+            } else {
+              /*  //二、自由模式
+                //判断当前地点是否异常
+                Attendance saveAttendance = new Attendance();
+
+                Integer groupAttendanceScope = groupRule.getGroupAttendanceScope();
+                if (Integer.parseInt(attendanceVo.getDistance())>groupAttendanceScope){
+                    saveAttendance.setAttendanceStatus("1");
+                    saveAttendance.setAttendanceDesc("地点异常");
+
+                }else {
+                    //地址重合则会是null或小于都走这里的逻辑
+                    saveAttendance.setAttendanceStatus("0");
+                }
+                //自由模式不做时间校验直接插入数据
+                //插入数据
+                Date startDate=new Date();
+                saveAttendance.setStartTimeStatus("0");
+                saveAttendance.setAttendanceUser(attendanceVo.getUsername());
+                Date startTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+                saveAttendance.setStartTime(startTime);
+                //年月日
+                String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
+                String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
+                saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
+                        dateToYearMonthDayArry[1]);
+                saveAttendance.setStartLocation(attendanceVo.getLocation());
+                saveAttendance.setDailyStatus("0");
+                saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());
+                this.save(saveAttendance);
+
+                //自由模式不会向数据插入数据
+                //insetStartStatic(attendanceVo.getPhone(),dateToYearMonthDay,attendanceVo.getUsername());
+                //返回数据页面
+                return saveAttendance;*/
+                return null;
             }
-        } else if (hourTime > attendanceHourTime && hourTime < 12) {
-            attendanceVo.setStartTimeStatus("1");
-            AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
-            //此处代码待优化，插入统计表数据
-            try {
-                this.insetStartStatic(attendanceVo.getPhone(),attendanceVo.getAttendanceMonth(),
-                        attendanceVo.getUsername());
-            }catch (Exception e){
-                    e.printStackTrace();
-            }
-            return resultattendanceVo;
-                //12点-14点打卡
-        }else if (hourTime >= 12 && hourTime<=14){
-            attendanceVo.setStartTimeStatus("1");
-            AttendanceVo resultattendanceVo=StartTmieMesg(attendanceVo);
-            return resultattendanceVo;
         }
-        log.debug("上班卡打卡异常");
-        return null;
     }
     //TODO 上班打卡业务并返回数据
     /* 返回数据封装入口方法
