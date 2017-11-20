@@ -163,8 +163,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setDailyStatus("0");
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
-
-
+                log.debug("保存后返回的ID"+saveAttendance.getId());
                 try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
                     insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());

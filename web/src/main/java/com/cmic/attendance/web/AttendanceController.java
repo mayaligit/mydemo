@@ -105,7 +105,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
-        String serverDate=DateUtils.getDateToHourMinuteS(serverTime);
+        String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
