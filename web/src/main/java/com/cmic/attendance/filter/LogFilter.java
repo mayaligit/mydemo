@@ -29,7 +29,8 @@ public class LogFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException,
+            ServletException,RestException{
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request=(HttpServletRequest) servletRequest;
         String url = request.getServletPath();
@@ -64,9 +65,8 @@ public class LogFilter implements Filter {
 
             }else {
                 //用户没有登录
-                log.debug("没有登录被拦截："+url);
-                response.sendRedirect("http://192.168.3.6/attendance/login.html");
-                response.setStatus(302);
+                log.debug(">>>>被拦截的URL："+url);
+                throw  new RestException(2, "用户没登录");
             }
 
         }else if (null !=attendanceUserVo){
