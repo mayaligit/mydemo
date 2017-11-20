@@ -110,7 +110,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             Integer groupAttendanceWay = 1;
             System.out.println("进行打卡业务1");
             //一、固定时长
-            if ("1".equals(groupAttendanceWay)) {
+            if ("1".equals("1")) {
                 //判断当前地点是否异常
                 Attendance saveAttendance = new Attendance();
                 Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
