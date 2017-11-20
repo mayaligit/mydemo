@@ -106,8 +106,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToHourMinuteS(serverTime);
-        String houst=serverDate.split("-")[1];
-        int houstTime=Integer.parseInt(houst);
         //检查当前用户是否已经打卡
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
