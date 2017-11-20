@@ -62,9 +62,13 @@ public class LogFilter implements Filter {
                     throw  new RestException(2, "用户没登录");
                 }
 
+            }else {
+                log.debug("被拦截的URL："+url);
+                throw  new RestException(2, "用户没登录");
             }
 
         }else if (null !=attendanceUserVo){
+
             filterChain.doFilter(servletRequest,servletResponse);
         }
     }
