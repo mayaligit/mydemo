@@ -19,10 +19,8 @@ public class Daily extends DataEntity<Daily> {
     protected Date submitTime;
     @ApiModelProperty(value = "日报标题")
     protected String dailyTitle;
-    @ApiModelProperty(value = "已完成工作")
-    protected String finishedWork;
-    @ApiModelProperty(value = "未完成工作")
-    protected String unfinishedWork;
+    @ApiModelProperty(value = "今日日报")
+    protected String todayDaily;
     @ApiModelProperty(value = "提交日报时的地点")
     protected String submitLocation;
     @ApiModelProperty(value = "日报审批人")
@@ -77,20 +75,12 @@ public class Daily extends DataEntity<Daily> {
         this.dailyTitle = dailyTitle;
     }
 
-    public String getFinishedWork() {
-        return finishedWork;
+    public String getTodayDaily() {
+        return todayDaily;
     }
 
-    public void setFinishedWork(String finishedWork) {
-        this.finishedWork = finishedWork;
-    }
-
-    public String getUnfinishedWork() {
-        return unfinishedWork;
-    }
-
-    public void setUnfinishedWork(String unfinishedWork) {
-        this.unfinishedWork = unfinishedWork;
+    public void setTodayDaily(String todayDaily) {
+        this.todayDaily = todayDaily;
     }
 
     public String getSubmitLocation() {
