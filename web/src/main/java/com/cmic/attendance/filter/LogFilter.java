@@ -47,23 +47,19 @@ public class LogFilter implements Filter {
                 filterChain.doFilter(servletRequest,servletResponse);
 
             }else if(url.equals("/attendance/info")){
-                filterChain.doFilter(servletRequest,servletResponse);
-            } else if(current_admin!=null) {
-                //判断是否是手机端访问 如果是则放行
-                String requestHeader = request.getHeader("user-agent");
-                if (isMobileDevice(requestHeader)) {
-                    //使用手机端
-                    log.debug(">>>>放行手机端<<<<");
-                    filterChain.doFilter(servletRequest, servletResponse);
-                } else if (!isMobileDevice(requestHeader)){
-                    //电脑端
-                   /* response.sendRedirect("http://192.168.156.184:8180/admin_attendance/login.html");*/
-                    /*request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);*/
-                    log.debug(">>>>放行手机端<<<< 被拦截的URL："+url);
-                    throw  new RestException(2, "用户没登录");
-                }
 
-            }else {
+                filterChain.doFilter(servletRequest,servletResponse);
+
+            } else if(null !=current_admin) {
+               //放行手机端
+                log.debug(">>>>被拦截的URL："+url);
+                filterChain.doFilter(servletRequest,servletResponse);
+
+            }else if (url.equals("/attendance/getStartServerMesg")){
+
+                filterChain.doFilter(servletRequest,servletResponse);
+
+            } else {
                 //用户没有登录
                 log.debug(">>>>被拦截的URL："+url);
                 throw  new RestException(2, "用户没登录");
