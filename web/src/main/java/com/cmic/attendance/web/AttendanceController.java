@@ -105,7 +105,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
-        String serverDate=DateUtils.getDateToString(serverTime);
+        String serverDate=DateUtils.getDateToHourMinuteS(serverTime);
         String houst=serverDate.split("-")[1];
         int houstTime=Integer.parseInt(houst);
         //检查当前用户是否已经打卡
@@ -171,9 +171,22 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         HttpServletResponse response =WebUtils.getRequestAttributes().getResponse();
       /*  response.setHeader("Access-Control-Allow-Origin", "*");*/
         attendanceVo.setClazzesId(this.clazzesId);
-        AttendanceVo resultattendanceVo = service.punchCard(attendanceVo);
-        log.debug("打上班卡返回数据"+resultattendanceVo.toString());
-        return resultattendanceVo;
+        Attendance attendanceBo = service.punchCard(attendanceVo);
+
+        AttendanceVo resultAttendanceVo =new AttendanceVo();
+        resultAttendanceVo.setAttendanceId(attendanceBo.getId());
+        resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
+        resultAttendanceVo.setPhone(attendanceVo.getPhone());
+        resultAttendanceVo.setAttendanceStatus(attendanceBo.getAttendanceStatus());
+        resultAttendanceVo.setAttendanceDesc(attendanceBo.getAttendanceDesc());
+        resultAttendanceVo.setDailyStatus(attendanceBo.getDailyStatus());
+        resultAttendanceVo.setLocation(attendanceBo.getStartLocation());
+        resultAttendanceVo.setStartTimeStatus(attendanceBo.getStartTimeStatus());
+        resultAttendanceVo.setAttendanceMonth(attendanceBo.getAttendanceMonth());
+        resultAttendanceVo.setLocationStatus(attendanceBo.getAttendanceStatus());
+        resultAttendanceVo.setAttendanceHour(DateUtils.getDateToHourMinuteS(attendanceBo.getStartTime()));
+        resultAttendanceVo.setIsAttendanceStart("0");
+        return resultAttendanceVo;
     }
 
 

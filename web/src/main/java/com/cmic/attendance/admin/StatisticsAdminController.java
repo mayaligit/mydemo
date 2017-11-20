@@ -131,7 +131,7 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
 
 //        response.setHeader("Access-Control-Allow-Origin", "*");
         Date date = new Date();
-        String nowDate = DateUtils.getDateToString(date);
+        String nowDate = DateUtils.getDateToYearMonthDay(date);
         Calendar c=Calendar.getInstance();
         c.setTime(date);
         int weekday=c.get(Calendar.DAY_OF_WEEK)-1;

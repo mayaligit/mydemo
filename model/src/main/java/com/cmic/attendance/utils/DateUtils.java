@@ -10,17 +10,6 @@ public class DateUtils {
     //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * 获取年月日yyyy-MM-dd的字符串
-     * @param date
-     * @return  String
-     */
-    public  static String getDateToString(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString=formatter.format(date);
-        return dateString;
-    }
-
-    /**
      * 获取年月日  yyyy-MM-dd HH:mm:ss 的字符串
      * @param date
      * @return string
@@ -30,19 +19,33 @@ public class DateUtils {
         String dateString=formatter.format(date);
         return dateString;
     }
-
     /**
-     * 获取年月日yyyy-MM-dd的字符串
+     * 获取年月日的字符串
      * @param date
      * @return  String
      */
-    public  static String getDateToStringHMS(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+    public  static String getDateToYearMonthDay(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString=formatter.format(date);
-        return dateString;
+        String[] split = dateString.split(" ");
+        return split[0];
     }
+
     /**
-            * 将时间格式转换成为  yyyy-MM-dd的日期格式
+     * 获取HH:mm:ss的字符串
+     * @param date
+     * @return  String
+     */
+    public  static String getDateToHourMinuteS(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString=formatter.format(date);
+        String[] split = dateString.split(" ");
+        return split[1];
+    }
+
+
+    /**
+     * 将时间格式转换成为  yyyy-MM-dd的日期格式
      * @param  stingTodate
      * @return date
      */
