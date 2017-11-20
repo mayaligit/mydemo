@@ -125,6 +125,17 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     }
 
     @ApiOperation(value = "用户退出", notes = "用户退出", httpMethod = "GET")
+    @RequestMapping(value="/noLogint", method = RequestMethod.GET)
+    public HashMap<String,String> noLogint(HttpServletRequest request){
+       /* redisTemplate.delete("attendanceUser");*/
+        request.getSession().removeAttribute("attendanceUserVo");
+        log.debug(">>>>>>>用户没登录<<<<<<<<<");
+        HashMap<String,String> reslutMap= new HashMap<String,String>();
+        reslutMap.put("code","2");
+        return reslutMap;
+    }
+
+    @ApiOperation(value = "用户退出", notes = "用户退出", httpMethod = "GET")
     @RequestMapping(value="/loginout", method = RequestMethod.GET)
     public HashMap<String,String> loginOut(HttpServletRequest request){
        /* redisTemplate.delete("attendanceUser");*/

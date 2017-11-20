@@ -60,9 +60,9 @@ public class LogFilter implements Filter {
                 filterChain.doFilter(servletRequest,servletResponse);
 
             } else {
-                //用户没有登录
+                //用户没有登录,转发跳转到
                 log.debug(">>>>被拦截的URL："+url);
-                throw  new RestException(2, "用户没登录");
+                response.sendRedirect("/attendance/user/noLogint");
             }
 
         }else if (null !=attendanceUserVo){
