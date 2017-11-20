@@ -54,7 +54,10 @@ public class LogFilter implements Filter {
         }else if (url.equals("/attandence/user/getCheckCode")){
             //验证码端放行
             filterChain.doFilter(servletRequest,servletResponse);
-        }else {
+        }else if(null!=attendanceUserVo){
+            //电脑端已经登记放行
+            filterChain.doFilter(servletRequest,servletResponse);
+        } else {
 
             //进行拦截
             request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
