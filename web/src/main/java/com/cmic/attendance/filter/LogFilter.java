@@ -57,8 +57,9 @@ public class LogFilter implements Filter {
         }else {
 
             //进行拦截
-            log.debug(">>>>转发：" + attendanceUserVo);
-            response.sendRedirect("/attendance/user/noLogint");
+            request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
+           /* response.sendRedirect("/attendance/user/noLogint");*/
+
         }
 
     }
