@@ -63,8 +63,10 @@ public class LogFilter implements Filter {
                 }
 
             }else {
-                log.debug("被拦截的URLhttp://192.168.156.184:8180/admin_attendance/login.html："+url);
+                //用户没有登录
+                log.debug("没有登录被拦截："+url);
                 response.sendRedirect("http://192.168.3.6/attendance/login.html");
+                response.setStatus(302);
             }
 
         }else if (null !=attendanceUserVo){
