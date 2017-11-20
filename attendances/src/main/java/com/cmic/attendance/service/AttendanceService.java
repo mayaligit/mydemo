@@ -113,9 +113,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             if ("1".equals("1")) {
                 //判断当前地点是否异常
                 Attendance saveAttendance = new Attendance();
+                String distance2 = attendanceVo.getDistance();
+                String[] split = distance2.split("\\.");
+                String distances=split[0];
                 Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
-
-                if (Integer.parseInt(attendanceVo.getDistance()) > groupAttendanceScope) {
+                if (Integer.parseInt(distances) > groupAttendanceScope) {
                     saveAttendance.setAttendanceStatus("1");
                     saveAttendance.setAttendanceDesc("地点异常");
 
