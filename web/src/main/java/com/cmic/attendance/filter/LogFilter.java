@@ -47,6 +47,7 @@ public class LogFilter implements Filter {
                 || null !="/attendance/user/login"
                 || url.equals("/attandence/user/getCheckCode")
                 || url.equals("/attendance/info")){
+            log.debug(">>>>放行的URL："+url);
             filterChain.doFilter(servletRequest,servletResponse);
         }else {
             log.debug(">>>>转发："+current_admin);
