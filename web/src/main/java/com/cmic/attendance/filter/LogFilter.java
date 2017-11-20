@@ -33,14 +33,11 @@ public class LogFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request=(HttpServletRequest) servletRequest;
         String url = request.getServletPath();
-        log.debug("请求 URL："+url);
         //判斷是否已登录
         Object current_admin_info = (Object) redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
         //只拦电脑端
         Object current_admin = request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-
         Object attendanceUserVo = request.getSession().getAttribute("attendanceUserVo");
-        log.debug("手机端session"+">>>"+current_admin+"<<<");
 
         if( null== attendanceUserVo || "".equals(attendanceUserVo)){
             //需要放行的代码
@@ -52,7 +49,6 @@ public class LogFilter implements Filter {
                 filterChain.doFilter(servletRequest,servletResponse);
             } else if(current_admin!=null) {
                 //判断是否是手机端访问 如果是则放行
-
                 String requestHeader = request.getHeader("user-agent");
                 if (isMobileDevice(requestHeader)) {
                     //使用手机端
@@ -62,15 +58,13 @@ public class LogFilter implements Filter {
                     //电脑端
                    /* response.sendRedirect("http://192.168.156.184:8180/admin_attendance/login.html");*/
                     /*request.getRequestDispatcher("/admin_attendance/login.html").forward(request,response);*/
-                    log.debug("执行了重定向电脑端重定向项");
+                    log.debug("被拦截的URL："+url);
                     throw  new RestException(2, "用户没登录");
                 }
 
             }
 
         }else if (null !=attendanceUserVo){
-            //已经登录
-            log.debug("post URL"+">>>放行<<<"+"服务器session"+">>>"+attendanceUserVo+"<<<");
             filterChain.doFilter(servletRequest,servletResponse);
         }
     }
