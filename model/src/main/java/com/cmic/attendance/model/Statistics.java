@@ -25,7 +25,8 @@ public class Statistics extends DataEntity<Statistics> {
     protected Date updateTime;
     @ApiModelProperty(value = "用户名")
     protected String username;
-
+    @ApiModelProperty(value = "所属考勤组名")
+    protected String attendanceGroup;
     public Statistics(){
 
     }
@@ -89,5 +90,11 @@ public class Statistics extends DataEntity<Statistics> {
         this.username = username;
     }
 
+    public String getAttendanceGroup() {
+        return attendanceGroup;
+    }
 
+    public void setAttendanceGroup(String attendanceGroup) {
+        this.attendanceGroup = attendanceGroup;
+    }
 }

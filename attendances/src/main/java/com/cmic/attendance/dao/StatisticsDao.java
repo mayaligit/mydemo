@@ -14,11 +14,11 @@ import java.util.Map;
 @Mapper
 public interface StatisticsDao extends CrudDao<Statistics> {
 
-    List<Map> checkAttendanceHardworkingByDay(String date);
+    List<Map> checkAttendanceHardworkingByDay(Map<String, Object> map);
 
-    List<Map> checkAttendanceHardworkingByMonth(String date);
+    List<Map> checkAttendanceHardworkingByMonth(Map<String, Object> map);
 
-    List<Map> checkAttendanceLatterByMonth(String date);
+    List<Map> checkAttendanceLatterByMonth(Map<String, Object> map);
 
     Statistics  checkAttendanceByCreateByAndCreateTime(@Param("createBy") String createBy,
                                                        @Param("createTime")String createTime);

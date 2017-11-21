@@ -2,15 +2,18 @@ package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.StatisticsDao;
 import com.cmic.attendance.model.Statistics;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
+import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +59,17 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
         logger.info("删除统计表：" + statistics.toJSONString());
     }
 
+
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按日统计勤奋榜
+     */
     public Map<String, Object> checkAttendanceHardworkingByDay(String date,PageInfo page) {
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -68,7 +81,10 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
         int pageSize = page.getPageSize();
         PageHelper.startPage(pageNum, pageSize,"workHour DESC");
 
-        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceHardworkingByDay(date);
+        Map paramsMap = new HashMap<>();
+        paramsMap.put("date",date);
+        paramsMap.put("attendanceGroup",attendanceGroup);
+        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceHardworkingByDay(paramsMap);
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
         Map<String, Object> map = new HashMap<>();
@@ -79,7 +95,16 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
         return map;
     }
 
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按月统计勤奋榜
+     */
     public Map<String, Object> checkAttendanceHardworkingByMonth(String date, PageInfo page) {
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -91,7 +116,12 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
 
         int i = date.lastIndexOf("-");
         String substring = date.substring(0, i);
-        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceHardworkingByMonth(substring);
+
+        Map paramsMap = new HashMap<>();
+        paramsMap.put("attendanceGroup",attendanceGroup);
+        paramsMap.put("substring",substring);
+
+        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceHardworkingByMonth(paramsMap);
 
         Map<String, Object> map = new HashMap<>();
         Page pi = (Page)pageInfo;
@@ -104,7 +134,16 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
 
     }
 
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按月统计迟到榜
+     */
     public Map<String, Object> checkAttendanceLatterByMonth(String date, PageInfo page) {
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -118,7 +157,12 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
 
         int i = date.lastIndexOf("-");
         String substring = date.substring(0, i);
-        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByMonth(substring);
+
+        Map paramsMap = new HashMap<>();
+        paramsMap.put("attendanceGroup",attendanceGroup);
+        paramsMap.put("substring",substring);
+
+        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByMonth(paramsMap);
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
 

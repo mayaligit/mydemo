@@ -190,7 +190,7 @@
         WHERE attendance_id = #{attendanceId}
     </update>
 
-    <select id="checkAttendanceByDay" parameterType="java.lang.String"  resultType="Map">
+    <select id="checkAttendanceByDay" parameterType="Map"  resultType="Map">
         SELECT
         DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
         a.attendance_user AS "userName"
@@ -198,6 +198,7 @@
         WHERE
             1=1 AND a.start_time IS NOT NULL
             and  date_format(a.start_time, '%Y-%m-%d') = #{value}
+            AND a.attendance_group = #{attendanceGroup}
     </select>
     <select id="getAttendanceByCreatebyAndCreateTime" resultType="Attendance">
         SELECT
@@ -216,14 +217,16 @@
         AND a.late_time = 1
         AND DATE(a.create_time) = #{date}
         AND DATE(b.create_time) = #{date}
+        AND a.attendance_group = #{attendanceGroup}
     </select>
 
-    <select id="getWorkCount" parameterType="String" resultType="int">
+    <select id="getWorkCount" parameterType="Map" resultType="int">
         SELECT
         COUNT(a.`id`) workCount
         FROM t_attendance a
         WHERE a.`start_time` IS NOT NULL
         and DATE(a.`start_time`) = #{date}
+        AND a.attendance_group = #{attendanceGroup}
     </select>
 
 
@@ -232,16 +235,17 @@
         FROM t_statistics a
         WHERE 1=1 AND a.late_time = 1
         AND DATE(a.create_time) = #{date}
+        AND a.attendance_group = #{attendanceGroup}
     </select>
 
-
-    <select id="getOutworkCount" parameterType="String" resultType="int">
+    <select id="getOutworkCount" parameterType="Map" resultType="int">
         SELECT
         COUNT(a.`id`) outworkCount
         FROM t_attendance a
         WHERE 1 = 1
         and a.attendance_status = "2"
         and DATE(a.`create_time`) = #{date}
+        AND a.attendance_group = #{attendanceGroup}
     </select>
 
     <select id="selectAttendances" parameterType="attendance" resultType="map">
