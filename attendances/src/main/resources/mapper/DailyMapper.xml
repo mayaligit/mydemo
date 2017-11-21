@@ -81,7 +81,7 @@
             #{createTime},
             #{updateBy.id},
             #{updateTime},
-            #{username}
+            #{username},
             #{attendanceGroup}
         )
     </insert>
@@ -100,7 +100,7 @@
         create_by = #{createBy.id},
         create_time = #{createTime},
         update_by = #{updateBy.id},
-        username = #{username}
+        username = #{username},
         attendance_group = #{attendanceGroup}
         WHERE id = #{id}
     </update>
