@@ -194,12 +194,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
                 log.debug("保存后返回的ID"+saveAttendance.getId());
-                try {
+                /*try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
                     insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());
                 } catch (Exception e) {
                     log.debug("插入统计表失败" + e.getMessage());
-                }
+                }*/
                 //返回数据页面
                 return saveAttendance;
             } else {
@@ -215,264 +215,112 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
       @return AttendanceEndVo 返回Controller的bean
      */
     @Transactional(readOnly = false)
-    public AttendanceEndVo punchCardEnd(AttendanceEndVo attendanceEndVo ){
-
-        Date serverTime=new Date();
-        String offtime = DateUtils.getDateToStrings(serverTime);
-        String[] split2 = offtime.split(" ");
-        String[] offtimeArry = split2[1].split(":");
-        int hourTime = Integer.parseInt(offtimeArry[0]);
-        int minuteTime = Integer.parseInt(offtimeArry[1]);
-        attendanceEndVo.setOfftime(split2[1]);
-        //从班次表中获取获取考勤时间 考勤地址 比较服务器时间
+    public Attendance punchCardEnd(AttendanceEndVo attendanceEndVo ){
+        /*读取规则gui
+        GroupRule groupRule = groupRuleService.getByGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0);*/
+        //将当前考勤日期转换为星期几
+        //获取规则表固定
         Clazzes clazzes = clazzesService.getClazzesById(attendanceEndVo.getClazzesId());
-        String dateString = clazzes.getNomalEndTime();
-        String[] saArry = dateString.split(":");
-        int offHourTime = Integer.parseInt(saArry[0]);
-        int offMinuteTime = Integer.parseInt(saArry[1]);
-        //获取标准上班时间
-        String nomalStartTime = clazzes.getNomalStartTime();
-        int tempTime=14;
-        /*//判断考勤地点是否异常
-        if (clazzes.getNomalAddress().equals(attendanceEndVo.getLocation())){
-            attendanceEndVo.setAttendanceStatus("0");
-        }else {
-            attendanceEndVo.setAttendanceStatus("1");
-            attendanceEndVo.setAttendanceDesc("地点异常");
-        }*/
-        //比较地点 范围内有效数据
-        String StnomalDistance = clazzes.getNomalAddress();
-        String distance = attendanceEndVo.getDistance();
-        if (null ==distance){
-            attendanceEndVo.setAttendanceStatus("0");
-        }else {
-            String[] split = distance.split("\\.");
-            String distances=split[0];
-            if (Integer.parseInt(distances)>=Integer.parseInt(StnomalDistance)){
-                //地点异常
-                attendanceEndVo.setAttendanceStatus("1");
-                attendanceEndVo.setAttendanceDesc("地点异常");
-            }else {
-                attendanceEndVo.setAttendanceStatus("0");
-            }
-        }
-        //早退
-        if ( hourTime < offHourTime && tempTime<= hourTime) {
-            attendanceEndVo.setEndTimeStatus("1");
-            //打卡插入数据
-            AttendanceEndVo AttendanceEndVo=EndTmieMesg(attendanceEndVo,"");
-           /* 统计表插入数据 待优化部分 与打卡功能业务无关*/
-            try{
-                InsetEndStaticBo insetEndStaticBo = new InsetEndStaticBo();
-                insetEndStaticBo.setCreateBy(attendanceEndVo.getPhone());
-                //当日的数据 2017-11-2
-                insetEndStaticBo.setCreateTime(attendanceEndVo.getAttendanceMonth());
-                insetEndStaticBo.setUserName(attendanceEndVo.getUsername());
-                insetEndStaticBo.setOfftime(attendanceEndVo.getOfftime());
-                //获取当天的上班时间
-                Attendance DBattendance = checkAttendance(attendanceEndVo.getPhone(), attendanceEndVo.getAttendanceMonth());
-                String startTime=null;
-                if (null !=DBattendance && DBattendance.getStartTime()!=null){
-                    Date DBstartTime=DBattendance.getStartTime();
-                    String dateToStrings = DateUtils.getDateToStrings(DBstartTime);
-                    String[] split1 = dateToStrings.split(" ");
-                    startTime=split1[1];
-                }
-                insetEndStaticBo.setStartTime(startTime);
-                //设置标准上班时间
-                insetEndStaticBo.setStandardTime(nomalStartTime);
-                //插入数据到统计表
-                insetEndStatic(insetEndStaticBo);
-            }catch (Exception e){
-                log.debug("插入数据到统计表失败"+e.getMessage());
-            }
-            return AttendanceEndVo;
-            /*正常*/
-        } else if (hourTime >= offHourTime) {
-            attendanceEndVo.setEndTimeStatus("0");
-           /* 插入数据是否使用分布式事务
-            DistributedLockUtils lock=new DistributedLockUtils(redisTemplate,"123",300,300);
-            try {
-                if(lock.lock()){
-                    //需要执行的代码
-                }
-            }catch (InterruptedException e) {
-                e.printStackTrace();
-            }finally {
-                lock.unlock();;
-            }
-            */
-            //插入数据 并返回处理结果
-            AttendanceEndVo AttendanceEndVo=EndTmieMesg(attendanceEndVo,"");
-            //插入计算统计时长的问题方法
-            try{
-                InsetEndStaticBo insetStatic = new InsetEndStaticBo();
-                insetStatic.setCreateBy(attendanceEndVo.getPhone());
-                //当日的数据 2017-11-2
-                insetStatic.setCreateTime(attendanceEndVo.getAttendanceMonth());
-                insetStatic.setUserName(attendanceEndVo.getUsername());
-                insetStatic.setOfftime(attendanceEndVo.getOfftime());
-                //获取当天的上班时间
-                Attendance DBattendance = checkAttendance(attendanceEndVo.getPhone(), attendanceEndVo.getAttendanceMonth());
-                String startTime=null;
-                if (null !=DBattendance){
-                    Date DBstartTime=DBattendance.getStartTime();
-                    if (DBstartTime!=null){
-                        String dateToStrings = DateUtils.getDateToStrings(DBstartTime);
-                        String[] split1 = dateToStrings.split(" ");
-                        startTime=split1[1];
-                    }
-                }
-                insetStatic.setStartTime(startTime);
-                insetEndMStatic(insetStatic);
-            }catch (Exception e){
-                log.debug("插入数据到统计表失败"+e.getMessage());
-            }
-            return AttendanceEndVo;
-        }else if (hourTime<14){
-            //早于14点打下班卡
-            attendanceEndVo.setEndTimeStatus("1");
-            //打卡插入数据
-            AttendanceEndVo AttendanceEndVo=EndTmieMesg(attendanceEndVo,"0");
-            //早退插入统计表数据
-             /* 统计表插入数据 待优化部分 与打卡功能业务无关*/
-            try{
-                InsetEndStaticBo insetStatic = new InsetEndStaticBo();
-                insetStatic.setCreateBy(attendanceEndVo.getPhone());
-                //当日的数据 2017-11-2
-                insetStatic.setCreateTime(attendanceEndVo.getAttendanceMonth());
-                insetStatic.setUserName(attendanceEndVo.getUsername());
-                insetStatic.setOfftime(attendanceEndVo.getOfftime());
-                //获取当天的上班时间
-                Attendance DBattendance = checkAttendance(attendanceEndVo.getPhone(), attendanceEndVo.getAttendanceMonth());
-                String startTime=null;
-                if (null !=DBattendance){
-                    Date DBstartTime=DBattendance.getStartTime();
-                    if (DBstartTime!=null){
-                        String dateToStrings = DateUtils.getDateToStrings(DBstartTime);
-                        String[] split1 = dateToStrings.split(" ");
-                        startTime=split1[1];
-                    }
-                }
-                insetStatic.setStartTime(startTime);
-                insetEndStatic(insetStatic);
-            }catch (Exception e){
-                log.debug("插入数据到统计表失败"+e.getMessage());
-            }
-            return AttendanceEndVo;
-        }
-        //打卡异常
-        return null;
-    }
-    //TODO 下班卡插入数据并且返回数据
-    /* 返回数据封装入口方法
-     * @param attendanceEndBo 业务层的bean
-     * @return AttendanceEndVo 返回给业务层的bean
-     * String status  "0" 正常时间    "1" 打早于12点打下班卡
-     */
-    @Transactional(readOnly = false)
-    public AttendanceEndVo EndTmieMesg(AttendanceEndVo attendanceEndBo,String status){
-        //检查是否存在表数据 需要参数 1.手机号 2.年月日
-        Attendance Dbattendance= checkAttendance(attendanceEndBo.getPhone(),attendanceEndBo.getAttendanceMonth());
-        String attendanceId ="";
-        String dailyStatus="0";
-        if (null ==Dbattendance ){
-            //插入数据插入数据
-            Attendance saveAttendance = new Attendance();
-            saveAttendance.setAttendanceUser(attendanceEndBo.getUsername());
-            String endTime =attendanceEndBo.getAttendanceMonth()+" "+attendanceEndBo.getOfftime();
-            Date dates = DateUtils.getStringsToDates(endTime);
-            saveAttendance.setEndTime(dates);
-            saveAttendance.setAttendanceStatus(attendanceEndBo.getAttendanceStatus());
-            saveAttendance.setEndTimeStatus(attendanceEndBo.getEndTimeStatus());
-            saveAttendance.setAttendanceDesc(attendanceEndBo.getAttendanceDesc());
-            //对日期类进行切割
-            String[] array=attendanceEndBo.getAttendanceMonth().split("-");
-            String year=array[0];
-            String month=array[1];
-            String attendanceMonth=year+"-"+month;
-            saveAttendance.setAttendanceMonth(attendanceMonth);
-            saveAttendance.setEndLocation(attendanceEndBo.getLocation());
-            //日报默认是未完成
-            saveAttendance.setDailyStatus("0");
-            if (dates == null) {
-                saveAttendance.setAttendanceDesc("打卡异常");
-                //打卡异常 抛异常回滚数据
-            }
-            this.save(saveAttendance);
-            //返回数据 id
-            attendanceId=saveAttendance.getId();
-        }else if (null !=Dbattendance){
-            //考勤数据存在
-            Dbattendance.getId();
-            Dbattendance.setAttendanceUser(attendanceEndBo.getUsername());
-            String endTime =attendanceEndBo.getAttendanceMonth()+" "+attendanceEndBo.getOfftime();
-            Date dates = DateUtils.getStringsToDates(endTime);
-            Dbattendance.setEndTime(dates);
-            Dbattendance.setAttendanceStatus(attendanceEndBo.getAttendanceStatus());
-            Dbattendance.setEndTimeStatus(attendanceEndBo.getEndTimeStatus());
-            //对日期类进行切割
-            String[] array=attendanceEndBo.getAttendanceMonth().split("-");
-            String year=array[0];
-            String month=array[1];
-            String attendanceMonth=year+"-"+month;
-            Dbattendance.setAttendanceMonth(attendanceMonth);
-            Dbattendance.setEndLocation(attendanceEndBo.getLocation());
-            //设置更新时间
-            Date date = new Date();
-            String dateToStrings = DateUtils.getDateToStrings(date);
-            Date stringsToDates = DateUtils.getStringsToDates(dateToStrings);
-            Dbattendance.setUpdateTime(stringsToDates);
-            if (dates == null) {
-                Dbattendance.setAttendanceDesc("打卡异常");
-                //异常状态码1 抛异常 回滚数据
-            }
-            this.save(Dbattendance);
-            attendanceId=Dbattendance.getId();
-        }else if (null !=Dbattendance && "1".equals(status)){
-            //早于12点打卡
-            Dbattendance.getId();
-            String endTime =attendanceEndBo.getAttendanceMonth()+" "+attendanceEndBo.getOfftime();
-            Date dates = DateUtils.getStringsToDates(endTime);
-            Dbattendance.setEndTime(dates);
-            Dbattendance.setAttendanceStatus(attendanceEndBo.getAttendanceStatus());
-            Dbattendance.setEndTimeStatus(attendanceEndBo.getEndTimeStatus());
-            //对日期类进行切割
-            String[] array=attendanceEndBo.getAttendanceMonth().split("-");
-            String year=array[0];
-            String month=array[1];
-            String attendanceMonth=year+"-"+month;
-            Dbattendance.setAttendanceMonth(attendanceMonth);
-            Dbattendance.setEndLocation(attendanceEndBo.getLocation());
-            //设置更新时间
-            Date date = new Date();
-            String dateToStrings = DateUtils.getDateToStrings(date);
-            Date stringsToDates = DateUtils.getStringsToDates(dateToStrings);
-            Dbattendance.setUpdateTime(stringsToDates);
-            if (dates == null) {
-                Dbattendance.setAttendanceDesc("打卡异常");
-                //异常状态码1 抛异常 回滚数据
-            }
-            this.save(Dbattendance);
-            attendanceId=Dbattendance.getId();
-        }
 
-        AttendanceEndVo resultAttendance=new AttendanceEndVo();
-        resultAttendance.setAttendanceId(attendanceId);
-         /*异常状态状态 判断地点的异常 0/正常 1/异常 2/外勤*/
-         if (null ==Dbattendance){
-             resultAttendance.setAttendanceStatus(attendanceEndBo.getAttendanceStatus());
-         }else {
-             resultAttendance.setAttendanceStatus(Dbattendance.getAttendanceStatus());
-         }
-       /* resultAttendance.setIsAttendanceEnd(attendanceEndBo.getIsAttendanceEnd()); 是否打卡不需要*/
-        resultAttendance.setOfftime(attendanceEndBo.getOfftime());
-        resultAttendance.setLocation(attendanceEndBo.getLocation());
-        resultAttendance.setAttendanceDesc(attendanceEndBo.getAttendanceDesc());
-        resultAttendance.setEndTimeStatus(attendanceEndBo.getEndTimeStatus());
-        resultAttendance.setDailyStatus(dailyStatus);
-        return resultAttendance;
+        if (clazzes==null){
+            //不在考勤日期内直接返回预留业务
+            return null;
+        }else {
+            //开始读取考勤组考勤的方式预留业务
+            Integer groupAttendanceWay = 1;
+            //一、固定时长
+            if ("1".equals("1")) {
+
+                //服务器时间
+                Date startDate = new Date();
+                String compareTime = DateUtils.getDateToHourMinuteS(startDate);
+                String[] compareTimeArry = compareTime.split(":");
+                Integer compareHour = Integer.parseInt(compareTimeArry[0]);
+                Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
+
+                //查询当前用户数据是否存在
+                Attendance saveAttendance=null;
+                Attendance attendance = checkAttendance(attendanceEndVo.getPhone(), DateUtils.getDateToYearMonthDay(startDate));
+
+                if (null==attendance){
+                    saveAttendance= new Attendance();
+                }else{
+                    saveAttendance=attendance;
+                    /*//插入数据 如果上班没打也算异常
+                    if (null ==attendance.getStartTime()){
+                        attendance.setAttendanceStatus("1");
+                        attendance.setAttendanceDesc("上班卡没打");
+                    }*/
+                }
+
+                //判断当前地点是否异常
+                String distance2 = attendanceEndVo.getDistance();
+                if (distance2 ==null || "".equals(distance2)){
+                    distance2="0:0";
+                }
+                String[] split = distance2.split("\\.");
+                String distances=split[0];
+                Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
+                if (Integer.parseInt(distances) > groupAttendanceScope) {
+                    saveAttendance.setAttendanceStatus("1");
+                    saveAttendance.setAttendanceDesc("地点异常");
+
+                } else {
+                    //地址重合则会是null或小于都走这里的逻辑
+                    saveAttendance.setAttendanceStatus("0");
+                }
+
+                //设计考勤时间
+                /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
+                String groupAttendanceStart = clazzes.getNomalEndTime();
+                String[] AttendanceStartArry = groupAttendanceStart.split(":");
+                Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
+                Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
+
+
+                /*大于或者等18点标准时间则为正常
+                 * 0为打卡正常
+                 * 1为迟到
+                 */
+                if (compareHour>groupAttendanceHour){
+                    saveAttendance.setEndTimeStatus("0");
+                }else if (compareHour==groupAttendanceHour){
+                    if (compareMinute>groupAttendanceMinute){
+                        saveAttendance.setEndTimeStatus("0");
+                    }else {
+                        saveAttendance.setEndTimeStatus("1");
+                    }
+                }else {
+                    saveAttendance.setEndTimeStatus("1");
+                }
+
+                //插入数据
+                saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
+                Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+                saveAttendance.setEndTime(endTime);
+                //年月日
+                String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
+                String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
+                saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
+                        dateToYearMonthDayArry[1]);
+                saveAttendance.setEndLocation(attendanceEndVo.getLocation());
+                saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
+
+                /**
+                 * 统计考勤信息数据
+                 *1、是否早退
+                 *2、打下班卡时间
+                 */
+                //返回数据
+                return attendance;
+            }else {
+                //二、自由模式。预留业务
+
+                return null;
+            }
+        }
     }
+
 
     /**
      * @author 何家来
