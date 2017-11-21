@@ -2,6 +2,8 @@ package com.cmic.attendance.web;
 
 import com.cmic.attendance.filter.LogFilter;
 import com.cmic.attendance.model.AttendanceUser;
+import com.cmic.attendance.model.RcsToken;
+import com.cmic.attendance.model.UserBo;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.utils.StringUtils;
 import com.cmic.saas.utils.WebUtils;
@@ -145,4 +147,11 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
         reslutMap.put("status","0");
         return reslutMap;
     }
+    /*@ApiOperation(value = "用户退出", notes = "用户退出", httpMethod = "GET")
+    @RequestMapping(value="/loginout3", method = RequestMethod.GET)
+    public ModelAndView info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("redirect:" + index);
+        return mav;
+    }*/
 }

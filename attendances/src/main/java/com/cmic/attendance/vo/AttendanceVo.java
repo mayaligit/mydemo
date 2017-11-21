@@ -1,11 +1,13 @@
 package com.cmic.attendance.vo;
 
 import com.cmic.attendance.model.Attendance;
+import com.cmic.attendance.model.GroupAddress;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 打卡系统的vo
@@ -59,6 +61,8 @@ public class AttendanceVo{
     private String isAttendanceEnd;
     /*下班卡地址*/
     private String endLocation;
+    //返回多地址数据
+    private List<GroupAddress> addressList;
 
     public String getAttendanceId() {
         return attendanceId;
@@ -220,4 +224,11 @@ public class AttendanceVo{
         this.endLocation = endLocation;
     }
 
+    public List<GroupAddress> getAddressList() {
+        return addressList;
+    }
+
+    public void setAddressList(List<GroupAddress> addressList) {
+        this.addressList = addressList;
+    }
 }

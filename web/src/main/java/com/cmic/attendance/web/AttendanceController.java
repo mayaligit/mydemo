@@ -1,7 +1,9 @@
 package com.cmic.attendance.web;
 
 import com.cmic.attendance.model.Attendance;
+import com.cmic.attendance.model.GroupAddress;
 import com.cmic.attendance.service.AttendanceService;
+import com.cmic.attendance.service.GroupAddressService;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceEndVo;
 import com.cmic.attendance.vo.AttendanceVo;
@@ -15,6 +17,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,12 +99,11 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public AttendanceVo getStartServerMesg() {
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
        /* response.setHeader("Access-Control-Allow-Origin", "*");*/
-        HttpServletRequest request = WebUtils.getRequest();
-        /*//测试数据
+        HttpServletRequest request = WebUtils.getRequest();//测试数据
         BaseAdminEntity user2=new BaseAdminEntity();
         user2.setId("18503096229");
         user2.setName("18503096229");
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO",user2);*/
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO",user2);
         //测试数据结束*/
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
@@ -154,6 +157,9 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setIsAttendanceStart("1");
             attendanceVo.setIsAttendanceEnd("1");
         }
+        //返回多地址打卡数据
+        List<GroupAddress> allGroupAddress = service.getAllGroupAddress();
+        attendanceVo.setAddressList(allGroupAddress);
         attendanceVo.setUsername(user.getName());
         attendanceVo.setPhone(user.getId());
         attendanceVo.setDate(serverDate);
@@ -170,7 +176,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
       /*  response.setHeader("Access-Control-Allow-Origin", "*");*/
         attendanceVo.setClazzesId(this.clazzesId);
         Attendance attendanceBo = service.punchCard(attendanceVo);
-
         AttendanceVo resultAttendanceVo =new AttendanceVo();
         resultAttendanceVo.setAttendanceId(attendanceBo.getId());
         resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
@@ -182,12 +187,10 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         resultAttendanceVo.setStartTimeStatus(attendanceBo.getStartTimeStatus());
         resultAttendanceVo.setAttendanceMonth(attendanceBo.getAttendanceMonth());
         resultAttendanceVo.setLocationStatus(attendanceBo.getAttendanceStatus());
-        log.debug("》》》》返回上班时间"+DateUtils.getDateToHourMinuteS(attendanceBo.getStartTime()));
         resultAttendanceVo.setAttendanceHour(DateUtils.getDateToHourMinuteS(attendanceBo.getStartTime()));
         resultAttendanceVo.setIsAttendanceStart("0");
         return resultAttendanceVo;
     }
-
 
     //TODO 下班卡业务
     /**
@@ -232,6 +235,10 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
        /* String userPhone = "13802885145";*/
 
         return service.getMonthAttendanceData(paramMap,userPhone);
+    }
 
+    @RequestMapping(value = "/test")
+    public List<GroupAddress> getAll(){
+        return  service.getAllGroupAddress();
     }
 }
