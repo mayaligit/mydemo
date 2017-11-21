@@ -159,6 +159,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }
         //返回多地址打卡数据
         List<GroupAddress> allGroupAddress = service.getAllGroupAddress();
+        log.debug("多地址数据"+allGroupAddress);
         attendanceVo.setAddressList(allGroupAddress);
         attendanceVo.setUsername(user.getName());
         attendanceVo.setPhone(user.getId());
