@@ -118,7 +118,7 @@
 
     <select id="checkAttendanceHardworkingByDay"  parameterType="String" resultType="java.util.HashMap" >
 
-     SELECT ROUND(SUM(office_time)/60,2) workHour,a.create_by
+     SELECT ROUND(SUM(office_time)/60,2) workHour,a.username "create_by"
       FROM t_statistics a
       WHERE
       1=1 AND DATE_FORMAT(a.update_time,'%Y-%m-%d') = #{date}
@@ -129,7 +129,7 @@
 
     <select id="checkAttendanceHardworkingByMonth"  parameterType="String" resultType="java.util.HashMap">
 
-        SELECT round(SUM(office_time)/60,2) workHour,a.create_by
+        SELECT round(SUM(office_time)/60,2) workHour,a.username "create_by"
         FROM t_statistics a
         WHERE
         1=1 and DATE_FORMAT(a.update_time,'%Y-%m') = #{date}
@@ -139,7 +139,7 @@
 
     <select id="checkAttendanceLatterByMonth" parameterType="String" resultType="java.util.HashMap">
 
-        SELECT SUM(late_time) lateTime,a.create_by
+        SELECT SUM(late_time) lateTime,a.username "create_by"
         FROM t_statistics a
         WHERE
         late_time IS NOT NULL and DATE_FORMAT(a.update_time,'%Y-%m') = #{date}

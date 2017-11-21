@@ -193,7 +193,7 @@
     <select id="checkAttendanceByDay" parameterType="java.lang.String"  resultType="Map">
         SELECT
         DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
-        a.create_by AS "userName"
+        a.attendance_user AS "userName"
         FROM t_attendance a
         WHERE
             1=1 AND a.start_time IS NOT NULL
@@ -209,7 +209,7 @@
     <select id="checkAttendanceLatterByDay" parameterType="Map" resultType="java.util.HashMap">
         SELECT
         DATE_FORMAT(b.start_time,'%Y-%m-%d %H:%i') AS "startTime",
-        a.create_by AS "userName"
+        a.username AS "userName"
         FROM t_statistics a,t_attendance b
         WHERE 1=1
         AND a.create_by = b.create_by
