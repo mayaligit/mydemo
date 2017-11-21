@@ -7,6 +7,7 @@ import com.cmic.attendance.service.GroupAddressService;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceEndVo;
 import com.cmic.attendance.vo.AttendanceVo;
+import com.cmic.attendance.vo.GroupAddressVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
@@ -25,6 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +157,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }
         attendanceVo.setUsername(user.getName());
         //返回多地址打卡数据
-        List<GroupAddress> allGroupAddress = service.getAllGroupAddress();
+        ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
         log.debug("多地址数据"+allGroupAddress);
         System.out.println("<<<<<<<<<<<<<<<<<<<<"+allGroupAddress.toString()+">>>>>>>>>>>>>>>>>>>>>>>>");
         attendanceVo.setAddressList(allGroupAddress);
@@ -236,7 +238,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     }
 
     @RequestMapping(value = "/test")
-    public List<GroupAddress> getAll(){
-        return  service.getAllGroupAddress();
+    public ArrayList<GroupAddressVo> getAll(){
+        ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
+        return allGroupAddress;
     }
 }

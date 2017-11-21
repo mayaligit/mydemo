@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class AttendanceVo{
     /*下班卡地址*/
     private String endLocation;
     //返回多地址数据
-    private List<GroupAddress> addressList;
+    private ArrayList<GroupAddressVo> addressList;
 
     public String getAttendanceId() {
         return attendanceId;
@@ -224,11 +225,11 @@ public class AttendanceVo{
         this.endLocation = endLocation;
     }
 
-    public List<GroupAddress> getAddressList() {
+    public ArrayList<GroupAddressVo> getAddressList() {
         return addressList;
     }
 
-    public void setAddressList(List<GroupAddress> addressList) {
+    public void setAddressList(ArrayList<GroupAddressVo> addressList) {
         this.addressList = addressList;
     }
 }
