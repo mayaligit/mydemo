@@ -1,0 +1,120 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.GroupAddressDao">
+    <sql id="groupAddressColumns">
+        a.id AS "id",
+        a.group_attendance_longitude AS "groupAttendanceLongitude",
+        a.group_attendance_dimension AS "groupAttendanceDimension",
+        a.group_address AS "groupAddress",
+        a.attendance_group_id AS "attendanceGroupId",
+        a.remarks AS "remarks",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate"
+    </sql>
+
+    <sql id="groupAddressJoins">
+    </sql>
+
+    <select id="get" resultType="GroupAddress">
+        SELECT
+        <include refid="groupAddressColumns"/>
+        FROM t_group_address a
+        <include refid="groupAddressJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="GroupAddress">
+        SELECT
+        <include refid="groupAddressColumns"/>
+        FROM t_group_address a
+        <include refid="groupAddressJoins"/>
+        <where>
+            1 = 1
+        <if test="groupAttendanceLongitude != null">
+        </if>
+        <if test="groupAttendanceDimension != null">
+        </if>
+        <if test="groupAddress != null">
+        </if>
+        <if test="attendanceGroupId != null">
+        </if>
+        <if test="remarks != null">
+        </if>
+        <if test="createBy.id != null">
+        </if>
+        <if test="createDate != null">
+        </if>
+        <if test="updateBy.id != null">
+        </if>
+        <if test="updateDate != null">
+        </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="GroupAddress">
+        SELECT
+        <include refid="groupAddressColumns"/>
+        FROM t_group_address a
+        <include refid="groupAddressJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_group_address(
+            id,
+            group_attendance_longitude,
+            group_attendance_dimension,
+            group_address,
+            attendance_group_id,
+            remarks,
+            create_by,
+            create_date,
+            update_by,
+            update_date
+        ) VALUES (
+            #{id},
+            #{groupAttendanceLongitude},
+            #{groupAttendanceDimension},
+            #{groupAddress},
+            #{attendanceGroupId},
+            #{remarks},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_group_address SET
+        remarks = #{remarks},
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_group_address SET
+        <if test="groupAttendanceLongitude != null  and groupAttendanceLongitude != ''">
+        group_attendance_longitude = #{groupAttendanceLongitude},
+        </if>
+        <if test="groupAttendanceDimension != null  and groupAttendanceDimension != ''">
+        group_attendance_dimension = #{groupAttendanceDimension},
+        </if>
+        <if test="groupAddress != null  and groupAddress != ''">
+        group_address = #{groupAddress},
+        </if>
+        <if test="attendanceGroupId != null  and attendanceGroupId != ''">
+        attendance_group_id = #{attendanceGroupId},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_group_address
+        WHERE id = #{id}
+    </delete>
+</mapper>

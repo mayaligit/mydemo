@@ -4,6 +4,7 @@ import com.cmic.attendance.bo.InsetEndStaticBo;
 import com.cmic.attendance.dao.AttendanceDao;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Clazzes;
+import com.cmic.attendance.model.GroupAddress;
 import com.cmic.attendance.model.Statistics;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceEndVo;
@@ -38,6 +39,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     private ClazzesService clazzesService;
     @Autowired
     private StatisticsService statisticsService;
+    @Autowired
+    private GroupAddressService groupAddressService;
 
     public Attendance get(String id) {
         return super.get(id);
@@ -71,6 +74,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         super.delete(id);
         logger.info("删除考勤表：" + attendance.toJSONString());
     }
+//#TODO 获取多地址数据
+    public List<GroupAddress> getAllGroupAddress (){
+        System.out.println("执行了获取多地址方法");
+        return groupAddressService.findAll();
+    }
+
 //#TODO 判断当前用户是否存在
     /**
      * @param phone
