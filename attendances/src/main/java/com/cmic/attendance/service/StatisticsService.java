@@ -119,7 +119,7 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
 
         Map paramsMap = new HashMap<>();
         paramsMap.put("attendanceGroup",attendanceGroup);
-        paramsMap.put("substring",substring);
+        paramsMap.put("date",substring);
 
         List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceHardworkingByMonth(paramsMap);
 
@@ -160,7 +160,7 @@ public class StatisticsService extends CrudService<StatisticsDao, Statistics> {
 
         Map paramsMap = new HashMap<>();
         paramsMap.put("attendanceGroup",attendanceGroup);
-        paramsMap.put("substring",substring);
+        paramsMap.put("date",substring);
 
         List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByMonth(paramsMap);
         Page pi = (Page)pageInfo;
