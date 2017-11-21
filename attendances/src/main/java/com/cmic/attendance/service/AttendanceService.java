@@ -226,7 +226,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             //不在考勤日期内直接返回预留业务
             return null;
         }else {
-            //开始读取考勤组考勤的方式
+            //开始读取考勤组考勤的方式预留业务
             Integer groupAttendanceWay = 1;
             //一、固定时长
             if ("1".equals("1")) {
@@ -241,15 +241,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //查询当前用户数据是否存在
                 Attendance saveAttendance=null;
                 Attendance attendance = checkAttendance(attendanceEndVo.getPhone(), DateUtils.getDateToYearMonthDay(startDate));
-                if (null !=attendance){
+
+                if (null==attendance){
+                    saveAttendance= new Attendance();
+                }else{
                     attendance=saveAttendance;
-                    //插入数据 如果上班没打也算异常
+                    /*//插入数据 如果上班没打也算异常
                     if (null ==attendance.getStartTime()){
                         attendance.setAttendanceStatus("1");
                         attendance.setAttendanceDesc("上班卡没打");
-                    }
-                }else {
-                    saveAttendance= new Attendance();
+                    }*/
                 }
 
                 //判断当前地点是否异常
