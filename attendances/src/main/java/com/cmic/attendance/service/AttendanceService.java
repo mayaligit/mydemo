@@ -193,7 +193,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setDailyStatus("0");
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
-                log.debug("保存后返回的ID"+saveAttendance.getId());
                 /*try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
                     insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());
@@ -306,12 +305,15 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setEndLocation(attendanceEndVo.getLocation());
                 saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
 
+                //保存数据
+                this.save(saveAttendance);
                 /**
                  * 统计考勤信息数据
                  *1、是否早退
                  *2、打下班卡时间
                  */
                 //返回数据
+
                 return attendance;
             }else {
                 //二、自由模式。预留业务
