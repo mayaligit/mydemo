@@ -182,6 +182,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         resultAttendanceVo.setStartTimeStatus(attendanceBo.getStartTimeStatus());
         resultAttendanceVo.setAttendanceMonth(attendanceBo.getAttendanceMonth());
         resultAttendanceVo.setLocationStatus(attendanceBo.getAttendanceStatus());
+        log.debug("》》》》返回上班时间"+DateUtils.getDateToHourMinuteS(attendanceBo.getStartTime()));
         resultAttendanceVo.setAttendanceHour(DateUtils.getDateToHourMinuteS(attendanceBo.getStartTime()));
         resultAttendanceVo.setIsAttendanceStart("0");
         return resultAttendanceVo;
