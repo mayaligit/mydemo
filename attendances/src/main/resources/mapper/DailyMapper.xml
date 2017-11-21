@@ -16,7 +16,7 @@
         a.create_time AS "createTime",
         a.update_by AS "updateBy.id",
         a.update_time AS "updateTime",
-        a.username AS "username"
+        a.username AS "username",
         a.attendance_group AS "attendanceGroup"
     </sql>
 
