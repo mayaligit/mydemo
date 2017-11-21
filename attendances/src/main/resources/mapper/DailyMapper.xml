@@ -208,7 +208,7 @@
                 and create_by = #{createBy}
             </if>
             <if test="attendanceGroup != null and attendanceGroup != ''">
-                and attendance_group = #{attendanceGroup}
+                and a.attendance_group = #{attendanceGroup}
             </if>
         </where>
     </select>

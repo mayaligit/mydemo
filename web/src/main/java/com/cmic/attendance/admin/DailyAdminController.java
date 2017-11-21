@@ -2,12 +2,14 @@ package com.cmic.attendance.admin;
 
 import com.cmic.attendance.model.Daily;
 import com.cmic.attendance.service.DailyService;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -42,7 +44,11 @@ public class DailyAdminController extends BaseRestController<DailyService> {
      * @return
      */
     @PostMapping("/dailyList")
-    public Map<String, Object> get(@RequestBody(required = false) Map<String, Object> parmMap) {
+    public Map<String, Object> get(@RequestBody(required = false) Map<String, Object> parmMap,
+                                   HttpSession session) {
+        //获取session中的用户信息
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)session.getAttribute("attendanceUserVo");
+        String attendance_group = attendanceUserVo.getAttendanceGroup();
         Daily daily = new Daily();
         PageInfo<Daily> page = new PageInfo();
 
@@ -51,6 +57,7 @@ public class DailyAdminController extends BaseRestController<DailyService> {
             page.setPageSize(parmMap.get("pageSize")==null?10:(int)parmMap.get("pageSize"));
             daily.setUsername((String)parmMap.get("username"));
             daily.setSuggestionStatus((String)parmMap.get("suggestionStatus"));
+            daily.setAttendanceGroup(attendance_group);
         }
 
         return service.findDailyList(page, daily);
