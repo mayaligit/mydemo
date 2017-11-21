@@ -206,14 +206,15 @@
         WHERE a.create_by = #{createBy} AND DATE(a.create_time)=#{createTime}
     </select>
     <select id="checkAttendanceLatterByDay" parameterType="Map" resultType="java.util.HashMap">
-
         SELECT
-        DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
+        DATE_FORMAT(b.start_time,'%Y-%m-%d %H:%i') AS "startTime",
         a.create_by AS "userName"
-        FROM t_attendance a
-        WHERE 1=1 and a.`start_time` IS NOT NULL
-        AND DATE(a.start_time) = #{date}
-        AND SUBSTRING(a.start_time,11,18)-#{nomalStartTime} &gt; "00:00:00"
+        FROM t_statistics a,t_attendance b
+        WHERE 1=1
+        AND a.create_by = b.create_by
+        AND a.late_time = 1
+        AND DATE(a.create_time) = #{date}
+        AND DATE(b.create_time) = #{date}
     </select>
 
     <select id="getWorkCount" parameterType="String" resultType="int">
@@ -226,13 +227,10 @@
 
 
     <select id="getLatterCount" parameterType="Map" resultType="int">
-
-        SELECT
-        COUNT(a.`id`) latterCount
-        FROM t_attendance a
-        WHERE 1=1 AND a.start_time is NOT NULL
-        and  DATE(a.start_time) = #{date}
-        AND SUBSTRING(a.start_time,11,18)-#{nomalStartTime} &gt; "00:00:00"
+        SELECT COUNT(id)
+        FROM t_statistics a
+        WHERE 1=1 AND a.late_time = 1
+        AND DATE(a.create_time) = #{date}
     </select>
 
 
