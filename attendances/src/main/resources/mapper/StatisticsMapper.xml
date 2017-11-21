@@ -118,11 +118,11 @@
 
     <select id="checkAttendanceHardworkingByDay"  parameterType="String" resultType="java.util.HashMap" >
 
-     SELECT create_by ,ROUND((UNIX_TIMESTAMP(end_time)-UNIX_TIMESTAMP(start_time))/3600,2) workHour
-     FROM t_attendance a
-     WHERE  a.`end_time` IS NOT NULL
-     and a.`start_time` IS NOT NULL
-     and DATE(a.create_time) = #{date}
+     SELECT ROUND(SUM(office_time)/60,2) workHour,a.create_by
+      FROM t_statistics a
+      WHERE
+      1=1 AND DATE_FORMAT(a.update_time,'%Y-%m-%d') = #{date}
+      GROUP BY a.create_by
     </select>
 
 

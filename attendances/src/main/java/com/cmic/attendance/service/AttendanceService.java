@@ -644,7 +644,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Map<String, Object> param = new HashMap<>();
         String nomalStartTime = clazzes.getNomalStartTime();
         param.put("date",date);
-        param.put("nomalStartTime",nomalStartTime);
+//        param.put("nomalStartTime",nomalStartTime);
         int latterCount = this.dao.getLatterCount(param);
         map.put("latterCount",latterCount);
 
