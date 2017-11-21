@@ -74,6 +74,11 @@ public class DailyService extends CrudService<DailyDao, Daily> {
 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        if(null == attendanceUserVo){
+            System.out.print("=================attendanceUserVo为空===================");
+        }else{
+            System.out.print("=================attendanceUserVo===================" +attendanceUserVo);
+        }
         dailyVo.setSuggestionStatus("1");//意见状态设置为未阅
         dailyVo.setExaminer("陈华龙");
         dailyVo.preInsert();
