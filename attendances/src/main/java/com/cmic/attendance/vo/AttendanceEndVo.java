@@ -38,7 +38,8 @@ public class AttendanceEndVo implements Serializable {
     private  String distance;
     /*班次表id*/
     private String clazzesId;
-
+    /*考勤组*/
+    private String attendanceGroup;
     public String getClazzesId() {
         return clazzesId;
     }
@@ -171,24 +172,11 @@ public class AttendanceEndVo implements Serializable {
         this.distance = distance;
     }
 
-    @Override
-    public String toString() {
-        return "AttendanceEndVo{" +
-                "username='" + username + '\'' +
-                ", attendanceMonth='" + attendanceMonth + '\'' +
-                ", location='" + location + '\'' +
-                ", offtime='" + offtime + '\'' +
-                ", phone='" + phone + '\'' +
-                ", attendanceId='" + attendanceId + '\'' +
-                ", attendanceStatus='" + attendanceStatus + '\'' +
-                ", attendanceDesc='" + attendanceDesc + '\'' +
-                ", isAttendanceEnd='" + isAttendanceEnd + '\'' +
-                ", endTimeStatus='" + endTimeStatus + '\'' +
-                ", dailyStatus='" + dailyStatus + '\'' +
-                ", serverTime='" + serverTime + '\'' +
-                ", date='" + date + '\'' +
-                ", distance='" + distance + '\'' +
-                ", clazzesId='" + clazzesId + '\'' +
-                '}';
+    public String getAttendanceGroup() {
+        return attendanceGroup;
+    }
+
+    public void setAttendanceGroup(String attendanceGroup) {
+        this.attendanceGroup = attendanceGroup;
     }
 }
