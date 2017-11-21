@@ -17,6 +17,7 @@
         a.update_by AS "updateBy.id",
         a.update_time AS "updateTime",
         a.username AS "username"
+        a.attendance_group AS "attendanceGroup"
     </sql>
 
     <sql id="dailyJoins">
@@ -63,7 +64,8 @@
             create_time,
             update_by,
             update_time,
-            username
+            username,
+            attendance_group
         ) VALUES (
             #{id},
             #{attendanceId},
@@ -80,6 +82,7 @@
             #{updateBy.id},
             #{updateTime},
             #{username}
+            #{attendanceGroup}
         )
     </insert>
 
@@ -98,6 +101,7 @@
         create_time = #{createTime},
         update_by = #{updateBy.id},
         username = #{username}
+        attendance_group = #{attendanceGroup}
         WHERE id = #{id}
     </update>
 
@@ -139,6 +143,9 @@
         <if test="username != null and username != ''">
             username = #{username},
         </if>
+        <if test="attendanceGroup != null and attendanceGroup != ''">
+            attendance_group = #{attendanceGroup},
+        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -160,7 +167,7 @@
     <select id="getDailyById" parameterType="String" resultType="Daily">
         SELECT
         id ,username ,submit_time AS "submitTime",daily_title AS "dailyTitle",today_daily AS "todayDaily",
-        suggestion_status AS "suggestionStatus",daily_desc AS "dailyDesc"
+        suggestion_status AS "suggestionStatus",daily_desc AS "dailyDesc",attendance_group AS "attendanceGroup"
         FROM t_daily
         WHERE id = #{dailyId}
     </select>
@@ -174,7 +181,7 @@
 
     <select id="findDailyList" parameterType="Daily" resultType="Map">
         SELECT
-          a.id , a.username ,a.daily_title AS dailyTitle ,a.daily_desc AS  dailyDesc ,
+          a.id , a.username ,a.daily_title AS dailyTitle ,a.daily_desc AS  dailyDesc ,a.attendance_group AS attendanceGroup,
         date_format(a.submit_time,'%Y年%m月%d日 %T') AS submitTime , a.suggestion_status AS suggestionStatus
         FROM t_daily a
         <where>
@@ -199,6 +206,9 @@
             </if>
             <if test="createBy != null and createBy != ''">
                 and create_by = #{createBy}
+            </if>
+            <if test="attendanceGroup != null and attendanceGroup != ''">
+                and attendance_group = #{attendanceGroup}
             </if>
         </where>
     </select>
