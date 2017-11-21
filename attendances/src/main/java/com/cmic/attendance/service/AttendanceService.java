@@ -245,7 +245,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 if (null==attendance){
                     saveAttendance= new Attendance();
                 }else{
-                    attendance=saveAttendance;
+                    saveAttendance=attendance;
                     /*//插入数据 如果上班没打也算异常
                     if (null ==attendance.getStartTime()){
                         attendance.setAttendanceStatus("1");
