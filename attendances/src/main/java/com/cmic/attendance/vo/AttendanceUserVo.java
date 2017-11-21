@@ -8,6 +8,8 @@ public class AttendanceUserVo implements Serializable {
 
     private  String attendanceUsername;
 
+    protected String attendanceGroup;
+
     private  String attendancePassword;
 
     private  String checkCode;
@@ -34,6 +36,14 @@ public class AttendanceUserVo implements Serializable {
 
     public void setCheckCode(String checkCode) {
         this.checkCode = checkCode;
+    }
+
+    public String getAttendanceGroup() {
+        return attendanceGroup;
+    }
+
+    public void setAttendanceGroup(String attendanceGroup) {
+        this.attendanceGroup = attendanceGroup;
     }
 
     @Override
