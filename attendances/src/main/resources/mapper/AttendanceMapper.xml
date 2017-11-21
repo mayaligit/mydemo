@@ -196,7 +196,8 @@
         a.create_by AS "userName"
         FROM t_attendance a
         WHERE
-            1=1 and  date_format(a.start_time, '%Y-%m-%d') = #{value}
+            1=1 AND a.start_time IS NOT NULL
+            and  date_format(a.start_time, '%Y-%m-%d') = #{value}
     </select>
     <select id="getAttendanceByCreatebyAndCreateTime" resultType="Attendance">
         SELECT

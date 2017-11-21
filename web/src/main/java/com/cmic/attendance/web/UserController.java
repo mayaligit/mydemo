@@ -2,26 +2,19 @@ package com.cmic.attendance.web;/**
  * Created by pc on 2017/11/14.
  */
 
-import com.cmic.attendance.model.AttendanceUser;
-import com.cmic.attendance.model.User;
 import com.cmic.saas.utils.WebUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -58,13 +51,6 @@ public class UserController {
         //填充图片
         g.fillRect(0,0, width,height);
 
-        //产生4个随机验证码
-        String checkCode = getCheckCode();
-        //将验证码放入HttpSession中
-        HttpSession session = WebUtils.getSession();
-        session.setAttribute("checkCode",checkCode);
-        //设置画笔颜色为黄色
-        g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
         //设置字体的小大
         g.setFont(new Font("黑体", Font.BOLD,30));
         Random random = new Random();
@@ -74,11 +60,21 @@ public class UserController {
             int y=random.nextInt(height);
             int x1=random.nextInt(width);
             int y1=random.nextInt(height);
+            g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
             g.drawLine(x, y, x+x1, y+y1);
         }
-        g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
+        StringBuffer sb = new StringBuffer();
         //向图片上写入验证码
-        g.drawString(checkCode,60,30);
+        for (int i=0;i<=3;i++){
+            g.setColor(getRandomColor(150, 240));// 随机设置字体颜色
+            String checkCode = getCheckCode();
+            g.drawString(checkCode,50+30*i,33);
+            sb.append(checkCode);
+        }
+        //将验证码放入HttpSession中
+        HttpSession session = WebUtils.getSession();
+        session.setAttribute("checkCode",sb.toString());
+
 
         //将内存中的图片输出到浏览器
         //参数一：图片对象
@@ -89,25 +85,18 @@ public class UserController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
     /**
-     * 产生4位随机字符串
+     * 随机字符串
      */
     private String getCheckCode() {
-        String base = "0123456789ABCDEFGabcdefg";
+        String base = "123456789qwertyuipasdfghjklzxcvbnm";
         int size = base.length();
         Random r = new Random();
-        StringBuffer sb = new StringBuffer();
-        for(int i=1;i<=4;i++){
-            //产生0到size-1的随机值
-            int index = r.nextInt(size);
-            //在base字符串中获取下标为index的字符
-            char c = base.charAt(index);
-            //将c放入到StringBuffer中去
-            sb.append(c);
-        }
-        return sb.toString();
+        int index = r.nextInt(size);
+        //在base字符串中获取下标为index的字符
+        char c = base.charAt(index);
+        return c+"";
     }
     /**
     * 获取随机颜色值
