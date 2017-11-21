@@ -20,15 +20,15 @@ public interface AttendanceDao extends CrudDao<Attendance> {
     void updateAttendances(Attendance attendance);
     void updateAttendan(Attendance attendance);
 
-    List<Map> checkAttendanceByDay(String date);
+    List<Map> checkAttendanceByDay(Map<String, Object> map);
 
     List<Map> checkAttendanceLatterByDay(Map<String, Object> map);
 
-    int getWorkCount(String date);
+    int getWorkCount(Map<String, Object> map);
 
     int getLatterCount(Map<String, Object> map);
 
-    int getOutworkCount(String date);
+    int getOutworkCount(Map<String, Object> map);
 
     List<Map> selectAttendances(Attendance attendance);
 

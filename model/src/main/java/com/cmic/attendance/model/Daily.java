@@ -35,6 +35,8 @@ public class Daily extends DataEntity<Daily> {
     protected Date updateTime;
     @ApiModelProperty(value = "用户名")
     protected String username;
+    @ApiModelProperty(value = "管理所属组")
+    protected String attendanceGroup;
 
     public Daily(){
 
@@ -139,5 +141,11 @@ public class Daily extends DataEntity<Daily> {
         this.username = username;
     }
 
+    public String getAttendanceGroup() {
+        return attendanceGroup;
+    }
 
+    public void setAttendanceGroup(String attendanceGroup) {
+        this.attendanceGroup = attendanceGroup;
+    }
 }

@@ -67,10 +67,15 @@ public class ClazzesService extends CrudService<ClazzesDao, Clazzes> {
         return dao.getTotalById(id);
     }
 
-    public  int startWork() {
-        return dao.startWork();
+    public  int startWork(String attendanceGroup) {
+        return dao.startWork(attendanceGroup);
     }
-    public  int endWork() {
-        return dao.endWork();
+    public  int endWork(String attendanceGroup) {
+        return dao.endWork(attendanceGroup);
+    }
+
+    public Clazzes getByGroupName(String attendanceGroup) {
+        Clazzes clazzes = dao.getByGroupName(attendanceGroup);
+        return clazzes;
     }
 }

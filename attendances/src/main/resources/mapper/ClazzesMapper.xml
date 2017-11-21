@@ -145,22 +145,31 @@
     </select>
 
 
-    <select id="startWork"  resultType="int">
+    <select id="startWork" parameterType="String" resultType="int">
         SELECT
         COUNT(id)
-        FROM t_clazzes
+        FROM t_clazzes a
         WHERE 1=1
-        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), nomal_start_time)  &gt; "00:00:00"
+        AND a.class_group = #{attendanceGroup}
+        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), a.nomal_start_time)  &gt; "00:00:00"
     </select>
-
-    <select id="endWork"  resultType="int">
+    <select id="endWork" parameterType="String"  resultType="int">
         SELECT
         COUNT(id)
-        FROM t_clazzes
+        FROM t_clazzes a
         WHERE 1=1
+        AND a.class_group = #{attendanceGroup}
         AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), nomal_end_time)  &gt; "00:00:00"
     </select>
 
+
+    <select id="getByGroupName" parameterType="String" resultType="Clazzes">
+        SELECT
+        <include refid="clazzesColumns"/>
+        FROM t_clazzes a
+        <include refid="clazzesJoins"/>
+        WHERE a.class_group = #{attendanceGroup}
+    </select>
 
 
 </mapper>

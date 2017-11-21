@@ -12,6 +12,7 @@
         a.update_by AS "updateBy.id",
         a.update_time AS "updateTime",
         a.username AS "username"
+        a.attendance_group AS "attendanceGroup"
     </sql>
 
     <sql id="statisticsJoins">
@@ -53,7 +54,8 @@
         create_time,
         update_by,
         update_time,
-        username
+        username,
+        attendance_group
         ) VALUES (
         #{id},
         #{lateTime},
@@ -65,6 +67,7 @@
         #{updateBy.id},
         #{updateTime},
         #{username}
+        #{attendanceGroup}
         )
     </insert>
 
@@ -79,6 +82,7 @@
         update_by = #{updateBy.id},
         update_time = #{updateTime},
         username = #{username}
+        attendance_group = #{attendanceGroup}
         WHERE id = #{id}
     </update>
 
@@ -105,6 +109,9 @@
         <if test="username != null  and username != ''">
             username = #{username},
         </if>
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            attendance_group = #{attendanceGroup},
+        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -116,33 +123,36 @@
     </delete>
 
 
-    <select id="checkAttendanceHardworkingByDay"  parameterType="String" resultType="java.util.HashMap" >
+    <select id="checkAttendanceHardworkingByDay"  parameterType="Map" resultType="java.util.HashMap" >
 
-     SELECT ROUND(SUM(office_time)/60,2) workHour,a.create_by
+     SELECT ROUND(SUM(office_time)/60,2) workHour,a.username "create_by"
       FROM t_statistics a
       WHERE
       1=1 AND DATE_FORMAT(a.update_time,'%Y-%m-%d') = #{date}
+      AND a.attendance_group = #{attendanceGroup}
       GROUP BY a.create_by
     </select>
 
 
 
-    <select id="checkAttendanceHardworkingByMonth"  parameterType="String" resultType="java.util.HashMap">
+    <select id="checkAttendanceHardworkingByMonth"  parameterType="Map" resultType="java.util.HashMap">
 
-        SELECT round(SUM(office_time)/60,2) workHour,a.create_by
+        SELECT round(SUM(office_time)/60,2) workHour,a.username "create_by"
         FROM t_statistics a
         WHERE
         1=1 and DATE_FORMAT(a.update_time,'%Y-%m') = #{date}
+        AND a.attendance_group = #{attendanceGroup}
         GROUP BY a.create_by
     </select>
 
 
-    <select id="checkAttendanceLatterByMonth" parameterType="String" resultType="java.util.HashMap">
+    <select id="checkAttendanceLatterByMonth" parameterType="Map" resultType="java.util.HashMap">
 
-        SELECT SUM(late_time) lateTime,a.create_by
+        SELECT SUM(late_time) lateTime,a.username "create_by"
         FROM t_statistics a
         WHERE
         late_time IS NOT NULL and DATE_FORMAT(a.update_time,'%Y-%m') = #{date}
+        AND a.attendance_group = #{attendanceGroup}
         GROUP BY a.create_by
     </select>
 

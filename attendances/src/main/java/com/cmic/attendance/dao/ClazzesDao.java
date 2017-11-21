@@ -20,6 +20,8 @@ public interface ClazzesDao extends CrudDao<Clazzes> {
 
     Clazzes getTotalById(String id);
 
-    int startWork();
-    int endWork();
+    int startWork(String attendanceGroup);
+    int endWork(String attendanceGroup);
+
+    Clazzes getByGroupName(String attendanceGroup);
 }
