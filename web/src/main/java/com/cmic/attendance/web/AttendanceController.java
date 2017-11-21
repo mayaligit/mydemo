@@ -201,10 +201,21 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public AttendanceEndVo punchCardEnd(@RequestBody AttendanceEndVo attendanceEndVo){
         HttpServletResponse response =WebUtils.getRequestAttributes().getResponse();
         /*response.setHeader("Access-Control-Allow-Origin", "*");*/
-        log.debug("attendanceEndVo"+attendanceEndVo.toString());
         attendanceEndVo.setClazzesId(this.clazzesId);
-        AttendanceEndVo resultAttendance= service.punchCardEnd(attendanceEndVo);
-        return resultAttendance;
+        Attendance attendanceBo = service.punchCardEnd(attendanceEndVo);
+        AttendanceEndVo resultAttendanceVo=new AttendanceEndVo();
+        resultAttendanceVo.setAttendanceId(attendanceBo.getId());
+        resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
+        resultAttendanceVo.setPhone(attendanceEndVo.getPhone());
+        resultAttendanceVo.setAttendanceStatus(attendanceBo.getAttendanceStatus());
+        resultAttendanceVo.setAttendanceDesc(attendanceBo.getAttendanceDesc());
+        resultAttendanceVo.setDailyStatus(attendanceBo.getDailyStatus());
+        resultAttendanceVo.setLocation(attendanceBo.getEndLocation());
+        resultAttendanceVo.setEndTimeStatus(attendanceBo.getEndTimeStatus());
+        resultAttendanceVo.setAttendanceMonth(attendanceBo.getAttendanceMonth());
+        resultAttendanceVo.setOfftime(DateUtils.getDateToHourMinuteS(attendanceBo.getEndTime()));
+        resultAttendanceVo.setIsAttendanceEnd("0");
+        return resultAttendanceVo;
     }
 
     /**
