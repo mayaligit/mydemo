@@ -8,11 +8,13 @@ import com.cmic.attendance.model.GroupAddress;
 import com.cmic.attendance.model.Statistics;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceEndVo;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.vo.AttendanceVo;
 import com.cmic.attendance.vo.GroupAddressVo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
+import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.ISelect;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -24,7 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -469,6 +474,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         return resultAttendance;
     }
 
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按日统计早到榜
+     */
     @Transactional(readOnly = false)
     public Map<String, Object> checkAttendanceByDay(String date,PageInfo page) {
 
@@ -482,7 +492,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         int pageSize = page.getPageSize();
         PageHelper.startPage(pageNum, pageSize,"startTime");
 
-        List<Map> pageInfo = (List<Map>)dao.checkAttendanceByDay(date);
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+
+        Map paramsMap = new HashMap<>();
+        paramsMap.put("attendanceGroup",attendanceGroup);
+        paramsMap.put("date",date);
+
+        List<Map> pageInfo = (List<Map>)dao.checkAttendanceByDay(paramsMap);
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
         Map<String, Object> map = new HashMap<>();
@@ -496,7 +515,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
    /* @Autowired
     private ClazzesDao clazzesDao;*/
 
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按日统计迟到榜
+     */
     public Map<String, Object> checkAttendanceLatterByDay(String date, PageInfo page) {
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -511,6 +539,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Map<String, Object> param = new HashMap<>();
         param.put("date",date);
         param.put("nomalStartTime",nomalStartTime);
+        param.put("attendanceGroup",attendanceGroup);
         PageHelper.startPage(page.getPageNum(), page.getPageSize(),"startTime DESC");
 
         List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByDay(param);
@@ -524,17 +553,26 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     }
 
 
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按日统计出勤率
+     */
     public Map<String,Object> checkAttendanceData(String date) {
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         Map<String, Object> map = new HashMap<>();
 //        获取班次信息
-        Clazzes clazzes = clazzesService.get("c2310c7ec996409b8e91f12daa428a98");
+        Clazzes clazzes = clazzesService.getByGroupName(attendanceGroup);
         if(clazzes==null){
             return null;
         }
 
-        int startWork = clazzesService.startWork();
-        int endWork = clazzesService.endWork();
+        int startWork = clazzesService.startWork(attendanceGroup);
+        int endWork = clazzesService.endWork(attendanceGroup);
         if(startWork>0){
             map.put("startWorkFlag","1");
         }else{
@@ -546,27 +584,28 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             map.put("endWorkFlag","0");
         }
 
-      /*  Date nowTime = new Date();
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = sdf.format(nowTime);
-        int i = format.indexOf(" ");
-        format = format.substring(i+1);*/
         String total = clazzes.getTotal();
         map.put("total",total);
 //        获取当天打卡人数
-        int workCount = this.dao.getWorkCount(date);
+        Map workCountMap = new HashMap<>();
+        workCountMap.put("date",date);
+        workCountMap.put("attendanceGroup",attendanceGroup);
+        int workCount = this.dao.getWorkCount(workCountMap);
         map.put("workCount",workCount);
         map.put("noWorkCount",Integer.parseInt(total)-workCount);
 
 //        获取外勤人数
-        int outworkCount = this.dao.getOutworkCount(date);
+        Map outworkCountMap = new HashMap<>();
+        outworkCountMap.put("date",date);
+        outworkCountMap.put("attendanceGroup",attendanceGroup);
+        int outworkCount = this.dao.getOutworkCount(outworkCountMap);
         map.put("outworkCount",outworkCount);
 
 //       当天迟到人数
         Map<String, Object> param = new HashMap<>();
-        String nomalStartTime = clazzes.getNomalStartTime();
         param.put("date",date);
-//        param.put("nomalStartTime",nomalStartTime);
+        param.put("attendanceGroup",attendanceGroup);
+
         int latterCount = this.dao.getLatterCount(param);
         map.put("latterCount",latterCount);
 

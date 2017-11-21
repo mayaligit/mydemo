@@ -1,22 +1,19 @@
 package com.cmic.attendance.service;
 
-import com.cmic.attendance.exception.LoginExeptions;
+import com.cmic.attendance.dao.AttendanceUserDao;
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.utils.MD5Util;
 import com.cmic.attendance.vo.AttendanceUserVo;
-import com.cmic.saas.utils.WebUtils;
-import com.github.pagehelper.PageInfo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
-import com.cmic.attendance.dao.AttendanceUserDao;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
