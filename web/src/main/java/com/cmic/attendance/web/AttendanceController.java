@@ -157,11 +157,12 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setIsAttendanceStart("1");
             attendanceVo.setIsAttendanceEnd("1");
         }
+        attendanceVo.setUsername(user.getName());
         //返回多地址打卡数据
         List<GroupAddress> allGroupAddress = service.getAllGroupAddress();
         log.debug("多地址数据"+allGroupAddress);
+        System.out.println("<<<<<<<<<<<<<<<<<<<<"+allGroupAddress.toString()+">>>>>>>>>>>>>>>>>>>>>>>>");
         attendanceVo.setAddressList(allGroupAddress);
-        attendanceVo.setUsername(user.getName());
         attendanceVo.setPhone(user.getId());
         attendanceVo.setDate(serverDate);
         attendanceVo.setServerTime(serverTimes.toString());
