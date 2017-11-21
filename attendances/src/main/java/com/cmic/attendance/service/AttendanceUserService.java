@@ -79,6 +79,8 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
 
         result.put("msg","登录成功");
         result.put("status","0");
+        //result.put("attendance_group",checkUser.getAttendanceGroup());
+        attendanceUserVo.setAttendanceGroup(checkUser.getAttendanceGroup());
         //服务器session
         request.getSession().setAttribute("attendanceUserVo",attendanceUserVo);
         return result;
