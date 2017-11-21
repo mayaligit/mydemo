@@ -194,12 +194,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
                 log.debug("保存后返回的ID"+saveAttendance.getId());
-                try {
+                /*try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
                     insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());
                 } catch (Exception e) {
                     log.debug("插入统计表失败" + e.getMessage());
-                }
+                }*/
                 //返回数据页面
                 return saveAttendance;
             } else {

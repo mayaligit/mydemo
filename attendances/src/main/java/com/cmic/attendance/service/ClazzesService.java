@@ -54,6 +54,7 @@ public class ClazzesService extends CrudService<ClazzesDao, Clazzes> {
         logger.info("删除班次表：" + clazzes.toJSONString());
     }
     //根据id获取班次表
+    @Transactional(readOnly = false)
     public Clazzes getClazzesById(String clazzesId) {
         return dao.getClazzesById(clazzesId);
     }
