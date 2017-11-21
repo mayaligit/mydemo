@@ -2,6 +2,7 @@ package com.cmic.attendance.admin;
 
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.service.AttendanceService;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
 import com.github.pagehelper.PageInfo;
@@ -10,7 +11,9 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -33,7 +36,11 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
      * @return
      */
     @PostMapping(value="/attendanceList", consumes="application/json")
-    public Map<String,Object> selectAttendances(@RequestBody Map<String,String> paramMap){
+    public Map<String,Object> selectAttendances(@RequestBody Map<String,String> paramMap,
+                                                HttpSession session){
+        //获取session中的用户信息
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)session.getAttribute("attendanceUserVo");
+        String attendance_group = attendanceUserVo.getAttendanceGroup();
         Attendance attendance = new Attendance();
         //获取考勤月份
         if(StringUtils.isNotBlank(paramMap.get("attendanceMonth")) ){
@@ -52,6 +59,11 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         //设置根据日报状态查询
         if(StringUtils.isNotBlank(paramMap.get("dailyStatus"))){
             attendance.setDailyStatus(paramMap.get("dailyStatus"));
+        }
+
+        //设置后台管理者的所属组  todo 用false 把分组条件关了，要用的时候打开
+        if(false&&StringUtils.isNotBlank(attendance_group)){
+            attendance.setAttendanceGroup(attendance_group);
         }
 
         Integer pageNum = paramMap.get("pageNum") == null ? 1 : Integer.parseInt(paramMap.get("pageNum"));

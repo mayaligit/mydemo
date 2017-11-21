@@ -277,6 +277,9 @@
             <if test="dailyStatus != null and dailyStatus != ''">
                 and  daily_status = #{dailyStatus}
             </if>
+            <if test="attendanceGroup != null and attendanceGroup != ''">
+                and  a.attendance_group = #{attendanceGroup}
+            </if>
         </where>
     </select>
 
