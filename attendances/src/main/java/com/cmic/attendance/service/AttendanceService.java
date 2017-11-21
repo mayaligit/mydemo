@@ -9,6 +9,7 @@ import com.cmic.attendance.model.Statistics;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceEndVo;
 import com.cmic.attendance.vo.AttendanceVo;
+import com.cmic.attendance.vo.GroupAddressVo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
@@ -75,9 +76,19 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         logger.info("删除考勤表：" + attendance.toJSONString());
     }
 //#TODO 获取多地址数据
-    public List<GroupAddress> getAllGroupAddress (){
-        System.out.println("执行了获取多地址方法");
-        return groupAddressService.findAll();
+    public ArrayList<GroupAddressVo> getAllGroupAddress (){
+
+        List<GroupAddress> addressList = groupAddressService.findAll();
+        ArrayList<GroupAddressVo> listGroupAddress = new ArrayList<GroupAddressVo>();
+        for (GroupAddress groupAddress:addressList) {
+            GroupAddressVo groupAddressVo =new GroupAddressVo();
+            groupAddressVo.setGroupAttendanceDimension(groupAddress.getGroupAttendanceDimension());
+            groupAddressVo.setGroupAttendanceLongitude(groupAddress.getGroupAttendanceLongitude());
+            groupAddressVo.setGroupAddress(groupAddress.getGroupAddress());
+            groupAddressVo.setAttendanceGroupId(groupAddress.getAttendanceGroupId());
+            listGroupAddress.add(groupAddressVo);
+        }
+        return listGroupAddress;
     }
 
 //#TODO 判断当前用户是否存在
