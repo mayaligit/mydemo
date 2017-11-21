@@ -4,7 +4,6 @@ import com.cmic.attendance.model.Audit;
 import com.cmic.attendance.service.AuditService;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
-import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
@@ -80,26 +79,21 @@ public class AuditController extends BaseRestController<AuditService> {
         /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, String> map = new HashMap<>();
         //判断是否携带了必须携带的两个参数
-        if (StringUtils.isBlank(audit.getAuditContent()) || StringUtils.isBlank(audit.getAuditDetail())) {
+        if (StringUtils.isBlank(audit.getAuditContent()) || StringUtils.isBlank(audit.getAuditUserName())||StringUtils.isBlank(audit.getAuditUserId())){
             map.put("msg","请求参数不能为空");
             return map ;
         }
         audit.setSubmitTime(new Date());
-        //暂时硬编码审批人
-        audit.setAuditUserName("陈华龙");
         audit.setAuditStatus("1");  //设置审批状态为未处理
 
-        //判断是否是考勤补卡,考勤补卡则设置业务类型为 考勤补卡类
-        if (StringUtils.isNotBlank(audit.getAttendanceId())) {
-            audit.setBusinessType("0");
-        }
         audit.setCreateTime(audit.getSubmitTime());
         audit.setUpdateTime(audit.getSubmitTime());
 
         //设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if(null == obj || !(obj instanceof BaseAdminEntity)){
-            throw new RestException("登陆超时,请重新登陆");
+            map.put("msg","登陆超时,请重新登陆");
+            return map ;
         }
         BaseAdminEntity user = (BaseAdminEntity)obj;
         audit.setUsername(user.getName());
