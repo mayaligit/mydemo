@@ -6,7 +6,6 @@ import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
 import com.cmic.attendance.dao.GroupAddressDao;
 import com.cmic.attendance.model.GroupAddress;
-import com.sun.xml.internal.fastinfoset.util.StringArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
