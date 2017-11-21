@@ -100,11 +100,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
        /* response.setHeader("Access-Control-Allow-Origin", "*");*/
         HttpServletRequest request = WebUtils.getRequest();//测试数据
-        BaseAdminEntity user2=new BaseAdminEntity();
-        user2.setId("18503096229");
-        user2.setName("18503096229");
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO",user2);
-        //测试数据结束*/
+       //测试数据结束*/
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();

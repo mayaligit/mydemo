@@ -76,6 +76,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     }
 //#TODO 获取多地址数据
     public List<GroupAddress> getAllGroupAddress (){
+        System.out.println("执行了获取多地址方法");
         return groupAddressService.findAll();
     }
 
