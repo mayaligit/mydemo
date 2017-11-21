@@ -197,7 +197,7 @@
         FROM t_attendance a
         WHERE
             1=1 AND a.start_time IS NOT NULL
-            and  date_format(a.start_time, '%Y-%m-%d') = #{value}
+            and  date_format(a.start_time, '%Y-%m-%d') = #{date}
             AND a.attendance_group = #{attendanceGroup}
     </select>
     <select id="getAttendanceByCreatebyAndCreateTime" resultType="Attendance">
