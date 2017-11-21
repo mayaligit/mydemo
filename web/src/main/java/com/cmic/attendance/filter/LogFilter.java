@@ -1,6 +1,7 @@
 package com.cmic.attendance.filter;
 
 import com.cmic.attendance.model.AttendanceUser;
+import com.cmic.attendance.utils.HttpRequestDeviceUtils;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.web.AttendanceController;
 import com.cmic.saas.base.model.BaseAdminEntity;
@@ -43,7 +44,7 @@ public class LogFilter implements Filter {
         log.debug(">>>>手机端session："+current_admin);
         log.debug(">>>>电脑端session："+attendanceUserVo);
         if (null !=current_admin){
-            //手机端放行
+            //手机端放行，已经登录
             filterChain.doFilter(servletRequest,servletResponse);
         } else if (url.equals("/attendance/info")) {
             //认证用户中心放行
@@ -57,9 +58,13 @@ public class LogFilter implements Filter {
         }else if(null!=attendanceUserVo){
             //电脑端已经登记放行
             filterChain.doFilter(servletRequest,servletResponse);
+        } else if(HttpRequestDeviceUtils.isMobileDevice(request)){
+            //放行手机端
+            filterChain.doFilter(servletRequest,servletResponse);
         } else {
             //进行拦截转发到登录页面接口
-            request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
+                //电脑端转发
+                request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
            /* response.sendRedirect("/attendance/user/noLogint");*/
 
         }
@@ -71,21 +76,4 @@ public class LogFilter implements Filter {
 
     }
 
-    public static boolean  isMobileDevice(String requestHeader){
-        /**
-         * android : 所有android设备
-         * mac os : iphone ipad
-         * windows phone:Nokia等windows系统的手机
-         */
-        String[] deviceArray = new String[]{"android","mac os","windows phone"};
-        if(requestHeader == null)
-            return false;
-        requestHeader = requestHeader.toLowerCase();
-        for(int i=0;i<deviceArray.length;i++){
-            if(requestHeader.indexOf(deviceArray[i])>0){
-                return true;
-            }
-        }
-        return false;
-    }
 }

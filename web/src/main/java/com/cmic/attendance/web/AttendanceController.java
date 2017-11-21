@@ -105,7 +105,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
-        String serverDate=DateUtils.getDateToHourMinuteS(serverTime);
+        String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
@@ -182,6 +182,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         resultAttendanceVo.setStartTimeStatus(attendanceBo.getStartTimeStatus());
         resultAttendanceVo.setAttendanceMonth(attendanceBo.getAttendanceMonth());
         resultAttendanceVo.setLocationStatus(attendanceBo.getAttendanceStatus());
+        log.debug("》》》》返回上班时间"+DateUtils.getDateToHourMinuteS(attendanceBo.getStartTime()));
         resultAttendanceVo.setAttendanceHour(DateUtils.getDateToHourMinuteS(attendanceBo.getStartTime()));
         resultAttendanceVo.setIsAttendanceStart("0");
         return resultAttendanceVo;
