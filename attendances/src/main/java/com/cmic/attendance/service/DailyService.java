@@ -3,7 +3,6 @@ package com.cmic.attendance.service;
 import com.cmic.attendance.dao.DailyDao;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Daily;
-import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.vo.DailyVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
@@ -73,7 +72,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         }
 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+
         dailyVo.setSuggestionStatus("1");//意见状态设置为未阅
         dailyVo.setExaminer("陈华龙");
         dailyVo.preInsert();
@@ -103,9 +102,8 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         dailyVo.setAttendanceId(attendance.getId());
         dailyVo.setExamineTime(dailyVo.getCreateTime());
         dailyVo.setUsername(user.getName());
-        if(StringUtils.isNoneBlank(attendanceUserVo.getAttendanceGroup())){
-            dailyVo.setAttendanceGroup(attendanceUserVo.getAttendanceGroup());
-        }
+        dailyVo.setAttendanceGroup("odc");//测试数据，暂时写死
+
 //        dailyVo.setUsername("陈华龙");//测试数据
         this.save(dailyVo);
         return null;
