@@ -30,6 +30,7 @@ import java.util.Map;
 @Service
 @Transactional(readOnly = true)
 public class AuditService extends CrudService<AuditDao, Audit> {
+
     @Autowired
     private AttendanceDao attendanceDao;
 
@@ -85,8 +86,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("auditStatus","0"); //设置审批意见状态为 已处理
         paraMap.put("auditId",audit.getId());
         paraMap.put("auditSuggestion",audit.getAuditSuggestion());
-//        paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());
-        //更新 审批状态为 已处理
+      //  paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());        //更新 审批状态为 已处理
         dao.updateAudit(paraMap);
 
         //获取当天数据库的打卡数据
