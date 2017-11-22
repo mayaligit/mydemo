@@ -108,7 +108,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             attendance.setCreateTime(new Date());
             attendance.setUpdateTime(new Date());
             attendance.setAttendanceMonth(createTime);
-            attendance.setAttendanceGroup("ODC考勤组");
+            attendance.setAttendanceGroup("ODC");
 
             if (businessType.trim().equals("0")) {  //处理补上班卡
                 Date startTime = DateUtils.getStringsToDates(createTime +" "+"9:00:00");
