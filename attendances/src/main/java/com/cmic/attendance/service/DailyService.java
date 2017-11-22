@@ -93,14 +93,14 @@ public class DailyService extends CrudService<DailyDao, Daily> {
 //            attendance.setAttendanceUser("陈华龙");//测试数据
             attendanceService.save(attendance);
         }else{
-            attendance.setUpdateTime(new Date());
+            attendance.setUpdateDate(new Date());
             attendance.setDailyStatus("1");
             attendance.setAttendanceUser(user.getName());
 //            attendance.setAttendanceUser("陈华龙");//测试数据
             attendanceService.update(attendance);
         }
         dailyVo.setAttendanceId(attendance.getId());
-        dailyVo.setExamineTime(dailyVo.getCreateTime());
+        dailyVo.setExamineTime(dailyVo.getCreateDate());
         dailyVo.setUsername(user.getName());
         dailyVo.setAttendanceGroup("odc");//测试数据，暂时写死
 

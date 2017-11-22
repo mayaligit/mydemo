@@ -1,21 +1,23 @@
 package com.cmic.attendance.model;
 
-import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModel;
+
+import com.cmic.saas.base.model.DataEntity;
+
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 考勤表实体
+ * 实体
  */
-@ApiModel(value = "Attendance", description = "考勤表")
+@ApiModel(value = "Attendance", description = "")
 public class Attendance extends DataEntity<Attendance> {
 
-    @ApiModelProperty(value = "当前打卡用户")
+    @ApiModelProperty(value = "当前打卡用户", example = "当前打卡用户")
     protected String attendanceUser;
-    @ApiModelProperty(value = "上班打卡时间")
+    @ApiModelProperty(value = "上班打卡时间", example = "2017-09-09")
     protected Date startTime;
-    @ApiModelProperty(value = "下班打卡时间")
+    @ApiModelProperty(value = "下班打卡时间", example = "2017-09-09")
     protected Date endTime;
     @ApiModelProperty(value = "0/正常,1/异常 2/外勤", example = "0/正常,1/异常 2/外勤")
     protected String attendanceStatus;
@@ -39,29 +41,6 @@ public class Attendance extends DataEntity<Attendance> {
     protected String endTimeStatus;
     @ApiModelProperty(value = "0/上班正常,1/上班迟到", example = "0/上班正常,1/上班迟到")
     protected String startTimeStatus;
-    @ApiModelProperty(value = "创建时间", example = "2017-09-09")
-    protected Date createTime;
-    @ApiModelProperty(value = "更新时间", example = "2017-09-09")
-    protected Date updateTime;
-
-    private Audit audit;
-    private Daily daily;
-
-    public Audit getAudit() {
-        return audit;
-    }
-
-    public void setAudit(Audit audit) {
-        this.audit = audit;
-    }
-
-    public Daily getDaily() {
-        return daily;
-    }
-
-    public void setDaily(Daily daily) {
-        this.daily = daily;
-    }
 
     public Attendance(){
 
@@ -182,20 +161,5 @@ public class Attendance extends DataEntity<Attendance> {
         this.startTimeStatus = startTimeStatus;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
 }

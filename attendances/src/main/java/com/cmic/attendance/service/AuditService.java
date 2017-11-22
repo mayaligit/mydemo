@@ -85,7 +85,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("auditStatus","0"); //设置审批意见状态为 已处理
         paraMap.put("auditId",audit.getId());
         paraMap.put("auditSuggestion",audit.getAuditSuggestion());
-        paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());
+//        paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());
         //更新 审批状态为 已处理
         dao.updateAudit(paraMap);
 
@@ -105,8 +105,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         if ( null == DBattendance) { //没有打卡数据
             attendance.preInsert();
             attendance.setAttendanceUser(audit.getUsername());
-            attendance.setCreateTime(new Date());
-            attendance.setUpdateTime(new Date());
+            attendance.setCreateDate(new Date());
+            attendance.setUpdateDate(new Date());
             attendance.setAttendanceMonth(createTime);
             attendance.setAttendanceGroup("ODC");
 
@@ -132,7 +132,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         }else { //有打卡数据
             attendance.setId(DBattendance.getId());
             attendance.preUpdate();
-            attendance.setUpdateTime(new Date());
+            attendance.setUpdateDate(new Date());
 
             if (businessType.trim().equals("0")) {  //处理补上班卡
                 Date startTime = DateUtils.getStringsToDates(createTime +" "+"9:00:00");

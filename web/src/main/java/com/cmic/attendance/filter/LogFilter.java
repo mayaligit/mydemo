@@ -1,12 +1,7 @@
 package com.cmic.attendance.filter;
 
-import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.utils.HttpRequestDeviceUtils;
-import com.cmic.attendance.vo.AttendanceUserVo;
-import com.cmic.attendance.web.AttendanceController;
-import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.RestException;
-import com.cmic.saas.utils.WebUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -65,10 +60,9 @@ public class LogFilter implements Filter {
             //进行拦截转发到登录页面接口
                 //电脑端转发
                 request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
-           /* response.sendRedirect("/attendance/user/noLogint");*/
+            response.sendRedirect("/attendance/user/noLogint");
 
         }
-
     }
 
     @Override

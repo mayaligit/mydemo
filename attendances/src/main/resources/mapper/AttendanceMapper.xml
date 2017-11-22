@@ -18,9 +18,9 @@
         a.end_time_status AS "endTimeStatus",
         a.start_time_status AS "startTimeStatus",
         a.create_by AS "createBy.id",
-        a.create_time AS "createTime",
+        a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_time AS "updateTime"
+        a.update_date AS "updateDate"
     </sql>
 
     <sql id="attendanceJoins">
@@ -41,6 +41,63 @@
         <include refid="attendanceJoins"/>
         <where>
             1 = 1
+            <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceUser != null">
+                AND a.attendance_user LIKE CONCAT('%',#{attendanceUser, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="startTime != null">
+                AND a.start_time LIKE CONCAT('%',#{startTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="endTime != null">
+                AND a.end_time LIKE CONCAT('%',#{endTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceStatus != null">
+                AND a.attendance_status LIKE CONCAT('%',#{attendanceStatus, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceDesc != null">
+                AND a.attendance_desc LIKE CONCAT('%',#{attendanceDesc, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceMonth != null">
+                AND a.attendance_month LIKE CONCAT('%',#{attendanceMonth, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="startLocation != null">
+                AND a.start_location LIKE CONCAT('%',#{startLocation, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="endLocation != null">
+                AND a.end_location LIKE CONCAT('%',#{endLocation, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="startSignal != null">
+                AND a.start_signal LIKE CONCAT('%',#{startSignal, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="endSignal != null">
+                AND a.end_signal LIKE CONCAT('%',#{endSignal, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="dailyStatus != null">
+                AND a.daily_status LIKE CONCAT('%',#{dailyStatus, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceGroup != null">
+                AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="endTimeStatus != null">
+                AND a.end_time_status LIKE CONCAT('%',#{endTimeStatus, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="startTimeStatus != null">
+                AND a.start_time_status LIKE CONCAT('%',#{startTimeStatus, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createBy.id != null">
+                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
         </where>
     </select>
 
@@ -69,9 +126,9 @@
         end_time_status,
         start_time_status,
         create_by,
-        create_time,
+        create_date,
         update_by,
-        update_time
+        update_date
         ) VALUES (
         #{id},
         #{attendanceUser},
@@ -89,14 +146,15 @@
         #{endTimeStatus},
         #{startTimeStatus},
         #{createBy.id},
-        #{createTime},
+        #{createDate},
         #{updateBy.id},
-        #{updateTime}
+        #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_attendance SET
+        id = #{id},
         attendance_user = #{attendanceUser},
         start_time = #{startTime},
         end_time = #{endTime},
@@ -112,63 +170,58 @@
         end_time_status = #{endTimeStatus},
         start_time_status = #{startTimeStatus},
         create_by = #{createBy.id},
-        create_time = #{createTime},
+        create_date = #{createDate},
         update_by = #{updateBy.id},
-        update_time = #{updateTime}
+        update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
     <update id="dynamicUpdate">
         UPDATE t_attendance SET
-        <if test="attendanceUser != null and attendanceUser != ''">
+        <if test="attendanceUser != null  and attendanceUser != ''">
             attendance_user = #{attendanceUser},
         </if>
-        <if test="startTime != null and startTime != ''">
+        <if test="startTime != null ">
             start_time = #{startTime},
         </if>
-        <if test="endTime != null and endTime != ''">
+        <if test="endTime != null ">
             end_time = #{endTime},
         </if>
-        <if test="attendanceStatus != null and attendanceStatus != ''">
+        <if test="attendanceStatus != null  and attendanceStatus != ''">
             attendance_status = #{attendanceStatus},
         </if>
-        <if test="attendanceDesc != null and attendanceDesc != ''">
+        <if test="attendanceDesc != null  and attendanceDesc != ''">
             attendance_desc = #{attendanceDesc},
         </if>
-        <if test="attendanceMonth != null and attendanceMonth != ''">
+        <if test="attendanceMonth != null  and attendanceMonth != ''">
             attendance_month = #{attendanceMonth},
         </if>
-        <if test="startLocation != null and startLocation != ''">
+        <if test="startLocation != null  and startLocation != ''">
             start_location = #{startLocation},
         </if>
-        <if test="endLocation != null and endLocation != ''">
+        <if test="endLocation != null  and endLocation != ''">
             end_location = #{endLocation},
         </if>
-        <if test="startSignal != null and startSignal != ''">
+        <if test="startSignal != null  and startSignal != ''">
             start_signal = #{startSignal},
         </if>
-        <if test="endSignal != null and endSignal != ''">
+        <if test="endSignal != null  and endSignal != ''">
             end_signal = #{endSignal},
         </if>
-        <if test="dailyStatus != null and dailyStatus != ''">
+        <if test="dailyStatus != null  and dailyStatus != ''">
             daily_status = #{dailyStatus},
         </if>
-        <if test="attendanceGroup != null and attendanceGroup != ''">
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
             attendance_group = #{attendanceGroup},
         </if>
-        <if test="endTimeStatus != null and endTimeStatus != ''">
+        <if test="endTimeStatus != null  and endTimeStatus != ''">
             end_time_status = #{endTimeStatus},
         </if>
-        <if test="startTimeStatus != null and startTimeStatus != ''">
+        <if test="startTimeStatus != null  and startTimeStatus != ''">
             start_time_status = #{startTimeStatus},
         </if>
-        <if test="createTime != null and createTime != ''">
-            create_time = #{createTime},
-        </if>
-        <if test="updateTime != null and updateTime != ''">
-            update_time = #{updateTime},
-        </if>
-        update_by = #{updateBy.id}
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
@@ -189,7 +242,7 @@
         WHERE attendance_id = #{attendanceId}
     </update>
 
-    <select id="checkAttendanceByDay" parameterType="AttendancePojo"  resultType="Map">
+    <select id="checkAttendanceByDay" parameterType="com.cmic.attendance.pojo.AttendancePojo"  resultType="Map">
         SELECT
         DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
         a.attendance_user AS "userName"
@@ -214,8 +267,8 @@
         WHERE 1=1
         AND a.create_by = b.create_by
         AND a.late_time = 1
-        AND DATE(a.create_time) = #{date}
-        AND DATE(b.create_time) = #{date}
+        AND DATE(a.create_date) = #{date}
+        AND DATE(b.create_date) = #{date}
         AND a.attendance_group = #{attendanceGroup}
     </select>
 
@@ -233,7 +286,7 @@
         SELECT COUNT(id)
         FROM t_statistics a
         WHERE 1=1 AND a.late_time = 1
-        AND DATE(a.create_time) = #{date}
+        AND DATE(a.create_date) = #{date}
         AND a.attendance_group = #{attendanceGroup}
     </select>
 
@@ -243,7 +296,7 @@
         FROM t_attendance a
         WHERE 1 = 1
         and a.attendance_status = "2"
-        and DATE(a.`create_time`) = #{date}
+        and DATE(a.`create_date`) = #{date}
         AND a.attendance_group = #{attendanceGroup}
     </select>
 
@@ -258,7 +311,7 @@
             a.start_time_status AS "startTimeStatus",
             a.end_time_status AS "endTimeStatus",
             a.attendance_desc AS "attendanceDesc",
-             date_format(a.create_time,'%Y-%m-%d %H:%i') AS "createTime",
+             date_format(a.create_date,'%Y-%m-%d %H:%i') AS "createTime",
             b.daily_desc AS "dailyDesc"
         FROM
             t_attendance a
@@ -284,10 +337,10 @@
 
     <select id="findAttendanceList" parameterType="map" resultType="Map">
        SELECT a.id ,a.attendance_status AS "attendanceStatus" , a.daily_status AS "dailyStatus" ,
-               DATE_FORMAT(a.create_time ,'%m月%d日') AS "createTime" , b.office_time/60 AS "officeTime" ,
-               DATE_FORMAT(a.create_time ,'%d') AS "order"
+               DATE_FORMAT(a.create_date ,'%m月%d日') AS "createTime" , b.office_time/60 AS "officeTime" ,
+               DATE_FORMAT(a.create_date ,'%d') AS "order"
        FROM t_attendance a,t_statistics b
-       WHERE a.create_by=b.create_by AND DATE_FORMAT(a.create_time,'%Y-%m-%d') = DATE_FORMAT(b.create_time,'%Y-%m-%d')
+       WHERE a.create_by=b.create_by AND DATE_FORMAT(a.create_date,'%Y-%m-%d') = DATE_FORMAT(b.create_date,'%Y-%m-%d')
               AND a.attendance_month = #{attaendanceMonth} AND a.create_by=#{createBy}
     </select>
 

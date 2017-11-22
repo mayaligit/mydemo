@@ -1,15 +1,13 @@
 package com.cmic.attendance.web;
 
-import com.cmic.attendance.filter.LogFilter;
+
 import com.cmic.attendance.model.AttendanceUser;
-import com.cmic.attendance.model.RcsToken;
-import com.cmic.attendance.model.UserBo;
+import com.cmic.attendance.service.AttendanceUserService;
 import com.cmic.attendance.vo.AttendanceUserVo;
+import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.utils.StringUtils;
 import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
-import com.cmic.saas.base.web.BaseRestController;
-import com.cmic.attendance.service.AttendanceUserService;
 import io.swagger.annotations.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
 * 考勤后台管理表Controller
