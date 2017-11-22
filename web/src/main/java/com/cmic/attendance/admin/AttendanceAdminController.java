@@ -125,6 +125,8 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
 //    @ResponseBody
     public Map<String,Object> checkAttendanceByDay(HttpServletResponse response,@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
+
+        
        /* response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, Object> map = service.checkAttendanceByDay(queryAttendanceVo);
         return map;
