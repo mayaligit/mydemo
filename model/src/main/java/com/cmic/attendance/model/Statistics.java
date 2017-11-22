@@ -16,7 +16,7 @@ public class Statistics extends DataEntity<Statistics> {
     @ApiModelProperty(value = "上班时长", example = "上班时长")
     protected Integer officeTime;
     @ApiModelProperty(value = "补填日报次数", example = "补填日报次数")
-    protected String dailyTime;
+    protected Integer dailyTime;
     @ApiModelProperty(value = "用户名", example = "用户名")
     protected String username;
     @ApiModelProperty(value = "所属考勤组名", example = "所属考勤组名")
@@ -53,11 +53,11 @@ public class Statistics extends DataEntity<Statistics> {
         this.officeTime = officeTime;
     }
 
-    public String getDailyTime() {
+    public Integer getDailyTime() {
         return dailyTime;
     }
 
-    public void setDailyTime(String dailyTime) {
+    public void setDailyTime(Integer dailyTime) {
         this.dailyTime = dailyTime;
     }
 

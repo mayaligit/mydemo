@@ -45,8 +45,6 @@ CREATE TABLE `t_attendance` (
 
 /*Data for the table `t_attendance` */
 
-insert  into `t_attendance`(`id`,`attendance_user`,`start_time`,`end_time`,`attendance_status`,`attendance_desc`,`attendance_month`,`start_location`,`end_location`,`start_signal`,`end_signal`,`daily_status`,`attendance_group`,`end_time_status`,`start_time_status`,`create_by`,`create_date`,`update_by`,`update_date`) values ('24234234','小苍','2017-11-17 11:00:59','2017-11-17 19:01:09','0',NULL,NULL,NULL,NULL,NULL,NULL,0,'123456',NULL,NULL,'13570088826','2017-11-17 15:00:58',NULL,'2017-11-17 15:00:58');
-
 /*Table structure for table `t_audit` */
 
 DROP TABLE IF EXISTS `t_audit`;
@@ -68,6 +66,7 @@ CREATE TABLE `t_audit` (
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `audit_detail` varchar(255) DEFAULT NULL COMMENT '审批详情',
   `username` char(32) DEFAULT NULL,
+  `attendance_group` char(32) DEFAULT NULL COMMENT '所属考勤组名',
   PRIMARY KEY (`id`),
   KEY `attendance_id` (`attendance_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -121,6 +120,7 @@ CREATE TABLE `t_daily` (
   `update_by` char(32) DEFAULT NULL COMMENT '更新人ID',
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `username` char(32) NOT NULL COMMENT '用户名',
+  `attendance_group` char(32) DEFAULT NULL COMMENT '所属考勤组名',
   PRIMARY KEY (`id`),
   KEY `FK_ID` (`attendance_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -159,6 +159,7 @@ CREATE TABLE `t_group_audit` (
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_by` char(32) DEFAULT NULL COMMENT '更新用户手机',
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `attendance_group` char(32) DEFAULT NULL COMMENT '所属考勤组名',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -178,12 +179,13 @@ CREATE TABLE `t_group_daily` (
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_by` char(32) DEFAULT NULL COMMENT '更新用户手机',
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `attendance_group` char(32) DEFAULT NULL COMMENT '所属考勤组名',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `t_group_daily` */
 
-insert  into `t_group_daily`(`id`,`daily_name`,`daily_address`,`daily_content`,`daily_status`,`create_by`,`create_date`,`update_by`,`update_date`) values ('197a4233d802000','模板一','http://admin.attandance.com/nulld8d343ad-00e8-400c-89ca-4e9156a3aaba.html','aa-bb-cc',NULL,'a0001','2017-11-13 14:58:55','a0001','2017-11-13 14:58:55');
+insert  into `t_group_daily`(`id`,`daily_name`,`daily_address`,`daily_content`,`daily_status`,`create_by`,`create_date`,`update_by`,`update_date`,`attendance_group`) values ('197a4233d802000','模板一','http://admin.attandance.com/nulld8d343ad-00e8-400c-89ca-4e9156a3aaba.html','aa-bb-cc',NULL,'a0001','2017-11-13 14:58:55','a0001','2017-11-13 14:58:55',NULL);
 
 /*Table structure for table `t_group_daily_rule` */
 
@@ -202,6 +204,7 @@ CREATE TABLE `t_group_daily_rule` (
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_by` char(32) DEFAULT NULL COMMENT '更新用户手机',
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `attendance_group` char(32) DEFAULT NULL COMMENT '所属考勤组名',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -257,8 +260,6 @@ CREATE TABLE `t_group_rule` (
 
 /*Data for the table `t_group_rule` */
 
-insert  into `t_group_rule`(`id`,`group_name`,`group_enterprise_id`,`group_enterprise_name`,`group_status`,`group_deadline`,`group_daily_id`,`group_attendance_way`,`group_attendance_start`,`group_attendance_end`,`group_attendance_duration`,`group_attendance_week`,`group_attendance_longitude`,`group_attendance_dimension`,`group_address`,`group_attendance_scope`,`create_by`,`create_date`,`update_by`,`update_date`) values ('123456',NULL,'',NULL,1,NULL,'',NULL,'00:00:00','00:00:00',0.000000,NULL,0.000000,0.000000,NULL,0,'13570088826','2017-11-17 16:43:35',NULL,'2017-11-17 16:43:35');
-
 /*Table structure for table `t_statistics` */
 
 DROP TABLE IF EXISTS `t_statistics`;
@@ -274,6 +275,7 @@ CREATE TABLE `t_statistics` (
   `update_by` char(32) DEFAULT NULL COMMENT '更新用户手机',
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `username` char(32) NOT NULL COMMENT '用户名',
+  `attendance_group` char(32) DEFAULT NULL COMMENT '所属考勤组名',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -1,6 +1,7 @@
 package com.cmic.attendance.dao;
 
 import com.cmic.attendance.model.Attendance;
+import com.cmic.attendance.pojo.AttendancePojo;
 import com.cmic.saas.base.dao.CrudDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,7 +21,7 @@ public interface AttendanceDao extends CrudDao<Attendance> {
     void updateAttendances(Attendance attendance);
     void updateAttendan(Attendance attendance);
 
-    List<Map> checkAttendanceByDay(Map<String, Object> map);
+    List<Map> checkAttendanceByDay(AttendancePojo attendancePojo);
 
     List<Map> checkAttendanceLatterByDay(Map<String, Object> map);
 

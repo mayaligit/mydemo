@@ -189,7 +189,7 @@
         WHERE attendance_id = #{attendanceId}
     </update>
 
-    <select id="checkAttendanceByDay" parameterType="Map"  resultType="Map">
+    <select id="checkAttendanceByDay" parameterType="AttendancePojo"  resultType="Map">
         SELECT
         DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
         a.attendance_user AS "userName"
