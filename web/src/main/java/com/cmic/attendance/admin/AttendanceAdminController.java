@@ -3,6 +3,7 @@ package com.cmic.attendance.admin;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.service.AttendanceService;
 import com.cmic.attendance.vo.AttendanceUserVo;
+import com.cmic.attendance.vo.QueryAttendanceVo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
 import com.github.pagehelper.PageInfo;
@@ -11,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
@@ -123,10 +123,10 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceByDay",method = RequestMethod.POST)
 //    @ResponseBody
-    public Map<String,Object> checkAttendanceByDay(HttpServletResponse response,String date, @RequestBody PageInfo page) {
+    public Map<String,Object> checkAttendanceByDay(HttpServletResponse response,@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
        /* response.setHeader("Access-Control-Allow-Origin", "*");*/
-        Map<String, Object> map = service.checkAttendanceByDay(date, page);
+        Map<String, Object> map = service.checkAttendanceByDay(queryAttendanceVo);
         return map;
     }
 

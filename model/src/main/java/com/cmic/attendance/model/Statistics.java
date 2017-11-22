@@ -10,13 +10,13 @@ import io.swagger.annotations.ApiModelProperty;
 public class Statistics extends DataEntity<Statistics> {
 
     @ApiModelProperty(value = "迟到次数", example = "迟到次数")
-    protected String lateTime;
+    protected Integer lateTime;
     @ApiModelProperty(value = "早退次数", example = "早退次数")
-    protected String earlyTime;
+    protected Integer earlyTime;
     @ApiModelProperty(value = "上班时长", example = "上班时长")
-    protected String officeTime;
+    protected Integer officeTime;
     @ApiModelProperty(value = "补填日报次数", example = "补填日报次数")
-    protected String dailyTime;
+    protected Integer dailyTime;
     @ApiModelProperty(value = "用户名", example = "用户名")
     protected String username;
     @ApiModelProperty(value = "所属考勤组名", example = "所属考勤组名")
@@ -29,35 +29,35 @@ public class Statistics extends DataEntity<Statistics> {
         super(id);
     }
 
-    public String getLateTime() {
+    public Integer getLateTime() {
         return lateTime;
     }
 
-    public void setLateTime(String lateTime) {
+    public void setLateTime(Integer lateTime) {
         this.lateTime = lateTime;
     }
 
-    public String getEarlyTime() {
+    public Integer getEarlyTime() {
         return earlyTime;
     }
 
-    public void setEarlyTime(String earlyTime) {
+    public void setEarlyTime(Integer earlyTime) {
         this.earlyTime = earlyTime;
     }
 
-    public String getOfficeTime() {
+    public Integer getOfficeTime() {
         return officeTime;
     }
 
-    public void setOfficeTime(String officeTime) {
+    public void setOfficeTime(Integer officeTime) {
         this.officeTime = officeTime;
     }
 
-    public String getDailyTime() {
+    public Integer getDailyTime() {
         return dailyTime;
     }
 
-    public void setDailyTime(String dailyTime) {
+    public void setDailyTime(Integer dailyTime) {
         this.dailyTime = dailyTime;
     }
 

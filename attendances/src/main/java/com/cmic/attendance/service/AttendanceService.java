@@ -6,11 +6,9 @@ import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Clazzes;
 import com.cmic.attendance.model.GroupAddress;
 import com.cmic.attendance.model.Statistics;
+import com.cmic.attendance.pojo.AttendancePojo;
 import com.cmic.attendance.utils.DateUtils;
-import com.cmic.attendance.vo.AttendanceEndVo;
-import com.cmic.attendance.vo.AttendanceUserVo;
-import com.cmic.attendance.vo.AttendanceVo;
-import com.cmic.attendance.vo.GroupAddressVo;
+import com.cmic.attendance.vo.*;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
@@ -331,7 +329,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      * 考勤统计,按日统计早到榜
      */
     @Transactional(readOnly = false)
-    public Map<String, Object> checkAttendanceByDay(String date,PageInfo page) {
+    public Map<String, Object> checkAttendanceByDay(QueryAttendanceVo queryAttendanceVo) {
+
+        String date = queryAttendanceVo.getDate();
+        PageInfo page = queryAttendanceVo.getPageInfo();
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -348,11 +349,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
-        Map paramsMap = new HashMap<>();
-        paramsMap.put("attendanceGroup",attendanceGroup);
-        paramsMap.put("date",date);
 
-        List<Map> pageInfo = (List<Map>)dao.checkAttendanceByDay(paramsMap);
+        AttendancePojo attendancePojo = new AttendancePojo();
+        attendancePojo.setDate(date);//日期格式:2017-11-11
+        attendancePojo.setAttendanceGroup(attendanceGroup);//所属考勤组名
+
+        List<Map> pageInfo = (List<Map>)dao.checkAttendanceByDay(attendancePojo);
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
         Map<String, Object> map = new HashMap<>();
