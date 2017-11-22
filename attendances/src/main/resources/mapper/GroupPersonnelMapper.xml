@@ -1,0 +1,142 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.v2.0.dao.GroupPersonnelDao">
+    <sql id="groupPersonnelColumns">
+        a.id AS "id",
+        a.personnel_phone AS "personnelPhone",
+        a.personnel_name AS "personnelName",
+        a.enterprise_id AS "enterpriseId",
+        a.enterprise_name AS "enterpriseName",
+        a.attendance_group_id AS "attendanceGroupId",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate"
+    </sql>
+
+    <sql id="groupPersonnelJoins">
+    </sql>
+
+    <select id="get" resultType="GroupPersonnel">
+        SELECT
+        <include refid="groupPersonnelColumns"/>
+        FROM t_group_personnel a
+        <include refid="groupPersonnelJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="GroupPersonnel">
+        SELECT
+        <include refid="groupPersonnelColumns"/>
+        FROM t_group_personnel a
+        <include refid="groupPersonnelJoins"/>
+        <where>
+            1 = 1
+        <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="personnelPhone != null">
+                AND a.personnel_phone LIKE CONCAT('%',#{personnelPhone, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="personnelName != null">
+                AND a.personnel_name LIKE CONCAT('%',#{personnelName, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="enterpriseId != null">
+                AND a.enterprise_id LIKE CONCAT('%',#{enterpriseId, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="enterpriseName != null">
+                AND a.enterprise_name LIKE CONCAT('%',#{enterpriseName, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="attendanceGroupId != null">
+                AND a.attendance_group_id LIKE CONCAT('%',#{attendanceGroupId, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="createBy.id != null">
+                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="GroupPersonnel">
+        SELECT
+        <include refid="groupPersonnelColumns"/>
+        FROM t_group_personnel a
+        <include refid="groupPersonnelJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_group_personnel(
+            id,
+            personnel_phone,
+            personnel_name,
+            enterprise_id,
+            enterprise_name,
+            attendance_group_id,
+            create_by,
+            create_date,
+            update_by,
+            update_date
+        ) VALUES (
+            #{id},
+            #{personnelPhone},
+            #{personnelName},
+            #{enterpriseId},
+            #{enterpriseName},
+            #{attendanceGroupId},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_group_personnel SET
+        id = #{id},
+        personnel_phone = #{personnelPhone},
+        personnel_name = #{personnelName},
+        enterprise_id = #{enterpriseId},
+        enterprise_name = #{enterpriseName},
+        attendance_group_id = #{attendanceGroupId},
+        create_by = #{createBy.id},
+        create_date = #{createDate},
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_group_personnel SET
+        <if test="personnelPhone != null  and personnelPhone != ''">
+        personnel_phone = #{personnelPhone},
+        </if>
+        <if test="personnelName != null  and personnelName != ''">
+        personnel_name = #{personnelName},
+        </if>
+        <if test="enterpriseId != null  and enterpriseId != ''">
+        enterprise_id = #{enterpriseId},
+        </if>
+        <if test="enterpriseName != null  and enterpriseName != ''">
+        enterprise_name = #{enterpriseName},
+        </if>
+        <if test="attendanceGroupId != null  and attendanceGroupId != ''">
+        attendance_group_id = #{attendanceGroupId},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_group_personnel
+        WHERE id = #{id}
+    </delete>
+</mapper>

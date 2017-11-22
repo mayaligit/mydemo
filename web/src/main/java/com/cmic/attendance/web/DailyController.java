@@ -53,8 +53,11 @@ public class DailyController extends BaseRestController<DailyService> {
             return map;
         }
 
-        if(StringUtils.isBlank(dailyVo.getTodayDaily())){
-            map.put("status",2);//今日日报为空
+        if(StringUtils.isBlank(dailyVo.getYesterdayUnfinished()) ||
+                StringUtils.isBlank(dailyVo.getYesterdayFinished()) ||
+                StringUtils.isBlank(dailyVo.getYesterdayPlan()) ||
+                StringUtils.isBlank(dailyVo.getTodayPlan())){
+            map.put("status",2);//日报内容为空
             return map;
         }
 

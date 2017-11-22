@@ -1,0 +1,172 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.v2.0.dao.GroupDailyRuleDao">
+    <sql id="groupDailyRuleColumns">
+        a.id AS "id",
+        a.rule_daily_type AS "ruleDailyType",
+        a.rule_daily_week AS "ruleDailyWeek",
+        a.rule_template_id AS "ruleTemplateId",
+        a.attendance_group_id AS "attendanceGroupId",
+        a.rule_daily_status AS "ruleDailyStatus",
+        a.rule_daily_reserve AS "ruleDailyReserve",
+        a.rule_deadline AS "ruleDeadline",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.attendance_group AS "attendanceGroup"
+    </sql>
+
+    <sql id="groupDailyRuleJoins">
+    </sql>
+
+    <select id="get" resultType="GroupDailyRule">
+        SELECT
+        <include refid="groupDailyRuleColumns"/>
+        FROM t_group_daily_rule a
+        <include refid="groupDailyRuleJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="GroupDailyRule">
+        SELECT
+        <include refid="groupDailyRuleColumns"/>
+        FROM t_group_daily_rule a
+        <include refid="groupDailyRuleJoins"/>
+        <where>
+            1 = 1
+        <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="ruleDailyType != null">
+                AND a.rule_daily_type LIKE CONCAT('%',#{ruleDailyType, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="ruleDailyWeek != null">
+                AND a.rule_daily_week LIKE CONCAT('%',#{ruleDailyWeek, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="ruleTemplateId != null">
+                AND a.rule_template_id LIKE CONCAT('%',#{ruleTemplateId, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="attendanceGroupId != null">
+                AND a.attendance_group_id LIKE CONCAT('%',#{attendanceGroupId, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="ruleDailyStatus != null">
+                AND a.rule_daily_status LIKE CONCAT('%',#{ruleDailyStatus, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="ruleDailyReserve != null">
+                AND a.rule_daily_reserve LIKE CONCAT('%',#{ruleDailyReserve, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="ruleDeadline != null">
+                AND a.rule_deadline LIKE CONCAT('%',#{ruleDeadline, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="createBy.id != null">
+                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="attendanceGroup != null">
+                AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="GroupDailyRule">
+        SELECT
+        <include refid="groupDailyRuleColumns"/>
+        FROM t_group_daily_rule a
+        <include refid="groupDailyRuleJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_group_daily_rule(
+            id,
+            rule_daily_type,
+            rule_daily_week,
+            rule_template_id,
+            attendance_group_id,
+            rule_daily_status,
+            rule_daily_reserve,
+            rule_deadline,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            attendance_group
+        ) VALUES (
+            #{id},
+            #{ruleDailyType},
+            #{ruleDailyWeek},
+            #{ruleTemplateId},
+            #{attendanceGroupId},
+            #{ruleDailyStatus},
+            #{ruleDailyReserve},
+            #{ruleDeadline},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{attendanceGroup}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_group_daily_rule SET
+        id = #{id},
+        rule_daily_type = #{ruleDailyType},
+        rule_daily_week = #{ruleDailyWeek},
+        rule_template_id = #{ruleTemplateId},
+        attendance_group_id = #{attendanceGroupId},
+        rule_daily_status = #{ruleDailyStatus},
+        rule_daily_reserve = #{ruleDailyReserve},
+        rule_deadline = #{ruleDeadline},
+        create_by = #{createBy.id},
+        create_date = #{createDate},
+        update_by = #{updateBy.id},
+        update_date = #{updateDate},
+        attendance_group = #{attendanceGroup}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_group_daily_rule SET
+        <if test="ruleDailyType != null  and ruleDailyType != ''">
+        rule_daily_type = #{ruleDailyType},
+        </if>
+        <if test="ruleDailyWeek != null  and ruleDailyWeek != ''">
+        rule_daily_week = #{ruleDailyWeek},
+        </if>
+        <if test="ruleTemplateId != null  and ruleTemplateId != ''">
+        rule_template_id = #{ruleTemplateId},
+        </if>
+        <if test="attendanceGroupId != null  and attendanceGroupId != ''">
+        attendance_group_id = #{attendanceGroupId},
+        </if>
+        <if test="ruleDailyStatus != null  and ruleDailyStatus != ''">
+        rule_daily_status = #{ruleDailyStatus},
+        </if>
+        <if test="ruleDailyReserve != null ">
+        rule_daily_reserve = #{ruleDailyReserve},
+        </if>
+        <if test="ruleDeadline != null ">
+        rule_deadline = #{ruleDeadline},
+        </if>
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+        attendance_group = #{attendanceGroup},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_group_daily_rule
+        WHERE id = #{id}
+    </delete>
+</mapper>

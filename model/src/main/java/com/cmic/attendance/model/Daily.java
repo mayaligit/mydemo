@@ -6,36 +6,38 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 日报表实体
+ * 实体
  */
-@ApiModel(value = "Daily", description = "日报表")
+@ApiModel(value = "Daily", description = "")
 public class Daily extends DataEntity<Daily> {
 
-    @ApiModelProperty(value = "日报所属考勤的id")
+    @ApiModelProperty(value = "日报所属考勤的id", example = "日报所属考勤的id")
     protected String attendanceId;
-    @ApiModelProperty(value = "日报描述")
+    @ApiModelProperty(value = "日报描述", example = "日报描述")
     protected String dailyDesc;
-    @ApiModelProperty(value = "日报提交时间")
+    @ApiModelProperty(value = "日报提交时间", example = "2017-09-09")
     protected Date submitTime;
-    @ApiModelProperty(value = "日报标题")
+    @ApiModelProperty(value = "日报标题", example = "日报标题")
     protected String dailyTitle;
-    @ApiModelProperty(value = "今日日报")
-    protected String todayDaily;
-    @ApiModelProperty(value = "提交日报时的地点")
+    @ApiModelProperty(value = "昨日工作计划", example = "昨日工作计划")
+    protected String yesterdayPlan;
+    @ApiModelProperty(value = "昨日已完成工作", example = "昨日已完成工作")
+    protected String yesterdayFinished;
+    @ApiModelProperty(value = "昨日未完成工作", example = "昨日未完成工作")
+    protected String yesterdayUnfinished;
+    @ApiModelProperty(value = "今日工作计划", example = "今日工作计划")
+    protected String todayPlan;
+    @ApiModelProperty(value = "提交日报时的地点", example = "提交日报时的地点")
     protected String submitLocation;
-    @ApiModelProperty(value = "日报审批人")
+    @ApiModelProperty(value = "日报审批人", example = "日报审批人")
     protected String examiner;
-    @ApiModelProperty(value = "日报审批时间")
+    @ApiModelProperty(value = "日报审批时间", example = "2017-09-09")
     protected Date examineTime;
-    @ApiModelProperty(value = "审批意见状态,0/已阅,1/已处理,2/未处理")
+    @ApiModelProperty(value = "审批意见状态,0/已阅,1/已处理,2/未处理", example = "审批意见状态,0/已阅,1/已处理,2/未处理")
     protected String suggestionStatus;
-    @ApiModelProperty(value = "创建时间")
-    protected Date createTime;
-    @ApiModelProperty(value = "更新时间")
-    protected Date updateTime;
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "用户名", example = "用户名")
     protected String username;
-    @ApiModelProperty(value = "管理所属组")
+    @ApiModelProperty(value = "所属考勤组名", example = "所属考勤组名")
     protected String attendanceGroup;
 
     public Daily(){
@@ -77,12 +79,36 @@ public class Daily extends DataEntity<Daily> {
         this.dailyTitle = dailyTitle;
     }
 
-    public String getTodayDaily() {
-        return todayDaily;
+    public String getYesterdayPlan() {
+        return yesterdayPlan;
     }
 
-    public void setTodayDaily(String todayDaily) {
-        this.todayDaily = todayDaily;
+    public void setYesterdayPlan(String yesterdayPlan) {
+        this.yesterdayPlan = yesterdayPlan;
+    }
+
+    public String getYesterdayFinished() {
+        return yesterdayFinished;
+    }
+
+    public void setYesterdayFinished(String yesterdayFinished) {
+        this.yesterdayFinished = yesterdayFinished;
+    }
+
+    public String getYesterdayUnfinished() {
+        return yesterdayUnfinished;
+    }
+
+    public void setYesterdayUnfinished(String yesterdayUnfinished) {
+        this.yesterdayUnfinished = yesterdayUnfinished;
+    }
+
+    public String getTodayPlan() {
+        return todayPlan;
+    }
+
+    public void setTodayPlan(String todayPlan) {
+        this.todayPlan = todayPlan;
     }
 
     public String getSubmitLocation() {
@@ -117,22 +143,6 @@ public class Daily extends DataEntity<Daily> {
         this.suggestionStatus = suggestionStatus;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -148,4 +158,6 @@ public class Daily extends DataEntity<Daily> {
     public void setAttendanceGroup(String attendanceGroup) {
         this.attendanceGroup = attendanceGroup;
     }
+
+
 }

@@ -8,10 +8,10 @@
         a.office_time AS "officeTime",
         a.daily_time AS "dailyTime",
         a.create_by AS "createBy.id",
-        a.create_time AS "createTime",
+        a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_time AS "updateTime",
-        a.username AS "username"
+        a.update_date AS "updateDate",
+        a.username AS "username",
         a.attendance_group AS "attendanceGroup"
     </sql>
 
@@ -33,6 +33,39 @@
         <include refid="statisticsJoins"/>
         <where>
             1 = 1
+            <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="lateTime != null">
+                AND a.late_time LIKE CONCAT('%',#{lateTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="earlyTime != null">
+                AND a.early_time LIKE CONCAT('%',#{earlyTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="officeTime != null">
+                AND a.office_time LIKE CONCAT('%',#{officeTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="dailyTime != null">
+                AND a.daily_time LIKE CONCAT('%',#{dailyTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createBy.id != null">
+                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="username != null">
+                AND a.username LIKE CONCAT('%',#{username, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceGroup != null">
+                AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
+            </if>
         </where>
     </select>
 
@@ -51,9 +84,9 @@
         office_time,
         daily_time,
         create_by,
-        create_time,
+        create_date,
         update_by,
-        update_time,
+        update_date,
         username,
         attendance_group
         ) VALUES (
@@ -63,25 +96,26 @@
         #{officeTime},
         #{dailyTime},
         #{createBy.id},
-        #{createTime},
+        #{createDate},
         #{updateBy.id},
-        #{updateTime},
-        #{username}
+        #{updateDate},
+        #{username},
         #{attendanceGroup}
         )
     </insert>
 
     <update id="update">
         UPDATE t_statistics SET
+        id = #{id},
         late_time = #{lateTime},
         early_time = #{earlyTime},
         office_time = #{officeTime},
         daily_time = #{dailyTime},
         create_by = #{createBy.id},
-        create_time = #{createTime},
+        create_date = #{createDate},
         update_by = #{updateBy.id},
-        update_time = #{updateTime},
-        username = #{username}
+        update_date = #{updateDate},
+        username = #{username},
         attendance_group = #{attendanceGroup}
         WHERE id = #{id}
     </update>
@@ -99,12 +133,6 @@
         </if>
         <if test="dailyTime != null  and dailyTime != ''">
             daily_time = #{dailyTime},
-        </if>
-        <if test="createTime != null ">
-            create_time = #{createTime},
-        </if>
-        <if test="updateTime != null ">
-            update_time = #{updateTime},
         </if>
         <if test="username != null  and username != ''">
             username = #{username},

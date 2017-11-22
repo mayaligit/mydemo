@@ -1,0 +1,241 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.v2.0.dao.GroupRuleDao">
+    <sql id="groupRuleColumns">
+        a.id AS "id",
+        a.group_name AS "groupName",
+        a.group_enterprise_id AS "groupEnterpriseId",
+        a.group_enterprise_name AS "groupEnterpriseName",
+        a.group_status AS "groupStatus",
+        a.group_deadline AS "groupDeadline",
+        a.group_daily_id AS "groupDailyId",
+        a.group_attendance_way AS "groupAttendanceWay",
+        a.group_attendance_start AS "groupAttendanceStart",
+        a.group_attendance_end AS "groupAttendanceEnd",
+        a.group_attendance_duration AS "groupAttendanceDuration",
+        a.group_attendance_week AS "groupAttendanceWeek",
+        a.group_attendance_longitude AS "groupAttendanceLongitude",
+        a.group_attendance_dimension AS "groupAttendanceDimension",
+        a.group_address AS "groupAddress",
+        a.group_attendance_scope AS "groupAttendanceScope",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate"
+    </sql>
+
+    <sql id="groupRuleJoins">
+    </sql>
+
+    <select id="get" resultType="GroupRule">
+        SELECT
+        <include refid="groupRuleColumns"/>
+        FROM t_group_rule a
+        <include refid="groupRuleJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="GroupRule">
+        SELECT
+        <include refid="groupRuleColumns"/>
+        FROM t_group_rule a
+        <include refid="groupRuleJoins"/>
+        <where>
+            1 = 1
+        <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupName != null">
+        </if>
+        <if test="groupEnterpriseId != null">
+                AND a.group_enterprise_id LIKE CONCAT('%',#{groupEnterpriseId, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupEnterpriseName != null">
+                AND a.group_enterprise_name LIKE CONCAT('%',#{groupEnterpriseName, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupStatus != null">
+                AND a.group_status LIKE CONCAT('%',#{groupStatus, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupDeadline != null">
+                AND a.group_deadline LIKE CONCAT('%',#{groupDeadline, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupDailyId != null">
+                AND a.group_daily_id LIKE CONCAT('%',#{groupDailyId, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAttendanceWay != null">
+                AND a.group_attendance_way LIKE CONCAT('%',#{groupAttendanceWay, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAttendanceStart != null">
+                AND a.group_attendance_start LIKE CONCAT('%',#{groupAttendanceStart, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAttendanceEnd != null">
+                AND a.group_attendance_end LIKE CONCAT('%',#{groupAttendanceEnd, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAttendanceDuration != null">
+                AND a.group_attendance_duration LIKE CONCAT('%',#{groupAttendanceDuration, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAttendanceWeek != null">
+                AND a.group_attendance_week LIKE CONCAT('%',#{groupAttendanceWeek, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAttendanceLongitude != null">
+                AND a.group_attendance_longitude LIKE CONCAT('%',#{groupAttendanceLongitude, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAttendanceDimension != null">
+                AND a.group_attendance_dimension LIKE CONCAT('%',#{groupAttendanceDimension, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAddress != null">
+                AND a.group_address LIKE CONCAT('%',#{groupAddress, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="groupAttendanceScope != null">
+                AND a.group_attendance_scope LIKE CONCAT('%',#{groupAttendanceScope, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="createBy.id != null">
+                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="GroupRule">
+        SELECT
+        <include refid="groupRuleColumns"/>
+        FROM t_group_rule a
+        <include refid="groupRuleJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_group_rule(
+            id,
+            group_name,
+            group_enterprise_id,
+            group_enterprise_name,
+            group_status,
+            group_deadline,
+            group_daily_id,
+            group_attendance_way,
+            group_attendance_start,
+            group_attendance_end,
+            group_attendance_duration,
+            group_attendance_week,
+            group_attendance_longitude,
+            group_attendance_dimension,
+            group_address,
+            group_attendance_scope,
+            create_by,
+            create_date,
+            update_by,
+            update_date
+        ) VALUES (
+            #{id},
+            #{groupName},
+            #{groupEnterpriseId},
+            #{groupEnterpriseName},
+            #{groupStatus},
+            #{groupDeadline},
+            #{groupDailyId},
+            #{groupAttendanceWay},
+            #{groupAttendanceStart},
+            #{groupAttendanceEnd},
+            #{groupAttendanceDuration},
+            #{groupAttendanceWeek},
+            #{groupAttendanceLongitude},
+            #{groupAttendanceDimension},
+            #{groupAddress},
+            #{groupAttendanceScope},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_group_rule SET
+        id = #{id},
+        group_name = #{groupName},
+        group_enterprise_id = #{groupEnterpriseId},
+        group_enterprise_name = #{groupEnterpriseName},
+        group_status = #{groupStatus},
+        group_deadline = #{groupDeadline},
+        group_daily_id = #{groupDailyId},
+        group_attendance_way = #{groupAttendanceWay},
+        group_attendance_start = #{groupAttendanceStart},
+        group_attendance_end = #{groupAttendanceEnd},
+        group_attendance_duration = #{groupAttendanceDuration},
+        group_attendance_week = #{groupAttendanceWeek},
+        group_attendance_longitude = #{groupAttendanceLongitude},
+        group_attendance_dimension = #{groupAttendanceDimension},
+        group_address = #{groupAddress},
+        group_attendance_scope = #{groupAttendanceScope},
+        create_by = #{createBy.id},
+        create_date = #{createDate},
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_group_rule SET
+        <if test="groupName != null  and groupName != ''">
+        group_name = #{groupName},
+        </if>
+        <if test="groupEnterpriseId != null  and groupEnterpriseId != ''">
+        group_enterprise_id = #{groupEnterpriseId},
+        </if>
+        <if test="groupEnterpriseName != null  and groupEnterpriseName != ''">
+        group_enterprise_name = #{groupEnterpriseName},
+        </if>
+        <if test="groupStatus != null  and groupStatus != ''">
+        group_status = #{groupStatus},
+        </if>
+        <if test="groupDeadline != null ">
+        group_deadline = #{groupDeadline},
+        </if>
+        <if test="groupDailyId != null  and groupDailyId != ''">
+        group_daily_id = #{groupDailyId},
+        </if>
+        <if test="groupAttendanceWay != null  and groupAttendanceWay != ''">
+        group_attendance_way = #{groupAttendanceWay},
+        </if>
+        <if test="groupAttendanceStart != null  and groupAttendanceStart != ''">
+        group_attendance_start = #{groupAttendanceStart},
+        </if>
+        <if test="groupAttendanceEnd != null  and groupAttendanceEnd != ''">
+        group_attendance_end = #{groupAttendanceEnd},
+        </if>
+        <if test="groupAttendanceDuration != null  and groupAttendanceDuration != ''">
+        group_attendance_duration = #{groupAttendanceDuration},
+        </if>
+        <if test="groupAttendanceWeek != null  and groupAttendanceWeek != ''">
+        group_attendance_week = #{groupAttendanceWeek},
+        </if>
+        <if test="groupAttendanceLongitude != null  and groupAttendanceLongitude != ''">
+        group_attendance_longitude = #{groupAttendanceLongitude},
+        </if>
+        <if test="groupAttendanceDimension != null  and groupAttendanceDimension != ''">
+        group_attendance_dimension = #{groupAttendanceDimension},
+        </if>
+        <if test="groupAddress != null  and groupAddress != ''">
+        group_address = #{groupAddress},
+        </if>
+        <if test="groupAttendanceScope != null  and groupAttendanceScope != ''">
+        group_attendance_scope = #{groupAttendanceScope},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_group_rule
+        WHERE id = #{id}
+    </delete>
+</mapper>

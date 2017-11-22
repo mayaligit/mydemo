@@ -3,31 +3,25 @@ package com.cmic.attendance.model;
 import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import java.util.Date;
 /**
- * 班次表实体
+ * 实体
  */
-@ApiModel(value = "Clazzes", description = "班次表")
+@ApiModel(value = "Clazzes", description = "")
 public class Clazzes extends DataEntity<Clazzes> {
 
-    @ApiModelProperty(value = "设定正常打卡地点")
+    @ApiModelProperty(value = "设定正常打卡地点", example = "设定正常打卡地点")
     protected String nomalAddress;
-    @ApiModelProperty(value = "正常上班时间")
+    @ApiModelProperty(value = "正常上班时间", example = "正常上班时间")
     protected String nomalStartTime;
-    @ApiModelProperty(value = "正常下班时间")
+    @ApiModelProperty(value = "正常下班时间", example = "正常下班时间")
     protected String nomalEndTime;
-    @ApiModelProperty(value = "用户所属组ID")
+    @ApiModelProperty(value = "用户所属组ID", example = "用户所属组ID")
     protected String classGroupId;
-    @ApiModelProperty(value = "用户所属组名字")
+    @ApiModelProperty(value = "用户所属组名字", example = "用户所属组名字")
     protected String classGroup;
-    @ApiModelProperty(value = "创建时间")
-    protected Date createTime;
-    @ApiModelProperty(value = "更新时间")
-    protected Date updateTime;
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "用户名", example = "用户名")
     protected String username;
-    @ApiModelProperty(value = "打卡应到人数")
+    @ApiModelProperty(value = "打卡应到人数", example = "打卡应到人数")
     protected String total;
 
     public Clazzes(){
@@ -75,22 +69,6 @@ public class Clazzes extends DataEntity<Clazzes> {
 
     public void setClassGroup(String classGroup) {
         this.classGroup = classGroup;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 
     public String getUsername() {

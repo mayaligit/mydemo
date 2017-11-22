@@ -1,0 +1,152 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.v2.0.dao.GroupAuditDao">
+    <sql id="groupAuditColumns">
+        a.id AS "id",
+        a.audit_phone AS "auditPhone",
+        a.audit_name AS "auditName",
+        a.enterprise_id AS "enterpriseId",
+        a.enterprise_name AS "enterpriseName",
+        a.daily_rule_id AS "dailyRuleId",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.attendance_group AS "attendanceGroup"
+    </sql>
+
+    <sql id="groupAuditJoins">
+    </sql>
+
+    <select id="get" resultType="GroupAudit">
+        SELECT
+        <include refid="groupAuditColumns"/>
+        FROM t_group_audit a
+        <include refid="groupAuditJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="GroupAudit">
+        SELECT
+        <include refid="groupAuditColumns"/>
+        FROM t_group_audit a
+        <include refid="groupAuditJoins"/>
+        <where>
+            1 = 1
+        <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="auditPhone != null">
+                AND a.audit_phone LIKE CONCAT('%',#{auditPhone, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="auditName != null">
+                AND a.audit_name LIKE CONCAT('%',#{auditName, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="enterpriseId != null">
+                AND a.enterprise_id LIKE CONCAT('%',#{enterpriseId, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="enterpriseName != null">
+                AND a.enterprise_name LIKE CONCAT('%',#{enterpriseName, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="dailyRuleId != null">
+                AND a.daily_rule_id LIKE CONCAT('%',#{dailyRuleId, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="createBy.id != null">
+                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        <if test="attendanceGroup != null">
+                AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
+        </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="GroupAudit">
+        SELECT
+        <include refid="groupAuditColumns"/>
+        FROM t_group_audit a
+        <include refid="groupAuditJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_group_audit(
+            id,
+            audit_phone,
+            audit_name,
+            enterprise_id,
+            enterprise_name,
+            daily_rule_id,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            attendance_group
+        ) VALUES (
+            #{id},
+            #{auditPhone},
+            #{auditName},
+            #{enterpriseId},
+            #{enterpriseName},
+            #{dailyRuleId},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{attendanceGroup}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_group_audit SET
+        id = #{id},
+        audit_phone = #{auditPhone},
+        audit_name = #{auditName},
+        enterprise_id = #{enterpriseId},
+        enterprise_name = #{enterpriseName},
+        daily_rule_id = #{dailyRuleId},
+        create_by = #{createBy.id},
+        create_date = #{createDate},
+        update_by = #{updateBy.id},
+        update_date = #{updateDate},
+        attendance_group = #{attendanceGroup}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_group_audit SET
+        <if test="auditPhone != null  and auditPhone != ''">
+        audit_phone = #{auditPhone},
+        </if>
+        <if test="auditName != null  and auditName != ''">
+        audit_name = #{auditName},
+        </if>
+        <if test="enterpriseId != null  and enterpriseId != ''">
+        enterprise_id = #{enterpriseId},
+        </if>
+        <if test="enterpriseName != null  and enterpriseName != ''">
+        enterprise_name = #{enterpriseName},
+        </if>
+        <if test="dailyRuleId != null  and dailyRuleId != ''">
+        daily_rule_id = #{dailyRuleId},
+        </if>
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+        attendance_group = #{attendanceGroup},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_group_audit
+        WHERE id = #{id}
+    </delete>
+</mapper>

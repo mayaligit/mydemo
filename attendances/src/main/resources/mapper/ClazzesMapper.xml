@@ -9,9 +9,9 @@
         a.class_group_id AS "classGroupId",
         a.class_group AS "classGroup",
         a.create_by AS "createBy.id",
-        a.create_time AS "createTime",
+        a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_time AS "updateTime",
+        a.update_date AS "updateDate",
         a.username AS "username",
         a.total AS "total"
     </sql>
@@ -34,6 +34,39 @@
         <include refid="clazzesJoins"/>
         <where>
             1 = 1
+            <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="nomalAddress != null">
+                AND a.nomal_address LIKE CONCAT('%',#{nomalAddress, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="nomalStartTime != null">
+                AND a.nomal_start_time LIKE CONCAT('%',#{nomalStartTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="nomalEndTime != null">
+                AND a.nomal_end_time LIKE CONCAT('%',#{nomalEndTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="classGroupId != null">
+                AND a.class_group_id LIKE CONCAT('%',#{classGroupId, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="classGroup != null">
+                AND a.class_group LIKE CONCAT('%',#{classGroup, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createBy.id != null">
+                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="total != null">
+                AND a.total LIKE CONCAT('%',#{total, typeHandler=EscapeTypeHandler},'%')
+            </if>
         </where>
     </select>
 
@@ -46,46 +79,46 @@
 
     <insert id="insert">
         INSERT INTO t_clazzes(
-            id,
-            nomal_address,
-            nomal_start_time,
-            nomal_end_time,
-            class_group_id,
-            class_group,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            username,
-            total
+        id,
+        nomal_address,
+        nomal_start_time,
+        nomal_end_time,
+        class_group_id,
+        class_group,
+        create_by,
+        create_date,
+        update_by,
+        update_date,
+        username,
+        total
         ) VALUES (
-            #{id},
-            #{nomalAddress},
-            #{nomalStartTime},
-            #{nomalEndTime},
-            #{classGroupId},
-            #{classGroup},
-            #{createBy.id},
-            #{createTime},
-            #{updateBy.id},
-            #{updateTime},
-            #{username},
-            #{total}
+        #{id},
+        #{nomalAddress},
+        #{nomalStartTime},
+        #{nomalEndTime},
+        #{classGroupId},
+        #{classGroup},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate},
+        #{username},
+        #{total}
         )
     </insert>
 
     <update id="update">
         UPDATE t_clazzes SET
+        id = #{id},
         nomal_address = #{nomalAddress},
         nomal_start_time = #{nomalStartTime},
         nomal_end_time = #{nomalEndTime},
         class_group_id = #{classGroupId},
         class_group = #{classGroup},
         create_by = #{createBy.id},
-        create_time = #{createTime},
+        create_date = #{createDate},
         update_by = #{updateBy.id},
-        update_time = #{updateTime},
-        username = #{username},
+        update_date = #{updateDate},
         total = #{total}
         WHERE id = #{id}
     </update>
@@ -93,31 +126,25 @@
     <update id="dynamicUpdate">
         UPDATE t_clazzes SET
         <if test="nomalAddress != null  and nomalAddress != ''">
-        nomal_address = #{nomalAddress},
+            nomal_address = #{nomalAddress},
         </if>
         <if test="nomalStartTime != null  and nomalStartTime != ''">
-        nomal_start_time = #{nomalStartTime},
+            nomal_start_time = #{nomalStartTime},
         </if>
         <if test="nomalEndTime != null  and nomalEndTime != ''">
-        nomal_end_time = #{nomalEndTime},
+            nomal_end_time = #{nomalEndTime},
         </if>
         <if test="classGroupId != null  and classGroupId != ''">
-        class_group_id = #{classGroupId},
+            class_group_id = #{classGroupId},
         </if>
         <if test="classGroup != null  and classGroup != ''">
-        class_group = #{classGroup},
-        </if>
-        <if test="createTime != null ">
-        create_time = #{createTime},
-        </if>
-        <if test="updateTime != null ">
-        update_time = #{updateTime},
+            class_group = #{classGroup},
         </if>
         <if test="username != null  and username != ''">
-        username = #{username},
+            username = #{username},
         </if>
         <if test="total != null  and total != ''">
-        total = #{total},
+            total = #{total},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}

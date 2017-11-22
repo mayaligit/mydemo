@@ -13,12 +13,14 @@
         a.audit_suggestion AS "auditSuggestion",
         a.business_type AS "businessType",
         a.create_by AS "createBy.id",
-        a.create_time AS "createTime",
+        a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_time AS "updateTime",
+        a.update_date AS "updateDate",
         a.audit_detail AS "auditDetail",
-        a.username AS "username"
+        a.username AS "username",
+        a.attendance_group AS "attendanceGroup"
     </sql>
+
 
     <sql id="auditJoins">
     </sql>
@@ -38,6 +40,53 @@
         <include refid="auditJoins"/>
         <where>
             1 = 1
+            <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="submitTime != null">
+            </if>
+            <if test="auditContent != null">
+                AND a.audit_content LIKE CONCAT('%',#{auditContent, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="auditUserId != null">
+                AND a.audit_user_id LIKE CONCAT('%',#{auditUserId, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="auditUserName != null">
+                AND a.audit_user_name LIKE CONCAT('%',#{auditUserName, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="auditStatus != null">
+                AND a.audit_status LIKE CONCAT('%',#{auditStatus, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="auditTime != null">
+                AND a.audit_time LIKE CONCAT('%',#{auditTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceId != null">
+                AND a.attendance_id LIKE CONCAT('%',#{attendanceId, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="auditSuggestion != null">
+                AND a.audit_suggestion LIKE CONCAT('%',#{auditSuggestion, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="businessType != null">
+                AND a.business_type LIKE CONCAT('%',#{businessType, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="auditDetail != null">
+                AND a.audit_detail LIKE CONCAT('%',#{auditDetail, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="username != null">
+                AND a.username LIKE CONCAT('%',#{username, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceGroup != null">
+                AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
+            </if>
         </where>
     </select>
 
@@ -47,6 +96,7 @@
         FROM t_audit a
         <include refid="auditJoins"/>
     </select>
+
 
     <insert id="insert">
         INSERT INTO t_audit(
@@ -61,12 +111,12 @@
             audit_suggestion,
             business_type,
             create_by,
-            create_time,
+            create_date,
             update_by,
-            update_time,
+            update_date,
             audit_detail,
             username,
-            suggestion_remarks
+            attendance_group
         ) VALUES (
             #{id},
             #{submitTime},
@@ -79,17 +129,18 @@
             #{auditSuggestion},
             #{businessType},
             #{createBy.id},
-            #{createTime},
+            #{createDate},
             #{updateBy.id},
-            #{updateTime},
+            #{updateDate},
             #{auditDetail},
             #{username},
-            #{suggestionRemarks}
+            #{attendanceGroup}
         )
     </insert>
 
     <update id="update">
         UPDATE t_audit SET
+        id = #{id},
         submit_time = #{submitTime},
         audit_content = #{auditContent},
         audit_user_id = #{auditUserId},
@@ -99,59 +150,52 @@
         attendance_id = #{attendanceId},
         audit_suggestion = #{auditSuggestion},
         business_type = #{businessType},
-        create_by = #{createBy.id},
-        create_time = #{createTime},
+        create_date = #{createDate},
         update_by = #{updateBy.id},
-        update_time = #{updateTime},
+        update_date = #{updateDate},
         audit_detail = #{auditDetail},
         username = #{username},
-        suggestion_remarks = #{suggestionRemarks}
+        attendance_group = #{attendanceGroup}
         WHERE id = #{id}
     </update>
 
     <update id="dynamicUpdate">
         UPDATE t_audit SET
         <if test="submitTime != null ">
-        submit_time = #{submitTime},
+            submit_time = #{submitTime},
         </if>
         <if test="auditContent != null  and auditContent != ''">
-        audit_content = #{auditContent},
+            audit_content = #{auditContent},
         </if>
         <if test="auditUserId != null  and auditUserId != ''">
-        audit_user_id = #{auditUserId},
+            audit_user_id = #{auditUserId},
         </if>
         <if test="auditUserName != null  and auditUserName != ''">
-        audit_user_name = #{auditUserName},
+            audit_user_name = #{auditUserName},
         </if>
         <if test="auditStatus != null  and auditStatus != ''">
-        audit_status = #{auditStatus},
+            audit_status = #{auditStatus},
         </if>
         <if test="auditTime != null ">
-        audit_time = #{auditTime},
+            audit_time = #{auditTime},
         </if>
         <if test="attendanceId != null  and attendanceId != ''">
-        attendance_id = #{attendanceId},
+            attendance_id = #{attendanceId},
         </if>
         <if test="auditSuggestion != null  and auditSuggestion != ''">
-        audit_suggestion = #{auditSuggestion},
+            audit_suggestion = #{auditSuggestion},
         </if>
         <if test="businessType != null  and businessType != ''">
-        business_type = #{businessType},
-        </if>
-        <if test="createTime != null ">
-        create_time = #{createTime},
-        </if>
-        <if test="updateTime != null ">
-        update_time = #{updateTime},
+            business_type = #{businessType},
         </if>
         <if test="auditDetail != null  and auditDetail != ''">
-        audit_detail = #{auditDetail},
+            audit_detail = #{auditDetail},
         </if>
         <if test="username != null  and username != ''">
-        username = #{username},
+            username = #{username},
         </if>
-        <if test="suggestion_remarks != null  and suggestion_remarks != ''">
-            suggestion_remarks = #{suggestionRemarks},
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            attendance_group = #{attendanceGroup},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
