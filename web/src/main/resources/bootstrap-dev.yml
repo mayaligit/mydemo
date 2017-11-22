@@ -5,7 +5,7 @@ saas:
     enabled: false   #启动并注册至服务中心
 
 server:
-  port: 12110
+  port: 12111
 
 logging:
   file: /app/jenkins_deploy/logs/saas-${spring.profiles.active}/${spring.application.name}.log  #日志地址
