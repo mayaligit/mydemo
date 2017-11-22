@@ -1,5 +1,6 @@
 package com.cmic.attendance.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +13,7 @@ import java.util.Date;
 public class Audit extends DataEntity<Audit> {
 
     @ApiModelProperty(value = "日报提交时间")
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     protected Date submitTime;
     @ApiModelProperty(value = "申请的审批的内容")
     protected String auditContent;

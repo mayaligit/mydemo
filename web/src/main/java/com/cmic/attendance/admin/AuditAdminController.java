@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -37,11 +38,11 @@ public class AuditAdminController extends BaseRestController<AuditService> {
      * @return  提示信息
      */
     @RequestMapping(value = "/audit",method = RequestMethod.POST)
-    public String updateAudit(@RequestBody Audit audit){
+    public String updateAudit(@RequestBody Audit audit , HttpServletRequest request){
         if(StringUtils.isBlank(audit.getId()) || StringUtils.isBlank(audit.getAuditSuggestion())){
             return "审批意见不能为空";
         }
-        service.updateAudit(audit);
+        service.updateAudit(audit , request);
         return "审批成功";
     }
 

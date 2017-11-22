@@ -168,8 +168,7 @@
         <if test="updateTime != null and updateTime != ''">
             update_time = #{updateTime},
         </if>
-        update_by = #{updateBy.id},
-        update_date = #{updateDate}
+        update_by = #{updateBy.id}
         WHERE id = #{id}
     </update>
 
