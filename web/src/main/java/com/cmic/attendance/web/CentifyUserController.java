@@ -73,7 +73,7 @@ public class CentifyUserController {
         paramMap.add("contactId", rcsToken.getContactId());
         paramMap.add("enterId", rcsToken.getEnterId());
         //用户名的获取;
-
+        log.debug("token信息"+rcsToken.getToken());
         String userStr = this.restTemplate.postForObject(Constant.certifyServicePath + Constant.userINfo, paramMap, String.class);
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
