@@ -5,10 +5,12 @@ import com.cmic.attendance.dao.AuditDao;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Audit;
 import com.cmic.attendance.utils.DateUtils;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
+import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,9 +77,9 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         Map<String,Object> paraMap = new HashMap<String,Object>();
         //还没确定怎么获取审批人的电话号码, 暂时硬编码
        /* request.getSession().setAttribute("attendanceUserVo",attendanceUserVo);*/
-       /* AttendanceUserVo attendanceUserVo = (AttendanceUserVo)WebUtils.getSession().getAttribute("attendanceUserVo");
-        paraMap.put("updateBy",attendanceUserVo.getAttendanceUsername());*/
-        paraMap.put("updateBy","10086000");
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
+        paraMap.put("updateBy",attendanceUserVo.getAttendanceUsername());
+
         paraMap.put("updateTime",new Date());
         paraMap.put("auditTime", DateUtils.getDateToStrings(new Date()));
         paraMap.put("auditStatus","0"); //设置审批意见状态为 已处理
