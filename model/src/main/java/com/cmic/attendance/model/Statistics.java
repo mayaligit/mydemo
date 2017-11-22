@@ -3,24 +3,24 @@ package com.cmic.attendance.model;
 import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
 /**
- * 实体
+ * 统计表实体
  */
-@ApiModel(value = "Statistics", description = "")
+@ApiModel(value = "Statistics", description = "统计表")
 public class Statistics extends DataEntity<Statistics> {
 
-    @ApiModelProperty(value = "迟到次数", example = "迟到次数")
+    @ApiModelProperty(value = "迟到次数")
     protected Integer lateTime;
-    @ApiModelProperty(value = "早退次数", example = "早退次数")
+    @ApiModelProperty(value = "早退次数")
     protected Integer earlyTime;
-    @ApiModelProperty(value = "上班时长", example = "上班时长")
+    @ApiModelProperty(value = "上班时长")
     protected Integer officeTime;
-    @ApiModelProperty(value = "补填日报次数", example = "补填日报次数")
+    @ApiModelProperty(value = "补填日报次数")
     protected Integer dailyTime;
-    @ApiModelProperty(value = "用户名", example = "用户名")
+    @ApiModelProperty(value = "用户名")
     protected String username;
-    @ApiModelProperty(value = "所属考勤组名", example = "所属考勤组名")
-    protected String attendanceGroup;
 
     public Statistics(){
 
@@ -67,14 +67,6 @@ public class Statistics extends DataEntity<Statistics> {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getAttendanceGroup() {
-        return attendanceGroup;
-    }
-
-    public void setAttendanceGroup(String attendanceGroup) {
-        this.attendanceGroup = attendanceGroup;
     }
 
 

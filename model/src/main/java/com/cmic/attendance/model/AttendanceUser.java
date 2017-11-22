@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 考勤后台管理表实体
+ * 后台角色表实体
  */
-@ApiModel(value = "AttendanceUser", description = "考勤后台管理表")
+@ApiModel(value = "AttendanceUser", description = "后台角色表")
 public class AttendanceUser extends DataEntity<AttendanceUser> {
 
     @ApiModelProperty(value = "账号")

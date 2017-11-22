@@ -3,26 +3,28 @@ package com.cmic.attendance.model;
 import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
 /**
- * 实体
+ * 班次表实体
  */
-@ApiModel(value = "Clazzes", description = "")
+@ApiModel(value = "Clazzes", description = "班次表")
 public class Clazzes extends DataEntity<Clazzes> {
 
-    @ApiModelProperty(value = "设定正常打卡地点", example = "设定正常打卡地点")
+    @ApiModelProperty(value = "设定正常打卡地点")
     protected String nomalAddress;
-    @ApiModelProperty(value = "正常上班时间", example = "正常上班时间")
-    protected String nomalStartTime;
-    @ApiModelProperty(value = "正常下班时间", example = "正常下班时间")
-    protected String nomalEndTime;
-    @ApiModelProperty(value = "用户所属组ID", example = "用户所属组ID")
+    @ApiModelProperty(value = "正常上班时间")
+    protected Date nomalStartTime;
+    @ApiModelProperty(value = "正常下班时间")
+    protected Date nomalEndTime;
+    @ApiModelProperty(value = "用户所属组ID")
     protected String classGroupId;
-    @ApiModelProperty(value = "用户所属组名字", example = "用户所属组名字")
+    @ApiModelProperty(value = "用户所属组名字")
     protected String classGroup;
-    @ApiModelProperty(value = "用户名", example = "用户名")
+    @ApiModelProperty(value = "用户名")
     protected String username;
-    @ApiModelProperty(value = "打卡应到人数", example = "打卡应到人数")
-    protected String total;
+    @ApiModelProperty(value = "打卡应到人数")
+    protected Integer total;
 
     public Clazzes(){
 
@@ -39,19 +41,19 @@ public class Clazzes extends DataEntity<Clazzes> {
         this.nomalAddress = nomalAddress;
     }
 
-    public String getNomalStartTime() {
+    public Date getNomalStartTime() {
         return nomalStartTime;
     }
 
-    public void setNomalStartTime(String nomalStartTime) {
+    public void setNomalStartTime(Date nomalStartTime) {
         this.nomalStartTime = nomalStartTime;
     }
 
-    public String getNomalEndTime() {
+    public Date getNomalEndTime() {
         return nomalEndTime;
     }
 
-    public void setNomalEndTime(String nomalEndTime) {
+    public void setNomalEndTime(Date nomalEndTime) {
         this.nomalEndTime = nomalEndTime;
     }
 
@@ -79,11 +81,11 @@ public class Clazzes extends DataEntity<Clazzes> {
         this.username = username;
     }
 
-    public String getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(String total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 

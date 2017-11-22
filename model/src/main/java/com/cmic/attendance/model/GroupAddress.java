@@ -6,15 +6,15 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 考勤地址表实体
+ * 组地址表实体
  */
-@ApiModel(value = "GroupAddress", description = "考勤地址表")
+@ApiModel(value = "GroupAddress", description = "组地址表")
 public class GroupAddress extends DataEntity<GroupAddress> {
 
     @ApiModelProperty(value = "考勤组的经度")
-    protected String groupAttendanceLongitude;
+    protected Float groupAttendanceLongitude;
     @ApiModelProperty(value = "考勤组的维度")
-    protected String groupAttendanceDimension;
+    protected Float groupAttendanceDimension;
     @ApiModelProperty(value = "考勤地址")
     protected String groupAddress;
     @ApiModelProperty(value = "关联对应的考勤组")
@@ -27,19 +27,19 @@ public class GroupAddress extends DataEntity<GroupAddress> {
         super(id);
     }
 
-    public String getGroupAttendanceLongitude() {
+    public Float getGroupAttendanceLongitude() {
         return groupAttendanceLongitude;
     }
 
-    public void setGroupAttendanceLongitude(String groupAttendanceLongitude) {
+    public void setGroupAttendanceLongitude(Float groupAttendanceLongitude) {
         this.groupAttendanceLongitude = groupAttendanceLongitude;
     }
 
-    public String getGroupAttendanceDimension() {
+    public Float getGroupAttendanceDimension() {
         return groupAttendanceDimension;
     }
 
-    public void setGroupAttendanceDimension(String groupAttendanceDimension) {
+    public void setGroupAttendanceDimension(Float groupAttendanceDimension) {
         this.groupAttendanceDimension = groupAttendanceDimension;
     }
 
