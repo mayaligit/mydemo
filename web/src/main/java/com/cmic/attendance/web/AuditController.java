@@ -86,8 +86,8 @@ public class AuditController extends BaseRestController<AuditService> {
         audit.setSubmitTime(new Date());
         audit.setAuditStatus("1");  //设置审批状态为未处理
 
-        audit.setCreateTime(audit.getSubmitTime());
-        audit.setUpdateTime(audit.getSubmitTime());
+        audit.setCreateDate(audit.getSubmitTime());
+        audit.setUpdateDate(audit.getSubmitTime());
 
         //设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
