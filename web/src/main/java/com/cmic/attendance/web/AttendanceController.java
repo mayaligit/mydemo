@@ -41,6 +41,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
 
     private static Logger log = Logger.getLogger(AttendanceController.class);
 
+    @Autowired
+    private GroupAddressService groupAddressService;
     @Value("${clazzesService.id}")
     private String clazzesId;
 

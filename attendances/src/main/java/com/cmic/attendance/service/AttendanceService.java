@@ -250,6 +250,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                         attendance.setAttendanceStatus("1");
                         attendance.setAttendanceDesc("上班卡没打");
                     }*/
+                    saveAttendance.setUpdateDate(startDate);
                 }
 
                 //判断当前地点是否异常
@@ -482,83 +483,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }
     }
 
-    //统计下班数据
-    public void  insetEndStatic(InsetEndStaticBo insetEndStaticBo) {
-        Statistics DBstatistics =
-                statisticsService.checkAttendanceByCreateByAndCreateTime(insetEndStaticBo.getCreateBy()
-                        , insetEndStaticBo.getCreateTime());
-        if (null ==DBstatistics){
-            //产生统计数据
-            Statistics saveStatistics = new Statistics();
-            saveStatistics.setEarlyTime(1);
-            //如果没打上班卡，使用默认时间来统计时长 14点开始上班 早于 12点打下班卡
-            Date date=new Date();
-            String dates = DateUtils.getDateToStrings(date);
-            String Hour = dates.split(" ")[1].split(":")[0];
-            int Hours=Integer.parseInt(Hour);
-            String startTime=null;
-            if (null==insetEndStaticBo.getStartTime() && Hours<=14){
-                startTime=insetEndStaticBo.getStartTime();
-            }else if (null==insetEndStaticBo.getStartTime() && Hours>=14){
-                startTime = "14:00:00";
-            }else {
-                startTime=insetEndStaticBo.getStartTime();
-            }
-            String[] startTimeArry = startTime.split(":");
-            int starHour=Integer.parseInt(startTimeArry[0]);
-            int starMinute=Integer.parseInt(startTimeArry[1]);
-            int starTime=starHour*60+starMinute;
-            String offtime = insetEndStaticBo.getOfftime();
-            String[]offtimeArry = offtime.split(":");
-            int offHour=Integer.parseInt(offtimeArry[0]);
-            int offMinute=Integer.parseInt(offtimeArry[1]);
-            int offTime=offHour*60+offMinute;
-            int saveTime=offTime-starTime;
-            saveStatistics.setOfficeTime(saveTime);
-            saveStatistics.setUsername(insetEndStaticBo.getUserName());
-            statisticsService.save(saveStatistics);
-        }else {
-            //更新数据
-            int earlyTime=0;
-            if (DBstatistics.getEarlyTime()!=0){
-                int DbearlyTime = DBstatistics.getEarlyTime();
-                earlyTime=DbearlyTime+1;
-            }else {
-                earlyTime=1;
-            }
-            DBstatistics.setEarlyTime(earlyTime);
 
-            //如果没打上班卡，使用默认时间来统计时长 14点开始上班 早于
-            Date date=new Date();
-            String dates = DateUtils.getDateToStrings(date);
-            String Hour = dates.split(" ")[1].split(":")[0];
-            int Hours=Integer.parseInt(Hour);
-            String startTime2=null;
-            if (null==insetEndStaticBo.getStartTime() && Hours>=14){
-                startTime2 = "14:00:00";
-            }else if (null==insetEndStaticBo.getStartTime() && Hours<14){
-                startTime2=insetEndStaticBo.getStartTime();
-            }else {
-                startTime2=insetEndStaticBo.getStartTime();
-            }
-            String[] startTimeArry = startTime2.split(":");
-            int starHour=Integer.parseInt(startTimeArry[0]);
-            int starMinute=Integer.parseInt(startTimeArry[1]);
-            int starTime=starHour*60+starMinute;
-            //如果是负数则为0
-            String offtime = insetEndStaticBo.getOfftime();
-            String[] offtimeArry = offtime.split(":");
-            int offHour=Integer.parseInt(offtimeArry[0]);
-            int offMinute=Integer.parseInt(offtimeArry[1]);
-            /*int offSecond=Integer.parseInt(offtimeArry[2]);
-            int offCreated=offHour*3600*1000+offMinute*60*1000+offSecond*1000;*/
-            int offTime=offHour*60+ offMinute;
-            int saveTime=offTime-starTime;
-            DBstatistics.setOfficeTime(saveTime);
-            DBstatistics.setUsername(insetEndStaticBo.getUserName());
-            statisticsService.save(DBstatistics);
-        }
-    }
 
  /**
      * 查询考勤列表数据分页
