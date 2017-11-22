@@ -7,15 +7,18 @@
         a.daily_desc AS "dailyDesc",
         a.submit_time AS "submitTime",
         a.daily_title AS "dailyTitle",
-        a.today_daily AS "todayDaily",
+        a.yesterday_plan AS "yesterdayPlan",
+        a.yesterday_finished AS "yesterdayFinished",
+        a.yesterday_unfinished AS "yesterdayUnfinished",
+        a.today_plan AS "todayPlan",
         a.submit_location AS "submitLocation",
         a.examiner AS "examiner",
         a.examine_time AS "examineTime",
         a.suggestion_status AS "suggestionStatus",
         a.create_by AS "createBy.id",
-        a.create_time AS "createTime",
+        a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_time AS "updateTime",
+        a.update_date AS "updateDate",
         a.username AS "username",
         a.attendance_group AS "attendanceGroup"
     </sql>
@@ -38,6 +41,60 @@
         <include refid="dailyJoins"/>
         <where>
             1 = 1
+            <if test="id != null">
+                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceId != null">
+                AND a.attendance_id LIKE CONCAT('%',#{attendanceId, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="dailyDesc != null">
+                AND a.daily_desc LIKE CONCAT('%',#{dailyDesc, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="submitTime != null">
+                AND a.submit_time LIKE CONCAT('%',#{submitTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="dailyTitle != null">
+                AND a.daily_title LIKE CONCAT('%',#{dailyTitle, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="yesterdayPlan != null">
+                AND a.yesterday_plan LIKE CONCAT('%',#{yesterdayPlan, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="yesterdayFinished != null">
+                AND a.yesterday_finished LIKE CONCAT('%',#{yesterdayFinished, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="yesterdayUnfinished != null">
+                AND a.yesterday_unfinished LIKE CONCAT('%',#{yesterdayUnfinished, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="todayPlan != null">
+                AND a.today_plan LIKE CONCAT('%',#{todayPlan, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="submitLocation != null">
+                AND a.submit_location LIKE CONCAT('%',#{submitLocation, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="examineTime != null">
+                AND a.examine_time LIKE CONCAT('%',#{examineTime, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="suggestionStatus != null">
+                AND a.suggestion_status LIKE CONCAT('%',#{suggestionStatus, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createBy.id != null">
+                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="createDate != null">
+                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateBy.id != null">
+                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="updateDate != null">
+                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="username != null">
+                AND a.username LIKE CONCAT('%',#{username, typeHandler=EscapeTypeHandler},'%')
+            </if>
+            <if test="attendanceGroup != null">
+                AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
+            </if>
         </where>
     </select>
 
@@ -50,56 +107,66 @@
 
     <insert id="insert">
         INSERT INTO t_daily(
-            id,
-            attendance_id,
-            daily_desc,
-            submit_time,
-            daily_title,
-            today_daily,
-            submit_location,
-            examiner,
-            examine_time,
-            suggestion_status,
-            create_by,
-            create_time,
-            update_by,
-            update_time,
-            username,
-            attendance_group
+        id,
+        attendance_id,
+        daily_desc,
+        submit_time,
+        daily_title,
+        yesterday_plan,
+        yesterday_finished,
+        yesterday_unfinished,
+        today_plan,
+        submit_location,
+        examiner,
+        examine_time,
+        suggestion_status,
+        create_by,
+        create_date,
+        update_by,
+        update_date,
+        username,
+        attendance_group
         ) VALUES (
-            #{id},
-            #{attendanceId},
-            #{dailyDesc},
-            #{submitTime},
-            #{dailyTitle},
-            #{todayDaily},
-            #{submitLocation},
-            #{examiner},
-            #{examineTime},
-            #{suggestionStatus},
-            #{createBy.id},
-            #{createTime},
-            #{updateBy.id},
-            #{updateTime},
-            #{username},
-            #{attendanceGroup}
+        #{id},
+        #{attendanceId},
+        #{dailyDesc},
+        #{submitTime},
+        #{dailyTitle},
+        #{yesterdayPlan},
+        #{yesterdayFinished},
+        #{yesterdayUnfinished},
+        #{todayPlan},
+        #{submitLocation},
+        #{examiner},
+        #{examineTime},
+        #{suggestionStatus},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate},
+        #{username},
+        #{attendanceGroup}
         )
     </insert>
 
     <update id="update">
         UPDATE t_daily SET
+        id = #{id},
         attendance_id = #{attendanceId},
         daily_desc = #{dailyDesc},
         submit_time = #{submitTime},
         daily_title = #{dailyTitle},
-        today_daily = #{todayDaily},
+        yesterday_plan = #{yesterdayPlan},
+        yesterday_finished = #{yesterdayFinished},
+        yesterday_unfinished = #{yesterdayUnfinished},
+        today_plan = #{todayPlan},
         submit_location = #{submitLocation},
-        examiner = #{examiner},
         examine_time = #{examineTime},
         suggestion_status = #{suggestionStatus},
         create_by = #{createBy.id},
-        create_time = #{createTime},
+        create_date = #{createDate},
         update_by = #{updateBy.id},
+        update_date = #{updateDate},
         username = #{username},
         attendance_group = #{attendanceGroup}
         WHERE id = #{id}
@@ -107,43 +174,46 @@
 
     <update id="dynamicUpdate">
         UPDATE t_daily SET
-        <if test="attendanceId != null and attendanceId != ''">
-        attendance_id = #{attendanceId},
+        <if test="attendanceId != null  and attendanceId != ''">
+            attendance_id = #{attendanceId},
         </if>
-        <if test="dailyDesc != null and dailyDesc != ''">
-        daily_desc = #{dailyDesc},
+        <if test="dailyDesc != null  and dailyDesc != ''">
+            daily_desc = #{dailyDesc},
         </if>
-        <if test="submitTime != null and submitTime != ''">
-        submit_time = #{submitTime},
+        <if test="submitTime != null ">
+            submit_time = #{submitTime},
         </if>
-        <if test="dailyTitle != null and dailyTitle != ''">
-        daily_title = #{dailyTitle},
+        <if test="dailyTitle != null  and dailyTitle != ''">
+            daily_title = #{dailyTitle},
         </if>
-        <if test="todayDaily != null and todayDaily != ''">
-        today_daily = #{todayDaily},
+        <if test="yesterdayPlan != null  and yesterdayPlan != ''">
+            yesterday_plan = #{yesterdayPlan},
         </if>
-        <if test="submitLocation != null and submitLocation != ''">
-        submit_location = #{submitLocation},
+        <if test="yesterdayFinished != null  and yesterdayFinished != ''">
+            yesterday_finished = #{yesterdayFinished},
         </if>
-        <if test="examiner != null and examiner != ''">
-        examiner = #{examiner},
+        <if test="yesterdayUnfinished != null  and yesterdayUnfinished != ''">
+            yesterday_unfinished = #{yesterdayUnfinished},
         </if>
-        <if test="examineTime != null and examineTime != ''">
-        examine_time = #{examineTime},
+        <if test="todayPlan != null  and todayPlan != ''">
+            today_plan = #{todayPlan},
         </if>
-        <if test="suggestionStatus != null and suggestionStatus != ''">
-        suggestion_status = #{suggestionStatus},
+        <if test="submitLocation != null  and submitLocation != ''">
+            submit_location = #{submitLocation},
         </if>
-        <if test="createTime != null and createTime != ''">
-        create_time = #{createTime},
+        <if test="examiner != null  and examiner != ''">
+            examiner = #{examiner},
         </if>
-        <if test="updateTime != null and updateTime != ''">
-        update_time = #{updateTime},
+        <if test="examineTime != null ">
+            examine_time = #{examineTime},
         </if>
-        <if test="username != null and username != ''">
+        <if test="suggestionStatus != null  and suggestionStatus != ''">
+            suggestion_status = #{suggestionStatus},
+        </if>
+        <if test="username != null  and username != ''">
             username = #{username},
         </if>
-        <if test="attendanceGroup != null and attendanceGroup != ''">
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
             attendance_group = #{attendanceGroup},
         </if>
         update_by = #{updateBy.id},

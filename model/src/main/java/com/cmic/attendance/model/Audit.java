@@ -1,46 +1,41 @@
 package com.cmic.attendance.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModel;
+
+import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 审核表实体
+ * 实体
  */
-@ApiModel(value = "Audit", description = "审核表")
+@ApiModel(value = "Audit", description = "")
 public class Audit extends DataEntity<Audit> {
 
-    @ApiModelProperty(value = "日报提交时间")
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "日报提交时间", example = "2017-09-09")
     protected Date submitTime;
-    @ApiModelProperty(value = "申请的审批的内容")
+    @ApiModelProperty(value = "申请的审批的内容", example = "申请的审批的内容")
     protected String auditContent;
-    @ApiModelProperty(value = "审批人ID")
+    @ApiModelProperty(value = "审批人ID", example = "审批人ID")
     protected String auditUserId;
-    @ApiModelProperty(value = "审批人名字")
+    @ApiModelProperty(value = "审批人名字", example = "审批人名字")
     protected String auditUserName;
-    @ApiModelProperty(value = "审批意见状态,0/已阅,1/已处理,2/未处理")
+    @ApiModelProperty(value = "审批意见状态,0/已阅,1/已处理,2/未处理", example = "审批意见状态,0/已阅,1/已处理,2/未处理")
     protected String auditStatus;
-    @ApiModelProperty(value = "审批时间")
+    @ApiModelProperty(value = "审批时间", example = "2017-09-09")
     protected Date auditTime;
-    @ApiModelProperty(value = "审批的是补卡类型时,关联对应考勤")
+    @ApiModelProperty(value = "审批的是补卡类型时,关联对应考勤", example = "审批的是补卡类型时,关联对应考勤")
     protected String attendanceId;
-    @ApiModelProperty(value = "0/同意 , 1/拒绝")
+    @ApiModelProperty(value = "0/同意 , 1/拒绝", example = "0/同意 , 1/拒绝")
     protected String auditSuggestion;
-    @ApiModelProperty(value = "保留字段,暂定0为补卡新类型, 以后可增加请假等类型")
+    @ApiModelProperty(value = "保留字段,暂定0为补卡新类型, 以后可增加请假等类型", example = "保留字段,暂定0为补卡新类型, 以后可增加请假等类型")
     protected String businessType;
-    @ApiModelProperty(value = "创建时间")
-    protected Date createTime;
-    @ApiModelProperty(value = "更新时间")
-    protected Date updateTime;
-    @ApiModelProperty(value = "审批详情")
+    @ApiModelProperty(value = "审批详情", example = "审批详情")
     protected String auditDetail;
     @ApiModelProperty(value = "")
     protected String username;
-    @ApiModelProperty(value = "审批意见备注")
-    protected String suggestionRemarks;
+    @ApiModelProperty(value = "所属考勤组名", example = "所属考勤组名")
+    protected String attendanceGroup;
 
     public Audit(){
 
@@ -121,22 +116,6 @@ public class Audit extends DataEntity<Audit> {
         this.businessType = businessType;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public String getAuditDetail() {
         return auditDetail;
     }
@@ -153,11 +132,13 @@ public class Audit extends DataEntity<Audit> {
         this.username = username;
     }
 
-    public String getSuggestionRemarks() {
-        return suggestionRemarks;
+    public String getAttendanceGroup() {
+        return attendanceGroup;
     }
 
-    public void setSuggestionRemarks(String suggestionRemarks) {
-        this.suggestionRemarks = suggestionRemarks;
+    public void setAttendanceGroup(String attendanceGroup) {
+        this.attendanceGroup = attendanceGroup;
     }
+
+
 }
