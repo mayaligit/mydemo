@@ -51,7 +51,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         logger.info("删除：" + groupRule.toJSONString());
     }
 	
-	 /*
+	/*
      插入考勤组规则数据
      */
     @Transactional(readOnly = false)
@@ -63,14 +63,21 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         //分割考勤人员输入，获取各值
         String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
         String person[] = persons.split(",");
-        try {
-            String groupEnterId = "";
-            for(int i=0;i<person.length;i++) {
-                String[] p = person[i].split("-");
-                groupEnterId = p[2]+" ";
-            }
+        //多地址获取
+        String addresses = groupRuleVo.getGroupRule().getGroupAddress();
+        String[] resses = addresses.split(",");
 
+        try {
+            //添加企业id
+            String groupEnterId = "";
+            if(person!=null&&person.length>0) {
+                for (int i = 0; i < person.length; i++) {
+                    String[] p = person[i].split("-");
+                    groupEnterId = p[2] + " ";
+                }
+            }
             groupRuleVo.getGroupRule().setGroupEnterpriseId(groupEnterId);
+            groupRuleVo.getGroupRule().setGroupAddress(null);
             //插入规则主表数据
             this.save(groupRuleVo.getGroupRule());
             attendanceGroupId = groupRuleVo.getGroupRule().getId();
@@ -130,10 +137,18 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
             if(groupAddress==null){
                 groupAddress = new GroupAddress();
             }
-            groupAddress.setGroupAttendanceDimension(groupRuleVo.getGroupRule().getGroupAttendanceDimension());
-            groupAddress.setGroupAttendanceLongitude(groupRuleVo.getGroupRule().getGroupAttendanceLongitude());
+
             groupAddress.setAttendanceGroupId(attendanceGroupId);
-            groupAddressService.save(groupAddress);
+            if(resses!=null){
+                for (int i = 0; i < resses.length; i++) {
+                    String adds[] = resses[i].split("-");
+                    groupAddress.setGroupAttendanceLongitude(adds[0]);
+                    groupAddress.setGroupAttendanceDimension(adds[1]);
+                    groupAddress.setGroupAttendanceScope(adds[2]);
+                    groupAddressService.save(groupAddress);
+                }
+            }
+
         }catch (Exception e){
             throw  new GroupRuleExeption("考勤表地址信息插入失败");
         }
