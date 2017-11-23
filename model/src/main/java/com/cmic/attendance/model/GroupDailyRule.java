@@ -11,22 +11,20 @@ import java.util.Date;
 @ApiModel(value = "GroupDailyRule", description = "")
 public class GroupDailyRule extends DataEntity<GroupDailyRule> {
 
-    @ApiModelProperty(value = "0/日报 1/周报", example = "0/日报 1/周报")
-    protected String ruleDailyType;
-    @ApiModelProperty(value = "(注：1-7表示提示日期)", example = "(注：1-7表示提示日期)")
+    @ApiModelProperty(value = "0/日报 1/周报")
+    protected Integer ruleDailyType;
+    @ApiModelProperty(value = "(注：1-7表示提示日期)")
     protected String ruleDailyWeek;
-    @ApiModelProperty(value = "关联日报模板模块 ", example = "关联日报模板模块 ")
+    @ApiModelProperty(value = "关联日报模板模块 ")
     protected String ruleTemplateId;
-    @ApiModelProperty(value = "关联对应考勤组", example = "关联对应考勤组")
+    @ApiModelProperty(value = "关联对应考勤组")
     protected String attendanceGroupId;
-    @ApiModelProperty(value = "0/立即启用 1/停用", example = "0/立即启用 1/停用")
-    protected String ruleDailyStatus;
-    @ApiModelProperty(value = "用户预订的生效时间（待定是年月日）", example = "2017-09-09")
+    @ApiModelProperty(value = "0/立即启用 1/停用")
+    protected Integer ruleDailyStatus;
+    @ApiModelProperty(value = "用户预订的生效时间（待定是年月日）")
     protected Date ruleDailyReserve;
-    @ApiModelProperty(value = "生效时间从-至 至的话默认2099年", example = "2017-09-09")
+    @ApiModelProperty(value = "生效时间从-至 至的话默认2099年")
     protected Date ruleDeadline;
-    @ApiModelProperty(value = "所属考勤组名", example = "所属考勤组名")
-    protected String attendanceGroup;
 
     public GroupDailyRule(){
 
@@ -35,11 +33,11 @@ public class GroupDailyRule extends DataEntity<GroupDailyRule> {
         super(id);
     }
 
-    public String getRuleDailyType() {
+    public Integer getRuleDailyType() {
         return ruleDailyType;
     }
 
-    public void setRuleDailyType(String ruleDailyType) {
+    public void setRuleDailyType(Integer ruleDailyType) {
         this.ruleDailyType = ruleDailyType;
     }
 
@@ -67,11 +65,11 @@ public class GroupDailyRule extends DataEntity<GroupDailyRule> {
         this.attendanceGroupId = attendanceGroupId;
     }
 
-    public String getRuleDailyStatus() {
+    public Integer getRuleDailyStatus() {
         return ruleDailyStatus;
     }
 
-    public void setRuleDailyStatus(String ruleDailyStatus) {
+    public void setRuleDailyStatus(Integer ruleDailyStatus) {
         this.ruleDailyStatus = ruleDailyStatus;
     }
 
@@ -89,14 +87,6 @@ public class GroupDailyRule extends DataEntity<GroupDailyRule> {
 
     public void setRuleDeadline(Date ruleDeadline) {
         this.ruleDeadline = ruleDeadline;
-    }
-
-    public String getAttendanceGroup() {
-        return attendanceGroup;
-    }
-
-    public void setAttendanceGroup(String attendanceGroup) {
-        this.attendanceGroup = attendanceGroup;
     }
 
 

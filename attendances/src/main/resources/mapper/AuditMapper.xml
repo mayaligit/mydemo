@@ -3,6 +3,7 @@
 <mapper namespace = "com.cmic.attendance.dao.AuditDao">
     <sql id="auditColumns">
         a.id AS "id",
+        a.username AS "username",
         a.submit_time AS "submitTime",
         a.audit_content AS "auditContent",
         a.audit_user_id AS "auditUserId",
@@ -12,15 +13,14 @@
         a.attendance_id AS "attendanceId",
         a.audit_suggestion AS "auditSuggestion",
         a.business_type AS "businessType",
+        a.suggestion_remarksvarchar AS "suggestionRemarksvarchar",
+        a.attendance_group AS "attendanceGroup",
+        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_date AS "updateDate",
-        a.audit_detail AS "auditDetail",
-        a.username AS "username",
-        a.attendance_group AS "attendanceGroup"
+        a.update_date AS "updateDate"
     </sql>
-
 
     <sql id="auditJoins">
     </sql>
@@ -100,47 +100,49 @@
 
     <insert id="insert">
         INSERT INTO t_audit(
-            id,
-            submit_time,
-            audit_content,
-            audit_user_id,
-            audit_user_name,
-            audit_status,
-            audit_time,
-            attendance_id,
-            audit_suggestion,
-            business_type,
-            create_by,
-            create_date,
-            update_by,
-            update_date,
-            audit_detail,
-            username,
-            attendance_group
+        id,
+        username,
+        submit_time,
+        audit_content,
+        audit_user_id,
+        audit_user_name,
+        audit_status,
+        audit_time,
+        attendance_id,
+        audit_suggestion,
+        business_type,
+        suggestion_remarksvarchar,
+        attendance_group,
+        remarks,
+        create_by,
+        create_date,
+        update_by,
+        update_date
         ) VALUES (
-            #{id},
-            #{submitTime},
-            #{auditContent},
-            #{auditUserId},
-            #{auditUserName},
-            #{auditStatus},
-            #{auditTime},
-            #{attendanceId},
-            #{auditSuggestion},
-            #{businessType},
-            #{createBy.id},
-            #{createDate},
-            #{updateBy.id},
-            #{updateDate},
-            #{auditDetail},
-            #{username},
-            #{attendanceGroup}
+        #{id},
+        #{username},
+        #{submitTime},
+        #{auditContent},
+        #{auditUserId},
+        #{auditUserName},
+        #{auditStatus},
+        #{auditTime},
+        #{attendanceId},
+        #{auditSuggestion},
+        #{businessType},
+        #{suggestionRemarksvarchar},
+        #{attendanceGroup},
+        #{remarks},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_audit SET
-        id = #{id},
+        username = #{username},
         submit_time = #{submitTime},
         audit_content = #{auditContent},
         audit_user_id = #{auditUserId},
@@ -150,17 +152,20 @@
         attendance_id = #{attendanceId},
         audit_suggestion = #{auditSuggestion},
         business_type = #{businessType},
-        create_date = #{createDate},
+        suggestion_remarksvarchar = #{suggestionRemarksvarchar},
+        attendance_group = #{attendanceGroup},
+        remarks = #{remarks},
+        create_by = #{createBy.id},
         update_by = #{updateBy.id},
-        update_date = #{updateDate},
-        audit_detail = #{auditDetail},
-        username = #{username},
-        attendance_group = #{attendanceGroup}
+        update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
     <update id="dynamicUpdate">
         UPDATE t_audit SET
+        <if test="username != null  and username != ''">
+            username = #{username},
+        </if>
         <if test="submitTime != null ">
             submit_time = #{submitTime},
         </if>
@@ -173,7 +178,7 @@
         <if test="auditUserName != null  and auditUserName != ''">
             audit_user_name = #{auditUserName},
         </if>
-        <if test="auditStatus != null  and auditStatus != ''">
+        <if test="auditStatus != null ">
             audit_status = #{auditStatus},
         </if>
         <if test="auditTime != null ">
@@ -182,17 +187,14 @@
         <if test="attendanceId != null  and attendanceId != ''">
             attendance_id = #{attendanceId},
         </if>
-        <if test="auditSuggestion != null  and auditSuggestion != ''">
+        <if test="auditSuggestion != null ">
             audit_suggestion = #{auditSuggestion},
         </if>
-        <if test="businessType != null  and businessType != ''">
+        <if test="businessType != null ">
             business_type = #{businessType},
         </if>
-        <if test="auditDetail != null  and auditDetail != ''">
-            audit_detail = #{auditDetail},
-        </if>
-        <if test="username != null  and username != ''">
-            username = #{username},
+        <if test="suggestionRemarksvarchar != null  and suggestionRemarksvarchar != ''">
+            suggestion_remarksvarchar = #{suggestionRemarksvarchar},
         </if>
         <if test="attendanceGroup != null  and attendanceGroup != ''">
             attendance_group = #{attendanceGroup},
@@ -231,7 +233,7 @@
             suggestion_remarks=#{suggestionRemarks},
         </if>
         update_by=#{updateBy},
-        update_time=#{updateTime}
+        update_date=#{updateDate}
         WHERE id =#{auditId}
     </update>
 

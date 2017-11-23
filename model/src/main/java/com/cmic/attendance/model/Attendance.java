@@ -1,9 +1,7 @@
 package com.cmic.attendance.model;
 
-import io.swagger.annotations.ApiModel;
-
 import com.cmic.saas.base.model.DataEntity;
-
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
@@ -13,34 +11,40 @@ import java.util.Date;
 @ApiModel(value = "Attendance", description = "")
 public class Attendance extends DataEntity<Attendance> {
 
-    @ApiModelProperty(value = "当前打卡用户", example = "当前打卡用户")
+    @ApiModelProperty(value = "当前打卡用户")
     protected String attendanceUser;
-    @ApiModelProperty(value = "上班打卡时间", example = "2017-09-09")
+    @ApiModelProperty(value = "上班打卡时间")
     protected Date startTime;
-    @ApiModelProperty(value = "下班打卡时间", example = "2017-09-09")
+    @ApiModelProperty(value = "下班打卡时间")
     protected Date endTime;
-    @ApiModelProperty(value = "0/正常,1/异常 2/外勤", example = "0/正常,1/异常 2/外勤")
+    @ApiModelProperty(value = "0/正常,1/异常 2/外勤")
     protected String attendanceStatus;
-    @ApiModelProperty(value = "考勤状态正常的话考勤描述为空，异常的话考勤状态需要显示是否已提审批，未审批显示异常", example = "考勤状态正常的话考勤描述为空，异常的话考勤状态需要显示是否已提审批，未审批显示异常")
+    @ApiModelProperty(value = "考勤状态正常的话考勤描述为空，异常的话考勤状态需要显示是否已提审批，未审批显示异常")
     protected String attendanceDesc;
-    @ApiModelProperty(value = "考勤月份", example = "考勤月份")
+    @ApiModelProperty(value = "考勤月份")
     protected String attendanceMonth;
-    @ApiModelProperty(value = "上班打卡地点", example = "上班打卡地点")
+    @ApiModelProperty(value = "上班打卡地点")
     protected String startLocation;
-    @ApiModelProperty(value = "下班打卡地点", example = "下班打卡地点")
+    @ApiModelProperty(value = "下班打卡地点")
     protected String endLocation;
-    @ApiModelProperty(value = "上班打卡使用的信号源,如wifi名,移动4G等保留字段", example = "上班打卡使用的信号源,如wifi名,移动4G等保留字段")
+    @ApiModelProperty(value = "上班打卡使用的信号源,如wifi名,移动4G等保留字段")
     protected String startSignal;
-    @ApiModelProperty(value = "下班打卡使用的信号源,如wifi名,移动4G等保留字段", example = "下班打卡使用的信号源,如wifi名,移动4G等保留字段")
+    @ApiModelProperty(value = "下班打卡使用的信号源,如wifi名,移动4G等保留字段")
     protected String endSignal;
-    @ApiModelProperty(value = "日报状态,0/未完成,1/已完成", example = "日报状态,0/未完成,1/已完成")
-    protected String dailyStatus;
-    @ApiModelProperty(value = "备用字段,用户所属考勤组", example = "备用字段,用户所属考勤组")
+    @ApiModelProperty(value = "日报状态,0/未完成,1/已完成")
+    protected Integer dailyStatus;
+    @ApiModelProperty(value = "备用字段,用户所属考勤组")
     protected String attendanceGroup;
-    @ApiModelProperty(value = "0/下班正常,1/下班早退", example = "0/下班正常,1/下班早退")
+    @ApiModelProperty(value = "0/下班正常,1/下班早退")
     protected String endTimeStatus;
-    @ApiModelProperty(value = "0/上班正常,1/上班迟到", example = "0/上班正常,1/上班迟到")
+    @ApiModelProperty(value = "0/上班正常,1/上班迟到")
     protected String startTimeStatus;
+    @ApiModelProperty(value = "0/正常，1/缺上班卡，2/缺下班卡")
+    protected String attendanceCardStatus;
+    @ApiModelProperty(value = "考勤打卡的经度")
+    protected String attendanceLongitude;
+    @ApiModelProperty(value = "考勤打卡的维度")
+    protected String attendanceDimension;
 
     public Attendance(){
 
@@ -129,11 +133,11 @@ public class Attendance extends DataEntity<Attendance> {
         this.endSignal = endSignal;
     }
 
-    public String getDailyStatus() {
+    public Integer getDailyStatus() {
         return dailyStatus;
     }
 
-    public void setDailyStatus(String dailyStatus) {
+    public void setDailyStatus(Integer dailyStatus) {
         this.dailyStatus = dailyStatus;
     }
 
@@ -159,6 +163,30 @@ public class Attendance extends DataEntity<Attendance> {
 
     public void setStartTimeStatus(String startTimeStatus) {
         this.startTimeStatus = startTimeStatus;
+    }
+
+    public String getAttendanceCardStatus() {
+        return attendanceCardStatus;
+    }
+
+    public void setAttendanceCardStatus(String attendanceCardStatus) {
+        this.attendanceCardStatus = attendanceCardStatus;
+    }
+
+    public String getAttendanceLongitude() {
+        return attendanceLongitude;
+    }
+
+    public void setAttendanceLongitude(String attendanceLongitude) {
+        this.attendanceLongitude = attendanceLongitude;
+    }
+
+    public String getAttendanceDimension() {
+        return attendanceDimension;
+    }
+
+    public void setAttendanceDimension(String attendanceDimension) {
+        this.attendanceDimension = attendanceDimension;
     }
 
 

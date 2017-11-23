@@ -3,25 +3,26 @@ package com.cmic.attendance.model;
 import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
 /**
- * 实体
+ * 统计表实体
  */
-@ApiModel(value = "Statistics", description = "")
+@ApiModel(value = "Statistics", description = "统计表")
 public class Statistics extends DataEntity<Statistics> {
 
-    @ApiModelProperty(value = "迟到次数", example = "迟到次数")
+    @ApiModelProperty(value = "迟到次数")
     protected Integer lateTime;
-    @ApiModelProperty(value = "早退次数", example = "早退次数")
+    @ApiModelProperty(value = "早退次数")
     protected Integer earlyTime;
-    @ApiModelProperty(value = "上班时长", example = "上班时长")
-    protected Integer officeTime;
-    @ApiModelProperty(value = "补填日报次数", example = "补填日报次数")
+    @ApiModelProperty(value = "上班时长")
+    protected Float officeTime;
+    @ApiModelProperty(value = "补填日报次数")
     protected Integer dailyTime;
-    @ApiModelProperty(value = "用户名", example = "用户名")
+    @ApiModelProperty(value = "用户名")
     protected String username;
-    @ApiModelProperty(value = "所属考勤组名", example = "所属考勤组名")
-    protected String attendanceGroup;
-
+    @ApiModelProperty(value = "统计组")
+    protected String attendance_group;
     public Statistics(){
 
     }
@@ -45,11 +46,11 @@ public class Statistics extends DataEntity<Statistics> {
         this.earlyTime = earlyTime;
     }
 
-    public Integer getOfficeTime() {
+    public Float getOfficeTime() {
         return officeTime;
     }
 
-    public void setOfficeTime(Integer officeTime) {
+    public void setOfficeTime(Float officeTime) {
         this.officeTime = officeTime;
     }
 
@@ -69,13 +70,11 @@ public class Statistics extends DataEntity<Statistics> {
         this.username = username;
     }
 
-    public String getAttendanceGroup() {
-        return attendanceGroup;
+    public String getAttendance_group() {
+        return attendance_group;
     }
 
-    public void setAttendanceGroup(String attendanceGroup) {
-        this.attendanceGroup = attendanceGroup;
+    public void setAttendance_group(String attendance_group) {
+        this.attendance_group = attendance_group;
     }
-
-
 }

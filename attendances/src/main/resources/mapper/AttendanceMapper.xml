@@ -17,6 +17,10 @@
         a.attendance_group AS "attendanceGroup",
         a.end_time_status AS "endTimeStatus",
         a.start_time_status AS "startTimeStatus",
+        a.attendance_card_status AS "attendanceCardStatus",
+        a.attendance_longitude AS "attendanceLongitude",
+        a.attendance_dimension AS "attendanceDimension",
+        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
@@ -110,51 +114,58 @@
 
     <insert id="insert">
         INSERT INTO t_attendance(
-        id,
-        attendance_user,
-        start_time,
-        end_time,
-        attendance_status,
-        attendance_desc,
-        attendance_month,
-        start_location,
-        end_location,
-        start_signal,
-        end_signal,
-        daily_status,
-        attendance_group,
-        end_time_status,
-        start_time_status,
-        create_by,
-        create_date,
-        update_by,
-        update_date
+            id,
+            attendance_user,
+            start_time,
+            end_time,
+            attendance_status,
+            attendance_desc,
+            attendance_month,
+            start_location,
+            end_location,
+            start_signal,
+            end_signal,
+            daily_status,
+            attendance_group,
+            end_time_status,
+            start_time_status,
+            attendance_card_status,
+            attendance_longitude,
+            attendance_dimension,
+            remarks,
+            create_by,
+            create_date,
+            update_by,
+            update_date
         ) VALUES (
-        #{id},
-        #{attendanceUser},
-        #{startTime},
-        #{endTime},
-        #{attendanceStatus},
-        #{attendanceDesc},
-        #{attendanceMonth},
-        #{startLocation},
-        #{endLocation},
-        #{startSignal},
-        #{endSignal},
-        #{dailyStatus},
-        #{attendanceGroup},
-        #{endTimeStatus},
-        #{startTimeStatus},
-        #{createBy.id},
-        #{createDate},
-        #{updateBy.id},
-        #{updateDate}
+            #{id},
+            #{attendanceUser},
+            #{startTime},
+            #{endTime},
+            #{attendanceStatus},
+            #{attendanceDesc},
+            #{attendanceMonth},
+            #{startLocation},
+            #{endLocation},
+            #{startSignal},
+            #{endSignal},
+            #{dailyStatus},
+            #{attendanceGroup},
+            #{endTimeStatus},
+            #{startTimeStatus},
+            #{attendanceCardStatus},
+            #{attendanceLongitude},
+            #{attendanceDimension},
+            #{remarks},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_attendance SET
-        id = #{id},
         attendance_user = #{attendanceUser},
         start_time = #{startTime},
         end_time = #{endTime},
@@ -169,8 +180,11 @@
         attendance_group = #{attendanceGroup},
         end_time_status = #{endTimeStatus},
         start_time_status = #{startTimeStatus},
+        attendance_card_status = #{attendanceCardStatus},
+        attendance_longitude = #{attendanceLongitude},
+        attendance_dimension = #{attendanceDimension},
+        remarks = #{remarks},
         create_by = #{createBy.id},
-        create_date = #{createDate},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -208,7 +222,7 @@
         <if test="endSignal != null  and endSignal != ''">
             end_signal = #{endSignal},
         </if>
-        <if test="dailyStatus != null  and dailyStatus != ''">
+        <if test="dailyStatus != null ">
             daily_status = #{dailyStatus},
         </if>
         <if test="attendanceGroup != null  and attendanceGroup != ''">
@@ -219,6 +233,15 @@
         </if>
         <if test="startTimeStatus != null  and startTimeStatus != ''">
             start_time_status = #{startTimeStatus},
+        </if>
+        <if test="attendanceCardStatus != null  and attendanceCardStatus != ''">
+            attendance_card_status = #{attendanceCardStatus},
+        </if>
+        <if test="attendanceLongitude != null  and attendanceLongitude != ''">
+            attendance_longitude = #{attendanceLongitude},
+        </if>
+        <if test="attendanceDimension != null  and attendanceDimension != ''">
+            attendance_dimension = #{attendanceDimension},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
@@ -237,7 +260,7 @@
         </if>
         <if test="updateTime != null and updateTime != ''">
 
-            update_time = #{updateTime,jdbcType=TIMESTAMP}
+            update_date= #{updateDate,jdbcType=TIMESTAMP}
         </if>
         WHERE attendance_id = #{attendanceId}
     </update>
@@ -257,7 +280,7 @@
         <include refid="attendanceColumns"/>
         FROM t_attendance a
         <include refid="attendanceJoins"/>
-        WHERE a.create_by = #{createBy} AND DATE(a.create_time)=#{createTime}
+        WHERE a.create_by = #{createBy} AND DATE(a.create_date)=#{createDate}
     </select>
     <select id="checkAttendanceLatterByDay" parameterType="Map" resultType="java.util.HashMap">
         SELECT

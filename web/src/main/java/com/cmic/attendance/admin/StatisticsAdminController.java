@@ -44,7 +44,7 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
         return statistics;
     }
 
-    @ApiOperation(value = "获取", notes = "获取统计表", httpMethod = "GET")
+    /*@ApiOperation(value = "获取", notes = "获取统计表", httpMethod = "GET")
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public Statistics get(@ApiParam(value = "统计表ID") @PathVariable String id){
         Statistics statistics = service.get(id);
@@ -57,15 +57,15 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
         statistics.setId(id);
         service.save(statistics);
         return get(id);
-    }
-
+    }*/
+/*
     @ApiOperation(value = "动态更新", notes = "动态更新统计表", httpMethod = "PATCH")
     @RequestMapping(value="/{id}", method = RequestMethod.PATCH)
     public Statistics patch(@ApiParam(value = "统计表ID") @PathVariable String id, @RequestBody Statistics statistics){
         statistics.setId(id);
         service.dynamicUpdate(statistics);
         return get(id);
-    }
+    }*/
 
     @ApiOperation(value = "删除", notes = "删除统计表", httpMethod = "DELETE")
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)

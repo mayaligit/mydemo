@@ -3,24 +3,23 @@
 <mapper namespace = "com.cmic.attendance.dao.DailyDao">
     <sql id="dailyColumns">
         a.id AS "id",
+        a.username AS "username",
         a.attendance_id AS "attendanceId",
         a.daily_desc AS "dailyDesc",
         a.submit_time AS "submitTime",
         a.daily_title AS "dailyTitle",
-        a.yesterday_plan AS "yesterdayPlan",
-        a.yesterday_finished AS "yesterdayFinished",
-        a.yesterday_unfinished AS "yesterdayUnfinished",
-        a.today_plan AS "todayPlan",
+        a.finished_work AS "finishedWork",
+        a.unfinished_work AS "unfinishedWork",
         a.submit_location AS "submitLocation",
         a.examiner AS "examiner",
         a.examine_time AS "examineTime",
         a.suggestion_status AS "suggestionStatus",
+        a.remarks AS "remarks",
+        a.attendance_group AS "attendanceGroup",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_date AS "updateDate",
-        a.username AS "username",
-        a.attendance_group AS "attendanceGroup"
+        a.update_date AS "updateDate"
     </sql>
 
     <sql id="dailyJoins">
@@ -108,72 +107,71 @@
     <insert id="insert">
         INSERT INTO t_daily(
         id,
+        username,
         attendance_id,
         daily_desc,
         submit_time,
         daily_title,
-        yesterday_plan,
-        yesterday_finished,
-        yesterday_unfinished,
-        today_plan,
+        finished_work,
+        unfinished_work,
         submit_location,
         examiner,
         examine_time,
         suggestion_status,
+        remarks,
+        attendance_group,
         create_by,
         create_date,
         update_by,
-        update_date,
-        username,
-        attendance_group
+        update_date
         ) VALUES (
         #{id},
+        #{username},
         #{attendanceId},
         #{dailyDesc},
         #{submitTime},
         #{dailyTitle},
-        #{yesterdayPlan},
-        #{yesterdayFinished},
-        #{yesterdayUnfinished},
-        #{todayPlan},
+        #{finishedWork},
+        #{unfinishedWork},
         #{submitLocation},
         #{examiner},
         #{examineTime},
         #{suggestionStatus},
+        #{remarks},
+        #{attendanceGroup},
         #{createBy.id},
         #{createDate},
         #{updateBy.id},
-        #{updateDate},
-        #{username},
-        #{attendanceGroup}
+        #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_daily SET
-        id = #{id},
+        username = #{username},
         attendance_id = #{attendanceId},
         daily_desc = #{dailyDesc},
         submit_time = #{submitTime},
         daily_title = #{dailyTitle},
-        yesterday_plan = #{yesterdayPlan},
-        yesterday_finished = #{yesterdayFinished},
-        yesterday_unfinished = #{yesterdayUnfinished},
-        today_plan = #{todayPlan},
+        finished_work = #{finishedWork},
+        unfinished_work = #{unfinishedWork},
         submit_location = #{submitLocation},
+        examiner = #{examiner},
         examine_time = #{examineTime},
         suggestion_status = #{suggestionStatus},
+        remarks = #{remarks},
+        attendance_group = #{attendanceGroup},
         create_by = #{createBy.id},
-        create_date = #{createDate},
         update_by = #{updateBy.id},
-        update_date = #{updateDate},
-        username = #{username},
-        attendance_group = #{attendanceGroup}
+        update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
     <update id="dynamicUpdate">
         UPDATE t_daily SET
+        <if test="username != null  and username != ''">
+            username = #{username},
+        </if>
         <if test="attendanceId != null  and attendanceId != ''">
             attendance_id = #{attendanceId},
         </if>
@@ -186,17 +184,11 @@
         <if test="dailyTitle != null  and dailyTitle != ''">
             daily_title = #{dailyTitle},
         </if>
-        <if test="yesterdayPlan != null  and yesterdayPlan != ''">
-            yesterday_plan = #{yesterdayPlan},
+        <if test="finishedWork != null  and finishedWork != ''">
+            finished_work = #{finishedWork},
         </if>
-        <if test="yesterdayFinished != null  and yesterdayFinished != ''">
-            yesterday_finished = #{yesterdayFinished},
-        </if>
-        <if test="yesterdayUnfinished != null  and yesterdayUnfinished != ''">
-            yesterday_unfinished = #{yesterdayUnfinished},
-        </if>
-        <if test="todayPlan != null  and todayPlan != ''">
-            today_plan = #{todayPlan},
+        <if test="unfinishedWork != null  and unfinishedWork != ''">
+            unfinished_work = #{unfinishedWork},
         </if>
         <if test="submitLocation != null  and submitLocation != ''">
             submit_location = #{submitLocation},
@@ -207,11 +199,8 @@
         <if test="examineTime != null ">
             examine_time = #{examineTime},
         </if>
-        <if test="suggestionStatus != null  and suggestionStatus != ''">
+        <if test="suggestionStatus != null ">
             suggestion_status = #{suggestionStatus},
-        </if>
-        <if test="username != null  and username != ''">
-            username = #{username},
         </if>
         <if test="attendanceGroup != null  and attendanceGroup != ''">
             attendance_group = #{attendanceGroup},
@@ -245,7 +234,7 @@
     <select id="updateDailyAuditById" parameterType="map" >
         UPDATE t_daily a
         SET     a.examine_time= #{examineTime} ,a.update_by = #{updateBy},
-        a.update_time=#{updateTime} ,a.suggestion_status = #{suggestionStatus}
+        a.update_date=#{updateDate} ,a.suggestion_status = #{suggestionStatus}
         WHERE id = #{dailyId}
     </select>
 

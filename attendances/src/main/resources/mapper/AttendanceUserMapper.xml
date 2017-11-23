@@ -95,7 +95,6 @@
         actived = #{actived},
         remarks = #{remarks},
         create_by = #{createBy.id},
-        create_date = #{createDate},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}

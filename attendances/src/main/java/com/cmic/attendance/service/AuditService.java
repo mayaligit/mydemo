@@ -101,7 +101,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO", adminEntity);
 
         Attendance attendance = new Attendance();
-        String businessType = audit.getBusinessType();
+        String businessType = audit.getBusinessType().toString();
         if ( null == DBattendance) { //没有打卡数据
             attendance.preInsert();
             attendance.setAttendanceUser(audit.getUsername());
@@ -116,14 +116,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 attendance.setStartTimeStatus("0");
                 attendance.setStartLocation("南方基地");
                 attendance.setAttendanceStatus("0");
-                attendance.setDailyStatus("0");
+                attendance.setDailyStatus(0);
 
             } else if (businessType.trim().equals("1")) {  //处理补下班卡
                 Date endTime = DateUtils.getStringsToDates(createTime +" "+"18:00:00");
                 attendance.setEndTime(endTime);
                 attendance.setEndLocation("南方基地");
                 attendance.setEndTimeStatus("0");
-                attendance.setDailyStatus("0");
+                attendance.setDailyStatus(0);
                 attendance.setAttendanceStatus("1");
 
             }
