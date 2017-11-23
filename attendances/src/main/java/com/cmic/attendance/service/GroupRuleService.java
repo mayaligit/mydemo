@@ -1,7 +1,8 @@
 package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.GroupRuleDao;
-import com.cmic.attendance.model.GroupRule;
+import com.cmic.attendance.model.*;
+import com.cmic.attendance.vo.GroupRuleVo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
