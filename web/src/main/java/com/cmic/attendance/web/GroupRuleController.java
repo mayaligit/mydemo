@@ -1,13 +1,22 @@
 package com.cmic.attendance.web;
 
+import com.cmic.attendance.exception.GroupRuleExeption;
 import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.service.GroupRuleService;
+import com.cmic.attendance.vo.GroupRuleVo;
+import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
+import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
 * Controller
