@@ -1,35 +1,35 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace = "com.cmic.attendance.dao.GroupAddressDao">
-    <sql id="groupAddressColumns">
+    <sql id="groupPersonnelColumns">
         a.id AS "id",
         a.group_attendance_longitude AS "groupAttendanceLongitude",
         a.group_attendance_dimension AS "groupAttendanceDimension",
         a.group_address AS "groupAddress",
         a.attendance_group_id AS "attendanceGroupId",
-        a.remarks AS "remarks",
+        a.group_attendance_scope AS "groupAttendanceScope",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
         a.update_date AS "updateDate"
     </sql>
 
-    <sql id="groupAddressJoins">
+    <sql id="groupPersonnelJoins">
     </sql>
 
     <select id="get" resultType="GroupAddress">
         SELECT
-        <include refid="groupAddressColumns"/>
-        FROM t_group_address a
-        <include refid="groupAddressJoins"/>
+        <include refid="groupPersonnelColumns"/>
+        FROM t_group_Address a
+        <include refid="groupPersonnelJoins"/>
         WHERE a.id = #{id}
     </select>
 
     <select id="findList" resultType="GroupAddress">
         SELECT
-        <include refid="groupAddressColumns"/>
-        FROM t_group_address a
-        <include refid="groupAddressJoins"/>
+        <include refid="groupPersonnelColumns"/>
+        FROM t_group_Address a
+        <include refid="groupPersonnelJoins"/>
         <where>
             1 = 1
         </where>
@@ -37,19 +37,19 @@
 
     <select id="findAllList" resultType="GroupAddress">
         SELECT
-        <include refid="groupAddressColumns"/>
-        FROM t_group_address a
-        <include refid="groupAddressJoins"/>
+        <include refid="groupPersonnelColumns"/>
+        FROM t_group_Address a
+        <include refid="groupPersonnelJoins"/>
     </select>
 
     <insert id="insert">
-        INSERT INTO t_group_address(
+        INSERT INTO t_group_Address(
             id,
             group_attendance_longitude,
             group_attendance_dimension,
             group_address,
             attendance_group_id,
-            remarks,
+            group_attendance_scope,
             create_by,
             create_date,
             update_by,
@@ -60,7 +60,7 @@
             #{groupAttendanceDimension},
             #{groupAddress},
             #{attendanceGroupId},
-            #{remarks},
+            #{groupAttendanceScope},
             #{createBy.id},
             #{createDate},
             #{updateBy.id},
@@ -69,39 +69,43 @@
     </insert>
 
     <update id="update">
-        UPDATE t_group_address SET
+        UPDATE t_group_Address SET
         group_attendance_longitude = #{groupAttendanceLongitude},
         group_attendance_dimension = #{groupAttendanceDimension},
         group_address = #{groupAddress},
         attendance_group_id = #{attendanceGroupId},
-        remarks = #{remarks},
+        group_attendance_scope = #{groupAttendanceScope},
         create_by = #{createBy.id},
+        create_date = #{createDate},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
-    <update id="dynamicUpdate">
-        UPDATE t_group_address SET
+   <update id="dynamicUpdate">
+        UPDATE t_group_Address SET
         <if test="groupAttendanceLongitude != null  and groupAttendanceLongitude != ''">
-        group_attendance_longitude = #{groupAttendanceLongitude},
+            group_attendance_longitude = #{groupAttendanceLongitude},
         </if>
         <if test="groupAttendanceDimension != null  and groupAttendanceDimension != ''">
-        group_attendance_dimension = #{groupAttendanceDimension},
+            group_attendance_dimension = #{group_attendance_dimension},
         </if>
         <if test="groupAddress != null  and groupAddress != ''">
-        group_address = #{groupAddress},
+            group_address = #{groupAddress},
         </if>
         <if test="attendanceGroupId != null  and attendanceGroupId != ''">
-        attendance_group_id = #{attendanceGroupId},
+            attendance_group_id = #{attendanceGroupId},
         </if>
+        <if test="group_attendance_scope != null  and group_attendance_scope != ''">
+            group_attendance_scope = #{groupAttendanceScope},
+       </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
     <delete id="delete">
-        DELETE FROM t_group_address
+        DELETE FROM t_group_Address
         WHERE id = #{id}
     </delete>
 </mapper>
