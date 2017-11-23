@@ -1,12 +1,14 @@
 package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.GroupRuleDao;
+import com.cmic.attendance.exception.GroupRuleExeption;
 import com.cmic.attendance.model.*;
 import com.cmic.attendance.vo.GroupRuleVo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,18 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
+
+    @Autowired
+    private GroupPersonnelService groupPersonnelService;
+
+    @Autowired
+    private GroupDailyRuleService groupDailyRuleService;
+
+    @Autowired
+    private GroupAuditService groupAuditService;
+
+    @Autowired
+    private GroupAddressService groupAddressService;
 
     public GroupRule get(String id) {
         return super.get(id);
