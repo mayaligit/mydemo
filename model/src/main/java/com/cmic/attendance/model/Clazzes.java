@@ -14,9 +14,9 @@ public class Clazzes extends DataEntity<Clazzes> {
     @ApiModelProperty(value = "设定正常打卡地点")
     protected String nomalAddress;
     @ApiModelProperty(value = "正常上班时间")
-    protected Date nomalStartTime;
+    protected String nomalStartTime;
     @ApiModelProperty(value = "正常下班时间")
-    protected Date nomalEndTime;
+    protected String nomalEndTime;
     @ApiModelProperty(value = "用户所属组ID")
     protected String classGroupId;
     @ApiModelProperty(value = "用户所属组名字")
@@ -41,19 +41,19 @@ public class Clazzes extends DataEntity<Clazzes> {
         this.nomalAddress = nomalAddress;
     }
 
-    public Date getNomalStartTime() {
+    public String getNomalStartTime() {
         return nomalStartTime;
     }
 
-    public void setNomalStartTime(Date nomalStartTime) {
+    public void setNomalStartTime(String nomalStartTime) {
         this.nomalStartTime = nomalStartTime;
     }
 
-    public Date getNomalEndTime() {
+    public String getNomalEndTime() {
         return nomalEndTime;
     }
 
-    public void setNomalEndTime(Date nomalEndTime) {
+    public void setNomalEndTime(String nomalEndTime) {
         this.nomalEndTime = nomalEndTime;
     }
 

@@ -97,12 +97,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 //#TODO 判断当前用户是否存在
     /**
      * @param phone
-     * @param createTime
+     * @param createDate
      * @return Attendance
      */
-    public Attendance checkAttendance(String phone,String createTime) {
-        log.debug("检验唯一性考勤数据手机号："+phone +" 考勤日期："+createTime);
-        Attendance attendance = dao.getAttendanceByCreatebyAndCreateTime(phone,createTime);
+    public Attendance checkAttendance(String phone,String createDate) {
+        log.debug("检验唯一性考勤数据手机号："+phone +" 考勤日期："+createDate);
+        Attendance attendance = dao.getAttendanceByCreatebyAndCreateTime(phone,createDate);
         if ( null ==attendance ) {
             return null;
         } else {
@@ -188,7 +188,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0] + "-" +
                         dateToYearMonthDayArry[1]);
                 saveAttendance.setStartLocation(attendanceVo.getLocation());
-                saveAttendance.setDailyStatus("0");
+                saveAttendance.setDailyStatus(0);
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
                 /*try {
@@ -437,7 +437,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             map.put("endWorkFlag","0");
         }
 
-        String total = clazzes.getTotal();
+        String total = clazzes.getTotal().toString();
         map.put("total",total);
 //        获取当天打卡人数
         Map workCountMap = new HashMap<>();
@@ -601,7 +601,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     }
 
 
-    //统计正常下班数据 只更新数据不做迟到计算
+   /* //统计正常下班数据 只更新数据不做迟到计算
     public void  insetEndMStatic(InsetEndStaticBo insetEndStaticBo) {
         Statistics DBstatistics =
                 statisticsService.checkAttendanceByCreateByAndCreateTime(insetEndStaticBo.getCreateBy()
@@ -659,13 +659,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             String[] offtimeArry = offtime.split(":");
             int offHour=Integer.parseInt(offtimeArry[0]);
             int offMinute=Integer.parseInt(offtimeArry[1]);
-            /*int offSecond=Integer.parseInt(offtimeArry[2]);
-            int offCreated=offHour*3600*1000+offMinute*60*1000+offSecond*1000;*/
+            *//*int offSecond=Integer.parseInt(offtimeArry[2]);
+            int offCreated=offHour*3600*1000+offMinute*60*1000+offSecond*1000;*//*
             int offTime=offHour*60+ offMinute;
             int saveTime=offTime-starTime;
             DBstatistics.setOfficeTime(saveTime);
             DBstatistics.setUsername(insetEndStaticBo.getUserName());
             statisticsService.save(DBstatistics);
         }
-    }
+    }*/
 }

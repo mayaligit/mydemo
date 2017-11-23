@@ -56,7 +56,7 @@ public class DailyAdminController extends BaseRestController<DailyService> {
             page.setPageNum(parmMap.get("pageNum")== null ? 1:(int)parmMap.get("pageNum"));
             page.setPageSize(parmMap.get("pageSize")==null?10:(int)parmMap.get("pageSize"));
             daily.setUsername((String)parmMap.get("username"));
-            daily.setSuggestionStatus((String)parmMap.get("suggestionStatus"));
+            daily.setSuggestionStatus((Integer) parmMap.get("suggestionStatus"));
             daily.setAttendanceGroup(attendance_group);
         }
 

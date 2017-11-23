@@ -6,9 +6,9 @@
         a.user_name AS "userName",
         a.location AS "location",
         a.create_by AS "createBy.id",
-        a.create_time AS "createTime",
+        a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_time AS "updateTime"
+        a.update_date AS "updateDate"
     </sql>
 
     <sql id="dailyRecordJoins">
@@ -45,17 +45,17 @@
             user_name,
             location,
             create_by,
-            create_time,
+            create_date,
             update_by,
-            update_time
+            update_date
         ) VALUES (
             #{attendanceId},
             #{userName},
             #{location},
             #{createBy.id},
-            #{createTime},
+            #{createDate},
             #{updateBy.id},
-            #{updateTime}
+            #{updateDate}
         )
     </insert>
 
@@ -77,10 +77,10 @@
         location = #{location},
         </if>
         <if test="createTime != null and createTime != ''">
-        create_time = #{createTime},
+        create_date = #{createDate},
         </if>
         <if test="updateTime != null and updateTime != ''">
-        update_time = #{updateTime},
+        update_date = #{updateDate},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}

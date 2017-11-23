@@ -1,5 +1,6 @@
 package com.cmic.attendance.web;
 
+import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.service.GroupRuleService;
 import com.cmic.saas.base.web.BaseRestController;
 import com.github.pagehelper.PageInfo;

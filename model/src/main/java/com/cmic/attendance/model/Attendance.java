@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 考勤表实体
+ * 实体
  */
-@ApiModel(value = "Attendance", description = "考勤表")
+@ApiModel(value = "Attendance", description = "")
 public class Attendance extends DataEntity<Attendance> {
 
     @ApiModelProperty(value = "当前打卡用户")
@@ -39,6 +39,12 @@ public class Attendance extends DataEntity<Attendance> {
     protected String endTimeStatus;
     @ApiModelProperty(value = "0/上班正常,1/上班迟到")
     protected String startTimeStatus;
+    @ApiModelProperty(value = "0/正常，1/缺上班卡，2/缺下班卡")
+    protected String attendanceCardStatus;
+    @ApiModelProperty(value = "考勤打卡的经度")
+    protected String attendanceLongitude;
+    @ApiModelProperty(value = "考勤打卡的维度")
+    protected String attendanceDimension;
 
     public Attendance(){
 
@@ -157,6 +163,30 @@ public class Attendance extends DataEntity<Attendance> {
 
     public void setStartTimeStatus(String startTimeStatus) {
         this.startTimeStatus = startTimeStatus;
+    }
+
+    public String getAttendanceCardStatus() {
+        return attendanceCardStatus;
+    }
+
+    public void setAttendanceCardStatus(String attendanceCardStatus) {
+        this.attendanceCardStatus = attendanceCardStatus;
+    }
+
+    public String getAttendanceLongitude() {
+        return attendanceLongitude;
+    }
+
+    public void setAttendanceLongitude(String attendanceLongitude) {
+        this.attendanceLongitude = attendanceLongitude;
+    }
+
+    public String getAttendanceDimension() {
+        return attendanceDimension;
+    }
+
+    public void setAttendanceDimension(String attendanceDimension) {
+        this.attendanceDimension = attendanceDimension;
     }
 
 

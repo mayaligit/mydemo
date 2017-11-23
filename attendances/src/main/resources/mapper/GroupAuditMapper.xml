@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "com.cmic.v2.0.dao.GroupAuditDao">
+<mapper namespace = "com.cmic.attendance.dao.GroupAuditDao">
     <sql id="groupAuditColumns">
         a.id AS "id",
         a.audit_phone AS "auditPhone",
@@ -8,11 +8,11 @@
         a.enterprise_id AS "enterpriseId",
         a.enterprise_name AS "enterpriseName",
         a.daily_rule_id AS "dailyRuleId",
+        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_date AS "updateDate",
-        a.attendance_group AS "attendanceGroup"
+        a.update_date AS "updateDate"
     </sql>
 
     <sql id="groupAuditJoins">
@@ -33,39 +33,6 @@
         <include refid="groupAuditJoins"/>
         <where>
             1 = 1
-        <if test="id != null">
-                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="auditPhone != null">
-                AND a.audit_phone LIKE CONCAT('%',#{auditPhone, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="auditName != null">
-                AND a.audit_name LIKE CONCAT('%',#{auditName, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="enterpriseId != null">
-                AND a.enterprise_id LIKE CONCAT('%',#{enterpriseId, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="enterpriseName != null">
-                AND a.enterprise_name LIKE CONCAT('%',#{enterpriseName, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="dailyRuleId != null">
-                AND a.daily_rule_id LIKE CONCAT('%',#{dailyRuleId, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="createBy.id != null">
-                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="createDate != null">
-                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="updateBy.id != null">
-                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="updateDate != null">
-                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="attendanceGroup != null">
-                AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
-        </if>
         </where>
     </select>
 
@@ -84,11 +51,11 @@
             enterprise_id,
             enterprise_name,
             daily_rule_id,
+            remarks,
             create_by,
             create_date,
             update_by,
-            update_date,
-            attendance_group
+            update_date
         ) VALUES (
             #{id},
             #{auditPhone},
@@ -96,27 +63,25 @@
             #{enterpriseId},
             #{enterpriseName},
             #{dailyRuleId},
+            #{remarks},
             #{createBy.id},
             #{createDate},
             #{updateBy.id},
-            #{updateDate},
-            #{attendanceGroup}
+            #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_group_audit SET
-        id = #{id},
         audit_phone = #{auditPhone},
         audit_name = #{auditName},
         enterprise_id = #{enterpriseId},
         enterprise_name = #{enterpriseName},
         daily_rule_id = #{dailyRuleId},
+        remarks = #{remarks},
         create_by = #{createBy.id},
-        create_date = #{createDate},
         update_by = #{updateBy.id},
-        update_date = #{updateDate},
-        attendance_group = #{attendanceGroup}
+        update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
@@ -136,9 +101,6 @@
         </if>
         <if test="dailyRuleId != null  and dailyRuleId != ''">
         daily_rule_id = #{dailyRuleId},
-        </if>
-        <if test="attendanceGroup != null  and attendanceGroup != ''">
-        attendance_group = #{attendanceGroup},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}

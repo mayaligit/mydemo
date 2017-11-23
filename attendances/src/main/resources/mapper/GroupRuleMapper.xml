@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "com.cmic.v2.0.dao.GroupRuleDao">
+<mapper namespace = "com.cmic.attendance.dao.GroupRuleDao">
     <sql id="groupRuleColumns">
         a.id AS "id",
         a.group_name AS "groupName",
@@ -18,6 +18,7 @@
         a.group_attendance_dimension AS "groupAttendanceDimension",
         a.group_address AS "groupAddress",
         a.group_attendance_scope AS "groupAttendanceScope",
+        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
@@ -42,65 +43,6 @@
         <include refid="groupRuleJoins"/>
         <where>
             1 = 1
-        <if test="id != null">
-                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupName != null">
-        </if>
-        <if test="groupEnterpriseId != null">
-                AND a.group_enterprise_id LIKE CONCAT('%',#{groupEnterpriseId, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupEnterpriseName != null">
-                AND a.group_enterprise_name LIKE CONCAT('%',#{groupEnterpriseName, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupStatus != null">
-                AND a.group_status LIKE CONCAT('%',#{groupStatus, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupDeadline != null">
-                AND a.group_deadline LIKE CONCAT('%',#{groupDeadline, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupDailyId != null">
-                AND a.group_daily_id LIKE CONCAT('%',#{groupDailyId, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAttendanceWay != null">
-                AND a.group_attendance_way LIKE CONCAT('%',#{groupAttendanceWay, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAttendanceStart != null">
-                AND a.group_attendance_start LIKE CONCAT('%',#{groupAttendanceStart, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAttendanceEnd != null">
-                AND a.group_attendance_end LIKE CONCAT('%',#{groupAttendanceEnd, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAttendanceDuration != null">
-                AND a.group_attendance_duration LIKE CONCAT('%',#{groupAttendanceDuration, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAttendanceWeek != null">
-                AND a.group_attendance_week LIKE CONCAT('%',#{groupAttendanceWeek, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAttendanceLongitude != null">
-                AND a.group_attendance_longitude LIKE CONCAT('%',#{groupAttendanceLongitude, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAttendanceDimension != null">
-                AND a.group_attendance_dimension LIKE CONCAT('%',#{groupAttendanceDimension, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAddress != null">
-                AND a.group_address LIKE CONCAT('%',#{groupAddress, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="groupAttendanceScope != null">
-                AND a.group_attendance_scope LIKE CONCAT('%',#{groupAttendanceScope, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="createBy.id != null">
-                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="createDate != null">
-                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="updateBy.id != null">
-                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="updateDate != null">
-                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
-        </if>
         </where>
     </select>
 
@@ -129,6 +71,7 @@
             group_attendance_dimension,
             group_address,
             group_attendance_scope,
+            remarks,
             create_by,
             create_date,
             update_by,
@@ -150,6 +93,7 @@
             #{groupAttendanceDimension},
             #{groupAddress},
             #{groupAttendanceScope},
+            #{remarks},
             #{createBy.id},
             #{createDate},
             #{updateBy.id},
@@ -159,7 +103,6 @@
 
     <update id="update">
         UPDATE t_group_rule SET
-        id = #{id},
         group_name = #{groupName},
         group_enterprise_id = #{groupEnterpriseId},
         group_enterprise_name = #{groupEnterpriseName},
@@ -175,8 +118,8 @@
         group_attendance_dimension = #{groupAttendanceDimension},
         group_address = #{groupAddress},
         group_attendance_scope = #{groupAttendanceScope},
+        remarks = #{remarks},
         create_by = #{createBy.id},
-        create_date = #{createDate},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}

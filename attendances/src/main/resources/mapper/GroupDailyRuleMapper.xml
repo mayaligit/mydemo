@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "com.cmic.v2.0.dao.GroupDailyRuleDao">
+<mapper namespace = "com.cmic.attendance.dao.GroupDailyRuleDao">
     <sql id="groupDailyRuleColumns">
         a.id AS "id",
         a.rule_daily_type AS "ruleDailyType",
@@ -10,11 +10,11 @@
         a.rule_daily_status AS "ruleDailyStatus",
         a.rule_daily_reserve AS "ruleDailyReserve",
         a.rule_deadline AS "ruleDeadline",
+        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_date AS "updateDate",
-        a.attendance_group AS "attendanceGroup"
+        a.update_date AS "updateDate"
     </sql>
 
     <sql id="groupDailyRuleJoins">
@@ -35,45 +35,6 @@
         <include refid="groupDailyRuleJoins"/>
         <where>
             1 = 1
-        <if test="id != null">
-                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="ruleDailyType != null">
-                AND a.rule_daily_type LIKE CONCAT('%',#{ruleDailyType, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="ruleDailyWeek != null">
-                AND a.rule_daily_week LIKE CONCAT('%',#{ruleDailyWeek, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="ruleTemplateId != null">
-                AND a.rule_template_id LIKE CONCAT('%',#{ruleTemplateId, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="attendanceGroupId != null">
-                AND a.attendance_group_id LIKE CONCAT('%',#{attendanceGroupId, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="ruleDailyStatus != null">
-                AND a.rule_daily_status LIKE CONCAT('%',#{ruleDailyStatus, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="ruleDailyReserve != null">
-                AND a.rule_daily_reserve LIKE CONCAT('%',#{ruleDailyReserve, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="ruleDeadline != null">
-                AND a.rule_deadline LIKE CONCAT('%',#{ruleDeadline, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="createBy.id != null">
-                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="createDate != null">
-                AND a.create_date LIKE CONCAT('%',#{createDate, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="updateBy.id != null">
-                AND a.update_by LIKE CONCAT('%',#{updateBy.id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="updateDate != null">
-                AND a.update_date LIKE CONCAT('%',#{updateDate, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="attendanceGroup != null">
-                AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
-        </if>
         </where>
     </select>
 
@@ -94,11 +55,11 @@
             rule_daily_status,
             rule_daily_reserve,
             rule_deadline,
+            remarks,
             create_by,
             create_date,
             update_by,
-            update_date,
-            attendance_group
+            update_date
         ) VALUES (
             #{id},
             #{ruleDailyType},
@@ -108,17 +69,16 @@
             #{ruleDailyStatus},
             #{ruleDailyReserve},
             #{ruleDeadline},
+            #{remarks},
             #{createBy.id},
             #{createDate},
             #{updateBy.id},
-            #{updateDate},
-            #{attendanceGroup}
+            #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_group_daily_rule SET
-        id = #{id},
         rule_daily_type = #{ruleDailyType},
         rule_daily_week = #{ruleDailyWeek},
         rule_template_id = #{ruleTemplateId},
@@ -126,17 +86,16 @@
         rule_daily_status = #{ruleDailyStatus},
         rule_daily_reserve = #{ruleDailyReserve},
         rule_deadline = #{ruleDeadline},
+        remarks = #{remarks},
         create_by = #{createBy.id},
-        create_date = #{createDate},
         update_by = #{updateBy.id},
-        update_date = #{updateDate},
-        attendance_group = #{attendanceGroup}
+        update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
     <update id="dynamicUpdate">
         UPDATE t_group_daily_rule SET
-        <if test="ruleDailyType != null  and ruleDailyType != ''">
+        <if test="ruleDailyType != null ">
         rule_daily_type = #{ruleDailyType},
         </if>
         <if test="ruleDailyWeek != null  and ruleDailyWeek != ''">
@@ -148,7 +107,7 @@
         <if test="attendanceGroupId != null  and attendanceGroupId != ''">
         attendance_group_id = #{attendanceGroupId},
         </if>
-        <if test="ruleDailyStatus != null  and ruleDailyStatus != ''">
+        <if test="ruleDailyStatus != null ">
         rule_daily_status = #{ruleDailyStatus},
         </if>
         <if test="ruleDailyReserve != null ">
@@ -156,9 +115,6 @@
         </if>
         <if test="ruleDeadline != null ">
         rule_deadline = #{ruleDeadline},
-        </if>
-        <if test="attendanceGroup != null  and attendanceGroup != ''">
-        attendance_group = #{attendanceGroup},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}

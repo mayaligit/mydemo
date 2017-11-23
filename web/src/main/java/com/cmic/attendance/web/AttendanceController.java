@@ -98,7 +98,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
      * 上班打卡页面初始化需要的是数据
      */
     @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "POST")
-    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.POST)
+    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
@@ -128,7 +128,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setAttendanceId(DBattendance.getId());
             attendanceVo.setAttendanceHour(datass);
             attendanceVo.setLocation(DBattendance.getStartLocation());
-            attendanceVo.setDailyStatus(DBattendance.getDailyStatus());
+            attendanceVo.setDailyStatus(DBattendance.getDailyStatus().toString());
             attendanceVo.setAttendanceStatus(DBattendance.getAttendanceStatus());
             attendanceVo.setStartTimeStatus(DBattendance.getStartTimeStatus());
             attendanceVo.setIsAttendanceStart("0");
@@ -149,7 +149,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setAttendanceId(DBattendance.getId());
             attendanceVo.setOfftime(datass);
             attendanceVo.setEndLocation(DBattendance.getEndLocation());
-            attendanceVo.setDailyStatus(DBattendance.getDailyStatus());
+            attendanceVo.setDailyStatus(DBattendance.getDailyStatus().toString());
             attendanceVo.setAttendanceStatus(DBattendance.getAttendanceStatus());
             attendanceVo.setEndTimeStatus(DBattendance.getEndTimeStatus());
             attendanceVo.setIsAttendanceEnd("0");
@@ -190,7 +190,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         resultAttendanceVo.setPhone(attendanceVo.getPhone());
         resultAttendanceVo.setAttendanceStatus(attendanceBo.getAttendanceStatus());
         resultAttendanceVo.setAttendanceDesc(attendanceBo.getAttendanceDesc());
-        resultAttendanceVo.setDailyStatus(attendanceBo.getDailyStatus());
+        resultAttendanceVo.setDailyStatus(attendanceBo.getDailyStatus().toString());
         resultAttendanceVo.setLocation(attendanceBo.getStartLocation());
         resultAttendanceVo.setStartTimeStatus(attendanceBo.getStartTimeStatus());
         resultAttendanceVo.setAttendanceMonth(attendanceBo.getAttendanceMonth());
@@ -217,7 +217,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         resultAttendanceVo.setPhone(attendanceEndVo.getPhone());
         resultAttendanceVo.setAttendanceStatus(attendanceBo.getAttendanceStatus());
         resultAttendanceVo.setAttendanceDesc(attendanceBo.getAttendanceDesc());
-        resultAttendanceVo.setDailyStatus(attendanceBo.getDailyStatus());
+        resultAttendanceVo.setDailyStatus(attendanceBo.getDailyStatus().toString());
         resultAttendanceVo.setLocation(attendanceBo.getEndLocation());
         resultAttendanceVo.setEndTimeStatus(attendanceBo.getEndTimeStatus());
         resultAttendanceVo.setAttendanceMonth(attendanceBo.getAttendanceMonth());

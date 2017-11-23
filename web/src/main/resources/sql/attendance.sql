@@ -14,7 +14,7 @@ MySQL - 5.7.12 : Database - saas_biz_attendance
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`saas_biz_attendance` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
-USE `saas_biz_attendance`;
+USE `saas_biz_attendance2.0`;
 
 /*Table structure for table `t_attendance` */
 
@@ -36,6 +36,9 @@ CREATE TABLE `t_attendance` (
   `attendance_group` char(32) DEFAULT NULL COMMENT '备用字段,用户所属考勤组',
   `end_time_status` char(32) DEFAULT NULL COMMENT '0/下班正常,1/下班早退',
   `start_time_status` char(32) DEFAULT NULL COMMENT '0/上班正常,1/上班迟到',
+  `attendance_card_status` char(32) DEFAULT '2' COMMENT '0/正常，1/缺上班卡，2/缺下班卡',
+  `attendance_longitude` float(10,6) DEFAULT NULL COMMENT '考勤打卡的经度',
+  `attendance_dimension` float(10,6) DEFAULT NULL COMMENT '考勤打卡的维度',
   `remarks` varchar(255) DEFAULT NULL COMMENT '预留字段',
   `create_by` char(32) DEFAULT NULL COMMENT '创建用户',
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -55,7 +58,7 @@ CREATE TABLE `t_attendance_user` (
   `attendance_group` char(32) NOT NULL COMMENT '管理所属组',
   `enterprise_id` char(32) DEFAULT NULL COMMENT '企业id-备用字段',
   `enterprise_name` char(32) DEFAULT NULL COMMENT '企业名称-备用字段',
-  `user_type` char(32) DEFAULT NULL COMMENT '0/超级管理员,1/普通管理员',
+  `user_type` char(32) DEFAULT NULL COMMENT '0/超级管理员,1/考勤组管理员',
   `actived` char(11) DEFAULT '0' COMMENT '0/正常,1/停用',
   `remarks` varchar(255) DEFAULT NULL COMMENT '备用字段',
   `create_by` char(32) DEFAULT NULL COMMENT '创建用户手机',
@@ -71,6 +74,7 @@ DROP TABLE IF EXISTS `t_audit`;
 
 CREATE TABLE `t_audit` (
   `id` char(32) NOT NULL COMMENT '审批表主键id',
+  `username` char(32) DEFAULT NULL COMMENT '提交审批用户名',
   `submit_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '日报提交时间',
   `audit_content` varchar(255) NOT NULL COMMENT '申请的审批的内容',
   `audit_user_id` varchar(255) DEFAULT NULL COMMENT '审批人ID',
@@ -80,7 +84,8 @@ CREATE TABLE `t_audit` (
   `attendance_id` char(32) DEFAULT NULL COMMENT '审批的是补卡类型时,关联对应考勤',
   `audit_suggestion` int(11) DEFAULT NULL COMMENT '0/同意 , 1/拒绝',
   `business_type` int(11) DEFAULT NULL COMMENT '保留字段,暂定0为补卡新类型, 以后可增加请假等类型',
-  `username` char(32) DEFAULT NULL,
+  `suggestion_remarksvarchar` varchar(255) DEFAULT NULL COMMENT '审批意见备注',
+  `attendance_group` char(32) DEFAULT NULL COMMENT '提交审批所属组',
   `remarks` varchar(255) DEFAULT NULL COMMENT '预留字段',
   `create_by` char(32) DEFAULT NULL COMMENT '创建用户',
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -117,6 +122,7 @@ DROP TABLE IF EXISTS `t_daily`;
 
 CREATE TABLE `t_daily` (
   `id` char(32) NOT NULL COMMENT '日报表主键id',
+  `username` char(32) NOT NULL COMMENT '日报提交用户名',
   `attendance_id` char(32) NOT NULL COMMENT '日报所属考勤的id',
   `daily_desc` varchar(255) DEFAULT NULL COMMENT '日报描述',
   `submit_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '日报提交时间',
@@ -128,11 +134,11 @@ CREATE TABLE `t_daily` (
   `examine_time` datetime DEFAULT NULL COMMENT '日报审批时间',
   `suggestion_status` int(11) DEFAULT NULL COMMENT '审批意见状态,0/已阅,1/已处理,2/未处理',
   `remarks` varchar(255) DEFAULT NULL COMMENT '预留字段',
+  `attendance_group` char(32) DEFAULT NULL COMMENT '提交审批所属组',
   `create_by` char(32) DEFAULT NULL COMMENT '创建人ID',
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_by` char(32) DEFAULT NULL COMMENT '更新人ID',
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `username` char(32) NOT NULL COMMENT '用户名',
   PRIMARY KEY (`id`),
   KEY `FK_ID` (`attendance_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -243,7 +249,7 @@ CREATE TABLE `t_group_rule` (
   `group_enterprise_name` char(32) DEFAULT NULL COMMENT '企业名称(保留字段)',
   `group_status` int(11) DEFAULT '1' COMMENT '0/启用 1/停用 默认1',
   `group_deadline` date DEFAULT NULL COMMENT '生效时间从-至 至的话默认2099年',
-  `group_daily_id` char(32) NOT NULL COMMENT '考勤组启用模板ID',
+  `group_daily_id` char(32) DEFAULT NULL COMMENT '考勤组启用日报模板ID',
   `group_attendance_way` int(11) DEFAULT NULL COMMENT '考勤方式 0/自由 1/时长',
   `group_attendance_start` time NOT NULL COMMENT '组考勤上班时间',
   `group_attendance_end` time NOT NULL COMMENT '组考勤下班时间',
@@ -277,6 +283,7 @@ CREATE TABLE `t_statistics` (
   `update_by` char(32) DEFAULT NULL COMMENT '更新用户手机',
   `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `username` char(32) NOT NULL COMMENT '用户名',
+  `attendance_group` char(32) DEFAULT NULL COMMENT '统计所属组',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

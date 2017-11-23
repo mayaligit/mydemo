@@ -6,11 +6,13 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 日报表实体
+ * 日报实体
  */
-@ApiModel(value = "Daily", description = "日报表")
+@ApiModel(value = "Daily", description = "日报")
 public class Daily extends DataEntity<Daily> {
 
+    @ApiModelProperty(value = "日报提交用户名")
+    protected String username;
     @ApiModelProperty(value = "日报所属考勤的id")
     protected String attendanceId;
     @ApiModelProperty(value = "日报描述")
@@ -31,14 +33,22 @@ public class Daily extends DataEntity<Daily> {
     protected Date examineTime;
     @ApiModelProperty(value = "审批意见状态,0/已阅,1/已处理,2/未处理")
     protected Integer suggestionStatus;
-    @ApiModelProperty(value = "用户名")
-    protected String username;
+    @ApiModelProperty(value = "提交审批所属组")
+    protected String attendanceGroup;
 
     public Daily(){
 
     }
     public Daily(String id){
         super(id);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAttendanceId() {
@@ -121,12 +131,12 @@ public class Daily extends DataEntity<Daily> {
         this.suggestionStatus = suggestionStatus;
     }
 
-    public String getUsername() {
-        return username;
+    public String getAttendanceGroup() {
+        return attendanceGroup;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAttendanceGroup(String attendanceGroup) {
+        this.attendanceGroup = attendanceGroup;
     }
 
 

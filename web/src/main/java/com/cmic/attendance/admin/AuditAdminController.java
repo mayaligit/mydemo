@@ -39,7 +39,7 @@ public class AuditAdminController extends BaseRestController<AuditService> {
      */
     @RequestMapping(value = "/audit",method = RequestMethod.POST)
     public String updateAudit(@RequestBody Audit audit , HttpServletRequest request){
-        if(StringUtils.isBlank(audit.getId()) || StringUtils.isBlank(audit.getAuditSuggestion())){
+        if(StringUtils.isBlank(audit.getId()) || StringUtils.isBlank(audit.getAuditSuggestion().toString())){
             return "审批意见不能为空";
         }
         service.updateAudit(audit , request);
@@ -61,7 +61,7 @@ public class AuditAdminController extends BaseRestController<AuditService> {
             page.setPageNum(parmMap.get("pageNum")== null ? 1:(int)parmMap.get("pageNum"));
             page.setPageSize(parmMap.get("pageSize")==null?10:(int)parmMap.get("pageSize"));
             audit.setUsername((String)parmMap.get("username"));
-            audit.setAuditStatus((String)parmMap.get("auditStatus"));
+            audit.setAuditStatus((Integer) parmMap.get("auditStatus"));
         }
 
         return service.findAuditList(page, audit);

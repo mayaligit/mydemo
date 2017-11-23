@@ -58,7 +58,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
 
         //设置根据日报状态查询
         if(StringUtils.isNotBlank(paramMap.get("dailyStatus"))){
-            attendance.setDailyStatus(paramMap.get("dailyStatus"));
+            attendance.setDailyStatus(Integer.parseInt(paramMap.get("dailyStatus")));
         }
 
         //设置后台管理者的所属组  todo 用false 把分组条件关了，要用的时候打开

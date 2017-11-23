@@ -16,7 +16,7 @@ import java.util.Map;
 public interface AttendanceDao extends CrudDao<Attendance> {
 
     Attendance getAttendanceByCreatebyAndCreateTime(@Param("createBy") String createBy,
-                                                    @Param("createTime")String createTime);
+                                                    @Param("createDate")String createDate);
     void updateByAttendance(@Param("id")Attendance updateByAttendance);
     void updateAttendances(Attendance attendance);
     void updateAttendan(Attendance attendance);

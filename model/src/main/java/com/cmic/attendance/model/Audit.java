@@ -6,11 +6,13 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 日报表实体
+ * 日报实体
  */
-@ApiModel(value = "Audit", description = "日报表")
+@ApiModel(value = "Audit", description = "日报")
 public class Audit extends DataEntity<Audit> {
 
+    @ApiModelProperty(value = "提交审批用户名")
+    protected String username;
     @ApiModelProperty(value = "日报提交时间")
     protected Date submitTime;
     @ApiModelProperty(value = "申请的审批的内容")
@@ -29,14 +31,24 @@ public class Audit extends DataEntity<Audit> {
     protected Integer auditSuggestion;
     @ApiModelProperty(value = "保留字段,暂定0为补卡新类型, 以后可增加请假等类型")
     protected Integer businessType;
-    @ApiModelProperty(value = "")
-    protected String username;
+    @ApiModelProperty(value = "审批意见备注")
+    protected String suggestionRemarksvarchar;
+    @ApiModelProperty(value = "提交审批所属组")
+    protected String attendanceGroup;
 
     public Audit(){
 
     }
     public Audit(String id){
         super(id);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Date getSubmitTime() {
@@ -111,12 +123,20 @@ public class Audit extends DataEntity<Audit> {
         this.businessType = businessType;
     }
 
-    public String getUsername() {
-        return username;
+    public String getSuggestionRemarksvarchar() {
+        return suggestionRemarksvarchar;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setSuggestionRemarksvarchar(String suggestionRemarksvarchar) {
+        this.suggestionRemarksvarchar = suggestionRemarksvarchar;
+    }
+
+    public String getAttendanceGroup() {
+        return attendanceGroup;
+    }
+
+    public void setAttendanceGroup(String attendanceGroup) {
+        this.attendanceGroup = attendanceGroup;
     }
 
 

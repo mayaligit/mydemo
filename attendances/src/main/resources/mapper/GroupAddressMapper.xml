@@ -32,24 +32,6 @@
         <include refid="groupAddressJoins"/>
         <where>
             1 = 1
-        <if test="groupAttendanceLongitude != null">
-        </if>
-        <if test="groupAttendanceDimension != null">
-        </if>
-        <if test="groupAddress != null">
-        </if>
-        <if test="attendanceGroupId != null">
-        </if>
-        <if test="remarks != null">
-        </if>
-        <if test="createBy.id != null">
-        </if>
-        <if test="createDate != null">
-        </if>
-        <if test="updateBy.id != null">
-        </if>
-        <if test="updateDate != null">
-        </if>
         </where>
     </select>
 
@@ -88,7 +70,12 @@
 
     <update id="update">
         UPDATE t_group_address SET
+        group_attendance_longitude = #{groupAttendanceLongitude},
+        group_attendance_dimension = #{groupAttendanceDimension},
+        group_address = #{groupAddress},
+        attendance_group_id = #{attendanceGroupId},
         remarks = #{remarks},
+        create_by = #{createBy.id},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}

@@ -1,17 +1,17 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "com.cmic.v2.0.dao.GroupDailyDao">
+<mapper namespace = "com.cmic.attendance.dao.GroupDailyDao">
     <sql id="groupDailyColumns">
         a.id AS "id",
         a.daily_name AS "dailyName",
         a.daily_address AS "dailyAddress",
         a.daily_content AS "dailyContent",
         a.daily_status AS "dailyStatus",
+        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_date AS "updateDate",
-        a.attendance_group AS "attendanceGroup"
+        a.update_date AS "updateDate"
     </sql>
 
     <sql id="groupDailyJoins">
@@ -32,24 +32,6 @@
         <include refid="groupDailyJoins"/>
         <where>
             1 = 1
-        <if test="id != null">
-                AND a.id LIKE CONCAT('%',#{id, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="dailyName != null">
-                AND a.daily_name LIKE CONCAT('%',#{dailyName, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="dailyAddress != null">
-                AND a.daily_address LIKE CONCAT('%',#{dailyAddress, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="dailyContent != null">
-                AND a.daily_content LIKE CONCAT('%',#{dailyContent, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="dailyStatus != null">
-                AND a.daily_status LIKE CONCAT('%',#{dailyStatus, typeHandler=EscapeTypeHandler},'%')
-        </if>
-        <if test="createBy.id != null">
-                AND a.create_by LIKE CONCAT('%',#{createBy.id, typeHandler=EscapeTypeHandler},'%')
-        </if>
         </where>
     </select>
 
@@ -67,32 +49,32 @@
             daily_address,
             daily_content,
             daily_status,
+            remarks,
             create_by,
             create_date,
             update_by,
-            update_date,
-            attendance_group
+            update_date
         ) VALUES (
             #{id},
             #{dailyName},
             #{dailyAddress},
             #{dailyContent},
             #{dailyStatus},
+            #{remarks},
             #{createBy.id},
             #{createDate},
             #{updateBy.id},
-            #{updateDate},
-            #{attendanceGroup}
+            #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_group_daily SET
-        id = #{id},
         daily_name = #{dailyName},
         daily_address = #{dailyAddress},
         daily_content = #{dailyContent},
         daily_status = #{dailyStatus},
+        remarks = #{remarks},
         create_by = #{createBy.id},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
@@ -110,11 +92,8 @@
         <if test="dailyContent != null  and dailyContent != ''">
         daily_content = #{dailyContent},
         </if>
-        <if test="dailyStatus != null  and dailyStatus != ''">
+        <if test="dailyStatus != null ">
         daily_status = #{dailyStatus},
-        </if>
-        <if test="attendanceGroup != null  and attendanceGroup != ''">
-        attendance_group = #{attendanceGroup},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}

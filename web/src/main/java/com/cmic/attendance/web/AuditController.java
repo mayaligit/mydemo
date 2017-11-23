@@ -84,7 +84,7 @@ public class AuditController extends BaseRestController<AuditService> {
             return map ;
         }
         audit.setSubmitTime(new Date());
-        audit.setAuditStatus("1");  //设置审批状态为未处理
+        audit.setAuditStatus(1);  //设置审批状态为未处理
 
         audit.setCreateDate(audit.getSubmitTime());
         audit.setUpdateDate(audit.getSubmitTime());
