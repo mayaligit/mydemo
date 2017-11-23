@@ -84,5 +84,33 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     public void delete(@ApiParam(value = "ID") @PathVariable String id){
         service.delete(id);
     }
+	
+	 /**
+     * 插入考勤规则
+     * //@param groupRuleVo
+     */
+    @ApiOperation(value = "插入规则", notes = "删除考勤主表", httpMethod = "POST")
+    @RequestMapping(value="/insertGroupRule")
+    public Map<String,String> insertGroupRule(@Validated @RequestBody GroupRuleVo groupRuleVo){
+        //测试数据
+        HttpServletRequest request = WebUtils.getRequest();
+        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        adminEntity.setId("15240653787");
+        adminEntity.setName("梁渝");
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
+        HashMap<String,String> resultHash =new HashMap<String,String>();
+        try {
+            service.insertGroupRule(groupRuleVo);
+            resultHash.put("code","0");
+            resultHash.put("msg","操作成功");
+            return resultHash;
+        } catch (GroupRuleExeption g) {
+            resultHash.put("code","1");
+            resultHash.put("msg",g.getMessage());
+            return resultHash;
+        }
+    }
 
 }
