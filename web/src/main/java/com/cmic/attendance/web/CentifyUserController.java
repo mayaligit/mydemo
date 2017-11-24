@@ -7,6 +7,7 @@ import com.cmic.attendance.model.UserBo;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.RestException;
+import com.cmic.saas.utils.JSONUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.swagger.annotations.Api;
@@ -36,9 +37,9 @@ import java.util.concurrent.TimeUnit;
 public class CentifyUserController {
 
     private static Logger log = Logger.getLogger(CentifyUserController.class);
+
     @Autowired
     private RedisTemplate redisTemplate;
-
 
     @Autowired
     private RestTemplate restTemplate;
@@ -95,8 +96,11 @@ public class CentifyUserController {
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
         AttendanceUserVo attendanceUser=new AttendanceUserVo();
         //拦截器不拦截，这个session无其他作用
-        redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set("_CURRENT_ADMIN_INFO");
-        redisTemplate.expire("_CURRENT_ADMIN_INFO", 30,TimeUnit.MINUTES);
+        String redisKey=phone;
+        String jsonBean = JSONUtils.parseObject2JsonString(adminEntity);
+        log.debug(">>>>>>>>>>>>>>>>对象json"+jsonBean+"<<<<<<<<<<<<<<<<<<<");
+        redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set(jsonBean);
+        redisTemplate.expire(phone, 30,TimeUnit.MINUTES);
 
        /* redisTemplate.boundValueOps("attendanceUser").set("_CURRENT_ADMIN_INFO");
 

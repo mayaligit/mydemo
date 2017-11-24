@@ -19,7 +19,6 @@ public class GroupAddress extends DataEntity<GroupAddress> {
     protected String groupAddress;
     @ApiModelProperty(value = "关联对应的考勤组")
     protected String attendanceGroupId;
-	
 	@ApiModelProperty(value = "考勤范围")
     private int groupAttendanceScope;
 

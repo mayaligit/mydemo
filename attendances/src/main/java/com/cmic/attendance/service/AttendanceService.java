@@ -136,7 +136,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 Attendance saveAttendance = new Attendance();
                 String distance2 = attendanceVo.getDistance();
                 if (distance2 ==null || "".equals(distance2)){
-                    distance2="0:0";
+                    distance2="0.0";
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
@@ -237,7 +237,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
                 //查询当前用户数据是否存在
                 Attendance saveAttendance=null;
-                Attendance attendance = checkAttendance(attendanceEndVo.getPhone(), DateUtils.getDateToYearMonthDay(startDate));
+                String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+                Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
 
                 if (null==attendance){
                     saveAttendance= new Attendance();
@@ -254,7 +255,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //判断当前地点是否异常
                 String distance2 = attendanceEndVo.getDistance();
                 if (distance2 ==null || "".equals(distance2)){
-                    distance2="0:0";
+                    distance2="0.0";
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
@@ -313,7 +314,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                  */
                 //返回数据
 
-                return attendance;
+                return saveAttendance;
             }else {
                 //二、自由模式。预留业务
 

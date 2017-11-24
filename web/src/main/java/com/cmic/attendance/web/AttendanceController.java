@@ -11,6 +11,7 @@ import com.cmic.attendance.vo.GroupAddressVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
+import com.cmic.saas.utils.JSONUtils;
 import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -20,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -42,7 +44,10 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     private static Logger log = Logger.getLogger(AttendanceController.class);
 
     @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
     private GroupAddressService groupAddressService;
+
     @Value("${clazzesService.id}")
     private String clazzesId;
 
@@ -103,14 +108,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public AttendanceVo getStartServerMesg() {
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
         response.setHeader("Access-Control-Allow-Origin", "*");
-        HttpServletRequest request = WebUtils.getRequest();
-        //测试数据
         //将用户信息封装到实体类中,并放入session域中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
+        HttpServletRequest request = WebUtils.getRequest();
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-       //测试数据结束*/
+       //测试数据结束
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
@@ -166,8 +170,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceVo.setUsername(user.getName());
         //返回多地址打卡数据
         ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
-        log.debug("多地址数据"+allGroupAddress);
-        System.out.println("<<<<<<<<<<<<<<<<<<<<"+allGroupAddress.toString()+">>>>>>>>>>>>>>>>>>>>>>>>");
         attendanceVo.setAddressList(allGroupAddress);
         attendanceVo.setPhone(user.getId());
         attendanceVo.setDate(serverDate);
@@ -180,8 +182,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @ApiOperation(value = "上班打卡", notes = "上班打卡接口", httpMethod = "POST")
     @RequestMapping(value = "/punchCardStart",method = RequestMethod.POST)
     public AttendanceVo punchCardStart(@RequestBody AttendanceVo attendanceVo){
-        HttpServletResponse response =WebUtils.getRequestAttributes().getResponse();
-      /*  response.setHeader("Access-Control-Allow-Origin", "*");*/
         attendanceVo.setClazzesId(this.clazzesId);
         Attendance attendanceBo = service.punchCard(attendanceVo);
         AttendanceVo resultAttendanceVo =new AttendanceVo();
