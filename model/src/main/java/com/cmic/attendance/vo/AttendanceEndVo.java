@@ -40,6 +40,10 @@ public class AttendanceEndVo implements Serializable {
     private String clazzesId;
     /*考勤组*/
     private String attendanceGroup;
+    //考勤时间是否是工作日
+    //工作日对应结果为0, 非工作日对应结果为1
+    private String attendanceDayStatus;
+
     public String getClazzesId() {
         return clazzesId;
     }
@@ -178,5 +182,13 @@ public class AttendanceEndVo implements Serializable {
 
     public void setAttendanceGroup(String attendanceGroup) {
         this.attendanceGroup = attendanceGroup;
+    }
+
+    public String getAttendanceDayStatus() {
+        return attendanceDayStatus;
+    }
+
+    public void setAttendanceDayStatus(String attendanceDayStatus) {
+        this.attendanceDayStatus = attendanceDayStatus;
     }
 }

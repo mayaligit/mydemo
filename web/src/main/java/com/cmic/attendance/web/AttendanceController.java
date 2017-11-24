@@ -1,5 +1,6 @@
 package com.cmic.attendance.web;
 
+import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.GroupAddress;
 import com.cmic.attendance.service.AttendanceService;
@@ -183,8 +184,14 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @RequestMapping(value = "/punchCardStart",method = RequestMethod.POST)
     public AttendanceVo punchCardStart(@RequestBody AttendanceVo attendanceVo){
         attendanceVo.setClazzesId(this.clazzesId);
-        Attendance attendanceBo = service.punchCard(attendanceVo);
+        Attendance attendanceBo = null;
         AttendanceVo resultAttendanceVo =new AttendanceVo();
+        try {
+            attendanceBo = service.punchCard(attendanceVo);
+            resultAttendanceVo.setAttendanceDayStatus("0");
+        }catch (AttendanceException e){
+            resultAttendanceVo.setAttendanceDayStatus("1");
+        }
         resultAttendanceVo.setAttendanceId(attendanceBo.getId());
         resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
         resultAttendanceVo.setPhone(attendanceVo.getPhone());
@@ -210,8 +217,14 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         HttpServletResponse response =WebUtils.getRequestAttributes().getResponse();
         /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         attendanceEndVo.setClazzesId(this.clazzesId);
-        Attendance attendanceBo = service.punchCardEnd(attendanceEndVo);
         AttendanceEndVo resultAttendanceVo=new AttendanceEndVo();
+        Attendance attendanceBo = null;
+        try{
+            attendanceBo = service.punchCardEnd(attendanceEndVo);
+            resultAttendanceVo.setAttendanceDayStatus("0");
+        }catch (AttendanceException e){
+            resultAttendanceVo.setAttendanceDayStatus("1");
+        }
         resultAttendanceVo.setAttendanceId(attendanceBo.getId());
         resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
         resultAttendanceVo.setPhone(attendanceEndVo.getPhone());
