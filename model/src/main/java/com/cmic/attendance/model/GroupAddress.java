@@ -12,15 +12,15 @@ import java.util.Date;
 public class GroupAddress extends DataEntity<GroupAddress> {
 
     @ApiModelProperty(value = "考勤组的经度")
-    protected String groupAttendanceLongitude;
+    protected float groupAttendanceLongitude;
     @ApiModelProperty(value = "考勤组的维度")
-    protected String groupAttendanceDimension;
+    protected float groupAttendanceDimension;
     @ApiModelProperty(value = "考勤地址")
     protected String groupAddress;
     @ApiModelProperty(value = "关联对应的考勤组")
     protected String attendanceGroupId;
 	@ApiModelProperty(value = "考勤范围")
-    private String groupAttendanceScope;
+    private int groupAttendanceScope;
 
     public GroupAddress(){
 
@@ -29,20 +29,20 @@ public class GroupAddress extends DataEntity<GroupAddress> {
         super(id);
     }
 
-    public String getGroupAttendanceLongitude() {
-        return groupAttendanceLongitude;
-    }
-
-    public void setGroupAttendanceLongitude(String groupAttendanceLongitude) {
-        this.groupAttendanceLongitude = groupAttendanceLongitude;
-    }
-
-    public String getGroupAttendanceDimension() {
+    public float getGroupAttendanceDimension() {
         return groupAttendanceDimension;
     }
 
-    public void setGroupAttendanceDimension(String groupAttendanceDimension) {
+    public void setGroupAttendanceDimension(float groupAttendanceDimension) {
         this.groupAttendanceDimension = groupAttendanceDimension;
+    }
+
+    public float getGroupAttendanceLongitude() {
+        return groupAttendanceLongitude;
+    }
+
+    public void setGroupAttendanceLongitude(float groupAttendanceLongitude) {
+        this.groupAttendanceLongitude = groupAttendanceLongitude;
     }
 
     public String getGroupAddress() {
@@ -60,13 +60,12 @@ public class GroupAddress extends DataEntity<GroupAddress> {
     public void setAttendanceGroupId(String attendanceGroupId) {
         this.attendanceGroupId = attendanceGroupId;
     }
-	public String getGroupAttendanceScope() {
+
+    public int getGroupAttendanceScope() {
         return groupAttendanceScope;
     }
 
-    public void setGroupAttendanceScope(String groupAttendanceScope) {
+    public void setGroupAttendanceScope(int groupAttendanceScope) {
         this.groupAttendanceScope = groupAttendanceScope;
     }
-
-
 }

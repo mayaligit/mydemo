@@ -7,12 +7,16 @@ import com.cmic.attendance.vo.GroupRuleVo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
 * Service
@@ -32,6 +36,9 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
     @Autowired
     private GroupAddressService groupAddressService;
+
+    @Autowired
+    private GroupRuleDao groupRuleDao;
 
     public GroupRule get(String id) {
         return super.get(id);
@@ -75,24 +82,18 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
         //返回考勤主表ID
         String attendanceGroupId = null;
-        //分割考勤人员输入，获取各值
-        String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
-        String person[] = persons.split(",");
+
         //多地址获取
         String addresses = groupRuleVo.getGroupRule().getGroupAddress();
         String[] resses = addresses.split(",");
 
         try {
-            //添加企业id
-            String groupEnterId = "";
-            if(person!=null&&person.length>0) {
-                for (int i = 0; i < person.length; i++) {
-                    String[] p = person[i].split("-");
-                    groupEnterId = p[2] + " ";
-                }
+            String place = null;
+            for(int i=0;i<resses.length;i++){
+               String[] places = resses[i].split("-");
+               place = places[3];
             }
-            groupRuleVo.getGroupRule().setGroupEnterpriseId(groupEnterId);
-            groupRuleVo.getGroupRule().setGroupAddress(null);
+            groupRuleVo.getGroupRule().setGroupAddress(place);
             //插入规则主表数据
             this.save(groupRuleVo.getGroupRule());
             attendanceGroupId = groupRuleVo.getGroupRule().getId();
@@ -102,6 +103,10 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
         //插入考勤人员
         try {
+            //分割考勤人员输入，获取各值
+            String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
+            String person[] = persons.split(",");
+
             for(int i=0;i<person.length;i++){
                 String[] p = person[i].split("-");
                 String personnelName = p[0];
@@ -157,9 +162,10 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
             if(resses!=null){
                 for (int i = 0; i < resses.length; i++) {
                     String adds[] = resses[i].split("-");
-                    groupAddress.setGroupAttendanceLongitude(adds[0]);
-                    groupAddress.setGroupAttendanceDimension(adds[1]);
-                    groupAddress.setGroupAttendanceScope(adds[2]);
+                    groupAddress.setGroupAttendanceLongitude(Float.parseFloat(adds[0]));
+                    groupAddress.setGroupAttendanceDimension(Float.parseFloat(adds[1]));
+                    groupAddress.setGroupAttendanceScope(Integer.parseInt(adds[2]));
+                    groupAddress.setGroupAddress(adds[3]);
                     groupAddressService.save(groupAddress);
                 }
             }
@@ -167,6 +173,31 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         }catch (Exception e){
             throw  new GroupRuleExeption("考勤表地址信息插入失败");
         }
+
+    }
+
+    public Map<String,Object> findAllGroupRuleList(Map<String,Object> paramMap){
+        //设置查询参数和排序条件
+        int pageSize = (int)paramMap.get("pageSize");
+        int pageNum = (int)paramMap.get("pageNum");
+        PageHelper.startPage(pageNum,pageSize,"a.create_time ASC");
+        //paramMap.put("createBy",phone);
+
+        String attaendanceMonth = (String)paramMap.get("attaendanceMonth");
+        paramMap.put("attaendanceMonth",attaendanceMonth.replace("/","-"));
+        //分页查询并获取分页信息
+        List<Map> attendanceList = groupRuleDao.findGroupRuleList(paramMap);
+        PageInfo<Attendance> pageInfo =  new PageInfo(attendanceList);
+
+        //创建对象对相应数据进行封装
+        Map<String,Object> responseMap = new HashMap<String,Object>();
+        List< Map<String,Object>> attendList = new ArrayList<>();
+
+        //获取总页数和总记录数
+        responseMap.put("totalPages",pageInfo.getPages());
+        responseMap.put("totalCount",pageInfo.getTotal());
+        responseMap.put("attendanceList",pageInfo.getList());
+        return responseMap;
 
     }
 
