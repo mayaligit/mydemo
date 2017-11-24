@@ -108,6 +108,7 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
+        //测试数据结束
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
         HashMap<String,String> resultHash =new HashMap<String,String>();
         try {

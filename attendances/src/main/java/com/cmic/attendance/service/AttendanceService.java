@@ -136,7 +136,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 Attendance saveAttendance = new Attendance();
                 String distance2 = attendanceVo.getDistance();
                 if (distance2 ==null || "".equals(distance2)){
-                    distance2="0:0";
+                    distance2="0.0";
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
@@ -254,7 +254,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //判断当前地点是否异常
                 String distance2 = attendanceEndVo.getDistance();
                 if (distance2 ==null || "".equals(distance2)){
-                    distance2="0:0";
+                    distance2="0.0";
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
