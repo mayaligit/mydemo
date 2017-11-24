@@ -313,7 +313,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                  */
                 //返回数据
 
-                return attendance;
+                return saveAttendance;
             }else {
                 //二、自由模式。预留业务
 
