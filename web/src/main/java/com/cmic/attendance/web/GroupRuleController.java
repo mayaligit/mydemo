@@ -29,9 +29,6 @@ import java.util.List;
 @RequestMapping("/rule")
 public class GroupRuleController extends BaseRestController<GroupRuleService> {
 
-    @Autowired
-    private GroupRuleService groupRuleService;
-
     @ApiOperation(value = "查询", notes = "查询列表", httpMethod = "GET")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "id", value="UUID主键", paramType = "query"),
@@ -58,11 +55,15 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         @ApiImplicitParam(name = "pageSize", value="分页大小", defaultValue = "10", paramType = "query"),
         @ApiImplicitParam(name = "pageNum", value="页码", defaultValue = "1", paramType = "query")
     })
-    @RequestMapping(value="/findGroupRuleList", method = RequestMethod.GET)
-    public Map<String,Object> findGroupList(@RequestBody Map<String,Object> paramMap){
-        //page = service.findPage(page, groupRule);
-        //return page;
-        Map<String,Object> map = groupRuleService.findAllGroupRuleList(paramMap);
+    @RequestMapping(value="/findGroupRuleList", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> findGroupList(@RequestBody PageInfo page){
+
+        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+        //response.setHeader("Access-Control-Allow-Origin", "*");
+        int pageNum = page.getPageNum();
+        int pageSize = page.getPageSize();
+        Map<String,Object> map = service.findAllGroupRuleList(pageNum,pageSize);
         return map;
 
     }
@@ -109,6 +110,7 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
      */
     @ApiOperation(value = "插入规则", notes = "删除考勤主表", httpMethod = "POST")
     @RequestMapping(value="/insertGroupRule")
+    @ResponseBody
     public Map<String,String> insertGroupRule(@Validated @RequestBody GroupRuleVo groupRuleVo){
         //测试数据
         HttpServletRequest request = WebUtils.getRequest();

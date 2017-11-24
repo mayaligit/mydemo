@@ -176,27 +176,26 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
     }
 
-    public Map<String,Object> findAllGroupRuleList(Map<String,Object> paramMap){
-        //设置查询参数和排序条件
-        int pageSize = (int)paramMap.get("pageSize");
-        int pageNum = (int)paramMap.get("pageNum");
-        PageHelper.startPage(pageNum,pageSize,"a.create_time ASC");
-        //paramMap.put("createBy",phone);
+    public Map<String,Object> findAllGroupRuleList(int pageNum,int pageSize){
 
-        String attaendanceMonth = (String)paramMap.get("attaendanceMonth");
-        paramMap.put("attaendanceMonth",attaendanceMonth.replace("/","-"));
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("pageNum",pageNum);
+        paramMap.put("pageSize",pageSize);
+        //设置查询参数和排序条件
+        PageHelper.startPage(pageNum,pageSize);
         //分页查询并获取分页信息
-        List<Map> attendanceList = groupRuleDao.findGroupRuleList(paramMap);
-        PageInfo<Attendance> pageInfo =  new PageInfo(attendanceList);
+        List<Map> groupRuleList = dao.findGroupRuleList(paramMap);
+
+        PageInfo<GroupRule> pageInfo =  new PageInfo(groupRuleList);
 
         //创建对象对相应数据进行封装
         Map<String,Object> responseMap = new HashMap<String,Object>();
-        List< Map<String,Object>> attendList = new ArrayList<>();
+        List< Map<String,Object>> ruleList = new ArrayList<>();
 
         //获取总页数和总记录数
         responseMap.put("totalPages",pageInfo.getPages());
         responseMap.put("totalCount",pageInfo.getTotal());
-        responseMap.put("attendanceList",pageInfo.getList());
+        responseMap.put("ruleList",pageInfo.getList());
         return responseMap;
 
     }

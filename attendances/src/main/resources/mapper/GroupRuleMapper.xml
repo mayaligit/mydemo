@@ -186,6 +186,7 @@
         SELECT a.id AS "id",
         a.group_name AS "groupName",
         a.group_status AS "groupStatus",
+        a.group_attendance_way AS "groupAttendanceWay",
         a.group_attendance_week AS "groupAttendanceWeek",
         a.group_address AS "groupAddress",
         a.remarks AS "remarks",
@@ -193,6 +194,6 @@
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
         a.update_date AS "updateDate"
-        from t_group_rule a;
+        from t_group_rule a
     </select>
 </mapper>
