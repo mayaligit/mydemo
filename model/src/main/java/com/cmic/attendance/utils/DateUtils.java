@@ -1,8 +1,16 @@
 package com.cmic.attendance.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 public class DateUtils {
     //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -96,4 +104,69 @@ public class DateUtils {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
         return formatter.format(new Date());
     }
+
+    /**
+     * 判断当前日期是星期几
+     * @param date
+     * @return
+     */
+    public static int dayForWeek(String date){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date tmpDate = format.parse(date);
+            Calendar cal = new GregorianCalendar();
+            cal.set(tmpDate.getYear(), tmpDate.getMonth(), tmpDate.getDay());
+            return cal.get(Calendar.DAY_OF_WEEK);
+        }catch (Throwable e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * @param httpUrl :请求接口
+     * @param httpArg :参数
+     * @return 返回结果
+     */
+    public static String request(String httpUrl, String httpArg) {
+        BufferedReader reader = null;
+        String result = null;
+        StringBuffer sbf = new StringBuffer();
+        httpUrl = httpUrl + "?" + httpArg;
+        try {
+            URL url = new URL(httpUrl);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("GET");
+            // 填入apikey到HTTP header
+            connection.setRequestProperty("apikey", "abfa5282a89706affd2e4ad6651c9648");
+            connection.connect();
+            InputStream is = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            String strRead = null;
+            while ((strRead = reader.readLine()) != null) {
+                sbf.append(strRead);
+                sbf.append("\r\n");
+            }
+            reader.close();
+            result = sbf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 节假日查询
+     * date格式为yyyy-MM-dd
+     * @return 工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
+     */
+    public static String getWorkDays(String date){
+        String httpUrl = "http://api.goseek.cn/Tools/holiday";
+        String fdate = "date=" + date.replace("-","");
+        String jsonResult = request(httpUrl, fdate);
+        JSONObject jsonObject = JSON.parseObject(jsonResult);
+        String value = jsonObject.get("data").toString();
+        return value;
+    }
+
 }
