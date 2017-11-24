@@ -333,6 +333,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         String date = queryAttendanceVo.getDate();
         PageInfo page = queryAttendanceVo.getPageInfo();
+        if(page==null){
+            Map<String, Object> map2 = new HashMap<>();
+            map2.put("pageInfo",new ArrayList<HashMap>());
+            map2.put("total",0);
+            map2.put("pageCount",0);
+            return map2;
+        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
