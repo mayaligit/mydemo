@@ -237,7 +237,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
                 //查询当前用户数据是否存在
                 Attendance saveAttendance=null;
-                Attendance attendance = checkAttendance(attendanceEndVo.getPhone(), DateUtils.getDateToYearMonthDay(startDate));
+                String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+                Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
 
                 if (null==attendance){
                     saveAttendance= new Attendance();

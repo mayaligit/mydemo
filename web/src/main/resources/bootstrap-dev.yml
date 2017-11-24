@@ -39,7 +39,7 @@ spring:
   mvc:  #日志格式
     date-format: yyyy-MM-dd HH:mm:ss
   datasource: #数据源
-    url: jdbc:mysql://192.168.185.164:3306/saas_${sys.module}_${sys.name}2.0?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8&characterSetResults=UTF-8
+    url: jdbc:mysql://192.168.185.164:3306/saas_${sys.module}_${sys.name}_test?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8&characterSetResults=UTF-8
     username: root #oa_promote  192.168.185.164
     password: abc@123 #oa_promote#123
     driver-class-name: com.mysql.jdbc.Driver
