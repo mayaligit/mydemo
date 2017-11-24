@@ -1,13 +1,25 @@
 package com.cmic.attendance.web;
 
+import com.cmic.attendance.exception.GroupRuleExeption;
 import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.service.GroupRuleService;
+import com.cmic.attendance.vo.GroupRuleVo;
+import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
+import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
+import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
 * Controller
@@ -16,6 +28,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/rule")
 public class GroupRuleController extends BaseRestController<GroupRuleService> {
+
+    @Autowired
+    private GroupRuleService groupRuleService;
 
     @ApiOperation(value = "查询", notes = "查询列表", httpMethod = "GET")
     @ApiImplicitParams({
@@ -43,10 +58,13 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         @ApiImplicitParam(name = "pageSize", value="分页大小", defaultValue = "10", paramType = "query"),
         @ApiImplicitParam(name = "pageNum", value="页码", defaultValue = "1", paramType = "query")
     })
-    @RequestMapping(value="/", method = RequestMethod.GET)
-    public PageInfo<GroupRule> get(@ApiIgnore GroupRule groupRule, @ApiIgnore PageInfo page){
-        page = service.findPage(page, groupRule);
-        return page;
+    @RequestMapping(value="/findGroupRuleList", method = RequestMethod.GET)
+    public Map<String,Object> findGroupList(@RequestBody Map<String,Object> paramMap){
+        //page = service.findPage(page, groupRule);
+        //return page;
+        Map<String,Object> map = groupRuleService.findAllGroupRuleList(paramMap);
+        return map;
+
     }
 
     @ApiOperation(value = "新增", notes = "新增", httpMethod = "POST")
