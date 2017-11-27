@@ -7,7 +7,7 @@ spring:
   application:
     name: ${sys.module}-${sys.name}
   profiles:
-    active: local #环境配置- local：本地 dev：开发环境 qa：测试环境 uat：用户测试 pd：生产环境
+    active: dev #环境配置- local：本地 dev：开发环境 qa：测试环境 uat：用户测试 pd：生产环境
   cloud:
     config:
       name: ${spring.application.name}

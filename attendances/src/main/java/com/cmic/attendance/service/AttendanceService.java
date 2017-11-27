@@ -1,6 +1,7 @@
 package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.AttendanceDao;
+import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Clazzes;
 import com.cmic.attendance.model.GroupAddress;
@@ -85,8 +86,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         ArrayList<GroupAddressVo> listGroupAddress = new ArrayList<GroupAddressVo>();
         for (GroupAddress groupAddress:addressList) {
             GroupAddressVo groupAddressVo =new GroupAddressVo();
-            groupAddressVo.setGroupAttendanceDimension(groupAddress.getGroupAttendanceDimension());
-            groupAddressVo.setGroupAttendanceLongitude(groupAddress.getGroupAttendanceLongitude());
+            groupAddressVo.setGroupAttendanceDimension(String.valueOf(groupAddress.getGroupAttendanceDimension()));
+            groupAddressVo.setGroupAttendanceLongitude(String.valueOf(groupAddress.getGroupAttendanceLongitude()));
             groupAddressVo.setGroupAddress(groupAddress.getGroupAddress());
             groupAddressVo.setAttendanceGroupId(groupAddress.getAttendanceGroupId());
             listGroupAddress.add(groupAddressVo);
@@ -117,15 +118,23 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
      */
     @Transactional(readOnly = false)
-    public Attendance punchCard(AttendanceVo attendanceVo) {
+    public Attendance punchCard(AttendanceVo attendanceVo) throws AttendanceException {
 
         /*读取规则gui*/
        /* GroupRule groupRule = groupRuleService.getByGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);*/
 
         //获取规则表固定
         Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
+        Date startDate = new Date();
         if (clazzes==null){
             //不在考勤日期内直接返回预留业务
+            String compareTime = DateUtils.getDateToYearMonthDay(startDate);
+            //判断是否为工作日
+            //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
+            String workDay = DateUtils.getWorkDays(compareTime);
+            if(!"0".equals(workDay)){
+                throw new AttendanceException("当前考勤时间不是工作日!");
+            }
             return null;
         }else {
             //开始读取考勤组考勤的方式
@@ -136,7 +145,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 Attendance saveAttendance = new Attendance();
                 String distance2 = attendanceVo.getDistance();
                 if (distance2 ==null || "".equals(distance2)){
-                    distance2="0:0";
+                    distance2="0.0";
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
@@ -151,7 +160,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 }
 
                 //服务器时间
-                Date startDate = new Date();
                 String compareTime = DateUtils.getDateToHourMinuteS(startDate);
                 String[] compareTimeArry = compareTime.split(":");
                 Integer compareHour = Integer.parseInt(compareTimeArry[0]);
@@ -212,15 +220,22 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
       @return AttendanceEndVo 返回Controller的bean
      */
     @Transactional(readOnly = false)
-    public Attendance punchCardEnd(AttendanceEndVo attendanceEndVo ){
+    public Attendance punchCardEnd(AttendanceEndVo attendanceEndVo ) throws AttendanceException {
         /*读取规则gui
         GroupRule groupRule = groupRuleService.getByGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0);*/
         //将当前考勤日期转换为星期几
         //获取规则表固定
         Clazzes clazzes = clazzesService.getClazzesById(attendanceEndVo.getClazzesId());
-
+        Date startDate = new Date();
         if (clazzes==null){
             //不在考勤日期内直接返回预留业务
+            String compareTime = DateUtils.getDateToYearMonthDay(startDate);
+            //判断是否为工作日
+            //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
+            String workDay = DateUtils.getWorkDays(compareTime);
+            if(!"0".equals(workDay)){
+                throw new AttendanceException("当前考勤时间不是工作日!");
+            }
             return null;
         }else {
             //开始读取考勤组考勤的方式预留业务
@@ -229,7 +244,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             if ("1".equals("1")) {
 
                 //服务器时间
-                Date startDate = new Date();
                 String compareTime = DateUtils.getDateToHourMinuteS(startDate);
                 String[] compareTimeArry = compareTime.split(":");
                 Integer compareHour = Integer.parseInt(compareTimeArry[0]);
@@ -237,7 +251,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
                 //查询当前用户数据是否存在
                 Attendance saveAttendance=null;
-                Attendance attendance = checkAttendance(attendanceEndVo.getPhone(), DateUtils.getDateToYearMonthDay(startDate));
+                String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+                Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
 
                 if (null==attendance){
                     saveAttendance= new Attendance();
@@ -254,7 +269,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //判断当前地点是否异常
                 String distance2 = attendanceEndVo.getDistance();
                 if (distance2 ==null || "".equals(distance2)){
-                    distance2="0:0";
+                    distance2="0.0";
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
@@ -313,7 +328,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                  */
                 //返回数据
 
-                return attendance;
+                return saveAttendance;
             }else {
                 //二、自由模式。预留业务
 
@@ -333,6 +348,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         String date = queryAttendanceVo.getDate();
         PageInfo page = queryAttendanceVo.getPageInfo();
+        if(page==null){
+            Map<String, Object> map2 = new HashMap<>();
+            map2.put("pageInfo",new ArrayList<HashMap>());
+            map2.put("total",0);
+            map2.put("pageCount",0);
+            return map2;
+        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);

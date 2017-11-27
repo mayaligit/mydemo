@@ -1,13 +1,25 @@
 package com.cmic.attendance.web;
 
+import com.cmic.attendance.exception.GroupRuleExeption;
 import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.service.GroupRuleService;
+import com.cmic.attendance.vo.GroupRuleVo;
+import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
+import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
+import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 
 /**
 * Controller
@@ -43,10 +55,17 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         @ApiImplicitParam(name = "pageSize", value="分页大小", defaultValue = "10", paramType = "query"),
         @ApiImplicitParam(name = "pageNum", value="页码", defaultValue = "1", paramType = "query")
     })
-    @RequestMapping(value="/", method = RequestMethod.GET)
-    public PageInfo<GroupRule> get(@ApiIgnore GroupRule groupRule, @ApiIgnore PageInfo page){
-        page = service.findPage(page, groupRule);
-        return page;
+    @RequestMapping(value="/findGroupRuleList", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> findGroupList(@RequestBody PageInfo page){
+
+        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+        //response.setHeader("Access-Control-Allow-Origin", "*");
+        int pageNum = page.getPageNum();
+        int pageSize = page.getPageSize();
+        Map<String,Object> map = service.findAllGroupRuleList(pageNum,pageSize);
+        return map;
+
     }
 
     @ApiOperation(value = "新增", notes = "新增", httpMethod = "POST")
@@ -83,6 +102,36 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "ID") @PathVariable String id){
         service.delete(id);
+    }
+	
+	 /**
+     * 插入考勤规则
+     * //@param groupRuleVo
+     */
+    @ApiOperation(value = "插入规则", notes = "删除考勤主表", httpMethod = "POST")
+    @RequestMapping(value="/insertGroupRule")
+    @ResponseBody
+    public Map<String,String> insertGroupRule(@Validated @RequestBody GroupRuleVo groupRuleVo){
+        //测试数据
+        HttpServletRequest request = WebUtils.getRequest();
+        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        adminEntity.setId("15240653787");
+        adminEntity.setName("梁渝");
+        //测试数据结束
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
+        HashMap<String,String> resultHash =new HashMap<String,String>();
+        try {
+            service.insertGroupRule(groupRuleVo);
+            resultHash.put("code","0");
+            resultHash.put("msg","操作成功");
+            return resultHash;
+        } catch (GroupRuleExeption g) {
+            resultHash.put("code","1");
+            resultHash.put("msg",g.getMessage());
+            return resultHash;
+        }
     }
 
 }

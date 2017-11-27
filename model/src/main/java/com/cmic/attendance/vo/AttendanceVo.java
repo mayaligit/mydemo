@@ -60,6 +60,10 @@ public class AttendanceVo{
     //返回多地址数据
     private ArrayList<GroupAddressVo> addressList;
 
+    //考勤时间是否是工作日
+    //工作日对应结果为0, 非工作日对应结果为1
+    private String attendanceDayStatus;
+
     public String getAttendanceId() {
         return attendanceId;
     }
@@ -226,5 +230,13 @@ public class AttendanceVo{
 
     public void setAddressList(ArrayList<GroupAddressVo> addressList) {
         this.addressList = addressList;
+    }
+
+    public String getAttendanceDayStatus() {
+        return attendanceDayStatus;
+    }
+
+    public void setAttendanceDayStatus(String attendanceDayStatus) {
+        this.attendanceDayStatus = attendanceDayStatus;
     }
 }
