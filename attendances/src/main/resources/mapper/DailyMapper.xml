@@ -272,4 +272,13 @@
         </where>
     </select>
 
+    <select id="getDailyByPhoneAndUser" parameterType="com.cmic.attendance.pojo.DailyPojo" resultType="Daily">
+        SELECT
+        id ,username ,submit_time AS "submitTime",daily_title AS "dailyTitle",today_daily AS "todayDaily",
+        suggestion_status AS "suggestionStatus",daily_desc AS "dailyDesc",attendance_group AS "attendanceGroup"
+        FROM t_daily
+        WHERE Date(update_time) = #{updateDate}
+        AND update_by = #{phone}
+    </select>
+
 </mapper>

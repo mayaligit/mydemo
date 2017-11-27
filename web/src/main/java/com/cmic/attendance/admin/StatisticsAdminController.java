@@ -3,6 +3,7 @@ package com.cmic.attendance.admin;
 import com.cmic.attendance.model.Statistics;
 import com.cmic.attendance.service.StatisticsService;
 import com.cmic.attendance.utils.DateUtils;
+import com.cmic.attendance.vo.QueryStatisticsVo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
@@ -10,7 +11,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,10 +82,10 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceHardworkingByDay",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> checkAttendanceHardworkingByDay(HttpServletResponse response, String date, @RequestBody PageInfo page) {
+    public Map<String,Object> checkAttendanceHardworkingByDay(@RequestBody QueryStatisticsVo queryStatisticsVo) {
 
 //        response.setHeader("Access-Control-Allow-Origin", "*");
-        Map<String, Object> map = service.checkAttendanceHardworkingByDay(date, page);
+        Map<String, Object> map = service.checkAttendanceHardworkingByDay(queryStatisticsVo);
         return map;
     }
 
@@ -97,10 +97,10 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceHardworkingByMonth",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> checkAttendanceHardworkingByMonth(HttpServletResponse response, String date,@RequestBody PageInfo page) {
+    public Map<String,Object> checkAttendanceHardworkingByMonth(@RequestBody QueryStatisticsVo queryStatisticsVo) {
 
 //        response.setHeader("Access-Control-Allow-Origin", "*");
-        Map<String, Object> map = service.checkAttendanceHardworkingByMonth(date, page);
+        Map<String, Object> map = service.checkAttendanceHardworkingByMonth(queryStatisticsVo);
         return map;
     }
 
@@ -112,10 +112,10 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceLatterByMonth",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> checkAttendanceLatterByMonth(HttpServletResponse response, String date, @RequestBody PageInfo page) {
+    public Map<String,Object> checkAttendanceLatterByMonth(@RequestBody QueryStatisticsVo queryStatisticsVo) {
 
 //        response.setHeader("Access-Control-Allow-Origin", "*");
-        Map<String, Object> map = service.checkAttendanceLatterByMonth(date, page);
+        Map<String, Object> map = service.checkAttendanceLatterByMonth(queryStatisticsVo);
         return map;
     }
 
@@ -129,7 +129,7 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
     @ResponseBody
     public Map getNowDate() {
 
-//        response.setHeader("Access-Control-Allow-Origin", "*");
+
         Date date = new Date();
         String nowDate = DateUtils.getDateToYearMonthDay(date);
         Calendar c=Calendar.getInstance();

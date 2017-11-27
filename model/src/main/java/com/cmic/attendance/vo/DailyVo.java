@@ -11,4 +11,14 @@ import java.io.Serializable;
  * @create 2017-10-30 19:04
  **/
 public class DailyVo extends Daily implements Serializable {
+
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }
