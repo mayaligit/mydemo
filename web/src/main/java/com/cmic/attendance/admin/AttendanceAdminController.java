@@ -124,9 +124,6 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
 //    @ResponseBody
     public Map<String,Object> checkAttendanceByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
-
-        
-       /* response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, Object> map = service.checkAttendanceByDay(queryAttendanceVo);
         return map;
     }
@@ -141,7 +138,6 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ResponseBody
     public Map<String,Object> checkAttendanceLatterByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
-        /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, Object> map = service.checkAttendanceLatterByDay(queryAttendanceVo);
         return map;
     }
@@ -156,7 +152,6 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ResponseBody
     public Map<String,Object> checkAttendanceData(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
-       /* response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String,Object> map = service.checkAttendanceData(queryAttendanceVo);
         return map;
     }
