@@ -72,7 +72,15 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         super.delete(id);
         logger.info("删除：" + groupRule.toJSONString());
     }
-	
+
+    /**
+     * 根据组名以及启用状态获取考勤组信息
+     *
+     */
+    public GroupRule findGroupNameAndGroupStatus(String groupName,int groupStatus){
+
+        return dao.getByGroupNameAndGroupStatus(groupName,groupStatus);
+    }
 	/*
      插入考勤组规则数据
      */

@@ -59,10 +59,15 @@ public class AttendanceVo{
     private String endLocation;
     //返回多地址数据
     private ArrayList<GroupAddressVo> addressList;
-
     //考勤时间是否是工作日
     //工作日对应结果为0, 非工作日对应结果为1
     private String attendanceDayStatus;
+    //考勤的组别
+    private String attendanceGroup;
+    //考勤的经度
+    private String attendanceLongitude;
+    //考勤的维度
+    private String attendanceDimension;
 
     public String getAttendanceId() {
         return attendanceId;
@@ -238,5 +243,29 @@ public class AttendanceVo{
 
     public void setAttendanceDayStatus(String attendanceDayStatus) {
         this.attendanceDayStatus = attendanceDayStatus;
+    }
+
+    public String getAttendanceGroup() {
+        return attendanceGroup;
+    }
+
+    public void setAttendanceGroup(String attendanceGroup) {
+        this.attendanceGroup = attendanceGroup;
+    }
+
+    public String getAttendanceLongitude() {
+        return attendanceLongitude;
+    }
+
+    public void setAttendanceLongitude(String attendanceLongitude) {
+        this.attendanceLongitude = attendanceLongitude;
+    }
+
+    public String getAttendanceDimension() {
+        return attendanceDimension;
+    }
+
+    public void setAttendanceDimension(String attendanceDimension) {
+        this.attendanceDimension = attendanceDimension;
     }
 }
