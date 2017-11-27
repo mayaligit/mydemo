@@ -196,4 +196,6 @@
         a.update_date AS "updateDate"
         from t_group_rule a
     </select>
+
+
 </mapper>
