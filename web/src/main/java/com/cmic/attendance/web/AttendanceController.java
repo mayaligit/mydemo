@@ -188,7 +188,12 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @ApiOperation(value = "上班打卡", notes = "上班打卡接口", httpMethod = "POST")
     @RequestMapping(value = "/punchCardStart",method = RequestMethod.POST)
     public AttendanceVo punchCardStart(@RequestBody AttendanceVo attendanceVo){
-        attendanceVo.setClazzesId(this.clazzesId);
+        String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();
+        attendanceVo.setAttendanceGroup("odc");
+        attendanceVo.setUsername(username);
+        attendanceVo.setPhone(phone);
+
         Attendance attendanceBo = null;
         AttendanceVo resultAttendanceVo =new AttendanceVo();
         try {
@@ -221,7 +226,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public AttendanceEndVo punchCardEnd(@RequestBody AttendanceEndVo attendanceEndVo){
         HttpServletResponse response =WebUtils.getRequestAttributes().getResponse();
         /*response.setHeader("Access-Control-Allow-Origin", "*");*/
-        attendanceEndVo.setClazzesId(this.clazzesId);
+
+        String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();
+        attendanceEndVo.setAttendanceGroup("odc");
+        attendanceEndVo.setUsername(username);
+        attendanceEndVo.setPhone(phone);
+
         AttendanceEndVo resultAttendanceVo=new AttendanceEndVo();
         Attendance attendanceBo = null;
         try{
