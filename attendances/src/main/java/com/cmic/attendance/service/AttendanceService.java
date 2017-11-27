@@ -156,9 +156,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }
         } else{
             //开始读取考勤组考勤的方式
-            String groupAttendanceWay= groupRule.getGroupAttendanceWay();
+            Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
+            String groupAttendanceWays = groupAttendanceWay + "";
             //一、固定时长
-            if ("1".equals(groupAttendanceWay)) {
+            if ("1".equals(groupAttendanceWays)) {
                 //判断当前地点是否异常
                 Attendance saveAttendance = new Attendance();
                 String distance2 = attendanceVo.getDistance();
@@ -167,7 +168,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
-                Integer groupAttendanceScope = Integer.parseInt(groupRule.getGroupAttendanceScope());
+                Integer groupAttendanceScope = groupRule.getGroupAttendanceScope();
                 if (Integer.parseInt(distances) > groupAttendanceScope) {
                     saveAttendance.setAttendanceStatus("1");
                     saveAttendance.setAttendanceDesc("地点异常");
@@ -178,7 +179,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 }
                 //设计考勤时间
                 /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
-                String groupAttendanceStart = groupRule.getGroupAttendanceStart();
+                String groupAttendanceStart = groupRule.getGroupAttendanceStart()+"";
                 String[] AttendanceStartArry = groupAttendanceStart.split(":");
                 Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
                 Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
@@ -306,7 +307,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
             //设计考勤时间
             /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
-            String groupAttendanceEnd = groupRule.getGroupAttendanceEnd();
+            String groupAttendanceEnd = groupRule.getGroupAttendanceEnd()+"";
             String[] AttendanceStartArry = groupAttendanceEnd.split(":");
             Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
             Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
