@@ -113,9 +113,8 @@ public class DateUtils {
      */
     public static int dayForWeek(Date time){
         String date = getDateToYearMonthDay(time);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            Date tmpDate = format.parse(date);
+            Date tmpDate = getStringsToDate(getDateToYearMonthDay(time));
             Calendar cal = Calendar.getInstance();
             cal.setTime(tmpDate);
             int weekDay = cal.get(Calendar.DAY_OF_WEEK)-1;
@@ -171,4 +170,5 @@ public class DateUtils {
         String value = jsonObject.get("data").toString();
         return value;
     }
+
 }
