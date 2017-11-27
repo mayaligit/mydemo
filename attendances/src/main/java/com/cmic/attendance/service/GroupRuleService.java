@@ -36,9 +36,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
     @Autowired
     private GroupAddressService groupAddressService;
-
-    @Autowired
-    private GroupRuleDao groupRuleDao;
+    
 
     public GroupRule get(String id) {
         return super.get(id);
@@ -78,7 +76,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
      *
      */
     public GroupRule findGroupNameAndGroupStatus(String groupName,int groupStatus){
-
+        System.out.println("groupName=="+groupName+"groupStatus=="+groupStatus);
         return dao.getByGroupNameAndGroupStatus(groupName,groupStatus);
     }
 	/*
