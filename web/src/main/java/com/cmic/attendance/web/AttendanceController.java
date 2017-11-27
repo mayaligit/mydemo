@@ -171,6 +171,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceVo.setUsername(user.getName());
         //返回多地址打卡数据
         ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
+        //返回用户组信息(预留业务)
+        attendanceVo.setAttendanceGroup("odc");
         attendanceVo.setAddressList(allGroupAddress);
         attendanceVo.setPhone(user.getId());
         attendanceVo.setDate(serverDate);

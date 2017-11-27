@@ -3,10 +3,7 @@ package com.cmic.attendance.service;
 import com.cmic.attendance.bo.InsetEndStaticBo;
 import com.cmic.attendance.dao.AttendanceDao;
 import com.cmic.attendance.exception.AttendanceException;
-import com.cmic.attendance.model.Attendance;
-import com.cmic.attendance.model.Clazzes;
-import com.cmic.attendance.model.GroupAddress;
-import com.cmic.attendance.model.Statistics;
+import com.cmic.attendance.model.*;
 import com.cmic.attendance.pojo.AttendancePojo;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.*;
@@ -46,6 +43,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     private StatisticsService statisticsService;
     @Autowired
     private GroupAddressService groupAddressService;
+    @Autowired
+    private GroupRuleService groupRuleService;
+
 
     public Attendance get(String id) {
         return super.get(id);
@@ -120,13 +120,21 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     @Transactional(readOnly = false)
     public Attendance punchCard(AttendanceVo attendanceVo) throws AttendanceException {
 
-        /*读取规则gui*/
-       /* GroupRule groupRule = groupRuleService.getByGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);*/
-
+        /*读取规则表
+         *跟考勤组已经启用在状态来获取考勤组信息
+         */
+        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
         //获取规则表固定
-        Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
         Date startDate = new Date();
-        if (clazzes==null){
+
+        String groupAttendanceWeek = groupRule.getGroupAttendanceWeek();
+        //日期格式1-2-3-4-5-6-7
+        String[] attendanceWeek = groupAttendanceWeek.split("-");
+        String isForWeek = DateUtils.dayForWeek(startDate)+"";
+        List<String> strings = Arrays.asList(attendanceWeek);
+        boolean contains = strings.contains(isForWeek);
+        //不在考勤期内
+        if (!contains){
             //不在考勤日期内直接返回预留业务
             String compareTime = DateUtils.getDateToYearMonthDay(startDate);
             //判断是否为工作日
@@ -135,12 +143,22 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             if(!"0".equals(workDay)){
                 throw new AttendanceException("当前考勤时间不是工作日!");
             }
-            return null;
-        }else {
+        }
+        //在考勤期内，但是当前日期是法定节假日
+        if (contains){
+            //不在考勤日期内直接返回预留业务
+            String compareTime = DateUtils.getDateToYearMonthDay(startDate);
+            //判断是否为工作日
+            //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
+            String workDay = DateUtils.getWorkDays(compareTime);
+            if(!"0".equals(workDay)){
+                throw new AttendanceException("节假日不用考勤!");
+            }
+        } else{
             //开始读取考勤组考勤的方式
-            Integer groupAttendanceWay = 1;
+            String groupAttendanceWay= groupRule.getGroupAttendanceWay();
             //一、固定时长
-            if ("1".equals("1")) {
+            if ("1".equals(groupAttendanceWay)) {
                 //判断当前地点是否异常
                 Attendance saveAttendance = new Attendance();
                 String distance2 = attendanceVo.getDistance();
@@ -149,7 +167,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
-                Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
+                Integer groupAttendanceScope = Integer.parseInt(groupRule.getGroupAttendanceScope());
                 if (Integer.parseInt(distances) > groupAttendanceScope) {
                     saveAttendance.setAttendanceStatus("1");
                     saveAttendance.setAttendanceDesc("地点异常");
@@ -167,7 +185,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
                 //设计考勤时间
                 /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
-                String groupAttendanceStart = clazzes.getNomalStartTime();
+                String groupAttendanceStart = groupRule.getGroupAttendanceStart();
                 String[] AttendanceStartArry = groupAttendanceStart.split(":");
                 Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
                 Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
@@ -212,6 +230,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 return null;
             }
         }
+        //考勤异常
+        return null;
     }
 
     //TODO 下班打卡业务
