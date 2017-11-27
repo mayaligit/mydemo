@@ -115,16 +115,14 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         adminEntity.setName("梁渝");
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
        //测试数据结束*/
-
        /* HttpServletRequest request = WebUtils.getRequest();
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");*/
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
-        BoundValueOperations current_admin = redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO");
-        List<BaseAdminEntity> baseAdminEntities = JSONUtils.parseArray(current_admin.toString(), BaseAdminEntity.class);
-        BaseAdminEntity user = baseAdminEntities.get(0);
+        String current_admin = (String)redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
+        BaseAdminEntity user = JSONUtils.parse(current_admin, BaseAdminEntity.class);
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime() ){
