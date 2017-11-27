@@ -36,7 +36,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
     @Autowired
     private GroupAddressService groupAddressService;
-    
+
 
     public GroupRule get(String id) {
         return super.get(id);
