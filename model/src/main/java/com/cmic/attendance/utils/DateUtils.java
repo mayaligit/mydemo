@@ -107,16 +107,19 @@ public class DateUtils {
 
     /**
      * 判断当前日期是星期几
-     * @param date
+     * @param time
+     * 星期日返回0，星期一返回1....
      * @return
      */
-    public static int dayForWeek(String date){
+    public static int dayForWeek(Date time){
+        String date = getDateToYearMonthDay(time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date tmpDate = format.parse(date);
-            Calendar cal = new GregorianCalendar();
-            cal.set(tmpDate.getYear(), tmpDate.getMonth(), tmpDate.getDay());
-            return cal.get(Calendar.DAY_OF_WEEK);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(tmpDate);
+            int weekDay = cal.get(Calendar.DAY_OF_WEEK)-1;
+            return weekDay;
         }catch (Throwable e){
             e.printStackTrace();
             return 0;
@@ -157,10 +160,10 @@ public class DateUtils {
 
     /**
      * 节假日查询
-     * date格式为yyyy-MM-dd
      * @return 工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
      */
-    public static String getWorkDays(String date){
+    public static String getWorkDays(Date time){
+        String date = getDateToYearMonthDay(time);
         String httpUrl = "http://api.goseek.cn/Tools/holiday";
         String fdate = "date=" + date.replace("-","");
         String jsonResult = request(httpUrl, fdate);
@@ -168,5 +171,4 @@ public class DateUtils {
         String value = jsonObject.get("data").toString();
         return value;
     }
-
 }
