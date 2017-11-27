@@ -107,7 +107,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
-        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
        /* response.setHeader("Access-Control-Allow-Origin", "*");*/
         /*//将用户信息封装到实体类中,并放入session域中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
@@ -121,6 +120,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
+        log.debug("会话是否为空"+user);
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime() ){
