@@ -64,6 +64,10 @@ public class AttendanceVo{
     private String attendanceDayStatus;
     //考勤的组别
     private String attendanceGroup;
+    //考勤的经度
+    private String attendanceLongitude;
+    //考勤的维度
+    private String attendanceDimension;
 
     public String getAttendanceId() {
         return attendanceId;
@@ -247,5 +251,21 @@ public class AttendanceVo{
 
     public void setAttendanceGroup(String attendanceGroup) {
         this.attendanceGroup = attendanceGroup;
+    }
+
+    public String getAttendanceLongitude() {
+        return attendanceLongitude;
+    }
+
+    public void setAttendanceLongitude(String attendanceLongitude) {
+        this.attendanceLongitude = attendanceLongitude;
+    }
+
+    public String getAttendanceDimension() {
+        return attendanceDimension;
+    }
+
+    public void setAttendanceDimension(String attendanceDimension) {
+        this.attendanceDimension = attendanceDimension;
     }
 }

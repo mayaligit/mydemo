@@ -8,7 +8,7 @@ server:
   port: 12111
 
 logging:
-  file: /app/jenkins_deploy/logs/saas-${spring.profiles.active}/${spring.application.name}.log  #日志地址
+  file: /app/jenkins_deploy/logs_test/saas-${spring.profiles.active}/${spring.application.name}.log  #日志地址
 
 hystrix:  #熔断配置
   command:
