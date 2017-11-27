@@ -98,7 +98,6 @@ public class CentifyUserController {
         //拦截器不拦截，这个session无其他作用
         String redisKey=phone;
         String jsonBean = JSONUtils.parseObject2JsonString(adminEntity);
-        log.debug(">>>>>>>>>>>>>>>>对象json"+jsonBean+"<<<<<<<<<<<<<<<<<<<");
         redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set(jsonBean);
         redisTemplate.expire(phone, 30,TimeUnit.MINUTES);
 
