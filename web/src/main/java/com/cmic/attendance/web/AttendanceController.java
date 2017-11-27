@@ -121,10 +121,10 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
-        String current_admin = (String)redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
-        BaseAdminEntity user = JSONUtils.parse(current_admin, BaseAdminEntity.class);
-        log.debug("redis中对象user"+user.getId()+"");
-        Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
+        String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();
+        log.debug("redis中对象user"+phone+""+username);
+        Attendance DBattendance=service.checkAttendance(phone,serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime() ){
             log.debug("用户已经打过卡了");
@@ -171,13 +171,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setIsAttendanceStart("1");
             attendanceVo.setIsAttendanceEnd("1");
         }
-        attendanceVo.setUsername(user.getName());
+        attendanceVo.setUsername(username);
         //返回多地址打卡数据
         ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
         //返回用户组信息(预留业务)
         attendanceVo.setAttendanceGroup("odc");
         attendanceVo.setAddressList(allGroupAddress);
-        attendanceVo.setPhone(user.getId());
+        attendanceVo.setPhone(phone);
         attendanceVo.setDate(serverDate);
         attendanceVo.setServerTime(serverTimes.toString());
         return attendanceVo;
