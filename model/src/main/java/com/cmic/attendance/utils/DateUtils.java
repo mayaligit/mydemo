@@ -114,9 +114,8 @@ public class DateUtils {
     public static int dayForWeek(Date time){
         String date = getDateToYearMonthDay(time);
         try {
-            Date tmpDate = getStringsToDate(getDateToYearMonthDay(time));
             Calendar cal = Calendar.getInstance();
-            cal.setTime(tmpDate);
+            cal.setTime(time);
             int weekDay = cal.get(Calendar.DAY_OF_WEEK)-1;
             return weekDay;
         }catch (Throwable e){
