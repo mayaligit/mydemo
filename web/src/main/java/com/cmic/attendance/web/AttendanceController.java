@@ -123,6 +123,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         //检查当前用户是否已经打卡
         String current_admin = (String)redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").get();
         BaseAdminEntity user = JSONUtils.parse(current_admin, BaseAdminEntity.class);
+        log.debug("redis中对象user"+user);
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime() ){
