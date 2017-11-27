@@ -6,6 +6,8 @@ import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
 import com.github.pagehelper.PageInfo;
+import com.netflix.discovery.converters.Auto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,9 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class GroupPersonnelService extends CrudService<GroupPersonnelDao, GroupPersonnel> {
+
+    @Autowired
+    private GroupPersonnelDao groupPersonnelDao;
 
     public GroupPersonnel get(String id) {
         return super.get(id);
@@ -51,6 +56,10 @@ public class GroupPersonnelService extends CrudService<GroupPersonnelDao, GroupP
         }
         super.delete(id);
         logger.info("删除：" + groupPersonnel.toJSONString());
+    }
+
+    public List<GroupPersonnel> findListByGroupRuleId(String groupRuleId){
+        return groupPersonnelDao.findListByGroupRuleId(groupRuleId);
     }
 
 }

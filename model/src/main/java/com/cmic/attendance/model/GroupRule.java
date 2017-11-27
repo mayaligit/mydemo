@@ -18,29 +18,29 @@ public class GroupRule extends DataEntity<GroupRule> {
     @ApiModelProperty(value = "企业名称(保留字段)")
     protected String groupEnterpriseName;
     @ApiModelProperty(value = "0/启用 1/停用 默认1")
-    protected String groupStatus;
+    protected Integer groupStatus;
     @ApiModelProperty(value = "生效时间从-至 至的话默认2099年")
     protected Date groupDeadline;
     @ApiModelProperty(value = "考勤组启用日报模板ID")
     protected String groupDailyId;
     @ApiModelProperty(value = "考勤方式 0/自由 1/时长")
-    protected String groupAttendanceWay;
+    protected Integer groupAttendanceWay;
     @ApiModelProperty(value = "组考勤上班时间")
-    protected String groupAttendanceStart;
+    protected Date groupAttendanceStart;
     @ApiModelProperty(value = "组考勤下班时间")
-    protected String groupAttendanceEnd;
+    protected Date groupAttendanceEnd;
     @ApiModelProperty(value = "考勤的时长（注：单位小时，如8.5小时)")
-    protected String groupAttendanceDuration;
+    protected float groupAttendanceDuration;
     @ApiModelProperty(value = "组考勤的周")
     protected String groupAttendanceWeek;
     @ApiModelProperty(value = "组考勤的经度")
-    protected String groupAttendanceLongitude;
+    protected float groupAttendanceLongitude;
     @ApiModelProperty(value = "组考勤的维度")
-    protected String groupAttendanceDimension;
+    protected float groupAttendanceDimension;
     @ApiModelProperty(value = "考勤地址")
     protected String groupAddress;
     @ApiModelProperty(value = "组考勤的范围（注：单位米 如1000米）")
-    protected String groupAttendanceScope;
+    protected Integer groupAttendanceScope;
 
     public GroupRule(){
 
@@ -73,11 +73,11 @@ public class GroupRule extends DataEntity<GroupRule> {
         this.groupEnterpriseName = groupEnterpriseName;
     }
 
-    public String getGroupStatus() {
+    public Integer getGroupStatus() {
         return groupStatus;
     }
 
-    public void setGroupStatus(String groupStatus) {
+    public void setGroupStatus(Integer groupStatus) {
         this.groupStatus = groupStatus;
     }
 
@@ -97,35 +97,35 @@ public class GroupRule extends DataEntity<GroupRule> {
         this.groupDailyId = groupDailyId;
     }
 
-    public String getGroupAttendanceWay() {
+    public Integer getGroupAttendanceWay() {
         return groupAttendanceWay;
     }
 
-    public void setGroupAttendanceWay(String groupAttendanceWay) {
+    public void setGroupAttendanceWay(Integer groupAttendanceWay) {
         this.groupAttendanceWay = groupAttendanceWay;
     }
 
-    public String getGroupAttendanceStart() {
+    public Date getGroupAttendanceStart() {
         return groupAttendanceStart;
     }
 
-    public void setGroupAttendanceStart(String groupAttendanceStart) {
+    public void setGroupAttendanceStart(Date groupAttendanceStart) {
         this.groupAttendanceStart = groupAttendanceStart;
     }
 
-    public String getGroupAttendanceEnd() {
+    public Date getGroupAttendanceEnd() {
         return groupAttendanceEnd;
     }
 
-    public void setGroupAttendanceEnd(String groupAttendanceEnd) {
+    public void setGroupAttendanceEnd(Date groupAttendanceEnd) {
         this.groupAttendanceEnd = groupAttendanceEnd;
     }
 
-    public String getGroupAttendanceDuration() {
+    public float getGroupAttendanceDuration() {
         return groupAttendanceDuration;
     }
 
-    public void setGroupAttendanceDuration(String groupAttendanceDuration) {
+    public void setGroupAttendanceDuration(float groupAttendanceDuration) {
         this.groupAttendanceDuration = groupAttendanceDuration;
     }
 
@@ -137,19 +137,19 @@ public class GroupRule extends DataEntity<GroupRule> {
         this.groupAttendanceWeek = groupAttendanceWeek;
     }
 
-    public String getGroupAttendanceLongitude() {
+    public float getGroupAttendanceLongitude() {
         return groupAttendanceLongitude;
     }
 
-    public void setGroupAttendanceLongitude(String groupAttendanceLongitude) {
+    public void setGroupAttendanceLongitude(float groupAttendanceLongitude) {
         this.groupAttendanceLongitude = groupAttendanceLongitude;
     }
 
-    public String getGroupAttendanceDimension() {
+    public float getGroupAttendanceDimension() {
         return groupAttendanceDimension;
     }
 
-    public void setGroupAttendanceDimension(String groupAttendanceDimension) {
+    public void setGroupAttendanceDimension(float groupAttendanceDimension) {
         this.groupAttendanceDimension = groupAttendanceDimension;
     }
 
@@ -161,11 +161,11 @@ public class GroupRule extends DataEntity<GroupRule> {
         this.groupAddress = groupAddress;
     }
 
-    public String getGroupAttendanceScope() {
+    public Integer getGroupAttendanceScope() {
         return groupAttendanceScope;
     }
 
-    public void setGroupAttendanceScope(String groupAttendanceScope) {
+    public void setGroupAttendanceScope(Integer groupAttendanceScope) {
         this.groupAttendanceScope = groupAttendanceScope;
     }
 

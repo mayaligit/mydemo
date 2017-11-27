@@ -189,7 +189,6 @@
         a.group_attendance_way AS "groupAttendanceWay",
         a.group_attendance_week AS "groupAttendanceWeek",
         a.group_address AS "groupAddress",
-        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",

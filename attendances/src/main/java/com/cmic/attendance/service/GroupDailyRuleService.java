@@ -53,4 +53,8 @@ public class GroupDailyRuleService extends CrudService<GroupDailyRuleDao, GroupD
         logger.info("删除：" + groupDailyRule.toJSONString());
     }
 
+    public GroupDailyRule getDailyByGroupRuleId(String groupRuleId){
+        return dao.getDailyByGroupRuleId(groupRuleId);
+    }
+
 }

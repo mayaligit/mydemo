@@ -1,6 +1,7 @@
 package com.cmic.attendance.web;
 
 import com.cmic.attendance.exception.GroupRuleExeption;
+import com.cmic.attendance.model.GroupPersonnel;
 import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.service.GroupRuleService;
 import com.cmic.attendance.vo.GroupRuleVo;
@@ -17,6 +18,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -59,7 +62,7 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     @ResponseBody
     public Map<String,Object> findGroupList(@RequestBody PageInfo page){
 
-        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+        //HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
         //response.setHeader("Access-Control-Allow-Origin", "*");
         int pageNum = page.getPageNum();
         int pageSize = page.getPageSize();
@@ -76,18 +79,25 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     }
 
     @ApiOperation(value = "获取", notes = "获取", httpMethod = "GET")
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
-    public GroupRule get(@ApiParam(value = "ID") @PathVariable String id){
-        GroupRule groupRule = service.get(id);
-        return groupRule;
+    @RequestMapping(value="/getGroupRuleById/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> getGroupRule(@PathVariable String id){
+        Map<String,Object> map = service.findGroupRuleVoById(id);
+        return map;
     }
 
     @ApiOperation(value = "新增/更新", notes = "新增/更新", httpMethod = "PUT")
-    @RequestMapping(value="/{id}", method = RequestMethod.PUT)
-    public GroupRule put(@PathVariable String id, @Validated @RequestBody GroupRule groupRule){
-        groupRule.setId(id);
-        service.save(groupRule);
-        return get(id);
+    @RequestMapping(value="/updateGroupRule/{id}", method = RequestMethod.PUT)
+    public String put(@RequestParam("id")String groupRuleId,@Validated @RequestBody GroupRuleVo groupRuleVo){
+        groupRuleVo.getGroupRule().setId(groupRuleId);
+        //service.save(groupRule);
+        try {
+            service.updateGroupRule(groupRuleVo);
+            return "true";
+        }catch (GroupRuleExeption e){
+
+        }
+        return "ture";
     }
 
     @ApiOperation(value = "动态更新", notes = "动态更新", httpMethod = "PATCH")
@@ -95,13 +105,14 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     public GroupRule patch(@ApiParam(value = "ID") @PathVariable String id, @RequestBody GroupRule groupRule){
         groupRule.setId(id);
         service.dynamicUpdate(groupRule);
-        return get(id);
+        //return get(id);
+        return service.get(id);
     }
 
     @ApiOperation(value = "删除", notes = "删除", httpMethod = "DELETE")
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
-    public void delete(@ApiParam(value = "ID") @PathVariable String id){
-        service.delete(id);
+    @RequestMapping(value="/delGroupRuleById/{id}", method = RequestMethod.DELETE)
+    public void delete(@ApiParam(value = "ID") @PathVariable String id) {
+        service.delByGroupRuleId(id);
     }
 	
 	 /**
