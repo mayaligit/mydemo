@@ -108,7 +108,7 @@ public class DateUtils {
     /**
      * 判断当前日期是星期几
      * @param time
-     * 星期日返回0，星期一返回1....
+     * 星期一返回1....
      * @return
      */
     public static int dayForWeek(Date time){
@@ -116,6 +116,9 @@ public class DateUtils {
             Calendar cal = Calendar.getInstance();
             cal.setTime(time);
             int weekDay = cal.get(Calendar.DAY_OF_WEEK)-1;
+            if(weekDay==0){
+                weekDay=7;
+            }
             return weekDay;
         }catch (Throwable e){
             e.printStackTrace();
@@ -169,4 +172,7 @@ public class DateUtils {
         return value;
     }
 
+    public static void main(String[] args) {
+        System.out.println(dayForWeek(getStringsToDate("2017-11-26")));
+    }
 }
