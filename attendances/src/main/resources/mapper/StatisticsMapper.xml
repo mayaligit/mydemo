@@ -151,35 +151,35 @@
     </delete>
 
 
-    <select id="checkAttendanceHardworkingByDay"  parameterType="Map" resultType="java.util.HashMap" >
+    <select id="checkAttendanceHardworkingByDay"  parameterType="com.cmic.attendance.pojo.StatisticsPojo" resultType="java.util.HashMap" >
 
      SELECT ROUND(SUM(office_time)/60,2) workHour,a.username "create_by"
       FROM t_statistics a
       WHERE
-      1=1 AND DATE_FORMAT(a.update_time,'%Y-%m-%d') = #{date}
+      1=1 AND DATE_FORMAT(a.update_date,'%Y-%m-%d') = #{date}
       AND a.attendance_group = #{attendanceGroup}
       GROUP BY a.create_by
     </select>
 
 
 
-    <select id="checkAttendanceHardworkingByMonth"  parameterType="Map" resultType="java.util.HashMap">
+    <select id="checkAttendanceHardworkingByMonth"  parameterType="com.cmic.attendance.pojo.StatisticsPojo" resultType="java.util.HashMap">
 
         SELECT round(SUM(office_time)/60,2) workHour,a.username "create_by"
         FROM t_statistics a
         WHERE
-        1=1 and DATE_FORMAT(a.update_time,'%Y-%m') = #{date}
+        1=1 and DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
         AND a.attendance_group = #{attendanceGroup}
         GROUP BY a.create_by
     </select>
 
 
-    <select id="checkAttendanceLatterByMonth" parameterType="Map" resultType="java.util.HashMap">
+    <select id="checkAttendanceLatterByMonth" parameterType="com.cmic.attendance.pojo.StatisticsPojo" resultType="java.util.HashMap">
 
         SELECT SUM(late_time) lateTime,a.username "create_by"
         FROM t_statistics a
         WHERE
-        late_time IS NOT NULL and DATE_FORMAT(a.update_time,'%Y-%m') = #{date}
+        late_time IS NOT NULL and DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
         AND a.attendance_group = #{attendanceGroup}
         GROUP BY a.create_by
     </select>
@@ -188,7 +188,7 @@
         SELECT
         <include refid="statisticsColumns"/>
         FROM t_statistics a
-        WHERE a.create_by=#{createBy} AND DATE(a.create_time)=#{createTime}
+        WHERE a.create_by=#{createBy} AND DATE(a.update_date)=#{createTime}
     </select>
 
 </mapper>

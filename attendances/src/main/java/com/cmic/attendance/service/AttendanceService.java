@@ -1,12 +1,10 @@
 package com.cmic.attendance.service;
 
-import com.cmic.attendance.bo.InsetEndStaticBo;
 import com.cmic.attendance.dao.AttendanceDao;
-import com.cmic.attendance.model.Attendance;
-import com.cmic.attendance.model.Clazzes;
-import com.cmic.attendance.model.GroupAddress;
-import com.cmic.attendance.model.Statistics;
+import com.cmic.attendance.exception.AttendanceException;
+import com.cmic.attendance.model.*;
 import com.cmic.attendance.pojo.AttendancePojo;
+import com.cmic.attendance.pojo.StatisticsPojo;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.*;
 import com.cmic.saas.base.service.CrudService;
@@ -45,6 +43,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     private StatisticsService statisticsService;
     @Autowired
     private GroupAddressService groupAddressService;
+    @Autowired
+    private GroupRuleService groupRuleService;
+
 
     public Attendance get(String id) {
         return super.get(id);
@@ -113,25 +114,52 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     /**
      * @param attendanceVo 封装前台数据的bean
      * @return AttendanceVo 封装统一返回信息的bean
-     * //获取规则表
-    Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
      */
     @Transactional(readOnly = false)
-    public Attendance punchCard(AttendanceVo attendanceVo) {
+    public Attendance punchCard(AttendanceVo attendanceVo) throws AttendanceException {
 
-        /*读取规则gui*/
-       /* GroupRule groupRule = groupRuleService.getByGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);*/
+        /*读取规则表
+         *跟考勤组已经启用在状态来获取考勤组信息
+         */
+        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
+        //服务器时间
+        Date startDate = new Date();
+        String compareTime = DateUtils.getDateToHourMinuteS(startDate);
+        String[] compareTimeArry = compareTime.split(":");
+        Integer compareHour = Integer.parseInt(compareTimeArry[0]);
+        Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
 
-        //获取规则表固定
-        Clazzes clazzes = clazzesService.getClazzesById(attendanceVo.getClazzesId());
-        if (clazzes==null){
+        //考勤的周 日期格式1-2-3-4-5-6-7
+        String groupAttendanceWeek = groupRule.getGroupAttendanceWeek();
+        String[] attendanceWeek = groupAttendanceWeek.split("-");
+        String isForWeek = DateUtils.dayForWeek(startDate)+"";
+        List<String> strings = Arrays.asList(attendanceWeek);
+        boolean contains = strings.contains(isForWeek);
+        //不在考勤期内
+        if (!contains){
             //不在考勤日期内直接返回预留业务
-            return null;
-        }else {
+            //判断是否为工作日
+            //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
+            String workDay = DateUtils.getWorkDays(startDate);
+            if(!"0".equals(workDay)){
+                throw new AttendanceException("当前考勤时间不是工作日!");
+            }
+        }
+
+        //在考勤期内，但是当前日期是法定节假日
+        if (contains){
+            //判断是否为工作日
+            //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
+            String workDay = DateUtils.getWorkDays(startDate);
+            if(!"0".equals(workDay)){
+                throw new AttendanceException("节假日不用考勤!");
+            }
+        } else{
             //开始读取考勤组考勤的方式
-            Integer groupAttendanceWay = 1;
+            Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
+            String groupAttendanceWays = groupAttendanceWay + "";
             //一、固定时长
-            if ("1".equals("1")) {
+            if ("1".equals(groupAttendanceWays)) {
                 //判断当前地点是否异常
                 Attendance saveAttendance = new Attendance();
                 String distance2 = attendanceVo.getDistance();
@@ -140,7 +168,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
-                Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
+                Integer groupAttendanceScope = groupRule.getGroupAttendanceScope();
                 if (Integer.parseInt(distances) > groupAttendanceScope) {
                     saveAttendance.setAttendanceStatus("1");
                     saveAttendance.setAttendanceDesc("地点异常");
@@ -149,17 +177,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     //地址重合则会是null或小于都走这里的逻辑
                     saveAttendance.setAttendanceStatus("0");
                 }
-
-                //服务器时间
-                Date startDate = new Date();
-                String compareTime = DateUtils.getDateToHourMinuteS(startDate);
-                String[] compareTimeArry = compareTime.split(":");
-                Integer compareHour = Integer.parseInt(compareTimeArry[0]);
-                Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
-
                 //设计考勤时间
                 /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
-                String groupAttendanceStart = clazzes.getNomalStartTime();
+                String groupAttendanceStart = groupRule.getGroupAttendanceStart()+"";
                 String[] AttendanceStartArry = groupAttendanceStart.split(":");
                 Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
                 Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
@@ -200,10 +220,35 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //返回数据页面
                 return saveAttendance;
             } else {
-                //2、预留自由打卡业务
-                return null;
+                //2、预留自由打卡业务 插入数据
+                Attendance saveAttendance = new Attendance();
+                saveAttendance.setAttendanceUser(attendanceVo.getUsername());
+                Date startTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+                saveAttendance.setStartTime(startTime);
+                String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
+                String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
+                saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0] + "-" +
+                        dateToYearMonthDayArry[1]);
+                saveAttendance.setStartLocation(attendanceVo.getLocation());
+                saveAttendance.setDailyStatus(0);
+                saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());
+                saveAttendance.setStartTimeStatus("0");
+                saveAttendance.setAttendanceCardStatus("2");
+                saveAttendance.setAttendanceLongitude(attendanceVo.getAttendanceLongitude());
+                saveAttendance.setAttendanceDimension(attendanceVo.getAttendanceDimension());
+                this.save(saveAttendance);
+                /*try {
+                    //向统计表插入数据 String CreateBy,String createTime,String userName
+                    insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());
+                } catch (Exception e) {
+                    log.debug("插入统计表失败" + e.getMessage());
+                }*/
+                //返回数据页面
+                return saveAttendance;
             }
         }
+        //考勤异常
+        return null;
     }
 
     //TODO 下班打卡业务
@@ -212,114 +257,103 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
       @return AttendanceEndVo 返回Controller的bean
      */
     @Transactional(readOnly = false)
-    public Attendance punchCardEnd(AttendanceEndVo attendanceEndVo ){
-        /*读取规则gui
-        GroupRule groupRule = groupRuleService.getByGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0);*/
-        //将当前考勤日期转换为星期几
-        //获取规则表固定
-        Clazzes clazzes = clazzesService.getClazzesById(attendanceEndVo.getClazzesId());
+    public Attendance punchCardEnd(AttendanceEndVo attendanceEndVo ) throws AttendanceException {
 
-        if (clazzes==null){
-            //不在考勤日期内直接返回预留业务
-            return null;
-        }else {
-            //开始读取考勤组考勤的方式预留业务
-            Integer groupAttendanceWay = 1;
-            //一、固定时长
-            if ("1".equals("1")) {
+        /*读取规则表
+         *跟考勤组已经启用在状态来获取考勤组信息
+         */
+        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0);
+        //服务器时间
+        Date startDate = new Date();
+        String compareTime = DateUtils.getDateToHourMinuteS(startDate);
+        String[] compareTimeArry = compareTime.split(":");
+        Integer compareHour = Integer.parseInt(compareTimeArry[0]);
+        Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
 
-                //服务器时间
-                Date startDate = new Date();
-                String compareTime = DateUtils.getDateToHourMinuteS(startDate);
-                String[] compareTimeArry = compareTime.split(":");
-                Integer compareHour = Integer.parseInt(compareTimeArry[0]);
-                Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
+        //一、固定时长
+        if ("1".equals(groupRule.getGroupAttendanceWay())){
+            Attendance saveAttendance=null;
+            String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+            //查询当前用户数据是否存在
+            Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
+            if (null==attendance){
+                saveAttendance= new Attendance();
+            }else{
+                saveAttendance=attendance;
+                /*//插入数据 如果上班没打也算异常
+                if (null ==attendance.getStartTime()){
+                      attendance.setAttendanceStatus("1");
+                      attendance.setAttendanceDesc("上班卡没打");
+                }*/
+                saveAttendance.setUpdateDate(startDate);
+            }
 
-                //查询当前用户数据是否存在
-                Attendance saveAttendance=null;
-                String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
-                Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
+            /*//判断当前地点是否异常
+            String distance2 = attendanceEndVo.getDistance();
+            if (distance2 ==null || "".equals(distance2)){
+                distance2="0.0";
+            }
+            String[] split = distance2.split("\\.");
+            String distances=split[0];
+            Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
+            if (Integer.parseInt(distances) > groupAttendanceScope) {
+                saveAttendance.setAttendanceStatus("1");
+                saveAttendance.setAttendanceDesc("地点异常");
 
-                if (null==attendance){
-                    saveAttendance= new Attendance();
-                }else{
-                    saveAttendance=attendance;
-                    /*//插入数据 如果上班没打也算异常
-                    if (null ==attendance.getStartTime()){
-                        attendance.setAttendanceStatus("1");
-                        attendance.setAttendanceDesc("上班卡没打");
-                    }*/
-                    saveAttendance.setUpdateDate(startDate);
-                }
+            } else {
+                //地址重合则会是null或小于都走这里的逻辑
+                saveAttendance.setAttendanceStatus("0");
+            }*/
 
-                //判断当前地点是否异常
-                String distance2 = attendanceEndVo.getDistance();
-                if (distance2 ==null || "".equals(distance2)){
-                    distance2="0.0";
-                }
-                String[] split = distance2.split("\\.");
-                String distances=split[0];
-                Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
-                if (Integer.parseInt(distances) > groupAttendanceScope) {
-                    saveAttendance.setAttendanceStatus("1");
-                    saveAttendance.setAttendanceDesc("地点异常");
+            //设计考勤时间
+            /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
+            String groupAttendanceEnd = groupRule.getGroupAttendanceEnd()+"";
+            String[] AttendanceStartArry = groupAttendanceEnd.split(":");
+            Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
+            Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
 
-                } else {
-                    //地址重合则会是null或小于都走这里的逻辑
-                    saveAttendance.setAttendanceStatus("0");
-                }
-
-                //设计考勤时间
-                /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
-                String groupAttendanceStart = clazzes.getNomalEndTime();
-                String[] AttendanceStartArry = groupAttendanceStart.split(":");
-                Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
-                Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
-
-
-                /*大于或者等18点标准时间则为正常
-                 * 0为打卡正常
-                 * 1为迟到
-                 */
-                if (compareHour>groupAttendanceHour){
+            /*大于或者等18点标准时间则为正常
+             * 0为打卡正常
+             * 1为迟到
+             */
+            if (compareHour>groupAttendanceHour){
+                saveAttendance.setEndTimeStatus("0");
+            }else if (compareHour==groupAttendanceHour){
+                if (compareMinute>groupAttendanceMinute){
                     saveAttendance.setEndTimeStatus("0");
-                }else if (compareHour==groupAttendanceHour){
-                    if (compareMinute>groupAttendanceMinute){
-                        saveAttendance.setEndTimeStatus("0");
-                    }else {
-                        saveAttendance.setEndTimeStatus("1");
-                    }
                 }else {
                     saveAttendance.setEndTimeStatus("1");
                 }
-
-                //插入数据
-                saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
-                Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
-                saveAttendance.setEndTime(endTime);
-                //年月日
-                String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
-                String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
-                saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
-                        dateToYearMonthDayArry[1]);
-                saveAttendance.setEndLocation(attendanceEndVo.getLocation());
-                saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
-
-                //保存数据
-                this.save(saveAttendance);
-                /**
-                 * 统计考勤信息数据
-                 *1、是否早退
-                 *2、打下班卡时间
-                 */
-                //返回数据
-
-                return saveAttendance;
             }else {
-                //二、自由模式。预留业务
-
-                return null;
+                    saveAttendance.setEndTimeStatus("1");
             }
+
+            //插入数据
+            saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
+            Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+            saveAttendance.setEndTime(endTime);
+            //年月日
+            String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
+            String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
+            saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
+                    dateToYearMonthDayArry[1]);
+            saveAttendance.setEndLocation(attendanceEndVo.getLocation());
+            saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
+
+            //保存数据
+            this.save(saveAttendance);
+            /**
+             * 统计考勤信息数据
+             *1、是否早退
+             *2、打下班卡时间
+             */
+            //返回数据
+
+            return saveAttendance;
+        }else {
+            //二、自由模式。预留业务
+
+            return null;
         }
     }
 
@@ -348,10 +382,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         if(page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
-        int pageNum = page.getPageNum();
-        int pageSize = page.getPageSize();
-        PageHelper.startPage(pageNum, pageSize,"startTime");
-
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"startTime");
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
@@ -372,16 +403,15 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         return map;
     }
 
-
-   /* @Autowired
-    private ClazzesDao clazzesDao;*/
-
     /**
      * @author 何家来
      * @return
      * 考勤统计,按日统计迟到榜
      */
-    public Map<String, Object> checkAttendanceLatterByDay(String date, PageInfo page) {
+    public Map<String, Object> checkAttendanceLatterByDay(QueryAttendanceVo queryAttendanceVo) {
+
+        String date = queryAttendanceVo.getDate();
+        PageInfo page = queryAttendanceVo.getPageInfo();
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
@@ -393,17 +423,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         if(page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
-        //获取班次信息
-        Clazzes clazzes = clazzesService.get("c2310c7ec996409b8e91f12daa428a98");
-        String nomalStartTime = clazzes.getNomalStartTime();
 
-        Map<String, Object> param = new HashMap<>();
-        param.put("date",date);
-        param.put("nomalStartTime",nomalStartTime);
-        param.put("attendanceGroup",attendanceGroup);
+        AttendancePojo attendancePojo = new AttendancePojo();
+        attendancePojo.setDate(date);
+        attendancePojo.setAttendanceGroup(attendanceGroup);
         PageHelper.startPage(page.getPageNum(), page.getPageSize(),"startTime DESC");
 
-        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByDay(param);
+        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByDay(attendancePojo);
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
         Map<String, Object> map = new HashMap<>();
@@ -419,8 +445,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      * @return
      * 考勤统计,按日统计出勤率
      */
-    public Map<String,Object> checkAttendanceData(String date) {
+    public Map<String,Object> checkAttendanceData(QueryAttendanceVo queryAttendanceVo) {
 
+        String date = queryAttendanceVo.getDate();
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
@@ -441,33 +468,31 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }
         if(endWork>0){
             map.put("endWorkFlag","1");
+            map.put("startWorkFlag","0");
         }else{
             map.put("endWorkFlag","0");
         }
 
-        String total = clazzes.getTotal().toString();
+        int total = clazzes.getTotal();
         map.put("total",total);
-//        获取当天打卡人数
-        Map workCountMap = new HashMap<>();
-        workCountMap.put("date",date);
-        workCountMap.put("attendanceGroup",attendanceGroup);
-        int workCount = this.dao.getWorkCount(workCountMap);
+
+        AttendancePojo attendancePojo = new AttendancePojo();
+        attendancePojo.setDate(date);
+        attendancePojo.setAttendanceGroup(attendanceGroup);
+//       获取当天打卡人数
+        int workCount = this.dao.getWorkCount(attendancePojo);
         map.put("workCount",workCount);
-        map.put("noWorkCount",Integer.parseInt(total)-workCount);
+        map.put("noWorkCount",total-workCount);
 
 //        获取外勤人数
-        Map outworkCountMap = new HashMap<>();
-        outworkCountMap.put("date",date);
-        outworkCountMap.put("attendanceGroup",attendanceGroup);
-        int outworkCount = this.dao.getOutworkCount(outworkCountMap);
+        int outworkCount = this.dao.getOutworkCount(attendancePojo);
         map.put("outworkCount",outworkCount);
 
 //       当天迟到人数
-        Map<String, Object> param = new HashMap<>();
-        param.put("date",date);
-        param.put("attendanceGroup",attendanceGroup);
-
-        int latterCount = this.dao.getLatterCount(param);
+        StatisticsPojo statisticsPojo = new StatisticsPojo();
+        statisticsPojo.setDate(date);
+        statisticsPojo.setAttendanceGroup(attendanceGroup);
+        int latterCount = this.dao.getLatterCount(statisticsPojo);
         map.put("latterCount",latterCount);
 
         return map;

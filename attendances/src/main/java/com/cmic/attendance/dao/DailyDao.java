@@ -1,6 +1,7 @@
 package com.cmic.attendance.dao;
 
 import com.cmic.attendance.model.Daily;
+import com.cmic.attendance.pojo.DailyPojo;
 import com.cmic.saas.base.dao.CrudDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,4 +22,6 @@ public interface DailyDao extends CrudDao<Daily> {
     void updateDailyAuditById(Map<String,Object> paramMap);
 
     List<Map> findDailyList(Daily daily);
+
+    Daily getDailyByPhoneAndUser(DailyPojo dailyPojo);
 }

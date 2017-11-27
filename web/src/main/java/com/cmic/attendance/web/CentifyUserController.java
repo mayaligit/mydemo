@@ -8,6 +8,7 @@ import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.JSONUtils;
+import com.cmic.saas.utils.WebUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.swagger.annotations.Api;
@@ -85,7 +86,8 @@ public class CentifyUserController {
         String phone = jsonObject.get("msisdn").getAsString();
         String username = jsonObject.get("username").getAsString();
         //获取用户所属企业ID 和 企业名称
-        String sessionId = request.getSession().getId();
+        HttpServletRequest request1 = WebUtils.getRequest();
+        String sessionId = request1.getSession().getId();
         String enterId = rcsToken.getEnterId();
         String enterName = rcsToken.getEnterName();
 
@@ -93,18 +95,15 @@ public class CentifyUserController {
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         adminEntity.setName(username);
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-        AttendanceUserVo attendanceUser=new AttendanceUserVo();
+        request1.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
+        log.debug("登录信息放到session"+adminEntity.getId()+adminEntity.getName());
         //拦截器不拦截，这个session无其他作用
-        String redisKey=phone;
         String jsonBean = JSONUtils.parseObject2JsonString(adminEntity);
-        log.debug(">>>>>>>>>>>>>>>>对象json"+jsonBean+"<<<<<<<<<<<<<<<<<<<");
-        redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set(jsonBean);
-        redisTemplate.expire(phone, 30,TimeUnit.MINUTES);
+        redisTemplate.boundValueOps("phone").set(phone);
+        redisTemplate.expire("phone", 30,TimeUnit.MINUTES);
 
-       /* redisTemplate.boundValueOps("attendanceUser").set("_CURRENT_ADMIN_INFO");
-
-        redisTemplate.expire("attendanceUser", 30, TimeUnit.MINUTES);*/
+        redisTemplate.boundValueOps("username").set(username);
+        redisTemplate.expire("username", 30, TimeUnit.MINUTES);
         return adminEntity;
     }
 

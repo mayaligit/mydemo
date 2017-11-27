@@ -282,7 +282,7 @@
         <include refid="attendanceJoins"/>
         WHERE a.create_by = #{createBy} AND DATE(a.create_date)=#{createDate}
     </select>
-    <select id="checkAttendanceLatterByDay" parameterType="Map" resultType="java.util.HashMap">
+    <select id="checkAttendanceLatterByDay" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="java.util.HashMap">
         SELECT
         DATE_FORMAT(b.start_time,'%Y-%m-%d %H:%i') AS "startTime",
         a.username AS "userName"
@@ -290,12 +290,12 @@
         WHERE 1=1
         AND a.create_by = b.create_by
         AND a.late_time = 1
-        AND DATE(a.create_date) = #{date}
-        AND DATE(b.create_date) = #{date}
+        AND DATE(a.update_date) = #{date}
+        AND DATE(b.update_date) = #{date}
         AND a.attendance_group = #{attendanceGroup}
     </select>
 
-    <select id="getWorkCount" parameterType="Map" resultType="int">
+    <select id="getWorkCount" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="int">
         SELECT
         COUNT(a.`id`) workCount
         FROM t_attendance a
@@ -305,21 +305,21 @@
     </select>
 
 
-    <select id="getLatterCount" parameterType="Map" resultType="int">
+    <select id="getLatterCount" parameterType="com.cmic.attendance.pojo.StatisticsPojo" resultType="int">
         SELECT COUNT(id)
         FROM t_statistics a
         WHERE 1=1 AND a.late_time = 1
-        AND DATE(a.create_date) = #{date}
+        AND DATE(a.update_date) = #{date}
         AND a.attendance_group = #{attendanceGroup}
     </select>
 
-    <select id="getOutworkCount" parameterType="Map" resultType="int">
+    <select id="getOutworkCount" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="int">
         SELECT
         COUNT(a.`id`) outworkCount
         FROM t_attendance a
         WHERE 1 = 1
         and a.attendance_status = "2"
-        and DATE(a.`create_date`) = #{date}
+        and DATE(a.`update_date`) = #{date}
         AND a.attendance_group = #{attendanceGroup}
     </select>
 

@@ -58,6 +58,25 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         super.dynamicUpdate(groupRule);
     }
 
+    @Transactional(readOnly = false)
+    public void delete(String id) {
+        //判断是否存在
+        GroupRule groupRule = get(id);
+        if(groupRule==null|| StringUtils.isEmpty(groupRule.getId())){
+            throw new RestException("删除失败，不存在");
+        }
+        super.delete(id);
+        logger.info("删除：" + groupRule.toJSONString());
+    }
+
+    /**
+     * 根据组名以及启用状态获取考勤组信息
+     *
+     */
+    public GroupRule findGroupNameAndGroupStatus(String groupName,int groupStatus){
+        System.out.println("groupName=="+groupName+"groupStatus=="+groupStatus);
+        return dao.getByGroupNameAndGroupStatus(groupName,groupStatus);
+    }
 	/*
      插入考勤组规则数据
      */

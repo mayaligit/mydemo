@@ -195,4 +195,12 @@
         a.update_date AS "updateDate"
         from t_group_rule a
     </select>
+
+    <select id="getByGroupNameAndGroupStatus" resultType="GroupRule">
+        SELECT
+        <include refid="groupRuleColumns"/>
+        FROM t_group_rule a
+        <include refid="groupRuleJoins"/>
+        WHERE a.group_name =#{groupName} AND a.group_status=#{groupStatus}
+    </select>
 </mapper>

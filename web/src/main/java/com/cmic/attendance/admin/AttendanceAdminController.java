@@ -6,7 +6,6 @@ import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.vo.QueryAttendanceVo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -123,11 +122,8 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceByDay",method = RequestMethod.POST)
 //    @ResponseBody
-    public Map<String,Object> checkAttendanceByDay(HttpServletResponse response,@RequestBody QueryAttendanceVo queryAttendanceVo) {
+    public Map<String,Object> checkAttendanceByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
-
-        
-       /* response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, Object> map = service.checkAttendanceByDay(queryAttendanceVo);
         return map;
     }
@@ -140,10 +136,9 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceLatterByDay",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> checkAttendanceLatterByDay(HttpServletResponse response,String date, @RequestBody PageInfo page) {
+    public Map<String,Object> checkAttendanceLatterByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
-        /*response.setHeader("Access-Control-Allow-Origin", "*");*/
-        Map<String, Object> map = service.checkAttendanceLatterByDay(date, page);
+        Map<String, Object> map = service.checkAttendanceLatterByDay(queryAttendanceVo);
         return map;
     }
 
@@ -155,10 +150,9 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "GET")
     @RequestMapping(value="/checkAttendanceData",method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> checkAttendanceData(HttpServletResponse response, String date) {
+    public Map<String,Object> checkAttendanceData(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
-       /* response.setHeader("Access-Control-Allow-Origin", "*");*/
-        Map<String,Object> map = service.checkAttendanceData(date);
+        Map<String,Object> map = service.checkAttendanceData(queryAttendanceVo);
         return map;
     }
 

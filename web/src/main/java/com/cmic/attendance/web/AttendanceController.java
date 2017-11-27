@@ -1,5 +1,6 @@
 package com.cmic.attendance.web;
 
+import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.GroupAddress;
 import com.cmic.attendance.service.AttendanceService;
@@ -21,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -106,21 +108,23 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
-        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        //将用户信息封装到实体类中,并放入session域中
+       /* response.setHeader("Access-Control-Allow-Origin", "*");*/
+        /*//将用户信息封装到实体类中,并放入session域中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
-        HttpServletRequest request = WebUtils.getRequest();
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-       //测试数据结束
-        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+       //测试数据结束*/
+       /* HttpServletRequest request = WebUtils.getRequest();
+        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");*/
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
-        Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
+        String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();
+        log.debug("redis中对象user"+phone+""+username);
+        Attendance DBattendance=service.checkAttendance(phone,serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime() ){
             log.debug("用户已经打过卡了");
@@ -167,11 +171,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setIsAttendanceStart("1");
             attendanceVo.setIsAttendanceEnd("1");
         }
-        attendanceVo.setUsername(user.getName());
+        attendanceVo.setUsername(username);
         //返回多地址打卡数据
         ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
+        //返回用户组信息(预留业务)
+        attendanceVo.setAttendanceGroup("odc");
         attendanceVo.setAddressList(allGroupAddress);
-        attendanceVo.setPhone(user.getId());
+        attendanceVo.setPhone(phone);
         attendanceVo.setDate(serverDate);
         attendanceVo.setServerTime(serverTimes.toString());
         return attendanceVo;
@@ -182,9 +188,20 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @ApiOperation(value = "上班打卡", notes = "上班打卡接口", httpMethod = "POST")
     @RequestMapping(value = "/punchCardStart",method = RequestMethod.POST)
     public AttendanceVo punchCardStart(@RequestBody AttendanceVo attendanceVo){
-        attendanceVo.setClazzesId(this.clazzesId);
-        Attendance attendanceBo = service.punchCard(attendanceVo);
+        String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();
+        attendanceVo.setAttendanceGroup("odc");
+        attendanceVo.setUsername(username);
+        attendanceVo.setPhone(phone);
+
+        Attendance attendanceBo = null;
         AttendanceVo resultAttendanceVo =new AttendanceVo();
+        try {
+            attendanceBo = service.punchCard(attendanceVo);
+            resultAttendanceVo.setAttendanceDayStatus("0");
+        }catch (AttendanceException e){
+            resultAttendanceVo.setAttendanceDayStatus("1");
+        }
         resultAttendanceVo.setAttendanceId(attendanceBo.getId());
         resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
         resultAttendanceVo.setPhone(attendanceVo.getPhone());
@@ -209,9 +226,21 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public AttendanceEndVo punchCardEnd(@RequestBody AttendanceEndVo attendanceEndVo){
         HttpServletResponse response =WebUtils.getRequestAttributes().getResponse();
         /*response.setHeader("Access-Control-Allow-Origin", "*");*/
-        attendanceEndVo.setClazzesId(this.clazzesId);
-        Attendance attendanceBo = service.punchCardEnd(attendanceEndVo);
+
+        String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();
+        attendanceEndVo.setAttendanceGroup("odc");
+        attendanceEndVo.setUsername(username);
+        attendanceEndVo.setPhone(phone);
+
         AttendanceEndVo resultAttendanceVo=new AttendanceEndVo();
+        Attendance attendanceBo = null;
+        try{
+            attendanceBo = service.punchCardEnd(attendanceEndVo);
+            resultAttendanceVo.setAttendanceDayStatus("0");
+        }catch (AttendanceException e){
+            resultAttendanceVo.setAttendanceDayStatus("1");
+        }
         resultAttendanceVo.setAttendanceId(attendanceBo.getId());
         resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
         resultAttendanceVo.setPhone(attendanceEndVo.getPhone());
