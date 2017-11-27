@@ -109,13 +109,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public AttendanceVo getStartServerMesg() {
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
        /* response.setHeader("Access-Control-Allow-Origin", "*");*/
-        //将用户信息封装到实体类中,并放入session域中
+        /*//将用户信息封装到实体类中,并放入session域中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
-        HttpServletRequest request = WebUtils.getRequest();
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-       //测试数据结束
+       //测试数据结束*/
+        HttpServletRequest request = WebUtils.getRequest();
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
