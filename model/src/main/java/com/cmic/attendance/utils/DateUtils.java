@@ -112,7 +112,6 @@ public class DateUtils {
      * @return
      */
     public static int dayForWeek(Date time){
-        String date = getDateToYearMonthDay(time);
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(time);
