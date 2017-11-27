@@ -128,10 +128,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Date startDate = new Date();
         if (clazzes==null){
             //不在考勤日期内直接返回预留业务
-            String compareTime = DateUtils.getDateToYearMonthDay(startDate);
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
-            String workDay = DateUtils.getWorkDays(compareTime);
+            String workDay = DateUtils.getWorkDays(startDate);
             if(!"0".equals(workDay)){
                 throw new AttendanceException("当前考勤时间不是工作日!");
             }
@@ -229,10 +228,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Date startDate = new Date();
         if (clazzes==null){
             //不在考勤日期内直接返回预留业务
-            String compareTime = DateUtils.getDateToYearMonthDay(startDate);
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
-            String workDay = DateUtils.getWorkDays(compareTime);
+            String workDay = DateUtils.getWorkDays(startDate);
             if(!"0".equals(workDay)){
                 throw new AttendanceException("当前考勤时间不是工作日!");
             }
