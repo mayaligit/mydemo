@@ -16,5 +16,5 @@ public interface GroupRuleDao extends CrudDao<GroupRule> {
 
     List<Map> findGroupRuleList(Map<String,Object> paramMap);
 
-    GroupRule getByGroupNameAndGroupStatus(String groupName,int groupStatus);
+    GroupRule getByGroupNameAndGroupStatus(String groupName,Integer groupStatus);
 }
