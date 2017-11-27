@@ -3,6 +3,8 @@ package com.cmic.attendance.service;
 import com.cmic.attendance.dao.DailyDao;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Daily;
+import com.cmic.attendance.pojo.DailyPojo;
+import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.DailyVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
@@ -66,46 +68,59 @@ public class DailyService extends CrudService<DailyDao, Daily> {
     public String insertDailyAndAttendance(DailyVo dailyVo){
 
         HttpServletRequest request = WebUtils.getRequest();
-        System.out.println("===========================考勤id======================= = " + dailyVo.getAttendanceId());
-        if(this.dao.getDailyByAttendanceId(dailyVo.getAttendanceId())!=null){
-            return "0";
+        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        System.out.println("===========================考勤id"+ dailyVo.getAttendanceId()+"========================");
+        if (null == user ) {
+            return "1";//登录超时
+        }
+        System.out.println("=============手机号码phone:"+user.getId()+"==============前端传过来的日期:updateDate:"+user.getId()+"======================== ");
+        String date = dailyVo.getDate();//前端传过来的日期,格式：2017-11-11
+        DailyPojo dailyPojo = new DailyPojo();
+        dailyPojo.setDate(date);
+        dailyPojo.setPhone(user.getId());
+        Daily daily = this.dao.getDailyByPhoneAndUser(dailyPojo);//根据手机号码和日期查询当天日报是否存在
+        if(daily!= null){
+            return "0";//日报已存在
         }
 
-        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        String dateToHourMinuteS = DateUtils.getDateToHourMinuteS(new Date());//获取当前时间的时分秒：格式：HH:mm:ss
+        Date date1 = DateUtils.getStringsToDates(date+ " "+dateToHourMinuteS);//拼接时间，格式为：yyyy-MM-dd HH:mm:ss
 
         dailyVo.setSuggestionStatus(1);//意见状态设置为未阅
         dailyVo.setExaminer("陈华龙");
         dailyVo.preInsert();
+        dailyVo.setSubmitTime(date1);
+        dailyVo.setCreateDate(date1);
+        dailyVo.setUpdateDate(date1);
 
-        Attendance attendance = attendanceService.get(dailyVo.getAttendanceId());
+        Attendance attendance = attendanceService.checkAttendance(user.getId(), date);
 //        考勤不存在则插入
         if (attendance==null){
             attendance = new Attendance();
-            if (null == user ) {
-                return "1";
-            }
+            attendance.setCreateDate(date1);
+            attendance.setUpdateDate(date1);
             attendance.setAttendanceStatus("1");
             attendance.setDailyStatus(1);
             Calendar cal = Calendar.getInstance();
             Integer month = cal.get(Calendar.MONTH )+1;
             attendance.setAttendanceMonth(cal.get(Calendar.YEAR )+"-"+month.toString());
             attendance.setAttendanceUser(user.getName());
-//            attendance.setAttendanceUser("陈华龙");//测试数据
-            attendanceService.save(attendance);
+//          attendance.setAttendanceUser("陈华龙");//测试数据
+            attendanceService.save(attendance);//插入考勤
         }else{
+            attendance.setUpdateDate(date1);
             attendance.setUpdateDate(new Date());
             attendance.setDailyStatus(1);
             attendance.setAttendanceUser(user.getName());
-//            attendance.setAttendanceUser("陈华龙");//测试数据
-            attendanceService.update(attendance);
+//          attendance.setAttendanceUser("陈华龙");//测试数据
+            attendanceService.update(attendance);//更新考勤
         }
         dailyVo.setAttendanceId(attendance.getId());
         dailyVo.setExamineTime(dailyVo.getCreateDate());
         dailyVo.setUsername(user.getName());
         dailyVo.setAttendanceGroup("odc");//测试数据，暂时写死
-
-//        dailyVo.setUsername("陈华龙");//测试数据
-        this.save(dailyVo);
+//      dailyVo.setUsername("陈华龙");//测试数据
+        this.save(dailyVo);//插入日报
         return null;
     }
 
