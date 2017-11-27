@@ -97,12 +97,11 @@ public class CentifyUserController {
         adminEntity.setName(username);
         request1.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
         log.debug("登录信息放到session"+adminEntity);
-        /*AttendanceUserVo attendanceUser=new AttendanceUserVo();*/
         //拦截器不拦截，这个session无其他作用
-       /* String redisKey=phone;
+        String redisKey=phone;
         String jsonBean = JSONUtils.parseObject2JsonString(adminEntity);
         redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set(jsonBean);
-        redisTemplate.expire(phone, 30,TimeUnit.MINUTES);*/
+        redisTemplate.expire(phone, 30,TimeUnit.MINUTES);
 
        /* redisTemplate.boundValueOps("attendanceUser").set("_CURRENT_ADMIN_INFO");
 

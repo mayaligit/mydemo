@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -114,13 +115,16 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         adminEntity.setName("梁渝");
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
        //测试数据结束*/
-        HttpServletRequest request = WebUtils.getRequest();
-        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+
+       /* HttpServletRequest request = WebUtils.getRequest();
+        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");*/
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
-        log.debug("会话是否为空"+user);
+        BoundValueOperations current_admin = redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO");
+        List<BaseAdminEntity> baseAdminEntities = JSONUtils.parseArray(current_admin.toString(), BaseAdminEntity.class);
+        BaseAdminEntity user = baseAdminEntities.get(0);
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime() ){
