@@ -77,7 +77,10 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
      */
     public GroupRule findGroupNameAndGroupStatus(String groupName,Integer groupStatus){
         System.out.println("groupNamesh组名== "+groupName+"<<<<<>>>>>>>groupStatus== "+groupStatus);
-        return dao.getGroupRuleByGroupName(groupName,groupStatus);
+        HashMap<String,Object> paramMap=new HashMap<>();
+        paramMap.put("groupName",groupName);
+        paramMap.put("groupStatus",groupStatus);
+        return dao.getGroupRuleByGroupName(paramMap);
     }
 	/*
      插入考勤组规则数据
