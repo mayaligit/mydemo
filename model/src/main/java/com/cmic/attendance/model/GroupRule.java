@@ -18,36 +18,28 @@ public class GroupRule extends DataEntity<GroupRule> {
     @ApiModelProperty(value = "企业名称(保留字段)")
     protected String groupEnterpriseName;
     @ApiModelProperty(value = "0/启用 1/停用 默认1")
-  
     protected Integer groupStatus;
     @ApiModelProperty(value = "生效时间从-至 至的话默认2099年")
     protected Date groupDeadline;
     @ApiModelProperty(value = "考勤组启用日报模板ID")
     protected String groupDailyId;
-    @ApiModelProperty(value = "考勤方式 0/自由 1/时长")
-  
+    @ApiModelProperty(value = "考勤方式 0/自由 1/时长", example = " ")
     protected Integer groupAttendanceWay;
     @ApiModelProperty(value = "组考勤上班时间")
- 
     protected Date groupAttendanceStart;
     @ApiModelProperty(value = "组考勤下班时间")
- 
     protected Date groupAttendanceEnd;
     @ApiModelProperty(value = "考勤的时长（注：单位小时，如8.5小时)")
-   
-    protected float groupAttendanceDuration;
+    protected Float groupAttendanceDuration;
     @ApiModelProperty(value = "组考勤的周")
     protected String groupAttendanceWeek;
     @ApiModelProperty(value = "组考勤的经度")
-   itude;
-    protected float groupAttendanceLongitude;
+    protected Float groupAttendanceLongitude;
     @ApiModelProperty(value = "组考勤的维度")
- 
-    protected float groupAttendanceDimension;
+    protected Float groupAttendanceDimension;
     @ApiModelProperty(value = "考勤地址")
     protected String groupAddress;
     @ApiModelProperty(value = "组考勤的范围（注：单位米 如1000米）")
-
     protected Integer groupAttendanceScope;
 
     public GroupRule(){
@@ -129,11 +121,11 @@ public class GroupRule extends DataEntity<GroupRule> {
         this.groupAttendanceEnd = groupAttendanceEnd;
     }
 
-    public float getGroupAttendanceDuration() {
+    public Float getGroupAttendanceDuration() {
         return groupAttendanceDuration;
     }
 
-    public void setGroupAttendanceDuration(float groupAttendanceDuration) {
+    public void setGroupAttendanceDuration(Float groupAttendanceDuration) {
         this.groupAttendanceDuration = groupAttendanceDuration;
     }
 
@@ -145,19 +137,19 @@ public class GroupRule extends DataEntity<GroupRule> {
         this.groupAttendanceWeek = groupAttendanceWeek;
     }
 
-    public float getGroupAttendanceLongitude() {
+    public Float getGroupAttendanceLongitude() {
         return groupAttendanceLongitude;
     }
 
-    public void setGroupAttendanceLongitude(float groupAttendanceLongitude) {
+    public void setGroupAttendanceLongitude(Float groupAttendanceLongitude) {
         this.groupAttendanceLongitude = groupAttendanceLongitude;
     }
 
-    public float getGroupAttendanceDimension() {
+    public Float getGroupAttendanceDimension() {
         return groupAttendanceDimension;
     }
 
-    public void setGroupAttendanceDimension(float groupAttendanceDimension) {
+    public void setGroupAttendanceDimension(Float groupAttendanceDimension) {
         this.groupAttendanceDimension = groupAttendanceDimension;
     }
 
