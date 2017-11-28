@@ -121,7 +121,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
-        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
+        List<GroupRule> groupNameAndGroupStatus = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
+        GroupRule groupRule = groupNameAndGroupStatus.get(0);
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+groupRule+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         //服务器时间
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
@@ -159,6 +161,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
             String groupAttendanceWays = groupAttendanceWay + "";
             //一、固定时长
+            log.debug("进入打卡业务");
             if ("1".equals(groupAttendanceWays)) {
                 //判断当前地点是否异常
                 Attendance saveAttendance = new Attendance();
@@ -262,7 +265,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
-        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0);
+        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0).get(0);
         //服务器时间
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
