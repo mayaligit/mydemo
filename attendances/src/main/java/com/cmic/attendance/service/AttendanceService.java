@@ -274,10 +274,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String[] compareTimeArry = compareTime.split(":");
         Integer compareHour = Integer.parseInt(compareTimeArry[0]);
         Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
-        log.debug("11111111111111111111111>>>"+groupRule.getGroupAttendanceWay());
+        String groupAttendanceWay = groupRule.getGroupAttendanceWay()+"";
         //一、固定时长
         if ("1".equals(groupRule.getGroupAttendanceWay())){
-            log.debug("进入打卡业务@@@@@@@@@@@@@@@@@@@@@>>>"+groupRule.getGroupAttendanceWay());
+            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入固定打卡业务<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             Attendance saveAttendance=null;
             String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
             //查询当前用户数据是否存在
@@ -360,7 +360,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return saveAttendance;
         }else {
             //二、自由模式。预留业务
-
+            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             return null;
         }
     }
