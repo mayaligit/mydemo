@@ -280,13 +280,22 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Integer compareHour = Integer.parseInt(compareTimeArry[0]);
         Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
         String groupAttendanceWay = groupRule.getGroupAttendanceWay()+"";
+        Attendance saveAttendance=null;
+        String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+        //查询当前用户数据是否存在
+        Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
+        Date startTime = attendance.getStartTime();
+        Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+        double timesBetween = endTime.getTime()-startTime.getTime();
+        double workTime=timesBetween/(60*60*1000);
+        BigDecimal bd = new BigDecimal(workTime);
+        //四舍五入保留一位小数
+        workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+        //上班时长
+        float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
         //一、固定时长
         if ("1".equals(groupAttendanceWay)){
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入固定打卡业务<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            Attendance saveAttendance=null;
-            String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
-            //查询当前用户数据是否存在
-            Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
             if (null==attendance){
                 saveAttendance= new Attendance();
             }else{
@@ -339,83 +348,45 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     saveAttendance.setEndTimeStatus("1");
             }
 
-            //插入数据
-            saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
-            Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
-            saveAttendance.setEndTime(endTime);
-            //年月日
-            String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
-            String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
-            saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
-                    dateToYearMonthDayArry[1]);
-            saveAttendance.setAttendanceCardStatus("0");
-            saveAttendance.setEndLocation(attendanceEndVo.getLocation());
-            saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
-            saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
-            saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
-            //保存数据
-            this.save(saveAttendance);
-            /**
-             * 统计考勤信息数据
-             *1、是否早退
-             *2、打下班卡时间
-             */
-            //返回数据
-            String id = saveAttendance.getId();
-            saveAttendance.setId(id);
-            return saveAttendance;
         }else {
             //二、自由模式。预留业务
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            Attendance saveAttendance=null;
-            String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
-            //查询当前用户数据是否存在
-            Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
             if (null==attendance){
                 saveAttendance= new Attendance();
             }else{
                 saveAttendance=attendance;
-                Date startTime = attendance.getStartTime();
-                Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
-                double timesBetween = endTime.getTime()-startTime.getTime();
-                double daysBetween=timesBetween/(60*60*1000);
-                BigDecimal bd = new BigDecimal(daysBetween);
-                //四舍五入保留一位小数
-                daysBetween = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
                 //获取考勤的时长
                 double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
                 //比较实际考勤时长与规则时长
-                if(daysBetween - groupAttendanceDuration > 0){
+                if(workTime - groupAttendanceDuration > 0){
                     saveAttendance.setEndTimeStatus("0");
                 }else {
                     saveAttendance.setEndTimeStatus("1");
                 }
                 saveAttendance.setUpdateDate(startDate);
             }
-            //插入数据
-            saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
-            Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
-            saveAttendance.setEndTime(endTime);
-            //年月日
-            String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
-            String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
-            saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
-                    dateToYearMonthDayArry[1]);
-            saveAttendance.setAttendanceCardStatus("0");
-            saveAttendance.setEndLocation(attendanceEndVo.getLocation());
-            saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
-            saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
-            saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
-            saveAttendance.setDailyStatus(0);
-            saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
-            saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
-            //保存数据
-            this.save(saveAttendance);
-            //返回数据
-            String id = saveAttendance.getId();
-            saveAttendance.setId(id);
-            return saveAttendance;
         }
+        //插入数据
+        saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
+        saveAttendance.setEndTime(endTime);
+        saveAttendance.setAttendanceWorkTime(attendanceWorkTime);
+        //年月日
+        String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
+        String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
+        saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
+                dateToYearMonthDayArry[1]);
+        saveAttendance.setAttendanceCardStatus("0");
+        saveAttendance.setEndLocation(attendanceEndVo.getLocation());
+        saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
+        saveAttendance.setDailyStatus(0);
+        saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
+        saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
+        //保存数据
+        this.save(saveAttendance);
+        //返回数据
+        String id = saveAttendance.getId();
+        saveAttendance.setId(id);
+        return saveAttendance;
     }
 
     /**
