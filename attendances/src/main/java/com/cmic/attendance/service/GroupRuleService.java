@@ -5,8 +5,10 @@ import com.cmic.attendance.exception.GroupRuleExeption;
 import com.cmic.attendance.model.*;
 import com.cmic.attendance.vo.GroupRuleVo;
 import com.cmic.saas.base.service.CrudService;
+import com.cmic.saas.base.web.RestException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -387,20 +389,6 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
         logger.info("删除：" + groupRule.toJSONString());
     }
-
-    /*@Transactional(readOnly = false)
-    public void delete(String id) {
-        //判断是否存在
-        GroupRule groupRule = get(id);
-        if(groupRule==null|| StringUtils.isEmpty(groupRule.getId())) {
-            throw new RestException("删除失败，不存在");
-        }
-        //删除考勤人员
-        groupPersonnelService.delete(id);
-        super.delete(id);
-        logger.info("删除：" + groupRule.toJSONString());
-
-    }*/
 
 }
 

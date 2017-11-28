@@ -39,7 +39,7 @@ public class GroupRule extends DataEntity<GroupRule> {
     @ApiModelProperty(value = "组考勤的周")
     protected String groupAttendanceWeek;
     @ApiModelProperty(value = "组考勤的经度")
-   itude;
+
     protected float groupAttendanceLongitude;
     @ApiModelProperty(value = "组考勤的维度")
  
