@@ -157,6 +157,7 @@
             #{attendanceGroup},
             #{endTimeStatus},
             #{startTimeStatus},
+            #{attendanceCardStatus},
             #{attendanceLongitudeStart},
             #{attendanceDimensionStart},
             #{attendanceLongitudeEnd},
@@ -191,7 +192,6 @@
         attendance_longitude_end = #{attendanceLongitudeEnd},
         attendance_dimension_end = #{attendanceDimensionEnd},
         remarks = #{remarks},
-        create_by = #{createBy.id},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
