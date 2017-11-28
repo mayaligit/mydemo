@@ -214,6 +214,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setAttendanceCardStatus("2");
                 saveAttendance.setStartLocation(attendanceVo.getLocation());
                 saveAttendance.setDailyStatus(0);
+                saveAttendance.setAttendanceDimensionStart(attendanceVo.getAttendanceDimension());
+                saveAttendance.setAttendanceLongitudeStart(attendanceVo.getAttendanceLongitude());
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
                 /*try {
