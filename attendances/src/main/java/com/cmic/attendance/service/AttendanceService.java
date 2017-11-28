@@ -211,6 +211,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
                 saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0] + "-" +
                         dateToYearMonthDayArry[1]);
+                saveAttendance.setAttendanceCardStatus("2");
                 saveAttendance.setStartLocation(attendanceVo.getLocation());
                 saveAttendance.setDailyStatus(0);
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
@@ -268,7 +269,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          */
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0);
         //服务器时间
-        log.debug("111111111111111111111查询回来的对象>>>"+groupRule.getGroupAttendanceWay());
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
         String[] compareTimeArry = compareTime.split(":");
@@ -343,6 +343,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
             saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
                     dateToYearMonthDayArry[1]);
+            saveAttendance.setAttendanceCardStatus("0");
             saveAttendance.setEndLocation(attendanceEndVo.getLocation());
             saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
 
@@ -356,11 +357,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             //返回数据
             String id = saveAttendance.getId();
             saveAttendance.setId(id);
-            log.debug("考勤表的ID》》》》》》"+id);
             return saveAttendance;
         }else {
             //二、自由模式。预留业务
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+
+
             return null;
         }
     }

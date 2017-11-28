@@ -41,10 +41,14 @@ public class Attendance extends DataEntity<Attendance> {
     protected String startTimeStatus;
     @ApiModelProperty(value = "0/正常，1/缺上班卡，2/缺下班卡")
     protected String attendanceCardStatus;
-    @ApiModelProperty(value = "考勤打卡的经度")
-    protected String attendanceLongitude;
-    @ApiModelProperty(value = "考勤打卡的维度")
-    protected String attendanceDimension;
+    @ApiModelProperty(value = "上班打卡的经度")
+    protected String attendanceLongitudeStart;
+    @ApiModelProperty(value = "上班打卡的维度")
+    protected String attendanceDimensionStart;
+    @ApiModelProperty(value = "下班打卡的经度")
+    protected String attendanceLongitudeEnd;
+    @ApiModelProperty(value = "下班打卡的维度")
+    protected String attendanceDimensionEnd;
 
     public Attendance(){
 
@@ -173,21 +177,35 @@ public class Attendance extends DataEntity<Attendance> {
         this.attendanceCardStatus = attendanceCardStatus;
     }
 
-    public String getAttendanceLongitude() {
-        return attendanceLongitude;
+    public String getAttendanceLongitudeStart() {
+        return attendanceLongitudeStart;
     }
 
-    public void setAttendanceLongitude(String attendanceLongitude) {
-        this.attendanceLongitude = attendanceLongitude;
+    public void setAttendanceLongitudeStart(String attendanceLongitudeStart) {
+        this.attendanceLongitudeStart = attendanceLongitudeStart;
     }
 
-    public String getAttendanceDimension() {
-        return attendanceDimension;
+    public String getAttendanceDimensionStart() {
+        return attendanceDimensionStart;
     }
 
-    public void setAttendanceDimension(String attendanceDimension) {
-        this.attendanceDimension = attendanceDimension;
+    public void setAttendanceDimensionStart(String attendanceDimensionStart) {
+        this.attendanceDimensionStart = attendanceDimensionStart;
     }
 
+    public String getAttendanceLongitudeEnd() {
+        return attendanceLongitudeEnd;
+    }
 
+    public void setAttendanceLongitudeEnd(String attendanceLongitudeEnd) {
+        this.attendanceLongitudeEnd = attendanceLongitudeEnd;
+    }
+
+    public String getAttendanceDimensionEnd() {
+        return attendanceDimensionEnd;
+    }
+
+    public void setAttendanceDimensionEnd(String attendanceDimensionEnd) {
+        this.attendanceDimensionEnd = attendanceDimensionEnd;
+    }
 }
