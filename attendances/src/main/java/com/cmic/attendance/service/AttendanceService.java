@@ -121,8 +121,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
-        List<GroupRule> groupNameAndGroupStatus = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
-        GroupRule groupRule = groupNameAndGroupStatus.get(0);
+        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+groupRule+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         //服务器时间
         Date startDate = new Date();
@@ -265,7 +264,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
-        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0).get(0);
+        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0);
         //服务器时间
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
