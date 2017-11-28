@@ -276,7 +276,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
         String groupAttendanceWay = groupRule.getGroupAttendanceWay()+"";
         //一、固定时长
-        if ("1".equals(groupRule.getGroupAttendanceWay())){
+        if ("1".equals(groupAttendanceWay)){
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入固定打卡业务<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             Attendance saveAttendance=null;
             String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
