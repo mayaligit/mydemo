@@ -183,7 +183,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 }
                 //设计考勤时间
                 /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
-                String groupAttendanceStart = groupRule.getGroupAttendanceStart()+"";
+                String groupAttendanceStart = groupRule.getGroupAttendanceStart();
                 String[] AttendanceStartArry = groupAttendanceStart.split(":");
                 Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
                 Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);

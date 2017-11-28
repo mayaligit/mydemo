@@ -26,9 +26,9 @@ public class GroupRule extends DataEntity<GroupRule> {
     @ApiModelProperty(value = "考勤方式 0/自由 1/时长")
     protected Integer groupAttendanceWay;
     @ApiModelProperty(value = "组考勤上班时间")
-    protected Date groupAttendanceStart;
+    protected String groupAttendanceStart;
     @ApiModelProperty(value = "组考勤下班时间")
-    protected Date groupAttendanceEnd;
+    protected String groupAttendanceEnd;
     @ApiModelProperty(value = "考勤的时长（注：单位小时，如8.5小时)")
     protected float groupAttendanceDuration;
     @ApiModelProperty(value = "组考勤的周")
@@ -105,19 +105,19 @@ public class GroupRule extends DataEntity<GroupRule> {
         this.groupAttendanceWay = groupAttendanceWay;
     }
 
-    public Date getGroupAttendanceStart() {
+    public String getGroupAttendanceStart() {
         return groupAttendanceStart;
     }
 
-    public void setGroupAttendanceStart(Date groupAttendanceStart) {
+    public void setGroupAttendanceStart(String groupAttendanceStart) {
         this.groupAttendanceStart = groupAttendanceStart;
     }
 
-    public Date getGroupAttendanceEnd() {
+    public String getGroupAttendanceEnd() {
         return groupAttendanceEnd;
     }
 
-    public void setGroupAttendanceEnd(Date groupAttendanceEnd) {
+    public void setGroupAttendanceEnd(String groupAttendanceEnd) {
         this.groupAttendanceEnd = groupAttendanceEnd;
     }
 
