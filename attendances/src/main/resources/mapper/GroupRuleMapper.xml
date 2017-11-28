@@ -193,7 +193,6 @@
         a.update_date AS "updateDate"
         from t_group_rule a
     </select>
-
     <select id="getGroupRuleByGroupName" resultType="GroupRule">
         SELECT
         <include refid="groupRuleColumns"/>
