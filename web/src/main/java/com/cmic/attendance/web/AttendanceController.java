@@ -241,7 +241,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }catch (AttendanceException e){
             resultAttendanceVo.setAttendanceDayStatus("1");
         }
-        resultAttendanceVo.setAttendanceId(attendanceBo.getId());
         resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
         resultAttendanceVo.setPhone(attendanceEndVo.getPhone());
         resultAttendanceVo.setAttendanceStatus(attendanceBo.getAttendanceStatus());

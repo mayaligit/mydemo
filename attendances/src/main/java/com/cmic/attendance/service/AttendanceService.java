@@ -352,7 +352,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
              *2、打下班卡时间
              */
             //返回数据
-
+            String id = saveAttendance.getId();
+            saveAttendance.setId(id);
+            log.debug("考勤表的ID》》》》》》"+id);
             return saveAttendance;
         }else {
             //二、自由模式。预留业务
