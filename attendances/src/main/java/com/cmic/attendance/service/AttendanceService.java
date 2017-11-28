@@ -239,8 +239,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());
                 saveAttendance.setStartTimeStatus("0");
                 saveAttendance.setAttendanceCardStatus("2");
-                saveAttendance.setAttendanceLongitude(attendanceVo.getAttendanceLongitude());
-                saveAttendance.setAttendanceDimension(attendanceVo.getAttendanceDimension());
+                saveAttendance.setAttendanceDimensionStart(attendanceVo.getAttendanceDimension());
+                saveAttendance.setAttendanceLongitudeStart(attendanceVo.getAttendanceLongitude());
                 this.save(saveAttendance);
                 /*try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
@@ -346,7 +346,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             saveAttendance.setAttendanceCardStatus("0");
             saveAttendance.setEndLocation(attendanceEndVo.getLocation());
             saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
-
+            saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
+            saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
             //保存数据
             this.save(saveAttendance);
             /**
