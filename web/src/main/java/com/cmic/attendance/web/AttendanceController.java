@@ -232,7 +232,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceEndVo.setAttendanceGroup("odc");
         attendanceEndVo.setUsername(username);
         attendanceEndVo.setPhone(phone);
-
         AttendanceEndVo resultAttendanceVo=new AttendanceEndVo();
         Attendance attendanceBo = null;
         try{

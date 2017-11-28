@@ -268,14 +268,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          */
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceEndVo.getAttendanceGroup(), 0);
         //服务器时间
+        log.debug("111111111111111111111查询回来的对象>>>"+groupRule.getGroupAttendanceWay());
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
         String[] compareTimeArry = compareTime.split(":");
         Integer compareHour = Integer.parseInt(compareTimeArry[0]);
         Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
-
+        log.debug("11111111111111111111111>>>"+groupRule.getGroupAttendanceWay());
         //一、固定时长
         if ("1".equals(groupRule.getGroupAttendanceWay())){
+            log.debug("进入打卡业务@@@@@@@@@@@@@@@@@@@@@>>>"+groupRule.getGroupAttendanceWay());
             Attendance saveAttendance=null;
             String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
             //查询当前用户数据是否存在
