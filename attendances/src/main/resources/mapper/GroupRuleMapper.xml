@@ -194,10 +194,10 @@
         from t_group_rule a
     </select>
 
-    <select id="getByGroupNameAndGroupStatus" resultType="GroupRule">
+    <select id="getGroupRuleByGroupName" resultType="GroupRule">
         SELECT
         <include refid="groupRuleColumns"/>
-        FROM t_group_rule a
-        WHERE a.group_name=#{groupName} AND a.group_status=#{groupStatus}
+        FROM t_group_rule b
+        WHERE b.group_name=#{groupName} AND b.group_status=#{groupStatus}
     </select>
 </mapper>
