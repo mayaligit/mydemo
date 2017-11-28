@@ -75,8 +75,8 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
      * 根据组名以及启用状态获取考勤组信息
      *
      */
-    public GroupRule findGroupNameAndGroupStatus(String groupName,int groupStatus){
-        System.out.println("groupName=="+groupName+"groupStatus=="+groupStatus);
+    public GroupRule findGroupNameAndGroupStatus(String groupName,Integer groupStatus){
+        System.out.println("groupNamesh组名== "+groupName+"<<<<<>>>>>>>groupStatus== "+groupStatus);
         return dao.getByGroupNameAndGroupStatus(groupName,groupStatus);
     }
 	/*
