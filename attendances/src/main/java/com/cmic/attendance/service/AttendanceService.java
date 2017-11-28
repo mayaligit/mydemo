@@ -122,7 +122,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          *跟考勤组已经启用在状态来获取考勤组信息
          */
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
-        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+groupRule+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+groupRule.getGroupAttendanceWay()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         //服务器时间
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
@@ -137,6 +137,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         List<String> strings = Arrays.asList(attendanceWeek);
         boolean contains = strings.contains(isForWeek);
         //不在考勤期内
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         if (!contains){
             //不在考勤日期内直接返回预留业务
             //判断是否为工作日
@@ -146,7 +147,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 throw new AttendanceException("当前考勤时间不是工作日!");
             }
         }
-
         //在考勤期内，但是当前日期是法定节假日
         if (contains){
             //判断是否为工作日
@@ -155,7 +155,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             if(!"0".equals(workDay)){
                 throw new AttendanceException("节假日不用考勤!");
             }
-        } else{
+        }
+
+        if (contains){
             //开始读取考勤组考勤的方式
             Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
             String groupAttendanceWays = groupAttendanceWay + "";
