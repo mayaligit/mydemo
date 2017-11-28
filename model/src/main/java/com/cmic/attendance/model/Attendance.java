@@ -50,6 +50,7 @@ public class Attendance extends DataEntity<Attendance> {
     @ApiModelProperty(value = "下班打卡的维度")
     protected String attendanceDimensionEnd;
 
+    
     public Attendance(){
 
     }
