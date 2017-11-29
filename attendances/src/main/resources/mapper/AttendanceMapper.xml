@@ -445,6 +445,48 @@
         </where>
     </select>
 
+    <!--外勤次数-->
+    <select id="getFieldPersonnel" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='2'
+        </where>
+    </select>
+
+    <!--缺卡天数-->
+    <select id="getMissingCard" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='1'
+        </where>
+    </select>
+
+
+
     <!--固定模式 早退次数-->
     <select id="getLeaveEarly" resultType="Integer">
         SELECT

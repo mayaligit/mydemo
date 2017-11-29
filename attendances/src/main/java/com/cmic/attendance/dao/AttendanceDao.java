@@ -44,4 +44,8 @@ public interface AttendanceDao extends CrudDao<Attendance> {
     int getLates(WorkStatistics workStatistics);
 
     int getLeaveEarly(WorkStatistics workStatistics);
+
+    int getFieldPersonnel(WorkStatistics workStatistics);
+
+    int getMissingCard(WorkStatistics workStatistics);
 }

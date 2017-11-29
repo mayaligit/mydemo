@@ -1,6 +1,7 @@
 package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.AttendanceDao;
+import com.cmic.attendance.dao.AuditDao;
 import com.cmic.attendance.dao.WorkStatisticsDao;
 import com.cmic.attendance.model.WorkStatistics;
 import com.github.pagehelper.PageInfo;
@@ -23,10 +24,16 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
     @Autowired
     AttendanceDao attendanceDao;
 
+    @Autowired
+    AuditDao auditDao;
+
     public WorkStatistics workStatistics(WorkStatistics workStatistics){
         int attendanceDays=attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤天数
         int Late= attendanceDao.getLates(workStatistics);//某个月的迟到次数
         int leaveEarly=attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
+        int fieldPersonnel=attendanceDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
+        int missingCard=attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
+        double holidayDays=auditDao.getHolidayDays(workStatistics);//某个月的请假天数
         System.out.println(111);
         return null;
     }
