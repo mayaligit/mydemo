@@ -26,6 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -364,12 +367,56 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }else {
             //二、自由模式。预留业务
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-
-
-            return null;
+            Attendance saveAttendance=null;
+            String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+            //查询当前用户数据是否存在
+            Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
+            if (null==attendance){
+                saveAttendance= new Attendance();
+            }else{
+                saveAttendance=attendance;
+                Date startTime = attendance.getStartTime();
+                Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+                double timesBetween = endTime.getTime()-startTime.getTime();
+                double daysBetween=timesBetween/(60*60*1000);
+                BigDecimal bd = new BigDecimal(daysBetween);
+                //四舍五入保留一位小数
+                daysBetween = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+                //获取考勤的时长
+                double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
+                //比较实际考勤时长与规则时长
+                if(daysBetween - groupAttendanceDuration > 0){
+                    saveAttendance.setAttendanceLongitudeEnd("0");
+                }else {
+                    saveAttendance.setEndTimeStatus("1");
+                }
+                saveAttendance.setUpdateDate(startDate);
+            }
+            //插入数据
+            saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
+            Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+            saveAttendance.setEndTime(endTime);
+            //年月日
+            String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
+            String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
+            saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
+                    dateToYearMonthDayArry[1]);
+            saveAttendance.setAttendanceCardStatus("0");
+            saveAttendance.setEndLocation(attendanceEndVo.getLocation());
+            saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
+            saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
+            saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
+            saveAttendance.setDailyStatus(0);
+            saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
+            saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
+            //保存数据
+            this.save(saveAttendance);
+            //返回数据
+            String id = saveAttendance.getId();
+            saveAttendance.setId(id);
+            return saveAttendance;
         }
     }
-
 
     /**
      * @author 何家来
@@ -714,4 +761,5 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             statisticsService.save(DBstatistics);
         }
     }*/
+
 }
