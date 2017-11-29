@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "com.cmic.attendance.dao.WorkStatisticsDao">
+<mapper namespace="com.cmic.attendance.dao.WorkStatisticsDao">
     <sql id="workStatisticsColumns">
         a.phone AS "phone",
         a.user_name AS "userName",
@@ -26,6 +26,25 @@
         <include refid="workStatisticsJoins"/>
         WHERE a.id = #{id}
     </select>
+
+    <!--<select id="getAttendanceDays" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_work_statistics a
+        <include refid="workStatisticsJoins"/>
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.phone = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.month = #{month}
+            </if>
+        </where>
+    </select>-->
 
     <select id="findList" resultType="WorkStatistics">
         SELECT

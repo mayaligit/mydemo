@@ -1,11 +1,13 @@
 package com.cmic.attendance.service;
 
+import com.cmic.attendance.dao.AttendanceDao;
 import com.cmic.attendance.dao.WorkStatisticsDao;
 import com.cmic.attendance.model.WorkStatistics;
 import com.github.pagehelper.PageInfo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,14 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkStatistics> {
+    @Autowired
+    AttendanceDao attendanceDao;
+
+    public WorkStatistics workStatistics(WorkStatistics workStatistics){
+        int attendanceDays=attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤天数
+        System.out.println(111);
+        return null;
+    }
 
     public WorkStatistics get(String id) {
         return super.get(id);
