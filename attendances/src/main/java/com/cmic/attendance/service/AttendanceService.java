@@ -357,7 +357,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance=attendance;
                 //获取考勤的时长
                 double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
-                //比较实际考勤时长与规则时长
+                //比较实际考勤时长与规则考勤时长
                 if(workTime - groupAttendanceDuration > 0){
                     saveAttendance.setEndTimeStatus("0");
                 }else {
