@@ -386,7 +386,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
                 //比较实际考勤时长与规则时长
                 if(daysBetween - groupAttendanceDuration > 0){
-                    saveAttendance.setAttendanceLongitudeEnd("0");
+                    saveAttendance.setEndTimeStatus("0");
                 }else {
                     saveAttendance.setEndTimeStatus("1");
                 }
