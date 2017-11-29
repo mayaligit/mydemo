@@ -417,6 +417,48 @@
         </where>
     </select>
 
+    <!--固定模式 迟到次数-->
+    <select id="getLates" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='0'
+            AND DATE_FORMAT(a.start_time,'%H%i%s')>90000
+        </where>
+    </select>
+
+    <!--固定模式 早退次数-->
+    <select id="getLeaveEarly" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='0'
+            AND DATE_FORMAT(a.end_time,'%H%i%s')&lt;180000
+        </where>
+    </select>
+
     <select id="getAttendanceDays" resultType="Integer">
         SELECT
         count(*)
@@ -432,6 +474,7 @@
             <if test="month != null">
                 AND a.attendance_month = #{month}
             </if>
+            AND a.attendance_status='0'
         </where>
     </select>
 

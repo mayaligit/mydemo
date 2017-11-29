@@ -25,6 +25,8 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
 
     public WorkStatistics workStatistics(WorkStatistics workStatistics){
         int attendanceDays=attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤天数
+        int Late= attendanceDao.getLates(workStatistics);//某个月的迟到次数
+        int leaveEarly=attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
         System.out.println(111);
         return null;
     }

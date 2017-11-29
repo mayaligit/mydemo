@@ -52,7 +52,7 @@ public class WorkStatisticsController extends BaseRestController<WorkStatisticsS
         System.out.println("abc");
         WorkStatistics workStatistics2 =null;
         try{
-            workStatistics2 = workStatisticsService.workStatistics(workStatistics);
+            workStatistics2  = workStatisticsService.workStatistics(workStatistics);
             return workStatistics2;
         }catch (Exception e){
             e.printStackTrace();
