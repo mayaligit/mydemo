@@ -2,29 +2,19 @@ package com.cmic.attendance.pojo;/**
  * Created by pc on 2017/10/30.
  */
 
-import com.cmic.attendance.model.Attendance;
-
 import java.io.Serializable;
 
 /**
  * @author 何家来
  * @create 2017-10-30 19:04
  **/
-public class AttendancePojo extends Attendance implements Serializable {
+public class AttendanceResultPojo  implements Serializable,Comparable<Object> {
 
-    private String date;
+
     private String workStartTime;
     private String workEndTime;
-
     private float workHour;
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
+    private String username;
 
     public float getWorkHour() {
         return workHour;
@@ -48,5 +38,30 @@ public class AttendancePojo extends Attendance implements Serializable {
 
     public void setWorkHour(float workHour) {
         this.workHour = workHour;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(this ==o){
+            return 0;
+        }
+        else if (o!=null && o instanceof AttendanceResultPojo) {
+            AttendanceResultPojo u = (AttendanceResultPojo) o;
+            if(workHour>=u.workHour){
+                return -1;
+            }else{
+                return 1;
+            }
+        }else{
+            return -1;
+        }
     }
 }
