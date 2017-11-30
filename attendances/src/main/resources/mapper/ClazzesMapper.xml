@@ -177,7 +177,7 @@
         FROM t_clazzes a
         WHERE 1=1
         AND a.class_group = #{attendanceGroup}
-        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), a.nomal_start_time)  &gt; "00:00:00"
+        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), a.nomal_start_time)  &gt;= "00:00:00"
     </select>
     <select id="endWork" parameterType="String"  resultType="int">
         SELECT
@@ -185,7 +185,7 @@
         FROM t_clazzes a
         WHERE 1=1
         AND a.class_group = #{attendanceGroup}
-        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), nomal_end_time)  &gt; "00:00:00"
+        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), nomal_end_time)  &gt;= "00:00:00"
     </select>
 
 

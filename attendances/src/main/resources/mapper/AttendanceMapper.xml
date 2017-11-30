@@ -298,14 +298,11 @@
     </select>
     <select id="checkAttendanceLatterByDay" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="java.util.HashMap">
         SELECT
-        DATE_FORMAT(b.start_time,'%Y-%m-%d %H:%i') AS "startTime",
-        a.username AS "userName"
-        FROM t_statistics a,t_attendance b
-        WHERE 1=1
-        AND a.create_by = b.create_by
-        AND a.late_time = 1
+        DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
+        a.`attendance_user` AS "userName"
+        FROM t_attendance a
+        WHERE a.start_time_status = "1"
         AND DATE(a.update_date) = #{date}
-        AND DATE(b.update_date) = #{date}
         AND a.attendance_group = #{attendanceGroup}
     </select>
 
@@ -319,10 +316,10 @@
     </select>
 
 
-    <select id="getLatterCount" parameterType="com.cmic.attendance.pojo.StatisticsPojo" resultType="int">
+    <select id="getLatterCount" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="int">
         SELECT COUNT(id)
-        FROM t_statistics a
-        WHERE 1=1 AND a.late_time = 1
+        FROM t_attendance a
+        WHERE 1=1 AND a.start_time_status  = 1
         AND DATE(a.update_date) = #{date}
         AND a.attendance_group = #{attendanceGroup}
     </select>
@@ -584,5 +581,41 @@
         </where>
     </select>
 
+    <select id="checkAttendanceHardworkingByDay"  parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="com.cmic.attendance.pojo.AttendanceResultPojo" >
+
+        SELECT
+        SUM(attendance_work_time/60) workHour,
+        a.`attendance_user` username,
+        DATE_FORMAT(a.`start_time`,'%H:%i:%s') workStartTime,
+        DATE_FORMAT(a.`end_time`,'%H:%i:%s') workEndTime
+        FROM t_attendance a
+        WHERE
+        1=1 AND DATE_FORMAT(a.update_date,'%Y-%m-%d') = #{date}
+        AND a.attendance_group = #{attendanceGroup}
+        GROUP BY a.create_by
+    </select>
+
+    <select id="checkAttendanceHardworkingByMonth"  parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="java.util.HashMap">
+
+        SELECT SUM(a.attendance_work_time/60) workHour,
+	    a.`attendance_user` "username"
+        FROM t_attendance a
+        WHERE a.`attendance_work_time` IS NOT NULL
+        AND DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
+        AND a.attendance_group = #{attendanceGroup}
+        GROUP BY a.create_by
+    </select>
+
+    <select id="checkAttendanceLatterByMonth" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="java.util.HashMap">
+
+        SELECT
+        COUNT(id) "lateTime",
+        a.`attendance_user` AS "userName"
+        FROM t_attendance a
+        WHERE a.start_time_status = "1"
+        AND DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
+        AND a.attendance_group = #{attendanceGroup}
+        GROUP BY a.create_by ,a.`attendance_user`;
+    </select>
 
 </mapper>

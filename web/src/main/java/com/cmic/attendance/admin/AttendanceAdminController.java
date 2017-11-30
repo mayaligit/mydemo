@@ -2,6 +2,7 @@ package com.cmic.attendance.admin;
 
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.service.AttendanceService;
+import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.vo.QueryAttendanceVo;
 import com.cmic.saas.base.web.BaseRestController;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -153,6 +157,71 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     public Map<String,Object> checkAttendanceData(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
         Map<String,Object> map = service.checkAttendanceData(queryAttendanceVo);
+        return map;
+    }
+
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按日统计勤奋榜
+     */
+    @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
+    @RequestMapping(value="/checkAttendanceHardworkingByDay",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> checkAttendanceHardworkingByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
+
+        Map<String, Object> map = service.checkAttendanceHardworkingByDay(queryAttendanceVo);
+        return map;
+    }
+
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按月统计勤奋榜
+     */
+    @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
+    @RequestMapping(value="/checkAttendanceHardworkingByMonth",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> checkAttendanceHardworkingByMonth(@RequestBody QueryAttendanceVo queryAttendanceVo) {
+
+        Map<String, Object> map = service.checkAttendanceHardworkingByMonth(queryAttendanceVo);
+        return map;
+    }
+
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按月统计迟到榜
+     */
+    @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
+    @RequestMapping(value="/checkAttendanceLatterByMonth",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> checkAttendanceLatterByMonth(@RequestBody QueryAttendanceVo queryAttendanceVo) {
+
+        Map<String, Object> map = service.checkAttendanceLatterByMonth(queryAttendanceVo);
+        return map;
+    }
+
+    /**
+     * @author 何家来
+     * @return
+     * 获取当前系统时间
+     */
+    @ApiOperation(value = "获取当前系统时间", notes = "获取当前系统时间", httpMethod = "GET")
+    @RequestMapping(value="/getNowDate",method = RequestMethod.GET)
+    @ResponseBody
+    public Map getNowDate() {
+
+        Date date = new Date();
+        String nowDate = DateUtils.getDateToYearMonthDay(date);
+        Calendar c=Calendar.getInstance();
+        c.setTime(date);
+        int weekday=c.get(Calendar.DAY_OF_WEEK)-1;
+        String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+
+        Map map = new HashMap<String,Object>();
+        map.put("nowDate",nowDate);
+        map.put("weekday",weekDays[weekday]);
         return map;
     }
 

@@ -2,14 +2,12 @@ package com.cmic.attendance.admin;
 
 import com.cmic.attendance.model.Daily;
 import com.cmic.attendance.service.DailyService;
-import com.cmic.attendance.vo.AttendanceUserVo;
+import com.cmic.attendance.vo.DailyVo;
 import com.cmic.saas.base.web.BaseRestController;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -39,28 +37,15 @@ public class DailyAdminController extends BaseRestController<DailyService> {
      }
 
     /**
-     * f分页查询日报列表
-     * @param parmMap 封装 pageSize ,pageNum , username 三个参数
+     * @author 何家来
+     * 分页查询日报列表
+     * @param  dailyVo 封装 pageInfo , username 两个参数，其中pageInfo:pageSize,pageNum
      * @return
      */
     @PostMapping("/dailyList")
-    public Map<String, Object> get(@RequestBody(required = false) Map<String, Object> parmMap,
-                                   HttpSession session) {
-        //获取session中的用户信息
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)session.getAttribute("attendanceUserVo");
-        String attendance_group = attendanceUserVo.getAttendanceGroup();
-        Daily daily = new Daily();
-        PageInfo<Daily> page = new PageInfo();
+    public Map<String, Object> get(@RequestBody DailyVo dailyVo) {
 
-        if (parmMap != null && parmMap.size() > 0) {
-            page.setPageNum(parmMap.get("pageNum")== null ? 1:(int)parmMap.get("pageNum"));
-            page.setPageSize(parmMap.get("pageSize")==null?10:(int)parmMap.get("pageSize"));
-            daily.setUsername((String)parmMap.get("username"));
-            daily.setSuggestionStatus((Integer) parmMap.get("suggestionStatus"));
-            daily.setAttendanceGroup(attendance_group);
-        }
-
-        return service.findDailyList(page, daily);
+        return service.findDailyList(dailyVo);
     }
 
 

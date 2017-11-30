@@ -151,38 +151,7 @@
     </delete>
 
 
-    <select id="checkAttendanceHardworkingByDay"  parameterType="com.cmic.attendance.pojo.StatisticsPojo" resultType="java.util.HashMap" >
 
-     SELECT ROUND(SUM(office_time)/60,2) workHour,a.username "create_by"
-      FROM t_statistics a
-      WHERE
-      1=1 AND DATE_FORMAT(a.update_date,'%Y-%m-%d') = #{date}
-      AND a.attendance_group = #{attendanceGroup}
-      GROUP BY a.create_by
-    </select>
-
-
-
-    <select id="checkAttendanceHardworkingByMonth"  parameterType="com.cmic.attendance.pojo.StatisticsPojo" resultType="java.util.HashMap">
-
-        SELECT round(SUM(office_time)/60,2) workHour,a.username "create_by"
-        FROM t_statistics a
-        WHERE
-        1=1 and DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
-        AND a.attendance_group = #{attendanceGroup}
-        GROUP BY a.create_by
-    </select>
-
-
-    <select id="checkAttendanceLatterByMonth" parameterType="com.cmic.attendance.pojo.StatisticsPojo" resultType="java.util.HashMap">
-
-        SELECT SUM(late_time) lateTime,a.username "create_by"
-        FROM t_statistics a
-        WHERE
-        late_time IS NOT NULL and DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
-        AND a.attendance_group = #{attendanceGroup}
-        GROUP BY a.create_by
-    </select>
 
     <select id="checkAttendanceByCreateByAndCreateTime" resultType="Statistics">
         SELECT
