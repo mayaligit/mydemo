@@ -1,4 +1,3 @@
-/*
 package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.AttendanceDao;
@@ -26,11 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-*/
 /**
  * 审批表Service
- *//*
-
+ */
 @Service
 @Transactional(readOnly = true)
 public class AuditService extends CrudService<AuditDao, Audit> {
@@ -61,9 +58,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
     @Transactional(readOnly = false)
     public Map save(HttpServletResponse response, Audit audit) {
-         */
-/*response.setHeader("Access-Control-Allow-Origin", "*");*//*
-
+         /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, String> map = new HashMap<>();
         //设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
@@ -75,11 +70,9 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         audit.setUsername(user.getName());
 
 
-      */
-/*  // 测试数据
+      /*  // 测试数据
         audit.setUsername("陈华龙");
-        audit.setAttendanceGroup("odc");*//*
-
+        audit.setAttendanceGroup("odc");*/
 
         //任何请况下都必须携带的参数
         if (StringUtils.isBlank(audit.getAuditContent()) || StringUtils.isBlank(audit.getAttendanceGroup())) {
@@ -198,7 +191,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     //获取考勤规则
                      GroupRule groupRule=groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
                     //自由模式
-                    groupRule.get
+
                     break;
                 case 2:
                     break;
@@ -208,7 +201,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         //审批的是补卡类型时,关联对应考勤
 
         //将手机号码放到session中
-        BaseAdminEntity adminEntity = new BaseAdminEntity();
+/*        BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO", adminEntity);
 
@@ -259,7 +252,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 attendance.setEndTimeStatus("0");
             }
             attendanceDao.dynamicUpdate(attendance);
-        }
+        }*/
     }
 
     public Map<String, Object> findAuditList(PageInfo<Audit> page, Audit audit) {
@@ -290,4 +283,4 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         return dataMap;
     }
 
-}*/
+}
