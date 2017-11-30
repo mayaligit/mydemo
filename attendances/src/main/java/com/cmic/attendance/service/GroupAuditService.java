@@ -52,4 +52,8 @@ public class GroupAuditService extends CrudService<GroupAuditDao, GroupAudit> {
         logger.info("删除：" + groupAudit.toJSONString());
     }
 
+    public GroupAudit getGroupAuditBydrId(String dailyRuleId){
+        return dao.getGroupAuditBydrId(dailyRuleId);
+    }
+
 }

@@ -1,9 +1,9 @@
 package com.cmic.attendance.web;
 
 import com.cmic.attendance.exception.GroupRuleExeption;
-import com.cmic.attendance.model.GroupPersonnel;
-import com.cmic.attendance.model.GroupRule;
-import com.cmic.attendance.service.GroupRuleService;
+import com.cmic.attendance.model.*;
+import com.cmic.attendance.service.*;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.vo.GroupRuleVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
@@ -18,6 +18,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +32,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/rule")
 public class GroupRuleController extends BaseRestController<GroupRuleService> {
+
+    @Autowired
+    private GroupDailyRuleService groupDailyRuleService;
+
+    @Autowired
+    private GroupAuditService groupAuditService;
+
+    @Autowired
+    private GroupAddressService groupAddressService;
+
+    @Autowired
+    private GroupPersonnelService groupPersonnelService;
 
     @ApiOperation(value = "查询", notes = "查询列表", httpMethod = "GET")
     @ApiImplicitParams({
@@ -71,33 +84,49 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
 
     }
 
-    @ApiOperation(value = "新增", notes = "新增", httpMethod = "POST")
-    @RequestMapping(value="/", method = RequestMethod.POST)
-    public GroupRule post(@Validated @RequestBody GroupRule groupRule){
-        service.insert(groupRule);
-        return groupRule;
+    @ApiOperation(value = "根据名称查询", notes = "根据名称查询", httpMethod = "POST")
+    @RequestMapping(value="/findGroupRuleByName", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> post(@Validated @RequestBody GroupRule groupRule){
+        //service.insert(groupRule);
+        Map<String,Object> paramMap = service.findGroupRuleByName(groupRule.getGroupName());
+        return paramMap;
     }
 
     @ApiOperation(value = "获取", notes = "获取", httpMethod = "GET")
     @RequestMapping(value="/getGroupRuleById/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> getGroupRule(@PathVariable String id){
+
         Map<String,Object> map = service.findGroupRuleVoById(id);
         return map;
     }
 
-    @ApiOperation(value = "新增/更新", notes = "新增/更新", httpMethod = "PUT")
-    @RequestMapping(value="/updateGroupRule/{id}", method = RequestMethod.PUT)
-    public String put(@RequestParam("id")String groupRuleId,@Validated @RequestBody GroupRuleVo groupRuleVo){
-        groupRuleVo.getGroupRule().setId(groupRuleId);
-        //service.save(groupRule);
+    @ApiOperation(value = "新增/更新", notes = "新增/更新", httpMethod = "POST")
+    @RequestMapping(value="/updateGroupRule/{id}", method = RequestMethod.POST)
+    public Map<String,String> updateGroupRule(@PathVariable String id,@Validated @RequestBody GroupRuleVo groupRuleVo){
+        groupRuleVo.getGroupRule().setId(id);
+        HashMap<String,String> resultHash =new HashMap<String,String>();
+
+        HttpSession session = WebUtils.getSession();
+        Object attendanceUserVo = session.getAttribute("attendanceUserVo");
+        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        adminEntity.setId("15240653787");
+        adminEntity.setName("梁渝");
+        groupRuleVo.getGroupRule().setUpdateBy(adminEntity);
+        groupRuleVo.getGroupPersonnel().setUpdateBy(adminEntity);
+
+        System.out.println("attendanceUserVo"+attendanceUserVo);
         try {
             service.updateGroupRule(groupRuleVo);
-            return "true";
+            resultHash.put("code","0");
+            resultHash.put("msg","更新成功");
+            return resultHash;
         }catch (GroupRuleExeption e){
-
+            resultHash.put("msg","更新失败");
+            resultHash.put("code","1");
+            return resultHash;
         }
-        return "ture";
     }
 
     @ApiOperation(value = "动态更新", notes = "动态更新", httpMethod = "PATCH")
@@ -112,7 +141,34 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     @ApiOperation(value = "删除", notes = "删除", httpMethod = "DELETE")
     @RequestMapping(value="/delGroupRuleById/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "ID") @PathVariable String id) {
-        service.delByGroupRuleId(id);
+
+        //删除考勤规则主表
+        service.delete(id);
+        if(id!=null) {
+            //删除考勤人员
+            List<GroupPersonnel> list = groupPersonnelService.findListByGroupRuleId(id);
+            for (GroupPersonnel groupPersonnel : list) {
+                String pid = groupPersonnel.getId();
+                groupPersonnelService.delete(pid);
+            }
+        }
+        //删除日报规则表数据
+        GroupDailyRule groupDailyRule = groupDailyRuleService.getDailyByGroupRuleId(id);
+        String dailyRuleId = groupDailyRule.getId();
+        groupDailyRuleService.delete(dailyRuleId);
+
+        //删除审核人员
+        if(dailyRuleId!=null) {
+            GroupAudit groupAudit = groupAuditService.getGroupAuditBydrId(dailyRuleId);
+            groupAuditService.delete(groupAudit.getId());
+        }
+
+        //删除多地址
+        List<GroupAddress> groupAddresses = groupAddressService.findListByGroupRuleId(id);
+        for (GroupAddress address : groupAddresses) {
+            groupAddressService.delete(address.getId());
+        }
+
     }
 	
 	 /**
