@@ -4,15 +4,25 @@ import java.io.Serializable;
 
 public class AttendanceUserVo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    protected static final long serialVersionUID = 1L;
 
-    private  String attendanceUsername;
+    protected  String id;
+
+    protected  String attendanceUsername;
 
     protected String attendanceGroup;
 
-    private  String attendancePassword;
+    protected  String attendancePassword;
 
-    private  String checkCode;
+    protected  String checkCode;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getAttendanceUsername() {
         return attendanceUsername;
@@ -46,12 +56,5 @@ public class AttendanceUserVo implements Serializable {
         this.attendanceGroup = attendanceGroup;
     }
 
-    @Override
-    public String toString() {
-        return "AttendanceUserVo{" +
-                "attendanceUsername='" + attendanceUsername + '\'' +
-                ", attendancePassword='" + attendancePassword + '\'' +
-                ", checkCode='" + checkCode + '\'' +
-                '}';
-    }
+
 }
