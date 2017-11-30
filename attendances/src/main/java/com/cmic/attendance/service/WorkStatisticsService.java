@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -27,13 +28,16 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
     @Autowired
     AuditDao auditDao;
 
-    public WorkStatistics workStatistics(WorkStatistics workStatistics){
-        int attendanceDays=attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤天数
-        int Late= attendanceDao.getLates(workStatistics);//某个月的迟到次数
-        int leaveEarly=attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
-        int fieldPersonnel=attendanceDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
-        int missingCard=attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
-        double holidayDays=auditDao.getHolidayDays(workStatistics);//某个月的请假天数
+    public WorkStatistics workStatistics(WorkStatistics workStatistics) {
+        int attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤天数
+        int Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
+        int leaveEarly = attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
+        int fieldPersonnel = attendanceDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
+        int missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
+        double holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假天数
+        double overtime = attendanceDao.getOverTime(workStatistics);//某个月总的加班时间，秒为单位。
+        //加班时间转换为小时为单位，取2位小数
+        double overtime_hour=  new BigDecimal(overtime/(60*60)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
         System.out.println(111);
         return null;
     }
@@ -64,7 +68,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
     public void delete(String id) {
         //判断是否存在
         WorkStatistics workStatistics = get(id);
-        if(workStatistics==null|| StringUtils.isEmpty(workStatistics.getId())){
+        if (workStatistics == null || StringUtils.isEmpty(workStatistics.getId())) {
             throw new RestException("删除失败，不存在");
         }
         super.delete(id);

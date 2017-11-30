@@ -2,6 +2,7 @@ package com.cmic.attendance.web;
 
 import com.cmic.attendance.model.WorkStatistics;
 import com.cmic.attendance.service.WorkStatisticsService;
+import com.cmic.saas.base.web.RestException;
 import com.github.pagehelper.PageInfo;
 import com.cmic.saas.base.web.BaseRestController;
 import io.swagger.annotations.*;
@@ -48,16 +49,17 @@ public class WorkStatisticsController extends BaseRestController<WorkStatisticsS
             @ApiImplicitParam(name = "pageNum", value = "页码", defaultValue = "1", paramType = "query")
     })
     @RequestMapping(value = "/workStatistics", method = RequestMethod.GET)
-    public WorkStatistics workStatistics(@ApiIgnore  WorkStatistics workStatistics) {
+    public WorkStatistics workStatistics(@ApiIgnore WorkStatistics workStatistics) {
         System.out.println("abc");
-        WorkStatistics workStatistics2 =null;
-        try{
-            workStatistics2  = workStatisticsService.workStatistics(workStatistics);
+        WorkStatistics workStatistics2 = null;
+        try {
+            workStatistics2 = workStatisticsService.workStatistics(workStatistics);
             return workStatistics2;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
+            throw new RestException("服务器繁忙，统计异常！");
         }
-       return workStatistics2;
+        //return workStatistics2;
     }
 
     @ApiOperation(value = "新增", notes = "新增", httpMethod = "POST")
