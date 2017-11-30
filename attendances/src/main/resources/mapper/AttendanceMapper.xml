@@ -565,5 +565,24 @@
         </where>
     </select>
 
+    <select id="getAttendanceDays" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='0'
+        </where>
+    </select>
+
 
 </mapper>
