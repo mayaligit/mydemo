@@ -3,6 +3,7 @@ package com.cmic.attendance.vo;/**
  */
 
 import com.cmic.attendance.model.Daily;
+import com.github.pagehelper.PageInfo;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 public class DailyVo extends Daily implements Serializable {
 
     private String date;
+    private PageInfo pageInfo;
 
     public String getDate() {
         return date;
@@ -20,5 +22,13 @@ public class DailyVo extends Daily implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public PageInfo getPageInfo() {
+        return pageInfo;
+    }
+
+    public void setPageInfo(PageInfo pageInfo) {
+        this.pageInfo = pageInfo;
     }
 }

@@ -114,7 +114,6 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
     @ResponseBody
     public Map<String,Object> checkAttendanceLatterByMonth(@RequestBody QueryStatisticsVo queryStatisticsVo) {
 
-//        response.setHeader("Access-Control-Allow-Origin", "*");
         Map<String, Object> map = service.checkAttendanceLatterByMonth(queryStatisticsVo);
         return map;
     }
@@ -128,7 +127,6 @@ public class StatisticsAdminController extends BaseRestController<StatisticsServ
     @RequestMapping(value="/getNowDate",method = RequestMethod.GET)
     @ResponseBody
     public Map getNowDate() {
-
 
         Date date = new Date();
         String nowDate = DateUtils.getDateToYearMonthDay(date);

@@ -5,6 +5,7 @@ import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Daily;
 import com.cmic.attendance.pojo.DailyPojo;
 import com.cmic.attendance.utils.DateUtils;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.vo.DailyVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
@@ -13,6 +14,7 @@ import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -152,22 +154,28 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         return "日报审批完成";
     }
 
-    public  Map<String, Object> findDailyList(PageInfo<Daily> page ,Daily daily){
-        if(page.getPageNum() == 0) {
+    public  Map<String, Object> findDailyList(DailyVo dailyVo){
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+
+        PageInfo page = dailyVo.getPageInfo();
+        if(page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
-
-        if(page.getPageSize() == 0) {
+        if(page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
-
         if(StringUtils.isEmpty(page.getOrderBy())) {
             page.setOrderBy("a.create_time desc");
         }
+        DailyPojo dailyPojo = new DailyPojo();
+        BeanUtils.copyProperties(dailyVo,dailyPojo);
+        dailyPojo.setAttendanceGroup(attendanceGroup);
 
         PageHelper.startPage(page.getPageNum(), page.getPageSize() > 0?page.getPageSize():10, page.getOrderBy());
-
-        PageInfo<Map> result=  new PageInfo(dao.findDailyList(daily));
+        PageInfo<Map> result=  new PageInfo(dao.findDailyList(dailyPojo));
 
         //创建封装数据
         Map<String, Object> dataMap = new HashMap<>();
