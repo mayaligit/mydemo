@@ -11,6 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.HashMap;
+
 /**
  * Controller
  */
@@ -49,9 +51,9 @@ public class WorkStatisticsController extends BaseRestController<WorkStatisticsS
             @ApiImplicitParam(name = "pageNum", value = "页码", defaultValue = "1", paramType = "query")
     })
     @RequestMapping(value = "/workStatistics", method = RequestMethod.GET)
-    public WorkStatistics workStatistics(@ApiIgnore WorkStatistics workStatistics) {
+    public HashMap workStatistics(@ApiIgnore WorkStatistics workStatistics) {
         System.out.println("abc");
-        WorkStatistics workStatistics2 = null;
+        HashMap workStatistics2 = null;
         try {
             workStatistics2 = workStatisticsService.workStatistics(workStatistics);
             return workStatistics2;
