@@ -11,4 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface GroupDailyRuleDao extends CrudDao<GroupDailyRule> {
 
+    public GroupDailyRule getDailyByGroupRuleId(String groupRuleId);
+
 }

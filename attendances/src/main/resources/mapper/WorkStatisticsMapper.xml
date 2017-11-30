@@ -1,0 +1,165 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmic.attendance.dao.WorkStatisticsDao">
+    <sql id="workStatisticsColumns">
+        a.phone AS "phone",
+        a.user_name AS "userName",
+        a.id AS "id",
+        a.attendance_days AS "attendanceDays",
+        a.holiday_days AS "holidayDays",
+        a.Late AS "late",
+        a.Leave_early AS "leaveEarly",
+        a.Missing_card AS "missingCard",
+        a.Absenteeism AS "absenteeism",
+        a.Field_personnel AS "fieldPersonnel",
+        a.overtime AS "overtime",
+        a.month AS "month"
+    </sql>
+
+    <sql id="workStatisticsJoins">
+    </sql>
+
+    <select id="get" resultType="WorkStatistics">
+        SELECT
+        <include refid="workStatisticsColumns"/>
+        FROM t_work_statistics a
+        <include refid="workStatisticsJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <!--<select id="getAttendanceDays" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_work_statistics a
+        <include refid="workStatisticsJoins"/>
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.phone = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.month = #{month}
+            </if>
+        </where>
+    </select>-->
+
+    <select id="findList" resultType="WorkStatistics">
+        SELECT
+        <include refid="workStatisticsColumns"/>
+        FROM t_work_statistics a
+        <include refid="workStatisticsJoins"/>
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.phone = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="id != null">
+                AND a.id = #{id}
+            </if>
+            <if test="month != null">
+                AND a.month = #{month}
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="WorkStatistics">
+        SELECT
+        <include refid="workStatisticsColumns"/>
+        FROM t_work_statistics a
+        <include refid="workStatisticsJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_work_statistics(
+        phone,
+        user_name,
+        id,
+        attendance_days,
+        holiday_days,
+        Late,
+        Leave_early,
+        Missing_card,
+        Absenteeism,
+        Field_personnel,
+        overtime,
+        month
+        ) VALUES (
+        #{phone},
+        #{userName},
+        #{id},
+        #{attendanceDays},
+        #{holidayDays},
+        #{late},
+        #{leaveEarly},
+        #{missingCard},
+        #{absenteeism},
+        #{fieldPersonnel},
+        #{overtime},
+        #{month}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_work_statistics SET
+        attendance_days = #{attendanceDays},
+        holiday_days = #{holidayDays},
+        Late = #{late},
+        Leave_early = #{leaveEarly},
+        Missing_card = #{missingCard},
+        Absenteeism = #{absenteeism},
+        Field_personnel = #{fieldPersonnel},
+        overtime = #{overtime}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_work_statistics SET
+        <if test="phone != null  and phone != ''">
+            phone = #{phone},
+        </if>
+        <if test="userName != null  and userName != ''">
+            user_name = #{userName},
+        </if>
+        <if test="attendanceDays != null  and attendanceDays != ''">
+            attendance_days = #{attendanceDays},
+        </if>
+        <if test="holidayDays != null  and holidayDays != ''">
+            holiday_days = #{holidayDays},
+        </if>
+        <if test="late != null  and late != ''">
+            Late = #{late},
+        </if>
+        <if test="leaveEarly != null  and leaveEarly != ''">
+            Leave_early = #{leaveEarly},
+        </if>
+        <if test="missingCard != null  and missingCard != ''">
+            Missing_card = #{missingCard},
+        </if>
+        <if test="absenteeism != null  and absenteeism != ''">
+            Absenteeism = #{absenteeism},
+        </if>
+        <if test="fieldPersonnel != null  and fieldPersonnel != ''">
+            Field_personnel = #{fieldPersonnel},
+        </if>
+        <if test="overtime != null  and overtime != ''">
+            overtime = #{overtime},
+        </if>
+        <if test="month != null  and month != ''">
+            month = #{month},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_work_statistics
+        WHERE id = #{id}
+    </delete>
+</mapper>

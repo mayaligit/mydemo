@@ -60,4 +60,10 @@ public class GroupAddressService extends CrudService<GroupAddressDao, GroupAddre
         return allGroupAddress;
     }
 
+    /**
+     *根据考勤组id获取多地址
+     */
+    public List<GroupAddress> findListByGroupRuleId(String attendanceGroupId){
+        return dao.findListByGroupRuleId(attendanceGroupId);
+    }
 }

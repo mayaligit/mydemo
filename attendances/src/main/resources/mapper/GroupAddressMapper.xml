@@ -108,4 +108,12 @@
         DELETE FROM t_group_Address
         WHERE id = #{id}
     </delete>
+
+    <select id="findListByGroupRuleId" resultType="GroupAddress">
+        SELECT
+        <include refid="groupPersonnelColumns"/>
+        FROM t_group_Address a
+        <include refid="groupPersonnelJoins"/>
+        WHERE a.attendance_group_id = #{attendanceGroupId}
+    </select>
 </mapper>

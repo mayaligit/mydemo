@@ -20,7 +20,7 @@ public class GroupAddress extends DataEntity<GroupAddress> {
     @ApiModelProperty(value = "关联对应的考勤组")
     protected String attendanceGroupId;
 	@ApiModelProperty(value = "考勤范围")
-    private int groupAttendanceScope;
+    protected Integer groupAttendanceScope;
 
     public GroupAddress(){
 
@@ -61,11 +61,11 @@ public class GroupAddress extends DataEntity<GroupAddress> {
         this.attendanceGroupId = attendanceGroupId;
     }
 
-    public int getGroupAttendanceScope() {
+    public Integer getGroupAttendanceScope() {
         return groupAttendanceScope;
     }
 
-    public void setGroupAttendanceScope(int groupAttendanceScope) {
+    public void setGroupAttendanceScope(Integer groupAttendanceScope) {
         this.groupAttendanceScope = groupAttendanceScope;
     }
 }

@@ -26,6 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -122,6 +125,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          *跟考勤组已经启用在状态来获取考勤组信息
          */
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+groupRule.getGroupAttendanceWay()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         //服务器时间
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
@@ -136,6 +140,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         List<String> strings = Arrays.asList(attendanceWeek);
         boolean contains = strings.contains(isForWeek);
         //不在考勤期内
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         if (!contains){
             //不在考勤日期内直接返回预留业务
             //判断是否为工作日
@@ -145,7 +150,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 throw new AttendanceException("当前考勤时间不是工作日!");
             }
         }
-
         //在考勤期内，但是当前日期是法定节假日
         if (contains){
             //判断是否为工作日
@@ -154,11 +158,15 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             if(!"0".equals(workDay)){
                 throw new AttendanceException("节假日不用考勤!");
             }
-        } else{
+        }
+
+        if (contains){
             //开始读取考勤组考勤的方式
-            String groupAttendanceWay= groupRule.getGroupAttendanceWay();
+            Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
+            String groupAttendanceWays = groupAttendanceWay + "";
             //一、固定时长
-            if ("1".equals(groupAttendanceWay)) {
+            log.debug("进入打卡业务");
+            if ("1".equals(groupAttendanceWays)) {
                 //判断当前地点是否异常
                 Attendance saveAttendance = new Attendance();
                 String distance2 = attendanceVo.getDistance();
@@ -167,7 +175,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 }
                 String[] split = distance2.split("\\.");
                 String distances=split[0];
-                Integer groupAttendanceScope = Integer.parseInt(groupRule.getGroupAttendanceScope());
+                Integer groupAttendanceScope = groupRule.getGroupAttendanceScope();
                 if (Integer.parseInt(distances) > groupAttendanceScope) {
                     saveAttendance.setAttendanceStatus("1");
                     saveAttendance.setAttendanceDesc("地点异常");
@@ -206,8 +214,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
                 saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0] + "-" +
                         dateToYearMonthDayArry[1]);
+                saveAttendance.setAttendanceCardStatus("2");
                 saveAttendance.setStartLocation(attendanceVo.getLocation());
                 saveAttendance.setDailyStatus(0);
+                saveAttendance.setAttendanceDimensionStart(attendanceVo.getAttendanceDimension());
+                saveAttendance.setAttendanceLongitudeStart(attendanceVo.getAttendanceLongitude());
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
                 /*try {
@@ -233,8 +244,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());
                 saveAttendance.setStartTimeStatus("0");
                 saveAttendance.setAttendanceCardStatus("2");
-                saveAttendance.setAttendanceLongitude(attendanceVo.getAttendanceLongitude());
-                saveAttendance.setAttendanceDimension(attendanceVo.getAttendanceDimension());
+                saveAttendance.setAttendanceDimensionStart(attendanceVo.getAttendanceDimension());
+                saveAttendance.setAttendanceLongitudeStart(attendanceVo.getAttendanceLongitude());
                 this.save(saveAttendance);
                 /*try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
@@ -268,13 +279,15 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String[] compareTimeArry = compareTime.split(":");
         Integer compareHour = Integer.parseInt(compareTimeArry[0]);
         Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
-
+        String groupAttendanceWay = groupRule.getGroupAttendanceWay()+"";
+        Attendance saveAttendance=null;
+        String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+        Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
+        //查询当前用户数据是否存在
+        Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
         //一、固定时长
-        if ("1".equals(groupRule.getGroupAttendanceWay())){
-            Attendance saveAttendance=null;
-            String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
-            //查询当前用户数据是否存在
-            Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
+        if ("1".equals(groupAttendanceWay)){
+            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入固定打卡业务<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             if (null==attendance){
                 saveAttendance= new Attendance();
             }else{
@@ -285,28 +298,19 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                       attendance.setAttendanceDesc("上班卡没打");
                 }*/
                 saveAttendance.setUpdateDate(startDate);
+                Date startTime = saveAttendance.getStartTime();
+                double timesBetween = endTime.getTime()-startTime.getTime();
+                double workTime=timesBetween/(60*60*1000);
+                BigDecimal bd = new BigDecimal(workTime);
+                //四舍五入保留一位小数
+                workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+                //上班时长
+                float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
+                saveAttendance.setAttendanceWorkTime(attendanceWorkTime);
             }
-
-            /*//判断当前地点是否异常
-            String distance2 = attendanceEndVo.getDistance();
-            if (distance2 ==null || "".equals(distance2)){
-                distance2="0.0";
-            }
-            String[] split = distance2.split("\\.");
-            String distances=split[0];
-            Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
-            if (Integer.parseInt(distances) > groupAttendanceScope) {
-                saveAttendance.setAttendanceStatus("1");
-                saveAttendance.setAttendanceDesc("地点异常");
-
-            } else {
-                //地址重合则会是null或小于都走这里的逻辑
-                saveAttendance.setAttendanceStatus("0");
-            }*/
-
             //设计考勤时间
             /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
-            String groupAttendanceEnd = groupRule.getGroupAttendanceEnd();
+            String groupAttendanceEnd = groupRule.getGroupAttendanceEnd()+"";
             String[] AttendanceStartArry = groupAttendanceEnd.split(":");
             Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
             Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
@@ -326,36 +330,70 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }else {
                     saveAttendance.setEndTimeStatus("1");
             }
-
-            //插入数据
-            saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
-            Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
-            saveAttendance.setEndTime(endTime);
-            //年月日
-            String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
-            String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
-            saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
-                    dateToYearMonthDayArry[1]);
-            saveAttendance.setEndLocation(attendanceEndVo.getLocation());
-            saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
-
-            //保存数据
-            this.save(saveAttendance);
-            /**
-             * 统计考勤信息数据
-             *1、是否早退
-             *2、打下班卡时间
-             */
-            //返回数据
-
-            return saveAttendance;
         }else {
             //二、自由模式。预留业务
-
-            return null;
+            log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            if (null==attendance){
+                saveAttendance= new Attendance();
+            }else{
+                saveAttendance=attendance;
+                Date startTime = saveAttendance.getStartTime();
+                double timesBetween = endTime.getTime()-startTime.getTime();
+                double workTime=timesBetween/(60*60*1000);
+                BigDecimal bd = new BigDecimal(workTime);
+                //四舍五入保留一位小数
+                workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+                //上班时长
+                float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
+                //获取考勤的时长
+                double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
+                //比较实际考勤时长与规则考勤时长
+                if(workTime - groupAttendanceDuration > 0){
+                    saveAttendance.setEndTimeStatus("0");
+                }else {
+                    saveAttendance.setEndTimeStatus("1");
+                }
+                saveAttendance.setUpdateDate(startDate);
+                saveAttendance.setAttendanceWorkTime(attendanceWorkTime);
+            }
         }
-    }
+        /*//判断当前地点是否异常
+            String distance2 = attendanceEndVo.getDistance();
+            if (distance2 ==null || "".equals(distance2)){
+                distance2="0.0";
+            }
+            String[] split = distance2.split("\\.");
+            String distances=split[0];
+            Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
+            if (Integer.parseInt(distances) > groupAttendanceScope) {
+                saveAttendance.setAttendanceStatus("1");
+                saveAttendance.setAttendanceDesc("地点异常");
 
+            } else {
+                //地址重合则会是null或小于都走这里的逻辑
+                saveAttendance.setAttendanceStatus("0");
+            }*/
+        //插入数据
+        saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
+        saveAttendance.setEndTime(endTime);
+        //年月日
+        String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
+        String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
+        saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
+                dateToYearMonthDayArry[1]);
+        saveAttendance.setAttendanceCardStatus("0");
+        saveAttendance.setEndLocation(attendanceEndVo.getLocation());
+        saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
+        saveAttendance.setDailyStatus(0);
+        saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
+        saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
+        //保存数据
+        this.save(saveAttendance);
+        //返回数据
+        String id = saveAttendance.getId();
+        saveAttendance.setId(id);
+        return saveAttendance;
+    }
 
     /**
      * @author 何家来
@@ -700,4 +738,5 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             statisticsService.save(DBstatistics);
         }
     }*/
+
 }

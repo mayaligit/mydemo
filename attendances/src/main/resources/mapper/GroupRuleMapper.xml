@@ -55,56 +55,55 @@
 
     <insert id="insert">
         INSERT INTO t_group_rule(
-            id,
-            group_name,
-            group_enterprise_id,
-            group_enterprise_name,
-            group_status,
-            group_deadline,
-            group_daily_id,
-            group_attendance_way,
-            group_attendance_start,
-            group_attendance_end,
-            group_attendance_duration,
-            group_attendance_week,
-            group_attendance_longitude,
-            group_attendance_dimension,
-            group_address,
-            group_attendance_scope,
-            remarks,
-            create_by,
-            create_date,
-            update_by,
-            update_date
+        id,
+        group_name,
+        group_enterprise_id,
+        group_enterprise_name,
+        group_status,
+        group_deadline,
+        group_daily_id,
+        group_attendance_way,
+        group_attendance_start,
+        group_attendance_end,
+        group_attendance_duration,
+        group_attendance_week,
+        group_attendance_longitude,
+        group_attendance_dimension,
+        group_address,
+        group_attendance_scope,
+        remarks,
+        create_by,
+        create_date,
+        update_by,
+        update_date
         ) VALUES (
-            #{id},
-            #{groupName},
-            #{groupEnterpriseId},
-            #{groupEnterpriseName},
-            #{groupStatus},
-            #{groupDeadline},
-            #{groupDailyId},
-            #{groupAttendanceWay},
-            #{groupAttendanceStart},
-            #{groupAttendanceEnd},
-            #{groupAttendanceDuration},
-            #{groupAttendanceWeek},
-            #{groupAttendanceLongitude},
-            #{groupAttendanceDimension},
-            #{groupAddress},
-            #{groupAttendanceScope},
-            #{remarks},
-            #{createBy.id},
-            #{createDate},
-            #{updateBy.id},
-            #{updateDate}
+        #{id},
+        #{groupName},
+        #{groupEnterpriseId},
+        #{groupEnterpriseName},
+        #{groupStatus},
+        #{groupDeadline},
+        #{groupDailyId},
+        #{groupAttendanceWay},
+        #{groupAttendanceStart},
+        #{groupAttendanceEnd},
+        #{groupAttendanceDuration},
+        #{groupAttendanceWeek},
+        #{groupAttendanceLongitude},
+        #{groupAttendanceDimension},
+        #{groupAddress},
+        #{groupAttendanceScope},
+        #{remarks},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate}
         )
     </insert>
 
     <update id="update">
         UPDATE t_group_rule SET
         group_name = #{groupName},
-        group_enterprise_id = #{groupEnterpriseId},
         group_enterprise_name = #{groupEnterpriseName},
         group_status = #{groupStatus},
         group_deadline = #{groupDeadline},
@@ -119,7 +118,6 @@
         group_address = #{groupAddress},
         group_attendance_scope = #{groupAttendanceScope},
         remarks = #{remarks},
-        create_by = #{createBy.id},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -128,49 +126,49 @@
     <update id="dynamicUpdate">
         UPDATE t_group_rule SET
         <if test="groupName != null  and groupName != ''">
-        group_name = #{groupName},
+            group_name = #{groupName},
         </if>
         <if test="groupEnterpriseId != null  and groupEnterpriseId != ''">
-        group_enterprise_id = #{groupEnterpriseId},
+            group_enterprise_id = #{groupEnterpriseId},
         </if>
         <if test="groupEnterpriseName != null  and groupEnterpriseName != ''">
-        group_enterprise_name = #{groupEnterpriseName},
+            group_enterprise_name = #{groupEnterpriseName},
         </if>
-        <if test="groupStatus != null  and groupStatus != ''">
-        group_status = #{groupStatus},
+        <if test="groupStatus != null ">
+            group_status = #{groupStatus},
         </if>
         <if test="groupDeadline != null ">
-        group_deadline = #{groupDeadline},
+            group_deadline = #{groupDeadline},
         </if>
         <if test="groupDailyId != null  and groupDailyId != ''">
-        group_daily_id = #{groupDailyId},
+            group_daily_id = #{groupDailyId},
         </if>
-        <if test="groupAttendanceWay != null  and groupAttendanceWay != ''">
-        group_attendance_way = #{groupAttendanceWay},
+        <if test="groupAttendanceWay != null ">
+            group_attendance_way = #{groupAttendanceWay},
         </if>
-        <if test="groupAttendanceStart != null  and groupAttendanceStart != ''">
-        group_attendance_start = #{groupAttendanceStart},
+        <if test="groupAttendanceStart != null ">
+            group_attendance_start = #{groupAttendanceStart},
         </if>
-        <if test="groupAttendanceEnd != null  and groupAttendanceEnd != ''">
-        group_attendance_end = #{groupAttendanceEnd},
+        <if test="groupAttendanceEnd != null ">
+            group_attendance_end = #{groupAttendanceEnd},
         </if>
         <if test="groupAttendanceDuration != null  and groupAttendanceDuration != ''">
-        group_attendance_duration = #{groupAttendanceDuration},
+            group_attendance_duration = #{groupAttendanceDuration},
         </if>
         <if test="groupAttendanceWeek != null  and groupAttendanceWeek != ''">
-        group_attendance_week = #{groupAttendanceWeek},
+            group_attendance_week = #{groupAttendanceWeek},
         </if>
         <if test="groupAttendanceLongitude != null  and groupAttendanceLongitude != ''">
-        group_attendance_longitude = #{groupAttendanceLongitude},
+            group_attendance_longitude = #{groupAttendanceLongitude},
         </if>
         <if test="groupAttendanceDimension != null  and groupAttendanceDimension != ''">
-        group_attendance_dimension = #{groupAttendanceDimension},
+            group_attendance_dimension = #{groupAttendanceDimension},
         </if>
         <if test="groupAddress != null  and groupAddress != ''">
-        group_address = #{groupAddress},
+            group_address = #{groupAddress},
         </if>
-        <if test="groupAttendanceScope != null  and groupAttendanceScope != ''">
-        group_attendance_scope = #{groupAttendanceScope},
+        <if test="groupAttendanceScope != null ">
+            group_attendance_scope = #{groupAttendanceScope},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
@@ -189,13 +187,16 @@
         a.group_attendance_way AS "groupAttendanceWay",
         a.group_attendance_week AS "groupAttendanceWeek",
         a.group_address AS "groupAddress",
-        a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
         a.update_date AS "updateDate"
         from t_group_rule a
     </select>
-
-
+    <select id="getGroupRuleByGroupName" parameterType="Map" resultType="GroupRule">
+        SELECT
+        <include refid="groupRuleColumns"/>
+        FROM t_group_rule a
+        WHERE a.group_name=#{groupName} AND a.group_status=#{groupStatus}
+    </select>
 </mapper>

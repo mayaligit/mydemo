@@ -125,4 +125,12 @@
         DELETE FROM t_group_daily_rule
         WHERE id = #{id}
     </delete>
+
+    <select id="getDailyByGroupRuleId" resultType="GroupDailyRule">
+        SELECT
+        <include refid="groupDailyRuleColumns"/>
+        FROM t_group_daily_rule a
+        <include refid="groupDailyRuleJoins"/>
+        WHERE a.attendance_group_id = #{attendanceGroupId}
+    </select>
 </mapper>
