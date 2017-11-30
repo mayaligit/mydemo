@@ -30,7 +30,9 @@ public class GroupRuleVo implements Serializable{
     /*日报人员规则*/
     private GroupAudit groupAudit;
 
-    private List<GroupAddress> addressList;
+    private Integer pageNum;
+    private Integer pageSize;
+    private String groupName;
 
     public GroupRule getGroupRule() {
         return groupRule;
@@ -72,11 +74,27 @@ public class GroupRuleVo implements Serializable{
         this.groupAddress = groupAddress;
     }
 
-    public List<GroupAddress> getAddressList() {
-        return addressList;
+    public Integer getPageNum() {
+        return pageNum;
     }
 
-    public void setAddressList(List<GroupAddress> addressList) {
-        this.addressList = addressList;
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

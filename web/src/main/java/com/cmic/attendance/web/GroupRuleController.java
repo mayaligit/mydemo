@@ -73,25 +73,18 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     })
     @RequestMapping(value="/findGroupRuleList", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> findGroupList(@RequestBody PageInfo page){
+    public Map<String,Object> findGroupList( @RequestBody GroupRuleVo GroupRuleVo){
 
         //HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
         //response.setHeader("Access-Control-Allow-Origin", "*");
-        int pageNum = page.getPageNum();
-        int pageSize = page.getPageSize();
-        Map<String,Object> map = service.findAllGroupRuleList(pageNum,pageSize);
+        Integer pageNum = GroupRuleVo.getPageNum();
+        Integer pageSize = GroupRuleVo.getPageSize();
+
+        Map<String, Object> map = service.findAllGroupRuleList(pageNum, pageSize, GroupRuleVo.getGroupName());
         return map;
 
     }
 
-    @ApiOperation(value = "根据名称查询", notes = "根据名称查询", httpMethod = "POST")
-    @RequestMapping(value="/findGroupRuleByName", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String,Object> post(@Validated @RequestBody GroupRule groupRule){
-        //service.insert(groupRule);
-        Map<String,Object> paramMap = service.findGroupRuleByName(groupRule.getGroupName());
-        return paramMap;
-    }
 
     @ApiOperation(value = "获取", notes = "获取", httpMethod = "GET")
     @RequestMapping(value="/getGroupRuleById/{id}", method = RequestMethod.GET)

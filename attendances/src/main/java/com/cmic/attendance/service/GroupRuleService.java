@@ -39,6 +39,9 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
     private  GroupPersonnelService groupPersonnelService;
 
     @Autowired
+    private GroupPersonnelDao personnelDao;
+
+    @Autowired
     private GroupAddressDao groupAddressDao;
 
     public GroupRule get(String id) {
@@ -83,7 +86,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         HashMap<String,Object> paramMap=new HashMap<>();
         paramMap.put("groupName",groupName);
         paramMap.put("groupStatus",groupStatus);
-        return dao.getGroupRuleByGroupName(paramMap);
+        return dao.getByGroupNameAndGroupStatus(paramMap);
     }
 	/*
      插入考勤组规则数据
@@ -187,7 +190,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
     }
 
-    public Map<String,Object> findAllGroupRuleList(int pageNum,int pageSize){
+    public Map<String,Object> findAllGroupRuleList(int pageNum,int pageSize,String groupName){
 
         Map<String,Object> paramMap = new HashMap<>();
         if(pageNum==0){
@@ -195,6 +198,9 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         }
         paramMap.put("pageNum",pageNum);
         paramMap.put("pageSize",pageSize);
+        if(groupName!=null) {
+            paramMap.put("groupName", "%" + groupName + "%");
+        }
         //设置查询参数和排序条件
         PageHelper.startPage(pageNum,pageSize);
         PageHelper.orderBy("updateDate");
@@ -241,7 +247,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         map.put("groupRule",groupRule);
 
         //根据考勤组id获取考勤人员
-        List<GroupPersonnel> groupPersonnelList = groupPersonnelService.findListByGroupRuleId(groupRuleId);
+        List<GroupPersonnel> groupPersonnelList = personnelDao.findListByGroupRuleId(groupRuleId);
         map.put("groupPersonnelList",groupPersonnelList);
 
         //根据考勤组id获取多地址
@@ -282,22 +288,10 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         try {
             //分割考勤人员输入，获取各值
             String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
-            String person[] = persons.split(",");
-            List<GroupPersonnel> list = groupPersonnelService.findListByGroupRuleId(attendanceGroupId);
+            String person[] = persons.split("-");
 
             for(int i=0;i<person.length;i++){
-                String[] p = person[i].split("-");
-                String personnelName = p[0];
-                String personnelPhone = p[1];
-                String groupEnterId = p[2];
-                groupRuleVo.getGroupPersonnel().setPersonnelName(p[0]);
-                groupRuleVo.getGroupPersonnel().setPersonnelPhone(personnelPhone);
-                groupRuleVo.getGroupPersonnel().setEnterpriseId(groupEnterId);
-                groupRuleVo.getGroupPersonnel().setId(list.get(i).getId());
-
-                GroupPersonnel groupPersonnel = groupRuleVo.getGroupPersonnel();
-                groupPersonnel.setAttendanceGroupId(attendanceGroupId);
-                groupPersonnelService.dynamicUpdate(groupPersonnel);
+                groupPersonnelService.delete(person[i]);
             }
         }catch (Exception e){
             throw  new GroupRuleExeption("考勤人员表更新失败");
@@ -322,45 +316,12 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
                         paraMap.put("groupAttendanceScope",Integer.parseInt(adds[2]));
                         paraMap.put("groupAddress",adds[3]);
                         paraMap.put("attendanceGroupId",attendanceGroupId);
-                        /*if(resses.length-gaddressList.size()>0){
-                            int alength = resses.length-gaddressList.size();
-                            if(alength==1){
-                                GroupAddress address = new GroupAddress();
-                                address.setGroupAttendanceLongitude(Float.parseFloat(adds[0]));
-                                address.setGroupAttendanceDimension(Float.parseFloat(adds[1]));
-                                address.setGroupAddress(adds[3]);
-                                address.setAttendanceGroupId(attendanceGroupId);
-                                address.setUpdateDate(new Date());
 
-                            }
-                        }*/
                         paraMap.put("updateDate",new Date());
                         groupAddressDao.updateGroupAddressById(paraMap);
                     }
             }
-
     }
 
-    public Map<String,Object> findGroupRuleByName(String groupName){
-        Map<String,Object> paramMap = new HashMap<>();
-
-        //获取考勤主表
-        GroupRule groupRule = dao.findGroupRuleByName(groupName);
-        if(groupRule.getGroupAttendanceStart()!=null&&groupRule.getGroupAttendanceEnd()!=null){
-            groupRule.setGroupAttendanceStart(groupRule.getGroupAttendanceStart().substring(0,5));
-            groupRule.setGroupAttendanceEnd(groupRule.getGroupAttendanceEnd().substring(0,5));
-        }
-        paramMap.put("groupRule",groupRule);
-
-        //获取考勤人员
-        List<GroupPersonnel> groupPersonnelList = groupPersonnelService.findListByGroupRuleId(groupRule.getId());
-        paramMap.put("groupPersonnelList",groupPersonnelList);
-
-        //获取考勤多地址
-        List<GroupAddress> addressList = groupAddressService.findListByGroupRuleId(groupRule.getId());
-        paramMap.put("groupAddressList",addressList);
-
-        return paramMap;
-    }
 }
 
