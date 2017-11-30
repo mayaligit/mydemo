@@ -201,4 +201,21 @@
         <include refid="groupRuleJoins"/>
         WHERE a.group_name=#{groupName} AND a.group_status=#{groupStatus}
     </select>
+
+    <select id="findGroupRuleByName" resultType="GroupRule">
+        SELECT a.id AS "id",
+        a.group_name AS "groupName",
+        a.group_status AS "groupStatus",
+        group_attendance_start = #{groupAttendanceStart},
+        group_attendance_end = #{groupAttendanceEnd},
+        a.group_attendance_way AS "groupAttendanceWay",
+        a.group_attendance_week AS "groupAttendanceWeek",
+        a.group_address AS "groupAddress",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate"
+        from t_group_rule a
+        WHERE a.group_name=#{groupName}
+    </select>
 </mapper>

@@ -4,6 +4,8 @@ import com.cmic.attendance.model.*;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.security.acl.Group;
+import java.util.List;
 
 /**
  * 接收WEB页面参数的vo
@@ -27,6 +29,8 @@ public class GroupRuleVo implements Serializable{
 
     /*日报人员规则*/
     private GroupAudit groupAudit;
+
+    private List<GroupAddress> addressList;
 
     public GroupRule getGroupRule() {
         return groupRule;
@@ -66,5 +70,13 @@ public class GroupRuleVo implements Serializable{
 
     public void setGroupAddress(GroupAddress groupAddress) {
         this.groupAddress = groupAddress;
+    }
+
+    public List<GroupAddress> getAddressList() {
+        return addressList;
+    }
+
+    public void setAddressList(List<GroupAddress> addressList) {
+        this.addressList = addressList;
     }
 }

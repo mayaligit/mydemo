@@ -111,4 +111,12 @@
         DELETE FROM t_group_audit
         WHERE id = #{id}
     </delete>
+
+    <select id="getGroupAuditBydrId" resultType="GroupAudit">
+        SELECT
+        <include refid="groupAuditColumns"/>
+        FROM t_group_audit a
+        <include refid="groupAuditJoins"/>
+        WHERE a.daily_rule_id = #{dailyRuleId}
+    </select>
 </mapper>
