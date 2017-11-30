@@ -34,4 +34,6 @@ public interface AuditDao extends CrudDao<Audit> {
     //某个月的请假天数
     double getHolidayDays(WorkStatistics workStatistics);
 
+    List<Audit> getHolidayList(WorkStatistics workStatistics);
+
 }
