@@ -38,6 +38,8 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         double overtime = attendanceDao.getOverTime(workStatistics);//某个月总的加班时间，秒为单位。
         //加班时间转换为小时为单位，取2位小数
         double overtime_hour=  new BigDecimal(overtime/(60*60)).setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();
+        //以下为统计某个月的旷工次数
+        List<Integer> missDays=attendanceDao.getAttendanceDaysList(workStatistics);
         System.out.println(111);
         return null;
     }
