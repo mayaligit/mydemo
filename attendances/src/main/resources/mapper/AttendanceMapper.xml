@@ -22,6 +22,7 @@
         a.attendance_dimension_start AS "attendanceDimensionStart",
         a.attendance_longitude_end AS "attendanceLongitudeEnd",
         a.attendance_dimension_end AS "attendanceDimensionEnd",
+        a.attendance_work_time AS "attendanceWorkTime",
         a.remarks AS "remarks",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
@@ -136,6 +137,7 @@
             attendance_dimension_start,
             attendance_longitude_end,
             attendance_dimension_end,
+            attendance_work_time,
             remarks,
             create_by,
             create_date,
@@ -162,6 +164,7 @@
             #{attendanceDimensionStart},
             #{attendanceLongitudeEnd},
             #{attendanceDimensionEnd},
+            #{attendanceWorkTime},
             #{remarks},
             #{createBy.id},
             #{createDate},
@@ -191,6 +194,7 @@
         attendance_dimension_start = #{attendanceDimensionStart},
         attendance_longitude_end = #{attendanceLongitudeEnd},
         attendance_dimension_end = #{attendanceDimensionEnd},
+        attendance_work_time = #{attendanceWorkTime},
         remarks = #{remarks},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
@@ -249,6 +253,9 @@
         </if>
         <if test="attendanceDimension != null  and attendanceDimension != ''">
             attendance_dimension = #{attendanceDimension},
+        </if>
+        <if test="attendanceWorkTime != null ">
+            attendance_work_time = #{attendanceWorkTime},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
@@ -414,6 +421,129 @@
             <if test="dailyStatus != null and dailyStatus != ''">
                 and  daily_status = #{dailyStatus}
             </if>
+        </where>
+    </select>
+
+    <!--固定模式 迟到次数       AND DATE_FORMAT(a.start_time,'%H%i%s')>90000-->
+    <select id="getLates" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='0'
+            AND start_time_status='1'
+        </where>
+    </select>
+
+    <!--外勤次数-->
+    <select id="getFieldPersonnel" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='2'
+        </where>
+    </select>
+
+    <!--加班时间 秒为单位 晚上7点后算加班-->
+    <select id="getOverTime" resultType="Double">
+        SELECT
+        IFNULL(SUM(TIME_TO_SEC(TIMEDIFF(DATE_FORMAT(a.end_time,'%H:%i:%s'),'19:00:00'))),0)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND DATE_FORMAT(a.end_time,'%H%i%s')>190000
+        </where>
+    </select>
+
+    <!--缺卡天数-->
+    <select id="getMissingCard" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='1'
+        </where>
+    </select>
+
+
+
+    <!--固定模式 早退次数            AND DATE_FORMAT(a.end_time,'%H%i%s')&lt;180000-->
+    <select id="getLeaveEarly" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='0'
+            AND end_time_status='1'
+        </where>
+    </select>
+
+    <select id="getAttendanceDays" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='0'
         </where>
     </select>
 

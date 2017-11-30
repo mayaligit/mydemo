@@ -104,6 +104,7 @@
         WHERE id = #{id}
     </update>
 
+
     <delete id="delete">
         DELETE FROM t_group_Address
         WHERE id = #{id}
@@ -116,4 +117,26 @@
         <include refid="groupPersonnelJoins"/>
         WHERE a.attendance_group_id = #{attendanceGroupId}
     </select>
+
+    <update id="updateGroupAddressById" parameterType="map">
+        UPDATE t_group_Address SET
+        <if test="groupAttendanceLongitude != null  and groupAttendanceLongitude != ''">
+            group_attendance_longitude = #{groupAttendanceLongitude},
+        </if>
+        <if test="groupAttendanceDimension != null  and groupAttendanceDimension != ''">
+            group_attendance_dimension = #{group_attendance_dimension},
+        </if>
+        <if test="groupAddress != null  and groupAddress != ''">
+            group_address = #{groupAddress},
+        </if>
+        <if test="attendanceGroupId != null  and attendanceGroupId != ''">
+            attendance_group_id = #{attendanceGroupId},
+        </if>
+        <if test="group_attendance_scope != null  and group_attendance_scope != ''">
+            group_attendance_scope = #{groupAttendanceScope},
+        </if>
+        /*update_by = #{updateBy.id},*/
+        update_date = #{updateDate}
+        WHERE id = #{addressid}
+    </update>
 </mapper>

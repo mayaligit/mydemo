@@ -1,6 +1,7 @@
 package com.cmic.attendance.dao;
 
 import com.cmic.attendance.model.Attendance;
+import com.cmic.attendance.model.WorkStatistics;
 import com.cmic.attendance.pojo.AttendancePojo;
 import com.cmic.attendance.pojo.StatisticsPojo;
 import com.cmic.saas.base.dao.CrudDao;
@@ -37,4 +38,16 @@ public interface AttendanceDao extends CrudDao<Attendance> {
     List<Map> findAttendanceList(Map<String,Object> paramMap);
 
     List<Attendance> selectExportAttendanceData(Attendance attendance);
+
+    int getAttendanceDays(WorkStatistics workStatistics);
+
+    int getLates(WorkStatistics workStatistics);
+
+    int getLeaveEarly(WorkStatistics workStatistics);
+
+    int getFieldPersonnel(WorkStatistics workStatistics);
+
+    int getMissingCard(WorkStatistics workStatistics);
+
+    double getOverTime(WorkStatistics workStatistics);
 }

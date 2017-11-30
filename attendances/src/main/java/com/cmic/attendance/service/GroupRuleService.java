@@ -1,11 +1,14 @@
 package com.cmic.attendance.service;
 
-import com.cmic.attendance.dao.GroupRuleDao;
+import com.cmic.attendance.dao.*;
 import com.cmic.attendance.exception.GroupRuleExeption;
 import com.cmic.attendance.model.*;
+import com.cmic.attendance.vo.AttendanceUserVo;
+import com.cmic.attendance.vo.AttendanceVo;
 import com.cmic.attendance.vo.GroupRuleVo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
+import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
@@ -14,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * Service
@@ -37,6 +37,12 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
     @Autowired
     private  GroupPersonnelService groupPersonnelService;
+
+    @Autowired
+    private GroupPersonnelDao personnelDao;
+
+    @Autowired
+    private GroupAddressDao groupAddressDao;
 
     public GroupRule get(String id) {
         return super.get(id);
@@ -80,7 +86,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         HashMap<String,Object> paramMap=new HashMap<>();
         paramMap.put("groupName",groupName);
         paramMap.put("groupStatus",groupStatus);
-        return dao.getGroupRuleByGroupName(paramMap);
+        return dao.getByGroupNameAndGroupStatus(paramMap);
     }
 	/*
      插入考勤组规则数据
@@ -184,7 +190,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
     }
 
-    public Map<String,Object> findAllGroupRuleList(int pageNum,int pageSize){
+    public Map<String,Object> findAllGroupRuleList(int pageNum,int pageSize,String groupName){
 
         Map<String,Object> paramMap = new HashMap<>();
         if(pageNum==0){
@@ -192,6 +198,9 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         }
         paramMap.put("pageNum",pageNum);
         paramMap.put("pageSize",pageSize);
+        if(groupName!=null) {
+            paramMap.put("groupName", "%" + groupName + "%");
+        }
         //设置查询参数和排序条件
         PageHelper.startPage(pageNum,pageSize);
         PageHelper.orderBy("updateDate");
@@ -231,50 +240,26 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
         //根据id获取考勤主表
         GroupRule groupRule = dao.get(groupRuleId);
+        if(groupRule.getGroupAttendanceStart()!=null&&groupRule.getGroupAttendanceEnd()!=null){
+            groupRule.setGroupAttendanceStart(groupRule.getGroupAttendanceStart().substring(0,5));
+            groupRule.setGroupAttendanceEnd(groupRule.getGroupAttendanceEnd().substring(0,5));
+        }
         map.put("groupRule",groupRule);
 
         //根据考勤组id获取考勤人员
-        List<GroupPersonnel> groupPersonnelList = groupPersonnelService.findListByGroupRuleId(groupRuleId);
-       /* String personnelName = "";
-        for (int i = 0; i < groupPersonnelList.size(); i++) {
-            GroupPersonnel groupPersonnel = groupPersonnelList.get(i);
-            String personnel = groupPersonnel.getPersonnelName() + "-" + groupPersonnel.getPersonnelPhone() + "-" + groupPersonnel.getEnterpriseId();
-            if (i == groupPersonnelList.size() - 1) {
-                personnelName = personnelName + personnel;
-            }else {
-                personnelName = personnelName + personnel + ",";
-            }
-        }
-        GroupPersonnel groupPersonnel = new GroupPersonnel();
-        groupPersonnel.setPersonnelName(personnelName);*/
+        List<GroupPersonnel> groupPersonnelList = personnelDao.findListByGroupRuleId(groupRuleId);
         map.put("groupPersonnelList",groupPersonnelList);
 
         //根据考勤组id获取多地址
         List<GroupAddress> addressList = groupAddressService.findListByGroupRuleId(groupRuleId);
         map.put("groupAddressList",addressList);
-        /*String group_Address = "";
-        String[] addresses = groupRule.getGroupAddress().split(",");
-
-        for(int i=0;i<addresses.length;i++){
-            GroupAddress gaddress = addressList.get(i);
-            Float longitude = gaddress.getGroupAttendanceLongitude();
-            Float dimension = gaddress.getGroupAttendanceDimension();
-            Integer scope = gaddress.getGroupAttendanceScope();
-            String ress = addresses[i]+"-"+longitude+"-"+dimension+"-"+scope;
-            if(i==addresses.length-1){
-                group_Address = group_Address + ress;
-            }else {
-                group_Address = group_Address + ress+",";
-            }
-        }
-        groupRule.setGroupAddress(group_Address);
-        groupRuleVo.setGroupRule(groupRule);*/
         return map;
     }
 
     /**
      * 更新数据
      * */
+    @Transactional
     public void updateGroupRule(GroupRuleVo groupRuleVo) throws GroupRuleExeption{
         //返回考勤主表ID
         String attendanceGroupId = groupRuleVo.getGroupRule().getId();
@@ -284,17 +269,17 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         String[] resses = addresses.split(",");
 
         try {
-            String place = null;
+            String place = "";
             for(int i=0;i<resses.length;i++){
                 String[] places = resses[i].split("-");
-                place = places[3]+",";
+                place = place + places[3]+",";
                 if(i==resses.length-1){
-                    place = places[3];
+                    place = place + places[3];
                 }
             }
             groupRuleVo.getGroupRule().setGroupAddress(place);
             //更新规则主表数据
-            this.update(groupRuleVo.getGroupRule());
+            dao.dynamicUpdate(groupRuleVo.getGroupRule());
         }catch (Exception e){
             throw  new GroupRuleExeption("规则表更新失败");
         }
@@ -303,94 +288,39 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         try {
             //分割考勤人员输入，获取各值
             String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
-            String person[] = persons.split(",");
+            String person[] = persons.split("-");
 
             for(int i=0;i<person.length;i++){
-                String[] p = person[i].split("-");
-                String personnelName = p[0];
-                String personnelPhone = p[1];
-                String groupEnterId = p[2];
-                groupRuleVo.getGroupPersonnel().setPersonnelName(p[0]);
-                groupRuleVo.getGroupPersonnel().setPersonnelPhone(personnelPhone);
-                groupRuleVo.getGroupPersonnel().setEnterpriseId(groupEnterId);
-
-                GroupPersonnel groupPersonnel = groupRuleVo.getGroupPersonnel();
-                groupPersonnel.setAttendanceGroupId(attendanceGroupId);
-                groupPersonnelService.update(groupPersonnel);
+                groupPersonnelService.delete(person[i]);
             }
         }catch (Exception e){
-            throw  new GroupRuleExeption("考勤表更新失败");
-        }
-
-        //更新日报规则表
-        String dailyRuleId=null;
-        try {
-            GroupDailyRule groupDailyRule = groupRuleVo.getGroupDailyRule();
-            if(groupDailyRule!=null) {
-                groupDailyRule.setAttendanceGroupId(attendanceGroupId);
-                groupDailyRuleService.update(groupDailyRule);
-                dailyRuleId = groupDailyRule.getId();
-            }
-        }catch (Exception e){
-            throw  new GroupRuleExeption("日报表更新失败");
-        }
-
-        //更新审核人员
-        try {
-            GroupAudit groupAudit = groupRuleVo.getGroupAudit();
-            if(groupAudit!=null) {
-                groupAudit.setDailyRuleId(dailyRuleId);
-                groupAuditService.update(groupAudit);
-            }
-
-        }catch (Exception e){
-            throw  new GroupRuleExeption("插入审人员核操作失败");
+            throw  new GroupRuleExeption("考勤人员表更新失败");
         }
 
         //插入考勤地址信息
-        try {
-            GroupAddress groupAddress = groupRuleVo.getGroupAddress();
-            if(groupAddress!=null) {
-                groupAddress.setAttendanceGroupId(attendanceGroupId);
+
+                List<GroupAddress> gaddressList = groupAddressDao.findListByGroupRuleId(attendanceGroupId);
                 if (resses != null) {
                     for (int i = 0; i < resses.length; i++) {
                         String adds[] = resses[i].split("-");
-                        groupAddress.setGroupAttendanceLongitude(Float.parseFloat(adds[0]));
-                        groupAddress.setGroupAttendanceDimension(Float.parseFloat(adds[1]));
-                        groupAddress.setGroupAttendanceScope(Integer.parseInt(adds[2]));
-                        groupAddress.setGroupAddress(adds[3]);
-                        groupAddressService.update(groupAddress);
+                        GroupAddress groupAddress = gaddressList.get(i);
+
+                        Map<String,Object> paraMap = new HashMap<String,Object>();
+                        //还没确定怎么获取审批人的电话号码, 暂时硬编码
+                        //AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
+                        //paraMap.put("updateBy",attendanceUserVo.getAttendanceUsername());
+
+                        paraMap.put("addressid",groupAddress.getId());
+                        paraMap.put("groupAttendanceLongitude",Float.parseFloat(adds[0]));
+                        paraMap.put("groupAttendanceDimension",Float.parseFloat(adds[1]));
+                        paraMap.put("groupAttendanceScope",Integer.parseInt(adds[2]));
+                        paraMap.put("groupAddress",adds[3]);
+                        paraMap.put("attendanceGroupId",attendanceGroupId);
+
+                        paraMap.put("updateDate",new Date());
+                        groupAddressDao.updateGroupAddressById(paraMap);
                     }
-                }
             }
-
-        }catch (Exception e){
-            throw  new GroupRuleExeption("考勤表地址信息更新失败");
-        }
-    }
-
-    @Transactional(readOnly = false)
-    public void delByGroupRuleId(String groupRuleId){
-        //删除groupRule
-        GroupRule groupRule = get(groupRuleId);
-        delete(groupRuleId);
-        //删除考勤人员
-        List<GroupPersonnel> list = groupPersonnelService.findListByGroupRuleId(groupRuleId);
-        for (GroupPersonnel groupPersonnel : list){
-            groupPersonnelService.delete(groupPersonnel.getId());
-        }
-        //删除日报规则表数据
-        GroupDailyRule groupDailyRule = groupDailyRuleService.getDailyByGroupRuleId(groupRuleId);
-        String groupDailyRuleId = groupDailyRule.getId();
-        groupDailyRuleService.delete(groupDailyRule.getId());
-
-        //删除审核人员
-        GroupAudit audit = new GroupAudit();
-        audit.setDailyRuleId(groupDailyRuleId);
-        GroupAudit groupAudit = groupAuditService.get(audit);
-        groupAuditService.delete(groupAudit.getId());
-
-        logger.info("删除：" + groupRule.toJSONString());
     }
 
 }

@@ -49,7 +49,8 @@ public class Attendance extends DataEntity<Attendance> {
     protected String attendanceLongitudeEnd;
     @ApiModelProperty(value = "下班打卡的维度")
     protected String attendanceDimensionEnd;
-
+    @ApiModelProperty(value="上班时长")
+    protected  float attendanceWorkTime;
 
     public Attendance(){
 
@@ -208,5 +209,13 @@ public class Attendance extends DataEntity<Attendance> {
 
     public void setAttendanceDimensionEnd(String attendanceDimensionEnd) {
         this.attendanceDimensionEnd = attendanceDimensionEnd;
+    }
+
+    public float getAttendanceWorkTime() {
+        return attendanceWorkTime;
+    }
+
+    public void setAttendanceWorkTime(float attendanceWorkTime) {
+        this.attendanceWorkTime = attendanceWorkTime;
     }
 }
