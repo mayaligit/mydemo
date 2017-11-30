@@ -50,4 +50,6 @@ public interface AttendanceDao extends CrudDao<Attendance> {
     int getMissingCard(WorkStatistics workStatistics);
 
     double getOverTime(WorkStatistics workStatistics);
+
+    List<Integer> getAttendanceDaysList(WorkStatistics workStatistics);
 }

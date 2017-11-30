@@ -505,6 +505,25 @@
         </where>
     </select>
 
+    <select id="getAttendanceMissDays" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='1'
+        </where>
+    </select>
+
 
 
     <!--固定模式 早退次数            AND DATE_FORMAT(a.end_time,'%H%i%s')&lt;180000-->
@@ -525,6 +544,24 @@
             </if>
             AND a.attendance_status='0'
             AND end_time_status='1'
+        </where>
+    </select>
+
+    <select id="getAttendanceDaysList" resultType="Integer">
+        SELECT
+        DATE_FORMAT(a.start_time,'%d')
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
         </where>
     </select>
 

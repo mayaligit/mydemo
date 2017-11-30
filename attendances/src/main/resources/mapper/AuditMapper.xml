@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "com.cmic.attendance.dao.AuditDao">
+<mapper namespace="com.cmic.attendance.dao.AuditDao">
     <sql id="auditColumns">
         a.id AS "id",
         a.username AS "username",
@@ -19,7 +19,12 @@
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
-        a.update_date AS "updateDate"
+        a.update_date AS "updateDate",
+        a.start_date AS "startDate",
+        a.end_date AS "endDate",
+        a.holiday_days AS "holidayDays",
+        a.field_personnel AS "fieldPersonnel",
+        a.field_personnel_days AS "fieldPersonnelDays"
     </sql>
 
     <sql id="auditJoins">
@@ -113,6 +118,22 @@
         </where>
     </select>
 
+    <!--某个月的请假审批通过记录-->
+    <select id="getHolidayList" resultType="Audit">
+        SELECT
+        <include refid="auditColumns"/>
+        FROM t_audit a
+        <where>
+            1 = 1
+            <if test="userName != null">
+                AND a.username = #{userName}
+            </if>
+            AND a.business_type=0
+            AND a.audit_suggestion=0
+            AND DATE_FORMAT(a.submit_time,'%Y-%m')=#{month}
+        </where>
+    </select>
+
 
     <insert id="insert">
         INSERT INTO t_audit(
@@ -133,7 +154,12 @@
         create_by,
         create_date,
         update_by,
-        update_date
+        update_date,
+        start_date,
+        end_date,
+        holiday_days,
+        field_personnel,
+        field_personnel_days
         ) VALUES (
         #{id},
         #{username},
@@ -152,12 +178,18 @@
         #{createBy.id},
         #{createDate},
         #{updateBy.id},
-        #{updateDate}
+        #{updateDate},
+        #{startDate},
+        #{endDate},
+        #{holidayDays},
+        #{fieldPersonnel},
+        #{fieldPersonnelDays}
         )
     </insert>
 
     <update id="update">
-        UPDATE t_audit SET
+        UPDATE t_audit
+        <set>
         username = #{username},
         submit_time = #{submitTime},
         audit_content = #{auditContent},
@@ -173,7 +205,13 @@
         remarks = #{remarks},
         create_by = #{createBy.id},
         update_by = #{updateBy.id},
-        update_date = #{updateDate}
+        update_date = #{updateDate},
+        start_date = #{startDate},
+        end_date = #{endDate},
+        holiday_days = #{holidayDays},
+        field_personnel = #{fieldPersonnel},
+        field_personnel_days = #{fieldPersonnelDays},
+        </set>
         WHERE id = #{id}
     </update>
 
@@ -255,8 +293,8 @@
 
     <select id="findAuditList" resultType="Map" parameterType="Audit">
         SELECT
-	      a.id , a.username ,a.audit_content AS auditContent ,
-          date_format(a.submit_time,'%Y年%m月%d日 %T') AS submitTime ,a.audit_status AS auditStatus
+        a.id , a.username ,a.audit_content AS auditContent ,
+        date_format(a.submit_time,'%Y年%m月%d日 %T') AS submitTime ,a.audit_status AS auditStatus
         FROM t_audit a
         <where>
             1=1
