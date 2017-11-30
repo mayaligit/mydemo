@@ -17,7 +17,7 @@ import java.util.Map;
 * 考勤地址表Service
 */
 @Service
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class GroupAddressService extends CrudService<GroupAddressDao, GroupAddress> {
 
     public GroupAddress get(String id) {
