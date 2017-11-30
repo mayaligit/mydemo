@@ -5,6 +5,7 @@ import com.cmic.attendance.dao.AttendanceDao;
 import com.cmic.attendance.dao.AuditDao;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Audit;
+import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
@@ -190,11 +191,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             String createTime = DateUtils.getDateToYearMonthDay(submitTime);
             Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime(phone, createTime);
             switch (audit.getBusinessType()) {
+                //分别按照自由模式和时长模式维护数据表 自由/groupAttendanceWay =0  时长/groupAttendanceWay=1
                 case 0:
-
-
                     break;
                 case 1:
+                    //获取考勤规则
+                     GroupRule groupRule=groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
+                    //自由模式
+                    groupRule.get
                     break;
                 case 2:
                     break;
