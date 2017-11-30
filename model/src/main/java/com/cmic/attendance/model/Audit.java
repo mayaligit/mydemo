@@ -5,15 +5,16 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+
 /**
- * 日报实体
+ * 审批实体
  */
 @ApiModel(value = "Audit", description = "日报")
 public class Audit extends DataEntity<Audit> {
 
     @ApiModelProperty(value = "提交审批用户名")
     protected String username;
-    @ApiModelProperty(value = "日报提交时间")
+    @ApiModelProperty(value = "审批提交时间")
     protected Date submitTime;
     @ApiModelProperty(value = "申请的审批的内容")
     protected String auditContent;
@@ -29,18 +30,25 @@ public class Audit extends DataEntity<Audit> {
     protected String attendanceId;
     @ApiModelProperty(value = "0/同意 , 1/拒绝")
     protected Integer auditSuggestion;
-    @ApiModelProperty(value = "保留字段,暂定0为补卡新类型, 以后可增加请假等类型")
+    @ApiModelProperty(value = "0/请假,1/外勤,2/缺卡")
     protected Integer businessType;
     @ApiModelProperty(value = "审批意见备注")
     protected String suggestionRemarksvarchar;
     @ApiModelProperty(value = "提交审批所属组")
     protected String attendanceGroup;
+    @ApiModelProperty(value = "请假开始时间,外勤开始时间")
+    protected Date startDate;
+    @ApiModelProperty(value = "请假结束时间,外勤结束时间")
+    protected Date endDate;
+    @ApiModelProperty(value = "外勤次数 0/没有申请 1/申请外勤1次")
+    protected Integer fieldPersonnel;
+    @ApiModelProperty(value = "请假时长 1/1天 0.5/半天")
+    protected Double holidayDays;
+    @ApiModelProperty(value = "外勤时长 1/1天 0.5/半天")
+    protected Double fieldPersonnelDays;
 
-    public Audit(){
+    public Audit() {
 
-    }
-    public Audit(String id){
-        super(id);
     }
 
     public String getUsername() {
@@ -139,5 +147,43 @@ public class Audit extends DataEntity<Audit> {
         this.attendanceGroup = attendanceGroup;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
 
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Integer getFieldPersonnel() {
+        return fieldPersonnel;
+    }
+
+    public void setFieldPersonnel(Integer fieldPersonnel) {
+        this.fieldPersonnel = fieldPersonnel;
+    }
+
+    public Double getHolidayDays() {
+        return holidayDays;
+    }
+
+    public void setHolidayDays(Double holidayDays) {
+        this.holidayDays = holidayDays;
+    }
+
+    public Double getFieldPersonnelDays() {
+        return fieldPersonnelDays;
+    }
+
+    public void setFieldPersonnelDays(Double fieldPersonnelDays) {
+        this.fieldPersonnelDays = fieldPersonnelDays;
+    }
 }
