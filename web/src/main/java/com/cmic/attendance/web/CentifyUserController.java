@@ -1,10 +1,8 @@
 package com.cmic.attendance.web;
 
 import com.cmic.attendance.Constant.Constant;
-import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.RcsToken;
 import com.cmic.attendance.model.UserBo;
-import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.JSONUtils;

@@ -114,16 +114,17 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-       //测试数据结束*/
-       /* HttpServletRequest request = WebUtils.getRequest();
-        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");*/
+       //测试数据结束*/ /**/
+         HttpServletRequest request = WebUtils.getRequest();
+        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
         String phone = (String)redisTemplate.boundValueOps("phone").get();
         String username = (String)redisTemplate.boundValueOps("username").get();
-        log.debug("redis中对象user"+phone+""+username);
+        log.debug("登录者session数据》》》》》》》》》》"+user);
+
         Attendance DBattendance=service.checkAttendance(phone,serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime() ){

@@ -421,7 +421,7 @@
         </where>
     </select>
 
-    <!--固定模式 迟到次数-->
+    <!--固定模式 迟到次数       AND DATE_FORMAT(a.start_time,'%H%i%s')>90000-->
     <select id="getLates" resultType="Integer">
         SELECT
         count(*)
@@ -438,7 +438,7 @@
                 AND a.attendance_month = #{month}
             </if>
             AND a.attendance_status='0'
-            AND DATE_FORMAT(a.start_time,'%H%i%s')>90000
+            AND start_time_status='1'
         </where>
     </select>
 
@@ -462,6 +462,26 @@
         </where>
     </select>
 
+    <!--加班时间 秒为单位 晚上7点后算加班-->
+    <select id="getOverTime" resultType="Double">
+        SELECT
+        IFNULL(SUM(TIME_TO_SEC(TIMEDIFF(DATE_FORMAT(a.end_time,'%H:%i:%s'),'19:00:00'))),0)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND DATE_FORMAT(a.end_time,'%H%i%s')>190000
+        </where>
+    </select>
+
     <!--缺卡天数-->
     <select id="getMissingCard" resultType="Integer">
         SELECT
@@ -482,9 +502,28 @@
         </where>
     </select>
 
+    <select id="getAttendanceMissDays" resultType="Integer">
+        SELECT
+        count(*)
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND a.attendance_status='1'
+        </where>
+    </select>
 
 
-    <!--固定模式 早退次数-->
+
+    <!--固定模式 早退次数            AND DATE_FORMAT(a.end_time,'%H%i%s')&lt;180000-->
     <select id="getLeaveEarly" resultType="Integer">
         SELECT
         count(*)
@@ -501,7 +540,25 @@
                 AND a.attendance_month = #{month}
             </if>
             AND a.attendance_status='0'
-            AND DATE_FORMAT(a.end_time,'%H%i%s')&lt;180000
+            AND end_time_status='1'
+        </where>
+    </select>
+
+    <select id="getAttendanceDaysList" resultType="Integer">
+        SELECT
+        DATE_FORMAT(a.start_time,'%d')
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
         </where>
     </select>
 

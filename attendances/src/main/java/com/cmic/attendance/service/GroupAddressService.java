@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -65,5 +66,9 @@ public class GroupAddressService extends CrudService<GroupAddressDao, GroupAddre
      */
     public List<GroupAddress> findListByGroupRuleId(String attendanceGroupId){
         return dao.findListByGroupRuleId(attendanceGroupId);
+    }
+
+    public void updateGroupAddressById(Map<String,Object> paramMap){
+        dao.updateGroupAddressById(paramMap);
     }
 }
