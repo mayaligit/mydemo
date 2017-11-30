@@ -43,7 +43,10 @@ public class AttendanceEndVo implements Serializable {
     //考勤时间是否是工作日
     //工作日对应结果为0, 非工作日对应结果为1
     private String attendanceDayStatus;
-
+    //打卡经度
+    private String attendanceDimension;
+    //打卡维度
+    private String attendanceLongitude;
     public String getClazzesId() {
         return clazzesId;
     }
@@ -190,5 +193,21 @@ public class AttendanceEndVo implements Serializable {
 
     public void setAttendanceDayStatus(String attendanceDayStatus) {
         this.attendanceDayStatus = attendanceDayStatus;
+    }
+
+    public String getAttendanceDimension() {
+        return attendanceDimension;
+    }
+
+    public void setAttendanceDimension(String attendanceDimension) {
+        this.attendanceDimension = attendanceDimension;
+    }
+
+    public String getAttendanceLongitude() {
+        return attendanceLongitude;
+    }
+
+    public void setAttendanceLongitude(String attendanceLongitude) {
+        this.attendanceLongitude = attendanceLongitude;
     }
 }

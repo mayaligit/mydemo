@@ -193,7 +193,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceVo.setAttendanceGroup("odc");
         attendanceVo.setUsername(username);
         attendanceVo.setPhone(phone);
-
+        log.debug("测试是否传地址"+attendanceVo.getAttendanceDimension()+attendanceVo.getAttendanceLongitude());
         Attendance attendanceBo = null;
         AttendanceVo resultAttendanceVo =new AttendanceVo();
         try {
@@ -232,7 +232,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceEndVo.setAttendanceGroup("odc");
         attendanceEndVo.setUsername(username);
         attendanceEndVo.setPhone(phone);
-
         AttendanceEndVo resultAttendanceVo=new AttendanceEndVo();
         Attendance attendanceBo = null;
         try{
@@ -241,7 +240,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }catch (AttendanceException e){
             resultAttendanceVo.setAttendanceDayStatus("1");
         }
-        resultAttendanceVo.setAttendanceId(attendanceBo.getId());
         resultAttendanceVo.setUsername(attendanceBo.getAttendanceUser());
         resultAttendanceVo.setPhone(attendanceEndVo.getPhone());
         resultAttendanceVo.setAttendanceStatus(attendanceBo.getAttendanceStatus());
