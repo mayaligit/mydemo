@@ -282,17 +282,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String groupAttendanceWay = groupRule.getGroupAttendanceWay()+"";
         Attendance saveAttendance=null;
         String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+        Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
         //查询当前用户数据是否存在
         Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
-        Date startTime = attendance.getStartTime();
-        Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
-        double timesBetween = endTime.getTime()-startTime.getTime();
-        double workTime=timesBetween/(60*60*1000);
-        BigDecimal bd = new BigDecimal(workTime);
-        //四舍五入保留一位小数
-        workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
-        //上班时长
-        float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
         //一、固定时长
         if ("1".equals(groupAttendanceWay)){
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入固定打卡业务<<<<<<<<<<<<<<<<<<<<<<<<<<<");
@@ -306,25 +298,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                       attendance.setAttendanceDesc("上班卡没打");
                 }*/
                 saveAttendance.setUpdateDate(startDate);
+                Date startTime = saveAttendance.getStartTime();
+                double timesBetween = endTime.getTime()-startTime.getTime();
+                double workTime=timesBetween/(60*60*1000);
+                BigDecimal bd = new BigDecimal(workTime);
+                //四舍五入保留一位小数
+                workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+                //上班时长
+                float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
+                saveAttendance.setAttendanceWorkTime(attendanceWorkTime);
             }
-
-            /*//判断当前地点是否异常
-            String distance2 = attendanceEndVo.getDistance();
-            if (distance2 ==null || "".equals(distance2)){
-                distance2="0.0";
-            }
-            String[] split = distance2.split("\\.");
-            String distances=split[0];
-            Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
-            if (Integer.parseInt(distances) > groupAttendanceScope) {
-                saveAttendance.setAttendanceStatus("1");
-                saveAttendance.setAttendanceDesc("地点异常");
-
-            } else {
-                //地址重合则会是null或小于都走这里的逻辑
-                saveAttendance.setAttendanceStatus("0");
-            }*/
-
             //设计考勤时间
             /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
             String groupAttendanceEnd = groupRule.getGroupAttendanceEnd()+"";
@@ -347,7 +330,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }else {
                     saveAttendance.setEndTimeStatus("1");
             }
-
         }else {
             //二、自由模式。预留业务
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
@@ -355,6 +337,14 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance= new Attendance();
             }else{
                 saveAttendance=attendance;
+                Date startTime = saveAttendance.getStartTime();
+                double timesBetween = endTime.getTime()-startTime.getTime();
+                double workTime=timesBetween/(60*60*1000);
+                BigDecimal bd = new BigDecimal(workTime);
+                //四舍五入保留一位小数
+                workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+                //上班时长
+                float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
                 //获取考勤的时长
                 double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
                 //比较实际考勤时长与规则考勤时长
@@ -364,12 +354,28 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     saveAttendance.setEndTimeStatus("1");
                 }
                 saveAttendance.setUpdateDate(startDate);
+                saveAttendance.setAttendanceWorkTime(attendanceWorkTime);
             }
         }
+        /*//判断当前地点是否异常
+            String distance2 = attendanceEndVo.getDistance();
+            if (distance2 ==null || "".equals(distance2)){
+                distance2="0.0";
+            }
+            String[] split = distance2.split("\\.");
+            String distances=split[0];
+            Integer groupAttendanceScope = Integer.parseInt(clazzes.getNomalAddress());
+            if (Integer.parseInt(distances) > groupAttendanceScope) {
+                saveAttendance.setAttendanceStatus("1");
+                saveAttendance.setAttendanceDesc("地点异常");
+
+            } else {
+                //地址重合则会是null或小于都走这里的逻辑
+                saveAttendance.setAttendanceStatus("0");
+            }*/
         //插入数据
         saveAttendance.setAttendanceUser(attendanceEndVo.getUsername());
         saveAttendance.setEndTime(endTime);
-        saveAttendance.setAttendanceWorkTime(attendanceWorkTime);
         //年月日
         String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
         String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
