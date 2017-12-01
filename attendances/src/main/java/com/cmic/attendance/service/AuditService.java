@@ -104,7 +104,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     break;
                 case 1:
                     //外勤情况 startDate endDate Field_personnel_days 不为空
-                    if (null == audit.getStartDate() || null == audit.getEndDate() || StringUtils.isBlank(String.valueOf(audit.getFieldPersonnelDays()))) {
+                    if (null == audit.getStartDate() || null == audit.getEndDate() || StringUtils.isBlank(String.valueOf(audit.getHolidayDays()))) {
                         map.put("msg", "外勤时间不能为空");
                         return map;
                     }
@@ -114,8 +114,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                         map.put("msg", "请正确选择开始和结束时间");
                         return map;
                     }
-                    //设置外勤次数为1
-                    audit.setFieldPersonnel(1);
                     break;
                 case 2:
                     //缺卡 uditContent已经判断了
@@ -158,6 +156,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
     @Transactional(readOnly = false)
     public void updateAudit(Audit audit, HttpServletRequest request) {
+        Attendance attendance = new Attendance();
         Map<String, Object> paraMap = new HashMap<String, Object>();
         //获取审批人信息,更新审批表
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
@@ -170,89 +169,137 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         //  paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());        //更新 审批状态为 已处理
         dao.updateAudit(paraMap);
 
-        // 如果审批同意 ,维护考勤表;如果不同意,无操作
+        //获取考勤规则
+        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
+
+        //如果审批同意 ,维护考勤表;如果不同意,无操作
         if (audit.getAuditSuggestion() == 1) {
             return;
         }
-        if (audit.getAuditSuggestion() == 0) {
-            //如果是请假 0 同意了 0  更新审批表  维护考勤表  上班时长为 0
-            // 如果是外勤 1 同意了 0  更新审批表  维护考情表  上下班按照默认值
-            // 如果是缺卡 2 同意了 0  更新审批表  维护考勤表 上下班按照默认值
-            //获取当天数据库的打卡数据
-            String phone = audit.getCreateBy().getId();
-            Date submitTime = audit.getSubmitTime();
-            String createTime = DateUtils.getDateToYearMonthDay(submitTime);
-            Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime(phone, createTime);
-            switch (audit.getBusinessType()) {
-                //分别按照自由模式和时长模式维护数据表 自由/groupAttendanceWay =0  时长/groupAttendanceWay=1
-                case 0:
-                    break;
-                case 1:
-                    //获取考勤规则
-                     GroupRule groupRule=groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
-                    //自由模式
 
-                    break;
-                case 2:
-                    break;
-            }
-        }
-
-        //审批的是补卡类型时,关联对应考勤
+        //获取数据库当天打卡数据
+        String phone = audit.getCreateBy().getId();
+        Date submitTime = audit.getSubmitTime();
+        String createTime = DateUtils.getDateToYearMonthDay(submitTime);
+        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime(phone, createTime);
 
         //将手机号码放到session中
-/*        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO", adminEntity);
 
-        Attendance attendance = new Attendance();
-        String businessType = audit.getBusinessType().toString();
-        if (null == DBattendance) { //没有打卡数据
-            attendance.preInsert();
-            attendance.setAttendanceUser(audit.getUsername());
-            attendance.setCreateDate(new Date());
-            attendance.setUpdateDate(new Date());
-            attendance.setAttendanceMonth(createTime);
-            attendance.setAttendanceGroup("ODC");
-
-            if (businessType.trim().equals("0")) {  //处理补上班卡
-                Date startTime = DateUtils.getStringsToDates(createTime + " " + "9:00:00");
-                attendance.setStartTime(startTime);
-                attendance.setStartTimeStatus("0");
-                attendance.setStartLocation("南方基地");
-                attendance.setAttendanceStatus("0");
-                attendance.setDailyStatus(0);
-
-            } else if (businessType.trim().equals("1")) {  //处理补下班卡
-                Date endTime = DateUtils.getStringsToDates(createTime + " " + "18:00:00");
-                attendance.setEndTime(endTime);
-                attendance.setEndLocation("南方基地");
-                attendance.setEndTimeStatus("0");
-                attendance.setDailyStatus(0);
-                attendance.setAttendanceStatus("1");
-
+     /* 审批同意 按自由模式和时长模式维护考勤表
+         如果是请假 0   更新审批表(已经处理)  不维护考勤表
+         如果是外勤 1   更新审批表(已经处理)  维护考情表  上下班按照默认值
+         如果是缺卡 2   更新审批表(已经处理)  维护考勤表 上下班按照默认值  */
+        //自由模式
+        if ("0".equals(groupRule.getGroupAttendanceWay())) {
+            switch (audit.getBusinessType()) {
+                //请假
+                case 0:
+                    break;
+                //外勤
+                case 1:
+                    attendance.preInsert();
+                    attendance.setAttendanceUser(audit.getUsername());
+                    attendance.setAttendanceStatus("0");
+                    attendance.setAttendanceMonth(DateUtils.getCurrMonth());
+                    attendance.setDailyStatus(0);
+                    attendance.setAttendanceGroup(audit.getAttendanceGroup());
+                    attendance.setEndTimeStatus("0");
+                    attendance.setStartTimeStatus("0");
+                    //attendance.setAttendanceWorkTime(groupRule.getGroupAttendanceDuration());
+                    attendance.setCreateDate(new Date());
+                    attendance.setUpdateDate(new Date());
+                    attendanceDao.insert(attendance);
+                    break;
+                //缺卡 分为有打卡和没有打卡情况
+                case 2:
+                    if (DBattendance == null) {
+                        attendance.preInsert();
+                        attendance.setAttendanceUser(audit.getUsername());
+                        attendance.setAttendanceStatus("0");
+                        attendance.setAttendanceMonth(DateUtils.getCurrMonth());
+                        attendance.setDailyStatus(0);
+                        attendance.setAttendanceGroup(audit.getAttendanceGroup());
+                        attendance.setEndTimeStatus("0");
+                        attendance.setStartTimeStatus("0");
+                        attendance.setCreateDate(new Date());
+                        attendance.setUpdateDate(new Date());
+                        attendanceDao.insert(attendance);
+                    } else {
+                        attendance.setId(DBattendance.getId());
+                        attendance.preUpdate();
+                        attendance.setAttendanceStatus("0");
+                        attendance.setUpdateDate(new Date());
+                        attendance.setStartTimeStatus("0");
+                        attendance.setEndTimeStatus("0");
+                        attendanceDao.dynamicUpdate(attendance);
+                    }
+                    break;
             }
-            attendanceDao.insert(attendance);
-
-        } else { //有打卡数据
-            attendance.setId(DBattendance.getId());
-            attendance.preUpdate();
-            attendance.setUpdateDate(new Date());
-
-            if (businessType.trim().equals("0")) {  //处理补上班卡
-                Date startTime = DateUtils.getStringsToDates(createTime + " " + "9:00:00");
-                attendance.setStartTime(startTime);
-                attendance.setStartTimeStatus("0");
-                attendance.setStartLocation("南方基地");
-
-            } else if (businessType.trim().equals("1")) {  //处理补下班卡
-                Date endTime = DateUtils.getStringsToDates(createTime + " " + "18:00:00");
-                attendance.setEndTime(endTime);
-                attendance.setEndLocation("南方基地");
-                attendance.setEndTimeStatus("0");
+        }
+        //时长模式
+        if ("1".equals(groupRule.getGroupAttendanceWay())) {
+            switch (audit.getBusinessType()) {
+                //请假
+                case 0:
+                    break;
+                //外勤
+                case 1:
+                    attendance.preInsert();
+                    attendance.setAttendanceUser(audit.getUsername());
+                    attendance.setStartTime(DateUtils.getStringsToDates(groupRule.getGroupAttendanceStart()));
+                    attendance.setEndTime(DateUtils.getStringsToDates(groupRule.getGroupAttendanceEnd()));
+                    attendance.setAttendanceStatus("0");
+                    attendance.setAttendanceMonth(DateUtils.getCurrMonth());
+                    //attendance.setStartLocation(groupRule.getGroupAddress());
+                    //attendance.setEndLocation(groupRule.getGroupAddress());
+                    attendance.setDailyStatus(0);
+                    attendance.setAttendanceGroup(audit.getAttendanceGroup());
+                    attendance.setEndTimeStatus("0");
+                    attendance.setStartTimeStatus("0");
+                    attendance.setAttendanceWorkTime(groupRule.getGroupAttendanceDuration());
+                    attendance.setCreateDate(new Date());
+                    attendance.setUpdateDate(new Date());
+                    attendanceDao.insert(attendance);
+                    break;
+                //缺卡 分为有打卡和没有打卡情况
+                case 2:
+                    if (DBattendance == null) {
+                        attendance.preInsert();
+                        attendance.setAttendanceUser(audit.getUsername());
+                        attendance.setStartTime(DateUtils.getStringsToDates(groupRule.getGroupAttendanceStart()));
+                        attendance.setEndTime(DateUtils.getStringsToDates(groupRule.getGroupAttendanceEnd()));
+                        attendance.setAttendanceStatus("0");
+                        attendance.setAttendanceMonth(DateUtils.getCurrMonth());
+                        attendance.setStartLocation(groupRule.getGroupAddress());
+                        attendance.setEndLocation(groupRule.getGroupAddress());
+                        attendance.setDailyStatus(0);
+                        attendance.setAttendanceGroup(audit.getAttendanceGroup());
+                        attendance.setEndTimeStatus("0");
+                        attendance.setStartTimeStatus("0");
+                        attendance.setAttendanceWorkTime(groupRule.getGroupAttendanceDuration());
+                        attendance.setCreateDate(new Date());
+                        attendance.setUpdateDate(new Date());
+                        attendanceDao.insert(attendance);
+                    } else {
+                        attendance.setId(DBattendance.getId());
+                        attendance.preUpdate();
+                        attendance.setStartTime(DateUtils.getStringsToDates(groupRule.getGroupAttendanceStart()));
+                        attendance.setEndTime(DateUtils.getStringsToDates(groupRule.getGroupAttendanceEnd()));
+                        attendance.setAttendanceStatus("0");
+                        attendance.setStartLocation(groupRule.getGroupAddress());
+                        attendance.setEndLocation(groupRule.getGroupAddress());
+                        attendance.setStartTimeStatus("0");
+                        attendance.setEndTimeStatus("0");
+                        attendance.setAttendanceWorkTime(groupRule.getGroupAttendanceDuration());
+                        attendance.setUpdateDate(new Date());
+                        attendanceDao.dynamicUpdate(attendance);
+                    }
+                    break;
             }
-            attendanceDao.dynamicUpdate(attendance);
-        }*/
+        }
     }
 
     public Map<String, Object> findAuditList(PageInfo<Audit> page, Audit audit) {
