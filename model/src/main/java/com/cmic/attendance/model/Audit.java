@@ -40,12 +40,9 @@ public class Audit extends DataEntity<Audit> {
     protected Date startDate;
     @ApiModelProperty(value = "请假结束时间,外勤结束时间")
     protected Date endDate;
-    @ApiModelProperty(value = "外勤次数 0/没有申请 1/申请外勤1次")
-    protected Integer fieldPersonnel;
-    @ApiModelProperty(value = "请假时长 1/1天 0.5/半天")
+    @ApiModelProperty(value = "请假或外勤时长 1/1天 0.5/半天")
     protected Double holidayDays;
-    @ApiModelProperty(value = "外勤时长 1/1天 0.5/半天")
-    protected Double fieldPersonnelDays;
+
 
     public Audit() {
 
@@ -163,13 +160,6 @@ public class Audit extends DataEntity<Audit> {
         this.endDate = endDate;
     }
 
-    public Integer getFieldPersonnel() {
-        return fieldPersonnel;
-    }
-
-    public void setFieldPersonnel(Integer fieldPersonnel) {
-        this.fieldPersonnel = fieldPersonnel;
-    }
 
     public Double getHolidayDays() {
         return holidayDays;
@@ -177,13 +167,5 @@ public class Audit extends DataEntity<Audit> {
 
     public void setHolidayDays(Double holidayDays) {
         this.holidayDays = holidayDays;
-    }
-
-    public Double getFieldPersonnelDays() {
-        return fieldPersonnelDays;
-    }
-
-    public void setFieldPersonnelDays(Double fieldPersonnelDays) {
-        this.fieldPersonnelDays = fieldPersonnelDays;
     }
 }

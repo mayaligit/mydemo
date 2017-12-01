@@ -104,7 +104,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     break;
                 case 1:
                     //外勤情况 startDate endDate Field_personnel_days 不为空
-                    if (null == audit.getStartDate() || null == audit.getEndDate() || StringUtils.isBlank(String.valueOf(audit.getFieldPersonnelDays()))) {
+                    if (null == audit.getStartDate() || null == audit.getEndDate() || StringUtils.isBlank(String.valueOf(audit.getHolidayDays()))) {
                         map.put("msg", "外勤时间不能为空");
                         return map;
                     }
@@ -114,8 +114,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                         map.put("msg", "请正确选择开始和结束时间");
                         return map;
                     }
-                    //设置外勤次数为1
-                    audit.setFieldPersonnel(1);
                     break;
                 case 2:
                     //缺卡 uditContent已经判断了

@@ -12,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -30,8 +31,11 @@ import java.util.List;
 */
 @Api(description = "管理")
 @RestController
-@RequestMapping("/rule")
+@RequestMapping("/attendance/rule")
 public class GroupRuleController extends BaseRestController<GroupRuleService> {
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Autowired
     private GroupDailyRuleService groupDailyRuleService;
@@ -101,15 +105,15 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         groupRuleVo.getGroupRule().setId(id);
         HashMap<String,String> resultHash =new HashMap<String,String>();
 
-        HttpSession session = WebUtils.getSession();
-        Object attendanceUserVo = session.getAttribute("attendanceUserVo");
+        //检查当前用户是否已经打卡
+        String username = (String)redisTemplate.boundValueOps("username").get();
+
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
         groupRuleVo.getGroupRule().setUpdateBy(adminEntity);
         groupRuleVo.getGroupPersonnel().setUpdateBy(adminEntity);
 
-        System.out.println("attendanceUserVo"+attendanceUserVo);
         try {
             service.updateGroupRule(groupRuleVo);
             resultHash.put("code","0");
@@ -174,13 +178,13 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     public Map<String,String> insertGroupRule(@Validated @RequestBody GroupRuleVo groupRuleVo){
         //测试数据
         HttpServletRequest request = WebUtils.getRequest();
-        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        //HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+        //response.setHeader("Access-Control-Allow-Origin", "*");
+       /* BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
         //测试数据结束
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
         HashMap<String,String> resultHash =new HashMap<String,String>();
         try {
             service.insertGroupRule(groupRuleVo);
