@@ -21,7 +21,7 @@ public interface DailyDao extends CrudDao<Daily> {
 
     void updateDailyAuditById(Map<String,Object> paramMap);
 
-    List<Map> findDailyList(Daily daily);
+    List<Map> findDailyList(DailyPojo dailyPojo);
 
     Daily getDailyByPhoneAndUser(DailyPojo dailyPojo);
 }

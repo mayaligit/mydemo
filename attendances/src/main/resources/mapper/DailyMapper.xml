@@ -238,7 +238,7 @@
         WHERE id = #{dailyId}
     </select>
 
-    <select id="findDailyList" parameterType="Daily" resultType="Map">
+    <select id="findDailyList" parameterType="com.cmic.attendance.pojo.DailyPojo" resultType="Map">
         SELECT
           a.id , a.username ,a.daily_title AS dailyTitle ,a.daily_desc AS  dailyDesc ,a.attendance_group AS attendanceGroup,
         date_format(a.submit_time,'%Y年%m月%d日 %T') AS submitTime , a.suggestion_status AS suggestionStatus

@@ -3,7 +3,7 @@ package com.cmic.attendance.dao;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.WorkStatistics;
 import com.cmic.attendance.pojo.AttendancePojo;
-import com.cmic.attendance.pojo.StatisticsPojo;
+import com.cmic.attendance.pojo.AttendanceResultPojo;
 import com.cmic.saas.base.dao.CrudDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -29,7 +29,7 @@ public interface AttendanceDao extends CrudDao<Attendance> {
 
     int getWorkCount(AttendancePojo attendancePojo);
 
-    int getLatterCount(StatisticsPojo statisticsPojo);
+    int getLatterCount(AttendancePojo attendancePojo);
 
     int getOutworkCount(AttendancePojo attendancePojo);
 
@@ -49,7 +49,15 @@ public interface AttendanceDao extends CrudDao<Attendance> {
 
     int getMissingCard(WorkStatistics workStatistics);
 
+    List<AttendanceResultPojo> checkAttendanceHardworkingByDay(AttendancePojo attendancePojo);
+
+    List<Map> checkAttendanceHardworkingByMonth(AttendancePojo attendancePojo);
+
+    List<Map> checkAttendanceLatterByMonth(AttendancePojo attendancePojo);
+
     double getOverTime(WorkStatistics workStatistics);
 
     List<Integer> getAttendanceDaysList(WorkStatistics workStatistics);
+
 }
+

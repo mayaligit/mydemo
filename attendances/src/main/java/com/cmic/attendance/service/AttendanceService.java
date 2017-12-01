@@ -4,7 +4,7 @@ import com.cmic.attendance.dao.AttendanceDao;
 import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.*;
 import com.cmic.attendance.pojo.AttendancePojo;
-import com.cmic.attendance.pojo.StatisticsPojo;
+import com.cmic.attendance.pojo.AttendanceResultPojo;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.*;
 import com.cmic.saas.base.service.CrudService;
@@ -27,8 +27,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -526,10 +525,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         map.put("outworkCount",outworkCount);
 
 //       当天迟到人数
-        StatisticsPojo statisticsPojo = new StatisticsPojo();
-        statisticsPojo.setDate(date);
-        statisticsPojo.setAttendanceGroup(attendanceGroup);
-        int latterCount = this.dao.getLatterCount(statisticsPojo);
+        int latterCount = this.dao.getLatterCount(attendancePojo);
         map.put("latterCount",latterCount);
 
         return map;
@@ -668,6 +664,179 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         responseMap.put("attendanceList",pageInfo.getList());
         return responseMap;
 
+    }
+
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按日统计勤奋榜
+     */
+    public Map<String, Object> checkAttendanceHardworkingByDay(QueryAttendanceVo queryAttendanceVo) {
+
+        String date = queryAttendanceVo.getDate();
+        PageInfo page = queryAttendanceVo.getPageInfo();
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        //测试使用，写死
+        if(null == attendanceUserVo){
+            attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+        }
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+
+        if(page.getPageNum() <= 0) {
+            page.setPageNum(1);
+        }
+        if(page.getPageSize() <= 0) {
+            page.setPageSize(10);
+        }
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workHour DESC");
+
+        AttendancePojo attendancePojo = new AttendancePojo();
+        attendancePojo.setDate(date);
+        attendancePojo.setAttendanceGroup(attendanceGroup);
+        
+        List<AttendanceResultPojo> pageInfo = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByDay(attendancePojo);
+        if(pageInfo != null && pageInfo.size() >0){
+            Iterator<AttendanceResultPojo> iterator = pageInfo.iterator();
+            while(iterator.hasNext()){
+                AttendanceResultPojo arp = iterator.next();
+                Float workHour = arp.getWorkHour();
+                Float hour = 0f;
+                //没打下班卡，并且提了审批（审批那边同意后会把下班时间更新为默认下班时间，否则下班时间为空,即13:00）
+                if(0.0 == workHour){
+                    hour = getSeconds("13:00:00");
+                    String startTime = arp.getWorkStartTime();//打卡时间
+                    float startTimeSeconds = getSeconds(startTime);
+                    if(startTimeSeconds >= hour){//如果上班打卡时间大于13:00:00，并且又没打下班卡，又没提审批,不算进勤奋榜
+                        iterator.remove();
+                        continue;
+                    }else{
+                        workHour = hour - startTimeSeconds;
+                    }
+                }
+                DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                String f=decimalFormat.format(workHour);//format 返回的是字符串
+                workHour = Float.parseFloat(f);
+                arp.setWorkHour(workHour);
+                System.out.print("666");
+            }
+
+        }
+        Comparator<AttendanceResultPojo> COMPARATOR = new Comparator<AttendanceResultPojo>() {
+            public int compare(AttendanceResultPojo o1, AttendanceResultPojo o2) {
+                return o1.compareTo(o2);//运用User类的compareTo方法比较两个对象
+            }
+        };
+
+        Collections.sort(pageInfo, COMPARATOR);//用我们写好的Comparator对pageInfo进行排序（工作时长）
+        Page pi = (Page)pageInfo;
+        long total = pi.getTotal();
+        Map<String, Object> map = new HashMap<>();
+        map.put("pageInfo",pageInfo);
+        map.put("total",total);
+        map.put("pageCount",pi.getPages());
+
+        return map;
+    }
+    public float getSeconds(String time){
+        String[] split = time.split(":");
+        int h1 = Integer.parseInt(split[0].charAt(0) + "");
+        int h2 = Integer.parseInt(split[0].charAt(1) + "");
+        int m1 = Integer.parseInt(split[1].charAt(0) + "");
+        int m2 = Integer.parseInt(split[1].charAt(1) + "");
+        int s1 = Integer.parseInt(split[2].charAt(0) + "");
+        int s2 = Integer.parseInt(split[2].charAt(1) + "");
+        Integer startTimeSeconds = h1*10*60*60+h2*60*60+m1*10*60+m2*60+s1*10+s2;
+        float a = startTimeSeconds / 3600f;
+        return a;
+    }
+
+    public Map<String,Object> checkAttendanceHardworkingByMonth(QueryAttendanceVo queryAttendanceVo) {
+
+        String date = queryAttendanceVo.getDate();
+        PageInfo page = queryAttendanceVo.getPageInfo();
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        //测试使用，写死
+        if(null == attendanceUserVo){
+            attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+        }
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+
+        if(page.getPageNum() <= 0) {
+            page.setPageNum(1);
+        }
+        if(page.getPageSize() <= 0) {
+            page.setPageSize(10);
+        }
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workHour DESC");
+
+        int i = date.lastIndexOf("-");
+        String substring = date.substring(0, i);
+
+        AttendancePojo attendancePojo = new AttendancePojo();
+        attendancePojo.setDate(substring);
+        attendancePojo.setAttendanceGroup(attendanceGroup);
+
+        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
+
+        Map<String, Object> map = new HashMap<>();
+        Page pi = (Page)pageInfo;
+        long total = pi.getTotal();
+        map.put("pageInfo",pageInfo);
+        map.put("total",total);
+        map.put("pageCount",pi.getPages());
+        return  map;
+    }
+
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按月统计迟到榜
+     */
+    public Map<String, Object> checkAttendanceLatterByMonth(QueryAttendanceVo queryAttendanceVo) {
+
+        String date = queryAttendanceVo.getDate();
+        PageInfo page = queryAttendanceVo.getPageInfo();
+
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        //测试使用，写死
+        if(null == attendanceUserVo){
+            attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+        }
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+
+        if(page.getPageNum() <= 0) {
+            page.setPageNum(1);
+        }
+        if(page.getPageSize() <= 0) {
+            page.setPageSize(10);
+        }
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"lateTime DESC");
+
+        int i = date.lastIndexOf("-");
+        String substring = date.substring(0, i);
+
+        AttendancePojo attendancePojo = new AttendancePojo();
+        attendancePojo.setDate(substring);
+        attendancePojo.setAttendanceGroup(attendanceGroup);
+
+        List<Map> pageInfo = (List<Map>) this.dao.checkAttendanceLatterByMonth(attendancePojo);
+        Page pi = (Page)pageInfo;
+        long total = pi.getTotal();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("pageInfo",pageInfo);
+        map.put("total",total);
+        map.put("pageCount",pi.getPages());
+
+        return map;
     }
 
 
