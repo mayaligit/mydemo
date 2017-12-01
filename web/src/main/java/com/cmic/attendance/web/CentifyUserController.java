@@ -84,8 +84,7 @@ public class CentifyUserController {
         String phone = jsonObject.get("msisdn").getAsString();
         String username = jsonObject.get("username").getAsString();
         //获取用户所属企业ID 和 企业名称
-        HttpServletRequest request1 = WebUtils.getRequest();
-        String sessionId = request1.getSession().getId();
+        String sessionId = request.getSession().getId();
         String enterId = rcsToken.getEnterId();
         String enterName = rcsToken.getEnterName();
 
@@ -93,8 +92,8 @@ public class CentifyUserController {
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         adminEntity.setName(username);
-        request1.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
-        log.debug("登录信息放到session"+adminEntity.getId()+adminEntity.getName());
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
+        log.debug("登录信息放到session>>>>>"+adminEntity.getId()+adminEntity.getName());
         //拦截器不拦截，这个session无其他作用
         String jsonBean = JSONUtils.parseObject2JsonString(adminEntity);
         redisTemplate.boundValueOps("phone").set(phone);
