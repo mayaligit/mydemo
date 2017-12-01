@@ -70,9 +70,9 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         audit.setUsername(user.getName());
 
 
-      /*  // 测试数据
-        audit.setUsername("陈华龙");
-        audit.setAttendanceGroup("odc");*/
+       /* // 测试数据
+        audit.setUsername("陈华龙");*/
+
 
         //任何请况下都必须携带的参数
         if (StringUtils.isBlank(audit.getAuditContent()) || StringUtils.isBlank(audit.getAttendanceGroup())) {
@@ -81,12 +81,24 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         }
 
         //组规则信息
-        // GroupRule groupRule=groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
-        // Float attendanceDuration=groupRule.getGroupAttendanceDuration();//考勤时长
+         GroupRule groupRule=groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
 
+        double attendanceDuration=0;
+        if(groupRule.getGroupAttendanceWay()==0){
+            //自由模式时长
+            attendanceDuration=(double)groupRule.getGroupAttendanceDuration();
+        }
+        if (groupRule.getGroupAttendanceWay()==1){
+            //时长模式时长
+            attendanceDuration=(double)groupRule.getGroupAttendanceDuration();
+        }
+
+
+        //判断审批参数
         if (StringUtils.isBlank(String.valueOf(audit.getBusinessType()))) {
             map.put("msg", "审批类型不能为空");
             return map;
+
         } else {
             switch (audit.getBusinessType()) {
                 case 0:
@@ -101,9 +113,13 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                         map.put("msg", "请正确选择开始和结束时间");
                         return map;
                     }
+                    //如果请假时间大于一天的工作时间,请假时间为工作时间
+                    if(attendanceDuration<audit.getHolidayDays()){
+                        audit.setHolidayDays(attendanceDuration);
+                    }
                     break;
                 case 1:
-                    //外勤情况 startDate endDate Field_personnel_days 不为空
+                    //外勤情况 startDate endDate holidayDays 不为空
                     if (null == audit.getStartDate() || null == audit.getEndDate() || StringUtils.isBlank(String.valueOf(audit.getHolidayDays()))) {
                         map.put("msg", "外勤时间不能为空");
                         return map;
@@ -114,9 +130,13 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                         map.put("msg", "请正确选择开始和结束时间");
                         return map;
                     }
+                    //如果外勤时间大于一天的工作时间,外勤时间为工作时间
+                    if(attendanceDuration<audit.getHolidayDays()){
+                        audit.setHolidayDays(attendanceDuration);
+                    }
                     break;
                 case 2:
-                    //缺卡 uditContent已经判断了
+                    //缺卡
                     break;
             }
         }
@@ -164,7 +184,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("updateTime", new Date());
         paraMap.put("auditTime", DateUtils.getDateToStrings(new Date()));
         paraMap.put("auditStatus", "0"); //设置审批意见状态为 已处理
-        paraMap.put("auditId", "");//审批人ID 老铁会提供 在attendanceUserVo中获取
+        paraMap.put("auditId", attendanceUserVo.getId());//审批人ID
+        paraMap.put("auditUsername",attendanceUserVo.getAttendanceUsername());
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
         //  paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());        //更新 审批状态为 已处理
         dao.updateAudit(paraMap);
@@ -193,7 +214,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
          如果是外勤 1   更新审批表(已经处理)  维护考情表  上下班按照默认值
          如果是缺卡 2   更新审批表(已经处理)  维护考勤表 上下班按照默认值  */
         //自由模式
-        if ("0".equals(groupRule.getGroupAttendanceWay())) {
+        if (groupRule.getGroupAttendanceWay()==0) {
             switch (audit.getBusinessType()) {
                 //请假
                 case 0:
@@ -240,7 +261,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             }
         }
         //时长模式
-        if ("1".equals(groupRule.getGroupAttendanceWay())) {
+        if (groupRule.getGroupAttendanceWay()==1) {
             switch (audit.getBusinessType()) {
                 //请假
                 case 0:
