@@ -22,9 +22,7 @@
         a.update_date AS "updateDate",
         a.start_date AS "startDate",
         a.end_date AS "endDate",
-        a.holiday_days AS "holidayDays",
-        a.field_personnel AS "fieldPersonnel",
-        a.field_personnel_days AS "fieldPersonnelDays"
+        a.holiday_days AS "holidayDays"
     </sql>
 
     <sql id="auditJoins">
@@ -157,9 +155,7 @@
         update_date,
         start_date,
         end_date,
-        holiday_days,
-        field_personnel,
-        field_personnel_days
+        holiday_days
         ) VALUES (
         #{id},
         #{username},
@@ -181,9 +177,7 @@
         #{updateDate},
         #{startDate},
         #{endDate},
-        #{holidayDays},
-        #{fieldPersonnel},
-        #{fieldPersonnelDays}
+        #{holidayDays}
         )
     </insert>
 
@@ -209,8 +203,6 @@
         start_date = #{startDate},
         end_date = #{endDate},
         holiday_days = #{holidayDays},
-        field_personnel = #{fieldPersonnel},
-        field_personnel_days = #{fieldPersonnelDays},
         </set>
         WHERE id = #{id}
     </update>
