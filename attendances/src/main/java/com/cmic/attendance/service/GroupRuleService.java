@@ -6,6 +6,7 @@ import com.cmic.attendance.model.*;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.vo.AttendanceVo;
 import com.cmic.attendance.vo.GroupRuleVo;
+import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.WebUtils;
@@ -13,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +45,12 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
 
     @Autowired
     private GroupAddressDao groupAddressDao;
+
+    @Autowired
+    private GroupRuleDao groupRuleDao;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public GroupRule get(String id) {
         return super.get(id);
@@ -124,21 +132,22 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
             //分割考勤人员输入，获取各值
             String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
             String person[] = persons.split(",");
-
-            for(int i=0;i<person.length;i++){
-                String[] p = person[i].split("-");
-                String personnelName = p[0];
-                String personnelPhone = p[1];
-                String groupEnterId = p[2];
-                GroupPersonnel groupPersonnel = new GroupPersonnel();
-                groupPersonnel.setPersonnelName(personnelName);
-                groupPersonnel.setPersonnelPhone(personnelPhone);
-                groupPersonnel.setEnterpriseId(groupEnterId);
-                groupPersonnel.setAttendanceGroupId(attendanceGroupId);
-                groupPersonnelService.save(groupPersonnel);
+            if(person!=null && person.length!=0) {
+                for (int i = 0; i < person.length; i++) {
+                    String[] p = person[i].split("-");
+                    String personnelName = p[0];
+                    String personnelPhone = p[1];
+                    String groupEnterId = p[2];
+                    GroupPersonnel groupPersonnel = new GroupPersonnel();
+                    groupPersonnel.setPersonnelName(personnelName);
+                    groupPersonnel.setPersonnelPhone(personnelPhone);
+                    groupPersonnel.setEnterpriseId(groupEnterId);
+                    groupPersonnel.setAttendanceGroupId(attendanceGroupId);
+                    groupPersonnelService.save(groupPersonnel);
+                }
             }
         }catch (Exception e){
-            throw  new GroupRuleExeption("考勤表插入失败");
+            throw  new GroupRuleExeption("考勤人员表插入失败");
         }
 
         //插入日报规则表
@@ -161,8 +170,10 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
             if(groupAudit==null){
                 groupAudit = new GroupAudit();
             }
-            groupAudit.setDailyRuleId(dailyRuleId);
-            groupAuditService.save(groupAudit);
+            if (dailyRuleId!=null) {
+                groupAudit.setDailyRuleId(dailyRuleId);
+                groupAuditService.save(groupAudit);
+            }
 
         }catch (Exception e){
             throw  new GroupRuleExeption("插入审人员核操作失败");
@@ -272,14 +283,15 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
             String place = "";
             for(int i=0;i<resses.length;i++){
                 String[] places = resses[i].split("-");
-                place = place + places[3]+",";
                 if(i==resses.length-1){
                     place = place + places[3];
+                    break;
                 }
+                place = place + places[3]+",";
             }
             groupRuleVo.getGroupRule().setGroupAddress(place);
             //更新规则主表数据
-            dao.dynamicUpdate(groupRuleVo.getGroupRule());
+            groupRuleDao.dynamicUpdate(groupRuleVo.getGroupRule());
         }catch (Exception e){
             throw  new GroupRuleExeption("规则表更新失败");
         }
@@ -288,39 +300,58 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         try {
             //分割考勤人员输入，获取各值
             String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
-            String person[] = persons.split("-");
-
-            for(int i=0;i<person.length;i++){
-                groupPersonnelService.delete(person[i]);
+            if(persons!=null && persons.length()!=0){
+                String person[] = persons.split("-");
+                for(int i=0;i<person.length;i++) {
+                    groupPersonnelService.delete(person[i]);
+                }
             }
         }catch (Exception e){
             throw  new GroupRuleExeption("考勤人员表更新失败");
         }
 
-        //插入考勤地址信息
+        //更新考勤地址信息
+        try {
+            if (resses != null) {
 
-                List<GroupAddress> gaddressList = groupAddressDao.findListByGroupRuleId(attendanceGroupId);
-                if (resses != null) {
-                    for (int i = 0; i < resses.length; i++) {
-                        String adds[] = resses[i].split("-");
-                        GroupAddress groupAddress = gaddressList.get(i);
-
-                        Map<String,Object> paraMap = new HashMap<String,Object>();
+                for (int i = 0; i < resses.length; i++) {
+                    String adds[] = resses[i].split("-");
+                    if(adds.length>4){
+                        //修改多地址
+                        Map<String, Object> paraMap = new HashMap<String, Object>();
                         //还没确定怎么获取审批人的电话号码, 暂时硬编码
                         //AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
                         //paraMap.put("updateBy",attendanceUserVo.getAttendanceUsername());
 
-                        paraMap.put("addressid",groupAddress.getId());
-                        paraMap.put("groupAttendanceLongitude",Float.parseFloat(adds[0]));
-                        paraMap.put("groupAttendanceDimension",Float.parseFloat(adds[1]));
-                        paraMap.put("groupAttendanceScope",Integer.parseInt(adds[2]));
-                        paraMap.put("groupAddress",adds[3]);
-                        paraMap.put("attendanceGroupId",attendanceGroupId);
+                        paraMap.put("groupAttendanceLongitude", Float.parseFloat(adds[0]));
+                        paraMap.put("groupAttendanceDimension", Float.parseFloat(adds[1]));
+                        paraMap.put("groupAttendanceScope", Integer.parseInt(adds[2]));
+                        paraMap.put("groupAddress", adds[3]);
+                        paraMap.put("attendanceGroupId", adds[4]);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        String updateDate = simpleDateFormat.format(new Date());
 
-                        paraMap.put("updateDate",new Date());
+                        paraMap.put("updateDate",updateDate);
+                        paraMap.put("addressid", adds[5]);
+                        //检查当前用户是否已经打卡
+                        //String username = (String)redisTemplate.boundValueOps("username").get();
+                        paraMap.put("updateBy.id", "15240653787");
                         groupAddressDao.updateGroupAddressById(paraMap);
+                    }else if(adds.length<=4){
+                        //添加多地址
+                        GroupAddress groupAddress = new GroupAddress();
+                        groupAddress.setGroupAttendanceLongitude(Float.parseFloat(adds[0]));
+                        groupAddress.setGroupAttendanceDimension(Float.parseFloat(adds[1]));
+                        groupAddress.setGroupAttendanceScope(Integer.parseInt(adds[2]));
+                        groupAddress.setGroupAddress(adds[3]);
+                        groupAddress.setAttendanceGroupId(attendanceGroupId);
+                        groupAddressService.save(groupAddress);
                     }
+                }
             }
+        }catch (Exception e){
+            throw new GroupRuleExeption("更新多地址失败");
+        }
     }
 
 }
