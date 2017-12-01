@@ -422,9 +422,9 @@
     </select>
 
     <!--固定模式 迟到次数       AND DATE_FORMAT(a.start_time,'%H%i%s')>90000-->
-    <select id="getLates" resultType="Integer">
+    <select id="getLates" resultType="Attendance">
         SELECT
-        count(*)
+        <include refid="attendanceColumns"/>
         FROM t_attendance a
         <where>
             1 = 1
@@ -483,9 +483,9 @@
     </select>
 
     <!--缺卡天数-->
-    <select id="getMissingCard" resultType="Integer">
+    <select id="getMissingCard" resultType="Attendance">
         SELECT
-        count(*)
+        <include refid="attendanceColumns"/>
         FROM t_attendance a
         <where>
             1 = 1
@@ -524,9 +524,9 @@
 
 
     <!--固定模式 早退次数            AND DATE_FORMAT(a.end_time,'%H%i%s')&lt;180000-->
-    <select id="getLeaveEarly" resultType="Integer">
+    <select id="getLeaveEarly" resultType="Attendance">
         SELECT
-        count(*)
+        <include refid="attendanceColumns"/>
         FROM t_attendance a
         <where>
             1 = 1
@@ -562,9 +562,9 @@
         </where>
     </select>
 
-    <select id="getAttendanceDays" resultType="Integer">
+    <select id="getAttendanceDays" resultType="Attendance">
         SELECT
-        count(*)
+        <include refid="attendanceColumns"/>
         FROM t_attendance a
         <where>
             1 = 1

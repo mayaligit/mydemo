@@ -133,9 +133,9 @@
     </select>
 
     <!--某个月的外勤审批通过记录-->
-    <select id="getFieldPersonnel" resultType="Integer">
+    <select id="getFieldPersonnel" resultType="Audit">
         SELECT
-            COUNT(*)
+        <include refid="auditColumns"/>
         FROM t_audit a
         <where>
             1 = 1

@@ -3,6 +3,7 @@ package com.cmic.attendance.service;
 import com.cmic.attendance.dao.AttendanceDao;
 import com.cmic.attendance.dao.AuditDao;
 import com.cmic.attendance.dao.WorkStatisticsDao;
+import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Audit;
 import com.cmic.attendance.model.WorkStatistics;
 import com.cmic.attendance.utils.DateUtils;
@@ -33,12 +34,14 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
     AuditDao auditDao;
 
     public HashMap workStatistics(WorkStatistics workStatistics) {
-        int attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤天数
-        int Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
-        int leaveEarly = attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
-        int fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
-        int missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
-        double holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，天为单位
+        SimpleDateFormat strdate = new SimpleDateFormat("E");
+        List<Attendance> attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤
+        //int Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
+        List<Attendance> Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
+        List<Attendance> leaveEarly = attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
+        List<Audit> fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
+        List<Attendance> missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
+        double holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，小时为单位
         List<Audit> holidayList = auditDao.getHolidayList(workStatistics);//某个月的请假审批通过记录
         double overtime = attendanceDao.getOverTime(workStatistics);//某个月总的加班时间，秒为单位。
         //加班时间转换为小时为单位，取2位小数
@@ -47,6 +50,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         CopyOnWriteArrayList<Integer> miss = new CopyOnWriteArrayList<>();//没有打卡的日期
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat simpleDateFormat3=new SimpleDateFormat("yyyy-MM-dd ");
         //System.out.println("---------今天是几号："+ calendar.get(Calendar.DAY_OF_MONTH));
         int dayOfMonth=0;
         String str=simpleDateFormat2.format(calendar.getTime());
@@ -110,14 +114,40 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         System.out.println(111);
         //组装 map 返回
         HashMap map=new HashMap();
-        map.put("attendanceDays",attendanceDays);//出勤天数
-        map.put("Late",Late);//迟到
-        map.put("leaveEarly",leaveEarly);//早退
-        map.put("fieldPersonnel",fieldPersonnel);//外勤
-        map.put("missingCard",missingCard);//缺卡
+        List<String> attendanceDaysData=new ArrayList<>();//出勤天数详情
+        map.put("attendanceDays",attendanceDays.size());//出勤天数
+        for(Attendance attendance:attendanceDays){
+            attendanceDaysData.add(simpleDateFormat3.format(attendance.getStartTime())+strdate.format(attendance.getStartTime()));
+        }
+        List<String> LateData=new ArrayList<>();//迟到详情
+        for(Attendance attendance:Late){
+            LateData.add(simpleDateFormat3.format(attendance.getStartTime())+strdate.format(attendance.getStartTime()));
+        }
+        List<String> leaveEarlyData=new ArrayList<>();//早退详情
+        for(Attendance attendance:leaveEarly){
+            leaveEarlyData.add(simpleDateFormat3.format(attendance.getStartTime())+strdate.format(attendance.getStartTime()));
+        }
+        List<String> fieldPersonnelData=new ArrayList<>();//外勤详情
+        for(Audit audit:fieldPersonnel){
+            fieldPersonnelData.add(simpleDateFormat3.format(audit.getSubmitTime())+strdate.format(audit.getSubmitTime()));
+        }
+        List<String> missingCardData=new ArrayList<>();//缺卡详情
+        for(Attendance attendance:missingCard){
+            missingCardData.add(simpleDateFormat3.format(attendance.getStartTime())+strdate.format(attendance.getStartTime()));
+        }
+        map.put("Late",Late.size());//迟到
+        map.put("leaveEarly",leaveEarly.size());//早退
+        map.put("fieldPersonnel",fieldPersonnel.size());//外勤
+        map.put("missingCard",missingCard.size());//缺卡
         map.put("overtime",overtime_hour);//加班时长，小时为单位
         map.put("Absenteeism",miss.size());//旷工天数
         map.put("holidayDays",holidayDays);//某个月的请假时长，天为单位
+        //以下为详情的数据
+        map.put("attendanceDaysData",attendanceDaysData);//出勤详情
+        map.put("LateData",LateData);//迟到详情
+        map.put("leaveEarlyData",leaveEarlyData);//早退详情
+        map.put("fieldPersonnelData",fieldPersonnelData);//外勤详情
+        map.put("missingCardData",missingCardData);//缺卡详情
         return map;
     }
 
