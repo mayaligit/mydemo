@@ -14,7 +14,7 @@ import springfox.documentation.annotations.ApiIgnore;
 */
 @Api(description = "考勤地址表管理")
 @RestController
-@RequestMapping("/address")
+@RequestMapping("/attendance/address")
 public class GroupAddressController extends BaseRestController<GroupAddressService> {
 
     @ApiOperation(value = "查询", notes = "查询考勤地址表列表", httpMethod = "GET")
@@ -69,7 +69,7 @@ public class GroupAddressController extends BaseRestController<GroupAddressServi
     }
 
     @ApiOperation(value = "删除", notes = "删除考勤地址表", httpMethod = "DELETE")
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/del/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "考勤地址表ID") @PathVariable String id){
         service.delete(id);
     }

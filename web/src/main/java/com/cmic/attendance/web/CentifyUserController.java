@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
  **/
 @Api(description = "考勤表管理")
 @RestController
+@CrossOrigin
 @RequestMapping("/attendance")
 public class CentifyUserController {
 
@@ -78,14 +80,15 @@ public class CentifyUserController {
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
-        //解析请求数据 , 获取用户电话和用户名
+//        解析请求数据 , 获取用户电话和用户名
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject) parser.parse(userStr);
         String phone = jsonObject.get("msisdn").getAsString();
         String username = jsonObject.get("username").getAsString();
+//        String phone = "15240653787";
+//        String username = "liangyu";
         //获取用户所属企业ID 和 企业名称
-        HttpServletRequest request1 = WebUtils.getRequest();
-        String sessionId = request1.getSession().getId();
+        String sessionId = request.getSession().getId();
         String enterId = rcsToken.getEnterId();
         String enterName = rcsToken.getEnterName();
 
@@ -93,8 +96,8 @@ public class CentifyUserController {
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         adminEntity.setName(username);
-        request1.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
-        log.debug("登录信息放到session"+adminEntity.getId()+adminEntity.getName());
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
+        log.debug("登录信息放到session>>>>>"+adminEntity.getId()+adminEntity.getName());
         //拦截器不拦截，这个session无其他作用
         String jsonBean = JSONUtils.parseObject2JsonString(adminEntity);
         redisTemplate.boundValueOps("phone").set(phone);
