@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
  **/
 @Api(description = "考勤表管理")
 @RestController
+@CrossOrigin
 @RequestMapping("/attendance")
 public class CentifyUserController {
 
@@ -78,11 +80,13 @@ public class CentifyUserController {
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
-        //解析请求数据 , 获取用户电话和用户名
+//        解析请求数据 , 获取用户电话和用户名
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject) parser.parse(userStr);
         String phone = jsonObject.get("msisdn").getAsString();
         String username = jsonObject.get("username").getAsString();
+//        String phone = "15240653787";
+//        String username = "liangyu";
         //获取用户所属企业ID 和 企业名称
         String sessionId = request.getSession().getId();
         String enterId = rcsToken.getEnterId();
