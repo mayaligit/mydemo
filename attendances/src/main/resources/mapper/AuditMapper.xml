@@ -132,6 +132,22 @@
         </where>
     </select>
 
+    <!--某个月的外勤审批通过记录-->
+    <select id="getFieldPersonnel" resultType="Integer">
+        SELECT
+            COUNT(*)
+        FROM t_audit a
+        <where>
+            1 = 1
+            <if test="userName != null">
+                AND a.username = #{userName}
+            </if>
+            AND a.business_type=1
+            AND a.audit_suggestion=0
+            AND DATE_FORMAT(a.submit_time,'%Y-%m')=#{month}
+        </where>
+    </select>
+
 
     <insert id="insert">
         INSERT INTO t_audit(

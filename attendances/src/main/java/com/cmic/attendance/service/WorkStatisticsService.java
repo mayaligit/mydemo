@@ -16,10 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -39,18 +36,31 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         int attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤天数
         int Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
         int leaveEarly = attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
-        int fieldPersonnel = attendanceDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
+        int fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
         int missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
         double holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，天为单位
         List<Audit> holidayList = auditDao.getHolidayList(workStatistics);//某个月的请假审批通过记录
         double overtime = attendanceDao.getOverTime(workStatistics);//某个月总的加班时间，秒为单位。
         //加班时间转换为小时为单位，取2位小数
-        Calendar calendar = Calendar.getInstance();
-        //System.out.println("---------今天是几号："+ calendar.get(Calendar.DAY_OF_MONTH));
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);//今天是几号
         double overtime_hour = new BigDecimal(overtime / (60 * 60)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         //List<Integer> miss = new ArrayList<>();//没有打卡的日期
         CopyOnWriteArrayList<Integer> miss = new CopyOnWriteArrayList<>();//没有打卡的日期
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("yyyy-MM");
+        //System.out.println("---------今天是几号："+ calendar.get(Calendar.DAY_OF_MONTH));
+        int dayOfMonth=0;
+        String str=simpleDateFormat2.format(calendar.getTime());
+        if(workStatistics.getMonth().equals(str)){//传进来的参数是本月
+            dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);//今天是几号
+        }else{
+            try{
+                calendar.setTime(simpleDateFormat2.parse(workStatistics.getMonth()));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            dayOfMonth=calendar.getActualMaximum(Calendar.DATE);//不是本月的话，看看参数的月份有几天
+        }
+
         //以下为统计某个月的旷工次数
         List<Integer> attendanceList = attendanceDao.getAttendanceDaysList(workStatistics);//打卡的日期
         for (int i = 1; i <= dayOfMonth; i++) {
@@ -77,7 +87,14 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         }
         System.out.println("------------------------除去工作日和节假日");
         Calendar calendar2=Calendar.getInstance();
-        calendar2.set(Calendar.DAY_OF_MONTH,2);
+        try{
+            Date date=simpleDateFormat2.parse(workStatistics.getMonth());
+            calendar2.setTime(date);//把时间设为传进来的月份
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        System.out.println(simpleDateFormat.format(calendar2.getTime()));
+        //calendar2.set(Calendar.DAY_OF_MONTH,2);
         //除去工作日和节假日
         for (Integer m : miss) {
             calendar2.set(Calendar.DAY_OF_MONTH,m);

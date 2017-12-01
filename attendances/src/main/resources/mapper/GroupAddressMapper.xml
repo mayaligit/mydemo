@@ -124,7 +124,7 @@
             group_attendance_longitude = #{groupAttendanceLongitude},
         </if>
         <if test="groupAttendanceDimension != null  and groupAttendanceDimension != ''">
-            group_attendance_dimension = #{group_attendance_dimension},
+            group_attendance_dimension = #{groupAttendanceDimension},
         </if>
         <if test="groupAddress != null  and groupAddress != ''">
             group_address = #{groupAddress},
@@ -132,10 +132,10 @@
         <if test="attendanceGroupId != null  and attendanceGroupId != ''">
             attendance_group_id = #{attendanceGroupId},
         </if>
-        <if test="group_attendance_scope != null  and group_attendance_scope != ''">
+        <if test="groupAttendanceScope != null  and groupAttendanceScope != ''">
             group_attendance_scope = #{groupAttendanceScope},
         </if>
-        /*update_by = #{updateBy.id},*/
+        update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{addressid}
     </update>
