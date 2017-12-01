@@ -55,6 +55,8 @@ public interface AttendanceDao extends CrudDao<Attendance> {
 
     List<Map> checkAttendanceLatterByMonth(AttendancePojo attendancePojo);
 
+    List<Attendance> getOverTimeList(WorkStatistics workStatistics);
+
     double getOverTime(WorkStatistics workStatistics);
 
     List<Integer> getAttendanceDaysList(WorkStatistics workStatistics);
