@@ -36,4 +36,6 @@ public interface AuditDao extends CrudDao<Audit> {
 
     List<Audit> getHolidayList(WorkStatistics workStatistics);
 
+    int getFieldPersonnel(WorkStatistics workStatistics);
+
 }
