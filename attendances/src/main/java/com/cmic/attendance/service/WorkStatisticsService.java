@@ -46,13 +46,18 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         //List<Integer> miss = new ArrayList<>();//没有打卡的日期
         CopyOnWriteArrayList<Integer> miss = new CopyOnWriteArrayList<>();//没有打卡的日期
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("yyyy-MM-d HH:mm");
+        SimpleDateFormat simpleDateFormat2=new SimpleDateFormat("yyyy-MM");
         //System.out.println("---------今天是几号："+ calendar.get(Calendar.DAY_OF_MONTH));
         int dayOfMonth=0;
         String str=simpleDateFormat2.format(calendar.getTime());
         if(workStatistics.getMonth().equals(str)){//传进来的参数是本月
             dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);//今天是几号
         }else{
+            try{
+                calendar.setTime(simpleDateFormat2.parse(workStatistics.getMonth()));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             dayOfMonth=calendar.getActualMaximum(Calendar.DATE);//不是本月的话，看看参数的月份有几天
         }
 
@@ -88,7 +93,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println(simpleDateFormat.format(calendar2));
+        System.out.println(simpleDateFormat.format(calendar2.getTime()));
         //calendar2.set(Calendar.DAY_OF_MONTH,2);
         //除去工作日和节假日
         for (Integer m : miss) {
