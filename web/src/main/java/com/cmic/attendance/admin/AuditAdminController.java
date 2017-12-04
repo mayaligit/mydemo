@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Api(description = "审批表后台管理")
 @RestController
-@RequestMapping("/adminAudit")
+@RequestMapping("/attendance/adminAudit")
 public class AuditAdminController extends BaseRestController<AuditService> {
     /**
      * 根据审批记录 id 获取单条审批的明细

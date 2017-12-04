@@ -23,7 +23,7 @@ import java.util.Random;
  **/
 @Api(description = "后台用户登录")
 @RestController
-@RequestMapping("/attendence/user")
+@RequestMapping("/attendance/user")
 public class UserController {
 
 

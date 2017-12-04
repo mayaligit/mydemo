@@ -26,7 +26,7 @@ import java.util.Map;
  **/
 @Api(description = "考勤表后台管理")
 @RestController
-@RequestMapping("/adminAttendance")
+@RequestMapping("/attendance/adminAttendance")
 public class AttendanceAdminController extends BaseRestController<AttendanceService> {
     /**
      * 查询考勤列表分页
