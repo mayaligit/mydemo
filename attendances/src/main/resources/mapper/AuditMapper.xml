@@ -261,6 +261,9 @@
         <if test="attendanceGroup != null  and attendanceGroup != ''">
             attendance_group = #{attendanceGroup},
         </if>
+        <if test="auditSuggestion != null  and auditSuggestion != ''">
+            audit_suggestion = #{auditSuggestion},
+        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -294,9 +297,15 @@
         <if test="suggestionRemarks != null and suggestionRemarks != ''">
             suggestion_remarks=#{suggestionRemarks},
         </if>
+        <if test="auditUserId != null and auditUserId != ''">
+            audit_user_id=#{auditUserId},
+        </if>
+        <if test="auditUsername != null and auditUsername != ''">
+            audit_user_name=#{auditUsername},
+        </if>
         update_by=#{updateBy},
         update_date=#{updateDate}
-        WHERE id =#{auditId}
+        WHERE id =#{id}
     </update>
 
     <select id="findAuditList" resultType="Map" parameterType="Audit">

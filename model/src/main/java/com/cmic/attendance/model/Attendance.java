@@ -218,4 +218,5 @@ public class Attendance extends DataEntity<Attendance> {
     public void setAttendanceWorkTime(float attendanceWorkTime) {
         this.attendanceWorkTime = attendanceWorkTime;
     }
+
 }

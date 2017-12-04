@@ -35,6 +35,10 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
 
     public HashMap workStatistics(WorkStatistics workStatistics) {
         SimpleDateFormat strdate = new SimpleDateFormat("E");
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
+
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤
         //int Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
         List<Attendance> Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
@@ -50,8 +54,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         //List<Integer> miss = new ArrayList<>();//没有打卡的日期
         CopyOnWriteArrayList<Integer> miss = new CopyOnWriteArrayList<>();//没有打卡的日期
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
-        SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
+
         //System.out.println("---------今天是几号："+ calendar.get(Calendar.DAY_OF_MONTH));
         int dayOfMonth = 0;
         String str = simpleDateFormat2.format(calendar.getTime());
@@ -73,7 +76,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
             if (attendanceList.contains(i)) continue;
             miss.add(i);
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
+
         //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d");
         List<Integer> holidays = new ArrayList<>();//请假的日期集合
         System.out.println("请假开始时间和结束时间：");

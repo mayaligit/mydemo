@@ -15,7 +15,7 @@ import java.util.Map;
 */
 @Api(description = "日报表后台管理")
 @RestController
-@RequestMapping("/adminDaily")
+@RequestMapping("/attendance/adminDaily")
 public class DailyAdminController extends BaseRestController<DailyService> {
 
     //获取单条日报信息
