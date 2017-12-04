@@ -178,7 +178,7 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
     public Map<String,String> insertGroupRule(@Validated @RequestBody GroupRuleVo groupRuleVo){
         //测试数据
         HttpServletRequest request = WebUtils.getRequest();
-        //HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+        HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
         //response.setHeader("Access-Control-Allow-Origin", "*");
        /* BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
@@ -191,6 +191,7 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
             resultHash.put("code","0");
             resultHash.put("msg","操作成功");
             return resultHash;
+
         } catch (GroupRuleExeption g) {
             resultHash.put("code","1");
             resultHash.put("msg",g.getMessage());

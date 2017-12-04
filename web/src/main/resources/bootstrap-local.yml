@@ -6,9 +6,10 @@ saas:
 
 server:
   port: 12111
+  contextPath: /attendance2
 
 logging:
-  file: D:/logs/saas-${spring.profiles.active}/${spring.application.name}.log  #日志地址
+  file: D:/app/jenkins_deploy/logs_test/saas-${spring.profiles.active}/${spring.application.name}.log  #日志地址
 
 hystrix:  #熔断配置
   command:
@@ -39,9 +40,9 @@ spring:
   mvc:  #日志格式
     date-format: yyyy-MM-dd HH:mm:ss
   datasource: #数据源
-    url: jdbc:mysql://localhost:3307/saas_${sys.module}_${sys.name}?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8&characterSetResults=UTF-8
+    url: jdbc:mysql://192.168.185.164:3306/saas_${sys.module}_${sys.name}_test?useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowMultiQueries=true&characterEncoding=UTF-8&characterSetResults=UTF-8
     username: root #oa_promote  192.168.185.164
-    password:      #oa_promote#123  abc@123
+    password: abc@123 #oa_promote#123
     driver-class-name: com.mysql.jdbc.Driver
     druid:
       initial-size: 5 #连接池初始化大小
@@ -72,12 +73,14 @@ spring:
       min-idle: 0 #最小空闲连接
       max-active: 10  #最大连接数
       max-wait: -1  #最大阻塞等待时间
-
 certify:
   server:
     path: http://192.168.185.250:9010/certify  # 获取用户信息的接口路径
     userInfo: /user/info
 index:
-  server: http://221.176.34.113:8180/attendance/index.html  # 前端远程入口
+  server: /attendance2.0/index.html  # 手机端前端远程入口
+indexs:
+  login: /admin_attendance/login.html  # PC端远程入口
+
 clazzesService:
   id: c2310c7ec996409b8e91f12daa428a98

@@ -40,6 +40,7 @@ import java.util.Map;
  */
 @Api(description = "考勤表管理")
 @RestController
+@CrossOrigin
 @RequestMapping("/attendance")
 public class AttendanceController extends BaseRestController<AttendanceService> {
 
@@ -123,7 +124,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         //检查当前用户是否已经打卡
         String phone = (String)redisTemplate.boundValueOps("phone").get();
         String username = (String)redisTemplate.boundValueOps("username").get();
-        log.debug("登录者session数据》》》》》》》》》》"+user);
+        log.debug("登录者session数据》》》》》》》》》》"+user+"<<<<<<<<<<<<<<<<<");
 
         Attendance DBattendance=service.checkAttendance(phone,serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();

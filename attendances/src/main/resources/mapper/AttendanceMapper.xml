@@ -422,9 +422,9 @@
     </select>
 
     <!--固定模式 迟到次数       AND DATE_FORMAT(a.start_time,'%H%i%s')>90000-->
-    <select id="getLates" resultType="Integer">
+    <select id="getLates" resultType="Attendance">
         SELECT
-        count(*)
+        <include refid="attendanceColumns"/>
         FROM t_attendance a
         <where>
             1 = 1
@@ -482,10 +482,30 @@
         </where>
     </select>
 
-    <!--缺卡天数-->
-    <select id="getMissingCard" resultType="Integer">
+    <!--加班时间 秒为单位 晚上7点后算加班   IFNULL(SUM(TIME_TO_SEC(TIMEDIFF(DATE_FORMAT(a.end_time,'%H:%i:%s'),'19:00:00'))),0)-->
+    <select id="getOverTimeList" resultType="Attendance">
         SELECT
-        count(*)
+        <include refid="attendanceColumns"/>
+        FROM t_attendance a
+        <where>
+            1 = 1
+            <if test="phone != null">
+                AND a.create_by = #{phone}
+            </if>
+            <if test="userName != null">
+                AND a.attendance_user = #{userName}
+            </if>
+            <if test="month != null">
+                AND a.attendance_month = #{month}
+            </if>
+            AND DATE_FORMAT(a.end_time,'%H%i%s')>190000
+        </where>
+    </select>
+
+    <!--缺卡天数-->
+    <select id="getMissingCard" resultType="Attendance">
+        SELECT
+        <include refid="attendanceColumns"/>
         FROM t_attendance a
         <where>
             1 = 1
@@ -524,9 +544,9 @@
 
 
     <!--固定模式 早退次数            AND DATE_FORMAT(a.end_time,'%H%i%s')&lt;180000-->
-    <select id="getLeaveEarly" resultType="Integer">
+    <select id="getLeaveEarly" resultType="Attendance">
         SELECT
-        count(*)
+        <include refid="attendanceColumns"/>
         FROM t_attendance a
         <where>
             1 = 1
@@ -562,9 +582,9 @@
         </where>
     </select>
 
-    <select id="getAttendanceDays" resultType="Integer">
+    <select id="getAttendanceDays" resultType="Attendance">
         SELECT
-        count(*)
+        <include refid="attendanceColumns"/>
         FROM t_attendance a
         <where>
             1 = 1
