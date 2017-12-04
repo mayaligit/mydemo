@@ -404,13 +404,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         String date = queryAttendanceVo.getDate();
         PageInfo page = queryAttendanceVo.getPageInfo();
-        if(page==null){
-            Map<String, Object> map2 = new HashMap<>();
-            map2.put("pageInfo",new ArrayList<HashMap>());
-            map2.put("total",0);
-            map2.put("pageCount",0);
-            return map2;
-        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -422,6 +415,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        //测试使用，写死
+        if(null == attendanceUserVo){
+            attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+        }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
 
@@ -451,6 +449,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        //测试使用，写死
+        if(null == attendanceUserVo){
+            attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+        }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         if(page.getPageNum() <= 0) {
@@ -486,6 +489,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String date = queryAttendanceVo.getDate();
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        //测试使用，写死
+        if(null == attendanceUserVo){
+            attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+        }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         Map<String, Object> map = new HashMap<>();
@@ -706,21 +714,23 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 Float hour = 0f;
                 //没打下班卡，并且提了审批（审批那边同意后会把下班时间更新为默认下班时间，否则下班时间为空,即13:00）
                 if(0.0 == workHour){
-                    hour = getSeconds("13:00:00");
                     String startTime = arp.getWorkStartTime();//打卡时间
                     float startTimeSeconds = getSeconds(startTime);
-                    if(startTimeSeconds >= hour){//如果上班打卡时间大于13:00:00，并且又没打下班卡，又没提审批,不算进勤奋榜
-                        iterator.remove();
-                        continue;
+                    if(null == arp.getWorkEndTime()){
+                        hour = getSeconds("13:00:00");
+                        if(startTimeSeconds >= hour){//如果上班打卡时间大于13:00:00，并且又没打下班卡，又没提审批,不算进勤奋榜
+                            iterator.remove();
+                            continue;
+                        }
                     }else{
-                        workHour = hour - startTimeSeconds;
+                        hour = getSeconds(arp.getWorkEndTime());
                     }
+                    workHour = hour - startTimeSeconds;
                 }
                 DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
                 String f=decimalFormat.format(workHour);//format 返回的是字符串
                 workHour = Float.parseFloat(f);
                 arp.setWorkHour(workHour);
-                System.out.print("666");
             }
 
         }
@@ -753,6 +763,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         return a;
     }
 
+
+    /**
+     * @author 何家来
+     * @return
+     * 考勤统计,按月统计勤奋榜
+     */
     public Map<String,Object> checkAttendanceHardworkingByMonth(QueryAttendanceVo queryAttendanceVo) {
 
         String date = queryAttendanceVo.getDate();
@@ -782,14 +798,58 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         attendancePojo.setDate(substring);
         attendancePojo.setAttendanceGroup(attendanceGroup);
 
-        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
+        List<AttendanceResultPojo> pageInfo = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
 
+        List<AttendanceResultPojo> list = (List<AttendanceResultPojo>)this.dao.checkNoEndTime(attendancePojo);
+
+        if(list != null && list.size() >0){
+            for(AttendanceResultPojo arp : list){
+                Float workHour = arp.getWorkHour();
+                Float hour = 0f;
+                //没打下班卡，并且提了审批（审批那边同意后会把下班时间更新为默认下班时间，否则下班时间为空,即13:00）
+                if(0.0 == workHour){
+                    String startTime = arp.getWorkStartTime();//打卡时间
+                    float startTimeSeconds = getSeconds(startTime);
+                    if(null == arp.getWorkEndTime()){
+                        hour = getSeconds("13:00:00");
+                        if(startTimeSeconds >= hour){//如果上班打卡时间大于13:00:00，并且又没打下班卡，又没提审批,不算进勤奋榜
+                            continue;
+                        }
+                    }else{
+                        hour = getSeconds(arp.getWorkEndTime());
+                    }
+                    workHour = hour - startTimeSeconds;
+                }
+                DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+                String f=decimalFormat.format(workHour);//format 返回的是字符串
+                workHour = Float.parseFloat(f);
+                arp.setWorkHour(workHour);
+
+                if(pageInfo != null && pageInfo.size() >0) {
+                    for(int j=0; j<pageInfo.size(); j++) {
+                        AttendanceResultPojo arp2 = pageInfo.get(j);
+                        String phone = arp2.getPhone();
+                        if(arp.getPhone().equals(phone)){
+                            arp2.setWorkHour(arp2.getWorkHour() + arp.getWorkHour());
+                        }else if(j == pageInfo.size()-1){
+                            pageInfo.add(arp);
+                        }
+
+                    }
+                }
+            }
+        }
+        Comparator<AttendanceResultPojo> COMPARATOR = new Comparator<AttendanceResultPojo>() {
+            public int compare(AttendanceResultPojo o1, AttendanceResultPojo o2) {
+                return o1.compareTo(o2);//运用User类的compareTo方法比较两个对象
+            }
+        };
+
+        Collections.sort(pageInfo, COMPARATOR);//用我们写好的Comparator对pageInfo进行排序（工作时长）
         Map<String, Object> map = new HashMap<>();
-        Page pi = (Page)pageInfo;
-        long total = pi.getTotal();
         map.put("pageInfo",pageInfo);
-        map.put("total",total);
-        map.put("pageCount",pi.getPages());
+        map.put("total",pageInfo.size());
+        map.put("pageCount",pageInfo.size()%page.getPageSize()==0 ? pageInfo.size()/page.getPageSize() : pageInfo.size()/page.getPageSize()+1);
         return  map;
     }
 
