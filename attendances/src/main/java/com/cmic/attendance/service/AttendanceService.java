@@ -875,10 +875,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
-        //测试使用，写死
+        Map<String, Object> map = new HashMap<>();
         if(null == attendanceUserVo){
-            attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");
+            //测试使用，写死
+         /*   attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");*/
+            map.put("flag",2);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -901,7 +903,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
 
-        Map<String, Object> map = new HashMap<>();
         map.put("pageInfo",pageInfo);
         map.put("total",total);
         map.put("pageCount",pi.getPages());

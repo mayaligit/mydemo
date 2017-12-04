@@ -109,6 +109,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
             attendance.setAttendanceMonth(cal.get(Calendar.YEAR )+"-"+month.toString());
             attendance.setAttendanceUser(user.getName());
 //            attendance.setAttendanceUser("陈华龙");//测试数据
+            attendance.setAttendanceGroup(dailyVo.getAttendanceGroup());
             attendanceService.save(attendance);//插入考勤
         }else{
             attendance.setUpdateDate(date1);
@@ -116,11 +117,13 @@ public class DailyService extends CrudService<DailyDao, Daily> {
             attendance.setDailyStatus(1);
             attendance.setAttendanceUser(user.getName());
 //          attendance.setAttendanceUser("陈华龙");//测试数据
+            attendance.setAttendanceGroup(dailyVo.getAttendanceGroup());
             attendanceService.update(attendance);//更新考勤
         }
         dailyVo.setAttendanceId(attendance.getId());
         dailyVo.setExamineTime(dailyVo.getCreateDate());
         dailyVo.setUsername(user.getName());
+        attendance.setAttendanceGroup(dailyVo.getAttendanceGroup());
 //        dailyVo.setAttendanceGroup("odc");//测试数据，暂时写死
 //        dailyVo.setUsername("陈华龙");//测试数据
         this.save(dailyVo);//插入日报
