@@ -8,13 +8,14 @@ import java.io.Serializable;
  * @author 何家来
  * @create 2017-10-30 19:04
  **/
-public class AttendanceResultPojo  implements Serializable,Comparable<Object> {
+public class AttendanceResultPojo implements Serializable,Comparable<Object> {
 
 
     private String workStartTime;
     private String workEndTime;
     private float workHour;
     private String username;
+    private String phone;
 
     public float getWorkHour() {
         return workHour;
@@ -46,6 +47,14 @@ public class AttendanceResultPojo  implements Serializable,Comparable<Object> {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override

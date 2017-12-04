@@ -40,6 +40,7 @@ import java.util.Map;
  */
 @Api(description = "考勤表管理")
 @RestController
+@CrossOrigin
 @RequestMapping("/attendance")
 public class AttendanceController extends BaseRestController<AttendanceService> {
 

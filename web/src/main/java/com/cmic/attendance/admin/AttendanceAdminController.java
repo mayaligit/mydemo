@@ -26,7 +26,7 @@ import java.util.Map;
  **/
 @Api(description = "考勤表后台管理")
 @RestController
-@RequestMapping("/adminAttendance")
+@RequestMapping("/attendance/adminAttendance")
 public class AttendanceAdminController extends BaseRestController<AttendanceService> {
     /**
      * 查询考勤列表分页
@@ -151,8 +151,8 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
      * @return
      * 考勤统计,按日统计出勤率
      */
-    @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "GET")
-    @RequestMapping(value="/checkAttendanceData",method = RequestMethod.GET)
+    @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
+    @RequestMapping(value="/checkAttendanceData",method = RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> checkAttendanceData(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
