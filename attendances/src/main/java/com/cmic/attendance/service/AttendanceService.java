@@ -402,6 +402,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     @Transactional(readOnly = false)
     public Map<String, Object> checkAttendanceByDay(QueryAttendanceVo queryAttendanceVo) {
 
+
         String date = queryAttendanceVo.getDate();
         PageInfo page = queryAttendanceVo.getPageInfo();
 
@@ -415,10 +416,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
-        //测试使用，写死
+        Map<String, Object> map = new HashMap<>();
         if(null == attendanceUserVo){
-            attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");
+            //测试使用，写死
+         /*   attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");*/
+            map.put("flag",2);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -430,7 +433,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         List<Map> pageInfo = (List<Map>)dao.checkAttendanceByDay(attendancePojo);
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
-        Map<String, Object> map = new HashMap<>();
+
         map.put("pageInfo",pageInfo);
         map.put("total",total);
         map.put("pageCount",pi.getPages());
@@ -449,10 +452,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
-        //测试使用，写死
+        Map<String, Object> map = new HashMap<>();
         if(null == attendanceUserVo){
-            attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");
+            //测试使用，写死
+         /*   attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");*/
+            map.put("flag",2);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -471,7 +476,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByDay(attendancePojo);
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
-        Map<String, Object> map = new HashMap<>();
+
         map.put("pageInfo",pageInfo);
         map.put("total",total);
         map.put("pageCount",pi.getPages());
@@ -489,14 +494,15 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String date = queryAttendanceVo.getDate();
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
-        //测试使用，写死
+        Map<String, Object> map = new HashMap<>();
         if(null == attendanceUserVo){
-            attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");
+            //测试使用，写死
+         /*   attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");*/
+            map.put("flag",2);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
-        Map<String, Object> map = new HashMap<>();
 //        获取班次信息
         Clazzes clazzes = clazzesService.getByGroupName(attendanceGroup);
         if(clazzes==null){
@@ -686,10 +692,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
-        //测试使用，写死
+        Map<String, Object> map = new HashMap<>();
         if(null == attendanceUserVo){
-            attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");
+            //测试使用，写死
+         /*   attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");*/
+            map.put("flag",2);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -743,7 +751,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         Collections.sort(pageInfo, COMPARATOR);//用我们写好的Comparator对pageInfo进行排序（工作时长）
         Page pi = (Page)pageInfo;
         long total = pi.getTotal();
-        Map<String, Object> map = new HashMap<>();
+
         map.put("pageInfo",pageInfo);
         map.put("total",total);
         map.put("pageCount",pi.getPages());
@@ -776,10 +784,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
-        //测试使用，写死
+        Map<String, Object> map = new HashMap<>();
         if(null == attendanceUserVo){
-            attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");
+            //测试使用，写死
+         /*   attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");*/
+            map.put("flag",2);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -846,7 +856,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         };
 
         Collections.sort(pageInfo, COMPARATOR);//用我们写好的Comparator对pageInfo进行排序（工作时长）
-        Map<String, Object> map = new HashMap<>();
+
         map.put("pageInfo",pageInfo);
         map.put("total",pageInfo.size());
         map.put("pageCount",pageInfo.size()%page.getPageSize()==0 ? pageInfo.size()/page.getPageSize() : pageInfo.size()/page.getPageSize()+1);
