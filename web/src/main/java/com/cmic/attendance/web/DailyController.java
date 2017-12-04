@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,9 +39,8 @@ public class DailyController extends BaseRestController<DailyService> {
 
     @ApiOperation(value = "新增", notes = "新增日报表", httpMethod = "POST")
     @RequestMapping(value="/save", method = RequestMethod.POST)
-    public Map post(HttpServletResponse response, @RequestBody DailyVo dailyVo, HttpServletRequest request){
+    public Map post( @RequestBody DailyVo dailyVo){
 
-//        response.setHeader("Access-Control-Allow-Origin", "*");
         HashMap<String, Object> map = new HashMap<>();
         map.put("status",0);
 
@@ -52,19 +50,10 @@ public class DailyController extends BaseRestController<DailyService> {
             map.put("status",1);//标题为空
             return map;
         }
-
-       /* if(StringUtils.isBlank(dailyVo.getYesterdayUnfinished()) ||
-                StringUtils.isBlank(dailyVo.getYesterdayFinished()) ||
-                StringUtils.isBlank(dailyVo.getYesterdayPlan()) ||
-                StringUtils.isBlank(dailyVo.getTodayPlan())){
-            map.put("status",2);//日报内容为空
-            return map;
-        }*/
-        if(StringUtils.isBlank(dailyVo.getUnfinishedWork()) || StringUtils.isBlank(dailyVo.getFinishedWork())){
+        if(StringUtils.isBlank(dailyVo.getTodayDaily())){
             map.put("status",2);//日报内容为空
             return map;
         }
-
         String msg = service.insertDailyAndAttendance(dailyVo);
         if(StringUtils.isNotBlank(msg)){
             if(msg.equals("0")){

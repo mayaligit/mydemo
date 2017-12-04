@@ -8,8 +8,7 @@
         a.daily_desc AS "dailyDesc",
         a.submit_time AS "submitTime",
         a.daily_title AS "dailyTitle",
-        a.finished_work AS "finishedWork",
-        a.unfinished_work AS "unfinishedWork",
+        a.today_daily AS "todayDaily",
         a.submit_location AS "submitLocation",
         a.examiner AS "examiner",
         a.examine_time AS "examineTime",
@@ -55,17 +54,8 @@
             <if test="dailyTitle != null">
                 AND a.daily_title LIKE CONCAT('%',#{dailyTitle, typeHandler=EscapeTypeHandler},'%')
             </if>
-            <if test="yesterdayPlan != null">
-                AND a.yesterday_plan LIKE CONCAT('%',#{yesterdayPlan, typeHandler=EscapeTypeHandler},'%')
-            </if>
-            <if test="yesterdayFinished != null">
-                AND a.yesterday_finished LIKE CONCAT('%',#{yesterdayFinished, typeHandler=EscapeTypeHandler},'%')
-            </if>
-            <if test="yesterdayUnfinished != null">
-                AND a.yesterday_unfinished LIKE CONCAT('%',#{yesterdayUnfinished, typeHandler=EscapeTypeHandler},'%')
-            </if>
-            <if test="todayPlan != null">
-                AND a.today_plan LIKE CONCAT('%',#{todayPlan, typeHandler=EscapeTypeHandler},'%')
+            <if test="todayDaily != null">
+                AND a.today_daily LIKE CONCAT('%',#{todayDaily, typeHandler=EscapeTypeHandler},'%')
             </if>
             <if test="submitLocation != null">
                 AND a.submit_location LIKE CONCAT('%',#{submitLocation, typeHandler=EscapeTypeHandler},'%')
@@ -112,8 +102,7 @@
         daily_desc,
         submit_time,
         daily_title,
-        finished_work,
-        unfinished_work,
+        today_daily,
         submit_location,
         examiner,
         examine_time,
@@ -131,8 +120,7 @@
         #{dailyDesc},
         #{submitTime},
         #{dailyTitle},
-        #{finishedWork},
-        #{unfinishedWork},
+        #{todayDaily},
         #{submitLocation},
         #{examiner},
         #{examineTime},
@@ -153,8 +141,7 @@
         daily_desc = #{dailyDesc},
         submit_time = #{submitTime},
         daily_title = #{dailyTitle},
-        finished_work = #{finishedWork},
-        unfinished_work = #{unfinishedWork},
+        today_daily = #{todayDaily},
         submit_location = #{submitLocation},
         examiner = #{examiner},
         examine_time = #{examineTime},
@@ -184,11 +171,8 @@
         <if test="dailyTitle != null  and dailyTitle != ''">
             daily_title = #{dailyTitle},
         </if>
-        <if test="finishedWork != null  and finishedWork != ''">
-            finished_work = #{finishedWork},
-        </if>
-        <if test="unfinishedWork != null  and unfinishedWork != ''">
-            unfinished_work = #{unfinishedWork},
+        <if test="todayDaily != null  and todayDaily != ''">
+            today_daily = #{todayDaily},
         </if>
         <if test="submitLocation != null  and submitLocation != ''">
             submit_location = #{submitLocation},
@@ -277,7 +261,7 @@
         id ,username ,submit_time AS "submitTime",daily_title AS "dailyTitle",today_daily AS "todayDaily",
         suggestion_status AS "suggestionStatus",daily_desc AS "dailyDesc",attendance_group AS "attendanceGroup"
         FROM t_daily
-        WHERE Date(update_time) = #{updateDate}
+        WHERE Date(update_date) = #{updateDate}
         AND update_by = #{phone}
     </select>
 
