@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 @Api(description = "管理")
 @RestController
-@RequestMapping("/work")
+@RequestMapping("/attendance/work")
 public class WorkStatisticsController extends BaseRestController<WorkStatisticsService> {
 
     @Autowired
