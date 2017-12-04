@@ -191,7 +191,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("auditUsername", "陈华龙");
         paraMap.put("id", "1aedeb5b1800000");
         dao.updateAudit(paraMap);
-        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime("13790440654", "2017-12-4");
+        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime("152406537870", "2017-12-4");
 
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
@@ -278,8 +278,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 } else {
                     attendance.setId(DBattendance.getId());
                     attendance.preUpdate();
-                    attendance.setStartTime(DateUtils.getStringsToDates(groupRule.getGroupAttendanceStart()));
-                    attendance.setEndTime(DateUtils.getStringsToDates(groupRule.getGroupAttendanceEnd()));
+                    attendance.setStartTime(DateUtils.getStringsToDates(startTime));
+                    attendance.setEndTime(DateUtils.getStringsToDates(endTime));
                     attendance.setAttendanceStatus("0");
                     attendance.setStartLocation(groupRule.getGroupAddress());
                     attendance.setEndLocation(groupRule.getGroupAddress());

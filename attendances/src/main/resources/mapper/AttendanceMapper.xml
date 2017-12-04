@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "com.cmic.attendance.dao.AttendanceDao">
+<mapper namespace="com.cmic.attendance.dao.AttendanceDao">
     <sql id="attendanceColumns">
         a.id AS "id",
         a.attendance_user AS "attendanceUser",
@@ -248,11 +248,17 @@
         <if test="attendanceCardStatus != null  and attendanceCardStatus != ''">
             attendance_card_status = #{attendanceCardStatus},
         </if>
-        <if test="attendanceLongitude != null  and attendanceLongitude != ''">
-            attendance_longitude = #{attendanceLongitude},
+        <if test="attendanceLongitudeStart != null  and attendanceLongitudeStart != ''">
+            attendance_longitude_start = #{attendanceLongitudeStart},
         </if>
-        <if test="attendanceDimension != null  and attendanceDimension != ''">
-            attendance_dimension = #{attendanceDimension},
+        <if test="attendanceDimensionStart != null  and attendanceDimensionStart != ''">
+            attendance_dimension_start= #{attendanceDimensionStart},
+        </if>
+        <if test="attendanceLongitudeEnd != null  and attendanceLongitudeEnd != ''">
+            attendance_longitude_end= #{attendanceLongitudeEnd},
+        </if>
+        <if test="attendanceDimensionEnd != null  and attendanceDimensionEnd != ''">
+            attendance_dimension_end= #{attendanceDimensionEnd},
         </if>
         <if test="attendanceWorkTime != null ">
             attendance_work_time = #{attendanceWorkTime},
@@ -279,7 +285,7 @@
         WHERE attendance_id = #{attendanceId}
     </update>
 
-    <select id="checkAttendanceByDay" parameterType="com.cmic.attendance.pojo.AttendancePojo"  resultType="Map">
+    <select id="checkAttendanceByDay" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="Map">
         SELECT
         DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
         a.attendance_user AS "userName"
@@ -296,7 +302,8 @@
         <include refid="attendanceJoins"/>
         WHERE a.create_by = #{createBy} AND DATE(a.create_date)=#{createDate}
     </select>
-    <select id="checkAttendanceLatterByDay" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="java.util.HashMap">
+    <select id="checkAttendanceLatterByDay" parameterType="com.cmic.attendance.pojo.AttendancePojo"
+            resultType="java.util.HashMap">
         SELECT
         DATE_FORMAT(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
         a.`attendance_user` AS "userName"
@@ -324,7 +331,7 @@
         AND a.attendance_group = #{attendanceGroup}
     </select>
 
-    <select id="getOutworkCount"  parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="int">
+    <select id="getOutworkCount" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="int">
         SELECT
         COUNT(a.`id`) outworkCount
         FROM t_attendance a
@@ -336,20 +343,20 @@
 
     <select id="selectAttendances" parameterType="attendance" resultType="map">
         SELECT
-            a.id AS "id",
-            a.attendance_user AS "attendanceUser",
-            date_format(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
-            date_format(a.end_time,'%Y-%m-%d %H:%i') AS "endTime",
-            a.attendance_status AS "attendanceStatus",
-            a.daily_status AS "dailyStatus",
-            a.start_time_status AS "startTimeStatus",
-            a.end_time_status AS "endTimeStatus",
-            a.attendance_desc AS "attendanceDesc",
-             date_format(a.create_date,'%Y-%m-%d %H:%i') AS "createTime",
-            b.daily_desc AS "dailyDesc"
+        a.id AS "id",
+        a.attendance_user AS "attendanceUser",
+        date_format(a.start_time,'%Y-%m-%d %H:%i') AS "startTime",
+        date_format(a.end_time,'%Y-%m-%d %H:%i') AS "endTime",
+        a.attendance_status AS "attendanceStatus",
+        a.daily_status AS "dailyStatus",
+        a.start_time_status AS "startTimeStatus",
+        a.end_time_status AS "endTimeStatus",
+        a.attendance_desc AS "attendanceDesc",
+        date_format(a.create_date,'%Y-%m-%d %H:%i') AS "createTime",
+        b.daily_desc AS "dailyDesc"
         FROM
-            t_attendance a
-            LEFT JOIN t_daily b ON a.id=b.attendance_id
+        t_attendance a
+        LEFT JOIN t_daily b ON a.id=b.attendance_id
         <where>
             <if test="attendanceUser != null and attendanceUser != ''">
                 attendance_user = #{attendanceUser}
@@ -358,13 +365,13 @@
                 and attendance_status = #{attendanceStatus}
             </if>
             <if test="attendanceMonth != null and attendanceMonth != ''">
-                and  attendance_month = #{attendanceMonth}
+                and attendance_month = #{attendanceMonth}
             </if>
             <if test="dailyStatus != null and dailyStatus != ''">
-                and  daily_status = #{dailyStatus}
+                and daily_status = #{dailyStatus}
             </if>
             <if test="attendanceGroup != null and attendanceGroup != ''">
-                and  a.attendance_group = #{attendanceGroup}
+                and a.attendance_group = #{attendanceGroup}
             </if>
         </where>
     </select>
@@ -379,7 +386,7 @@
     </select>
 
     <resultMap id="attendanceMap" type="Attendance">
-        <id column="id" property="id" />
+        <id column="id" property="id"/>
         <result column="attendanceStatus" property="attendanceStatus"/>
         <result column="createTime" property="createTime"/>
         <result column="attendanceDesc" property="attendanceDesc"/>
@@ -413,10 +420,10 @@
                 and attendance_status = #{attendanceStatus}
             </if>
             <if test="attendanceMonth != null and attendanceMonth != ''">
-                and  attendance_month = #{attendanceMonth}
+                and attendance_month = #{attendanceMonth}
             </if>
             <if test="dailyStatus != null and dailyStatus != ''">
-                and  daily_status = #{dailyStatus}
+                and daily_status = #{dailyStatus}
             </if>
         </where>
     </select>
@@ -542,7 +549,6 @@
     </select>
 
 
-
     <!--固定模式 早退次数            AND DATE_FORMAT(a.end_time,'%H%i%s')&lt;180000-->
     <select id="getLeaveEarly" resultType="Attendance">
         SELECT
@@ -601,7 +607,8 @@
         </where>
     </select>
 
-    <select id="checkAttendanceHardworkingByDay"  parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="com.cmic.attendance.pojo.AttendanceResultPojo" >
+    <select id="checkAttendanceHardworkingByDay" parameterType="com.cmic.attendance.pojo.AttendancePojo"
+            resultType="com.cmic.attendance.pojo.AttendanceResultPojo">
 
         SELECT
         SUM(attendance_work_time/60) workHour,
@@ -615,7 +622,8 @@
         GROUP BY a.create_by
     </select>
 
-    <select id="checkAttendanceHardworkingByMonth"  parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="com.cmic.attendance.pojo.AttendanceResultPojo">
+    <select id="checkAttendanceHardworkingByMonth" parameterType="com.cmic.attendance.pojo.AttendancePojo"
+            resultType="com.cmic.attendance.pojo.AttendanceResultPojo">
 
         SELECT SUM(a.attendance_work_time/60) workHour,
 	    a.`attendance_user` "username",a.`create_by` phone
@@ -626,7 +634,8 @@
         GROUP BY a.create_by
     </select>
 
-    <select id="checkAttendanceLatterByMonth" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="java.util.HashMap">
+    <select id="checkAttendanceLatterByMonth" parameterType="com.cmic.attendance.pojo.AttendancePojo"
+            resultType="java.util.HashMap">
 
         SELECT
         COUNT(id) "lateTime",
@@ -639,7 +648,8 @@
     </select>
 
 
-    <select id="checkNoEndTime"  parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="com.cmic.attendance.pojo.AttendanceResultPojo" >
+    <select id="checkNoEndTime" parameterType="com.cmic.attendance.pojo.AttendancePojo"
+            resultType="com.cmic.attendance.pojo.AttendanceResultPojo">
 
         SELECT
         a.`attendance_user` username,a.`create_by` phone,
