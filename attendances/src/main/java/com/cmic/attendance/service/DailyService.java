@@ -162,6 +162,10 @@ public class DailyService extends CrudService<DailyDao, Daily> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        Map map = new HashMap<>();
+        if(null == attendanceUserVo){
+            map.put("flag",2);
+        }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         PageInfo page = dailyVo.getPageInfo();
