@@ -67,7 +67,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         BaseAdminEntity user = (BaseAdminEntity) obj;
         audit.setUsername(user.getName());
 
-
         //audit.setUsername("陈志豪");// 测试数据
 
         //任何请况下都必须携带的参数
@@ -174,13 +173,13 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         Attendance attendance = new Attendance();
         Map<String, Object> paraMap = new HashMap<String, Object>();
         //获取审批人信息,更新审批表
-         AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
-         paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
+        paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
         paraMap.put("updateDate", new Date());
         paraMap.put("auditTime", DateUtils.getDateToStrings(new Date()));
         paraMap.put("auditStatus", "0"); //设置审批意见状态为 已处理
-         paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
-         paraMap.put("auditUsername",attendanceUserVo.getAttendanceUsername());
+        paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
+        paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
         //paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());
         paraMap.put("id", audit.getId());
@@ -203,13 +202,13 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             return;
         }
 
-       //获取数据库当天打卡数据
+        //获取数据库当天打卡数据
         String phone = audit.getCreateBy().getId();
         Date submitTime = audit.getSubmitTime();
         String createTime = DateUtils.getDateToYearMonthDay(submitTime);
         Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime(phone, createTime);
 
-         //将手机号码放到session中
+        //将手机号码放到session中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO", adminEntity);
@@ -297,11 +296,11 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         //创建封装数据
         Map<String, Object> dataMap = new HashMap<>();
         //验证登陆信息
-        Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        if (null == obj || !(obj instanceof BaseAdminEntity)) {
+        Object obj = WebUtils.getRequest().getSession().getAttribute("AttendanceUserVo");
+        if (null == obj || !(obj instanceof AttendanceUserVo)) {
             dataMap.put("flag", "1");
             return dataMap;
-        }else {
+        } else {
             dataMap.put("flag", "0");
         }
 
@@ -320,7 +319,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         PageHelper.startPage(page.getPageNum(), page.getPageSize() > 0 ? page.getPageSize() : 10, page.getOrderBy());
 
         PageInfo<Map> result = new PageInfo(dao.findAuditList(audit));
-
 
         //考勤数据
         dataMap.put("auditList", result.getList());
