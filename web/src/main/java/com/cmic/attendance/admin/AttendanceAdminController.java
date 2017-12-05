@@ -176,6 +176,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ResponseBody
     public Map<String,Object> checkAttendanceHardworkingByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
+        System.out.print("=======按日统计勤奋榜=========="+queryAttendanceVo.getDate()+"=========="+queryAttendanceVo.getPageInfo()+"==========");
         Map<String, Object> map = service.checkAttendanceHardworkingByDay(queryAttendanceVo);
         return map;
     }
@@ -190,6 +191,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ResponseBody
     public Map<String,Object> checkAttendanceHardworkingByMonth(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
+        System.out.print("=======按月统计勤奋榜=========="+queryAttendanceVo.getDate()+"=========="+queryAttendanceVo.getPageInfo()+"==========");
         Map<String, Object> map = service.checkAttendanceHardworkingByMonth(queryAttendanceVo);
         return map;
     }
