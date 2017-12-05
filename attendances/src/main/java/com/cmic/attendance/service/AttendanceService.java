@@ -697,6 +697,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        System.out.print("------"+attendanceUserVo+"------");
         Map<String, Object> map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
