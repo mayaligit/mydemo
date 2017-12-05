@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
     <name>RCSMatrix.biz.attendance</name>
     <description></description>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
