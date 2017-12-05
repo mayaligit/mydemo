@@ -51,9 +51,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @Autowired
     private GroupAddressService groupAddressService;
 
-    @Value("${clazzesService.id}")
-    private String clazzesId;
-
     @ApiOperation(value = "查询", notes = "查询考勤表列表", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderBy", value="排序", defaultValue = "createDate desc", paramType = "query"),
@@ -109,13 +106,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
-       /* response.setHeader("Access-Control-Allow-Origin", "*");*/
-        /*//将用户信息封装到实体类中,并放入session域中
-        BaseAdminEntity adminEntity = new BaseAdminEntity();
-        adminEntity.setId("15240653787");
-        adminEntity.setName("梁渝");
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-       //测试数据结束*/ /**/
          HttpServletRequest request = WebUtils.getRequest();
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();

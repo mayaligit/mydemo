@@ -172,7 +172,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
             page.setPageSize(10);
         }
         if(StringUtils.isEmpty(page.getOrderBy())) {
-            page.setOrderBy("a.create_time desc");
+            page.setOrderBy("a.create_date desc");
         }
         DailyPojo dailyPojo = new DailyPojo();
         BeanUtils.copyProperties(dailyVo,dailyPojo);
