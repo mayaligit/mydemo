@@ -217,8 +217,9 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         Map map = new HashMap<>();
+        map.put("flag",0);
         if(null == attendanceUserVo){
-            map.put("flag",2);
+            map.put("flag",1);
         }
 
         Date date = new Date();
