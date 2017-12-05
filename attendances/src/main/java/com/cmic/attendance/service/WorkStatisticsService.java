@@ -34,7 +34,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
     AuditDao auditDao;
 
     public HashMap workStatistics(WorkStatistics workStatistics) {
-        SimpleDateFormat strdate = new SimpleDateFormat("E");
+        SimpleDateFormat strdate = new SimpleDateFormat("EEEE");
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
         SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
