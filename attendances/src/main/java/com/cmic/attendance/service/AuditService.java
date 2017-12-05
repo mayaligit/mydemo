@@ -55,7 +55,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
          /*response.setHeader("Access-Control-Allow-Origin", "*");*/
 
         Map<String, String> map = new HashMap<>();
-       /* //设置用户名
+        /*//设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if (null == obj || !(obj instanceof BaseAdminEntity)) {
             map.put("msg", "登陆超时,请重新登陆");
@@ -64,8 +64,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         BaseAdminEntity user = (BaseAdminEntity) obj;
         audit.setUsername(user.getName());*/
 
-        // 测试数据
-        audit.setUsername("陈志豪");
+
+        audit.setUsername("陈志豪");// 测试数据
 
         //任何请况下都必须携带的参数
         if (StringUtils.isBlank(audit.getAuditContent()) || StringUtils.isBlank(audit.getAttendanceGroup())) {
@@ -171,24 +171,24 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         Attendance attendance = new Attendance();
         Map<String, Object> paraMap = new HashMap<String, Object>();
         //获取审批人信息,更新审批表
-        // AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
+         //AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
         // paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
         paraMap.put("updateDate", new Date());
         paraMap.put("auditTime", DateUtils.getDateToStrings(new Date()));
         paraMap.put("auditStatus", "0"); //设置审批意见状态为 已处理
-        // paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
+         //paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
         // paraMap.put("auditUsername",attendanceUserVo.getAttendanceUsername());
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
-        // paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());
+        //paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());
         //paraMap.put("id", audit.getId());
 
         // 测试数据
-        paraMap.put("updateBy", "陈华龙");
-        paraMap.put("auditUserId", "666");//审批人ID
-        paraMap.put("auditUsername", "陈华龙");
-        paraMap.put("id", "1aedeb5b1800000");
-        dao.updateAudit(paraMap);
-        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime("152406537870", "2017-12-4");
+        paraMap.put("updateBy", "陈华龙");// 测试数据
+        paraMap.put("auditUserId", "666");// 测试数据
+        paraMap.put("auditUsername", "陈华龙");// 测试数据
+        paraMap.put("id", "1aedeb5b1800000");// 测试数据
+        dao.updateAudit(paraMap);// 测试数据
+        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime("152406537870", "2017-12-4");// 测试数据
 
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
@@ -200,7 +200,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             return;
         }
 
-      /* //获取数据库当天打卡数据
+     /*  //获取数据库当天打卡数据
         String phone = audit.getCreateBy().getId();
         Date submitTime = audit.getSubmitTime();
         String createTime = DateUtils.getDateToYearMonthDay(submitTime);
@@ -210,7 +210,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO", adminEntity);
-        */
+*/
 
      /* 审批同意 按自由模式和时长模式维护考勤表
          如果是请假 0   更新审批表(已经处理)  不维护考勤表
@@ -291,6 +291,17 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     }
 
     public Map<String, Object> findAuditList(PageInfo<Audit> page, Audit audit) {
+        //创建封装数据
+        Map<String, Object> dataMap = new HashMap<>();
+        /*//验证登陆信息
+        Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        if (null == obj || !(obj instanceof BaseAdminEntity)) {
+            dataMap.put("flag", "1");
+            return dataMap;
+        }else {
+            dataMap.put("flag", "0");
+        }*/
+
         if (page.getPageNum() == 0) {
             page.setPageNum(1);
         }
@@ -307,8 +318,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
         PageInfo<Map> result = new PageInfo(dao.findAuditList(audit));
 
-        //创建封装数据
-        Map<String, Object> dataMap = new HashMap<>();
+
         //考勤数据
         dataMap.put("auditList", result.getList());
         //总页数
