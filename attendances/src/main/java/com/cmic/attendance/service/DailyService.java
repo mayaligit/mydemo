@@ -73,6 +73,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         System.out.println("===========================考勤id"+ dailyVo.getAttendanceId()+"========================");
         if (null == user ) {
+//            user  = new BaseAdminEntity();
             return "1";//登录超时
         }
         System.out.println("=============手机号码phone:"+user.getId()+"==============前端传过来的日期:updateDate:"+user.getId()+"======================== ");
@@ -107,7 +108,8 @@ public class DailyService extends CrudService<DailyDao, Daily> {
             Integer month = cal.get(Calendar.MONTH )+1;
             attendance.setAttendanceMonth(cal.get(Calendar.YEAR )+"-"+month.toString());
             attendance.setAttendanceUser(user.getName());
-//          attendance.setAttendanceUser("陈华龙");//测试数据
+//            attendance.setAttendanceUser("陈华龙");//测试数据
+            attendance.setAttendanceGroup(dailyVo.getAttendanceGroup());
             attendanceService.save(attendance);//插入考勤
         }else{
             attendance.setUpdateDate(date1);
@@ -115,13 +117,15 @@ public class DailyService extends CrudService<DailyDao, Daily> {
             attendance.setDailyStatus(1);
             attendance.setAttendanceUser(user.getName());
 //          attendance.setAttendanceUser("陈华龙");//测试数据
+            attendance.setAttendanceGroup(dailyVo.getAttendanceGroup());
             attendanceService.update(attendance);//更新考勤
         }
         dailyVo.setAttendanceId(attendance.getId());
         dailyVo.setExamineTime(dailyVo.getCreateDate());
         dailyVo.setUsername(user.getName());
-        dailyVo.setAttendanceGroup("odc");//测试数据，暂时写死
-//      dailyVo.setUsername("陈华龙");//测试数据
+        attendance.setAttendanceGroup(dailyVo.getAttendanceGroup());
+//        dailyVo.setAttendanceGroup("odc");//测试数据，暂时写死
+//        dailyVo.setUsername("陈华龙");//测试数据
         this.save(dailyVo);//插入日报
         return null;
     }

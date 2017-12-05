@@ -122,11 +122,12 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         Long serverTimes=serverTime.getTime();
         String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
         //检查当前用户是否已经打卡
-        String phone = (String)redisTemplate.boundValueOps("phone").get();
-        String username = (String)redisTemplate.boundValueOps("username").get();
-        log.debug("登录者session数据》》》》》》》》》》"+user+"<<<<<<<<<<<<<<<<<");
-
-        Attendance DBattendance=service.checkAttendance(phone,serverDate);
+      /*  String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();*/
+        String phone = user.getId();
+        String username=user.getName();
+        log.debug("登录者session数据》》》》》》》》》》"+user.getId()+user.getName()+"<<<<<<<<<<<<<<<<<");
+        Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime() ){
             log.debug("用户已经打过卡了");
@@ -190,8 +191,12 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @ApiOperation(value = "上班打卡", notes = "上班打卡接口", httpMethod = "POST")
     @RequestMapping(value = "/punchCardStart",method = RequestMethod.POST)
     public AttendanceVo punchCardStart(@RequestBody AttendanceVo attendanceVo){
-        String phone = (String)redisTemplate.boundValueOps("phone").get();
-        String username = (String)redisTemplate.boundValueOps("username").get();
+        /*String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();*/
+        HttpServletRequest request = WebUtils.getRequest();
+        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        String phone = user.getId();
+        String username=user.getName();
         attendanceVo.setAttendanceGroup("odc");
         attendanceVo.setUsername(username);
         attendanceVo.setPhone(phone);
@@ -228,9 +233,12 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public AttendanceEndVo punchCardEnd(@RequestBody AttendanceEndVo attendanceEndVo){
         HttpServletResponse response =WebUtils.getRequestAttributes().getResponse();
         /*response.setHeader("Access-Control-Allow-Origin", "*");*/
-
-        String phone = (String)redisTemplate.boundValueOps("phone").get();
-        String username = (String)redisTemplate.boundValueOps("username").get();
+        HttpServletRequest request = WebUtils.getRequest();
+        BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        String phone = user.getId();
+        String username=user.getName();
+        /*String phone = (String)redisTemplate.boundValueOps("phone").get();
+        String username = (String)redisTemplate.boundValueOps("username").get();*/
         attendanceEndVo.setAttendanceGroup("odc");
         attendanceEndVo.setUsername(username);
         attendanceEndVo.setPhone(phone);

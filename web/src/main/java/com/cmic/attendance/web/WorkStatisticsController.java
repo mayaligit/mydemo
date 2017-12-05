@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 @Api(description = "管理")
 @RestController
-@RequestMapping("/work")
+@RequestMapping("/attendance/work")
 public class WorkStatisticsController extends BaseRestController<WorkStatisticsService> {
 
     @Autowired
@@ -40,8 +40,8 @@ public class WorkStatisticsController extends BaseRestController<WorkStatisticsS
         return page;
     }
 
-    @ApiOperation(value = "工作统计", notes = "工作统计", httpMethod = "GET")
-    @ApiImplicitParams({
+    @ApiOperation(value = "工作统计", notes = "工作统计", httpMethod = "POST")
+ /*   @ApiImplicitParams({
             @ApiImplicitParam(name = "phone", value = "手机号", paramType = "query"),
             @ApiImplicitParam(name = "userName", value = "用户名", paramType = "query"),
             @ApiImplicitParam(name = "id", value = "", paramType = "query"),
@@ -49,9 +49,9 @@ public class WorkStatisticsController extends BaseRestController<WorkStatisticsS
             @ApiImplicitParam(name = "orderBy", value = "排序", defaultValue = "createDate desc", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "分页大小", defaultValue = "10", paramType = "query"),
             @ApiImplicitParam(name = "pageNum", value = "页码", defaultValue = "1", paramType = "query")
-    })
-    @RequestMapping(value = "/workStatistics", method = RequestMethod.GET)
-    public HashMap workStatistics(@ApiIgnore WorkStatistics workStatistics) {
+    })*/
+    @RequestMapping(value = "/workStatistics", method = RequestMethod.POST)
+    public HashMap workStatistics(@RequestBody WorkStatistics workStatistics) {
         System.out.println("abc");
         HashMap workStatistics2 = null;
         try {

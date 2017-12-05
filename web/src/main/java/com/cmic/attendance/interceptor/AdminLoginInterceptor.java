@@ -1,7 +1,6 @@
 package com.cmic.attendance.interceptor;
 
 import com.cmic.attendance.model.AttendanceUser;
-import com.cmic.attendance.model.User;
 import com.cmic.attendance.web.AttendanceController;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import org.apache.log4j.Logger;

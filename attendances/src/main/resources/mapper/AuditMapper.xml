@@ -101,23 +101,7 @@
     </select>
 
     <!--某人某个月的总请假时长-->
-    <select id="getHolidayDays" resultType="Double">
-        SELECT
-        IFNULL(SUM(a.holiday_days), 0)
-        FROM t_audit a
-        <where>
-            1 = 1
-            <if test="userName != null">
-                AND a.username = #{userName}
-            </if>
-            AND a.business_type=0
-            AND a.audit_suggestion=0
-            AND DATE_FORMAT(a.submit_time,'%Y-%m')=#{month}
-        </where>
-    </select>
-
-    <!--某个月的请假审批通过记录-->
-    <select id="getHolidayList" resultType="Audit">
+    <select id="getHolidayDays" resultType="Audit">
         SELECT
         <include refid="auditColumns"/>
         FROM t_audit a
@@ -132,10 +116,26 @@
         </where>
     </select>
 
-    <!--某个月的外勤审批通过记录-->
-    <select id="getFieldPersonnel" resultType="Integer">
+    <!--某个月的请假和外勤审批通过记录-->
+    <select id="getHolidayList" resultType="Audit">
         SELECT
-            COUNT(*)
+        <include refid="auditColumns"/>
+        FROM t_audit a
+        <where>
+            1 = 1
+            <if test="userName != null">
+                AND a.username = #{userName}
+            </if>
+            AND a.business_type &lt;&gt;  2
+            AND a.audit_suggestion=0
+            AND DATE_FORMAT(a.submit_time,'%Y-%m')=#{month}
+        </where>
+    </select>
+
+    <!--某个月的外勤审批通过记录-->
+    <select id="getFieldPersonnel" resultType="Audit">
+        SELECT
+        <include refid="auditColumns"/>
         FROM t_audit a
         <where>
             1 = 1
@@ -261,6 +261,9 @@
         <if test="attendanceGroup != null  and attendanceGroup != ''">
             attendance_group = #{attendanceGroup},
         </if>
+        <if test="auditSuggestion != null  and auditSuggestion != ''">
+            audit_suggestion = #{auditSuggestion},
+        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -294,9 +297,15 @@
         <if test="suggestionRemarks != null and suggestionRemarks != ''">
             suggestion_remarks=#{suggestionRemarks},
         </if>
+        <if test="auditUserId != null and auditUserId != ''">
+            audit_user_id=#{auditUserId},
+        </if>
+        <if test="auditUsername != null and auditUsername != ''">
+            audit_user_name=#{auditUsername},
+        </if>
         update_by=#{updateBy},
         update_date=#{updateDate}
-        WHERE id =#{auditId}
+        WHERE id =#{id}
     </update>
 
     <select id="findAuditList" resultType="Map" parameterType="Audit">
