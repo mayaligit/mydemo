@@ -124,7 +124,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          *跟考勤组已经启用在状态来获取考勤组信息
          */
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
-        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+groupRule.getGroupAttendanceWay()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>进入打卡业务>>方式"+groupRule.getGroupAttendanceWay()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         //服务器时间
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
@@ -164,7 +164,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
             String groupAttendanceWays = groupAttendanceWay + "";
             //一、固定时长
-            log.debug("进入打卡业务");
+            log.debug("进入固定时长打卡业务");
             if ("1".equals(groupAttendanceWays)) {
                 //判断当前地点是否异常
                 Attendance saveAttendance = new Attendance();
@@ -230,6 +230,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 return saveAttendance;
             } else {
                 //2、预留自由打卡业务 插入数据
+                log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>进入自由打卡模式<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
                 Attendance saveAttendance = new Attendance();
                 saveAttendance.setAttendanceUser(attendanceVo.getUsername());
                 Date startTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
@@ -257,6 +258,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }
         }
         //考勤异常
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>考勤异常<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         return null;
     }
 
@@ -412,16 +414,17 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         if(page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
-        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"startTime");
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"start_time");
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         Map<String, Object> map = new HashMap<>();
+        map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",2);
+            map.put("flag",1);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -453,11 +456,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         Map<String, Object> map = new HashMap<>();
+        map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",2);
+            map.put("flag",1);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -471,7 +475,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);
         attendancePojo.setAttendanceGroup(attendanceGroup);
-        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"startTime DESC");
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"start_time DESC");
 
         List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByDay(attendancePojo);
         Page pi = (Page)pageInfo;
@@ -495,11 +499,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         Map<String, Object> map = new HashMap<>();
+        map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",2);
+            map.put("flag",1);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -693,11 +698,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         Map<String, Object> map = new HashMap<>();
+        map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",2);
+            map.put("flag",1);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -785,11 +791,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         Map<String, Object> map = new HashMap<>();
+        map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",2);
+            map.put("flag",1);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -876,11 +883,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
         Map<String, Object> map = new HashMap<>();
+        map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",2);
+            map.put("flag",1);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
