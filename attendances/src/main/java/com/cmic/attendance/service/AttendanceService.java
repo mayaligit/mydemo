@@ -575,7 +575,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      * @return map集合
      */
     public Map<String, Object> selectAttendances(Integer pageNum , Integer pageSize, Attendance attendance){
-        PageInfo<Map> pageInfo = PageHelper.startPage(pageNum, pageSize,"a.create_time DESC").doSelectPageInfo(new ISelect() {
+        PageInfo<Map> pageInfo = PageHelper.startPage(pageNum, pageSize,"a.create_date DESC").doSelectPageInfo(new ISelect() {
             @Override
             public void doSelect() {
                 dao.selectAttendances(attendance);
@@ -659,7 +659,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         //设置查询参数和排序条件
         int pageSize = (int)paramMap.get("pageSize");
         int pageNum = (int)paramMap.get("pageNum");
-        PageHelper.startPage(pageNum,pageSize,"a.create_time ASC");
+        PageHelper.startPage(pageNum,pageSize,"a.create_date ASC");
         paramMap.put("createBy",phone);
 
         String attaendanceMonth = (String)paramMap.get("attaendanceMonth");
