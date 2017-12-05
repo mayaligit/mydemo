@@ -7,11 +7,13 @@ import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.attendance.vo.QueryAttendanceVo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
+import com.cmic.saas.utils.WebUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
@@ -212,6 +214,13 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ResponseBody
     public Map getNowDate() {
 
+        HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        Map map = new HashMap<>();
+        if(null == attendanceUserVo){
+            map.put("flag",2);
+        }
+
         Date date = new Date();
         String nowDate = DateUtils.getDateToYearMonthDay(date);
         Calendar c=Calendar.getInstance();
@@ -219,7 +228,6 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         int weekday=c.get(Calendar.DAY_OF_WEEK)-1;
         String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
 
-        Map map = new HashMap<String,Object>();
         map.put("nowDate",nowDate);
         map.put("weekday",weekDays[weekday]);
         return map;
