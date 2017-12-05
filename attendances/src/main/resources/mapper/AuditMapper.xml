@@ -316,7 +316,7 @@
             <if test="username != null and username != ''">
                 and username LIKE '%${username}%'
             </if>
-            <if test="auditStatus != null and auditStatus != ''">
+            <if test="auditStatus == 0 or auditStatus ==1">
                 and audit_status = #{auditStatus}
             </if>
         </where>
