@@ -32,8 +32,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     @Autowired
     private AttendanceDao attendanceDao;
     @Autowired
-    private AuditDao auditDao;
-    @Autowired
     private GroupRuleService groupRuleService;
 
     public Audit get(String id) {
