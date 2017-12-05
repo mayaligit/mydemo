@@ -296,8 +296,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         //创建封装数据
         Map<String, Object> dataMap = new HashMap<>();
         //验证登陆信息
-        Object obj = WebUtils.getRequest().getSession().getAttribute("AttendanceUserVo");
-        if (null == obj || !(obj instanceof AttendanceUserVo)) {
+        Object obj = WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
+        if (null == obj ) {
             dataMap.put("flag", "1");
             return dataMap;
         } else {
