@@ -31,9 +31,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
     @Autowired
     private AttendanceDao attendanceDao;
-    @Autowired
-    private AuditDao auditDao;
-    @Autowired
     private GroupRuleService groupRuleService;
 
     public Audit get(String id) {
@@ -303,7 +300,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         }
 
         if (org.apache.commons.lang3.StringUtils.isEmpty(page.getOrderBy())) {
-            page.setOrderBy("a.create_time desc");
+            page.setOrderBy("a.create_date desc");
         }
 
         PageHelper.startPage(page.getPageNum(), page.getPageSize() > 0 ? page.getPageSize() : 10, page.getOrderBy());

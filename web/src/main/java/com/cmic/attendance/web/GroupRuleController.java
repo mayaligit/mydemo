@@ -107,10 +107,11 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
 
         //检查当前用户是否已经打卡
         String username = (String)redisTemplate.boundValueOps("username").get();
+        String phone = (String)redisTemplate.boundValueOps("phone").get();
 
         BaseAdminEntity adminEntity = new BaseAdminEntity();
-        adminEntity.setId("15240653787");
-        adminEntity.setName("梁渝");
+        adminEntity.setId(phone);
+        adminEntity.setName(username);
         groupRuleVo.getGroupRule().setUpdateBy(adminEntity);
         groupRuleVo.getGroupPersonnel().setUpdateBy(adminEntity);
 

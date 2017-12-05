@@ -282,12 +282,14 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         try {
             String place = "";
             for(int i=0;i<resses.length;i++){
-                String[] places = resses[i].split("-");
-                if(i==resses.length-1){
-                    place = place + places[3];
-                    break;
+                if(resses[i].indexOf("-")>0) {
+                    String[] places = resses[i].split("-");
+                    if(i==resses.length-1){
+                        place = place + places[3];
+                        break;
+                    }
+                    place = place + places[3]+",";
                 }
-                place = place + places[3]+",";
             }
             groupRuleVo.getGroupRule().setGroupAddress(place);
             //更新规则主表数据
@@ -335,9 +337,9 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
                         paraMap.put("addressid", adds[5]);
                         //检查当前用户是否已经打卡
                         //String username = (String)redisTemplate.boundValueOps("username").get();
-                        paraMap.put("updateBy.id", "15240653787");
+                        paraMap.put("updateBy", groupRuleVo.getGroupRule().getUpdateBy());
                         groupAddressDao.updateGroupAddressById(paraMap);
-                    }else if(adds.length<=4){
+                    }else if(adds.length==4){
                         //添加多地址
                         GroupAddress groupAddress = new GroupAddress();
                         groupAddress.setGroupAttendanceLongitude(Float.parseFloat(adds[0]));
@@ -346,6 +348,8 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
                         groupAddress.setGroupAddress(adds[3]);
                         groupAddress.setAttendanceGroupId(attendanceGroupId);
                         groupAddressService.save(groupAddress);
+                    }else if(adds.length==1){
+                        groupAddressService.delete(adds[0]);
                     }
                 }
             }
