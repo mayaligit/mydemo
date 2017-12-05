@@ -276,9 +276,10 @@
 
     <select id="getAuditById" parameterType="String" resultType="Audit">
         SELECT
-        id ,username ,submit_time AS "submitTime" ,audit_content AS "auditContent" , audit_detail AS "auditDetail",
-        audit_status AS "auditStatus",audit_suggestion AS "auditSuggestion",suggestion_remarks AS "suggestionRemarks",
-        create_by AS "createBy.id",business_type AS "businessType"
+        id ,username ,submit_time AS "submitTime" ,audit_content AS "auditContent" ,audit_user_id AS "auditUserId",
+        audit_user_name AS "auditUserName",audit_time AS "auditTime",attendance_id AS "attendanceId",
+        audit_status AS "auditStatus",audit_suggestion AS "auditSuggestion",suggestion_remarksvarchar AS "suggestionRemarksvarchar",
+        create_by AS "createBy.id",business_type AS "businessType",attendance_group AS "attendacnceGroup"
         FROM t_audit
         WHERE id = #{auditId}
     </select>
