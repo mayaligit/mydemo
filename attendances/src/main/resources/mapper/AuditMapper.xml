@@ -22,7 +22,8 @@
         a.update_date AS "updateDate",
         a.start_date AS "startDate",
         a.end_date AS "endDate",
-        a.holiday_days AS "holidayDays"
+        a.holiday_days AS "holidayDays",
+        a.phone_number AS "phoneNumber"
     </sql>
 
     <sql id="auditJoins">
