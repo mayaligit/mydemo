@@ -3,7 +3,7 @@
 <mapper namespace="com.cmic.attendance.dao.AuditDao">
     <sql id="auditColumns">
         a.id AS "id",
-        a.username AS "username",
+        a.user_name AS "userName",
         a.submit_time AS "submitTime",
         a.audit_content AS "auditContent",
         a.audit_user_id AS "auditUserId",
@@ -85,8 +85,8 @@
             <if test="auditDetail != null">
                 AND a.audit_detail LIKE CONCAT('%',#{auditDetail, typeHandler=EscapeTypeHandler},'%')
             </if>
-            <if test="username != null">
-                AND a.username LIKE CONCAT('%',#{username, typeHandler=EscapeTypeHandler},'%')
+            <if test="userName != null">
+                AND a.user_name LIKE CONCAT('%',#{userName, typeHandler=EscapeTypeHandler},'%')
             </if>
             <if test="attendanceGroup != null">
                 AND a.attendance_group LIKE CONCAT('%',#{attendanceGroup, typeHandler=EscapeTypeHandler},'%')
@@ -109,7 +109,7 @@
         <where>
             1 = 1
             <if test="userName != null">
-                AND a.username = #{userName}
+                AND a.user_name = #{userName}
             </if>
             AND a.business_type=0
             AND a.audit_suggestion=0
@@ -125,7 +125,7 @@
         <where>
             1 = 1
             <if test="userName != null">
-                AND a.username = #{userName}
+                AND a.user_name = #{userName}
             </if>
             AND a.business_type &lt;&gt;  2
             AND a.audit_suggestion=0
@@ -141,7 +141,7 @@
         <where>
             1 = 1
             <if test="userName != null">
-                AND a.username = #{userName}
+                AND a.user_name = #{userName}
             </if>
             AND a.business_type=1
             AND a.audit_suggestion=0
@@ -153,7 +153,7 @@
     <insert id="insert">
         INSERT INTO t_audit(
         id,
-        username,
+        user_name,
         submit_time,
         audit_content,
         audit_user_id,
@@ -175,7 +175,7 @@
         holiday_days
         ) VALUES (
         #{id},
-        #{username},
+        #{userName},
         #{submitTime},
         #{auditContent},
         #{auditUserId},
@@ -201,7 +201,7 @@
     <update id="update">
         UPDATE t_audit
         <set>
-        username = #{username},
+        user_name = #{userName},
         submit_time = #{submitTime},
         audit_content = #{auditContent},
         audit_user_id = #{auditUserId},
@@ -226,8 +226,8 @@
 
     <update id="dynamicUpdate">
         UPDATE t_audit SET
-        <if test="username != null  and username != ''">
-            username = #{username},
+        <if test="userName != null  and userName != ''">
+            user_name = #{userName},
         </if>
         <if test="submitTime != null ">
             submit_time = #{submitTime},
@@ -309,13 +309,13 @@
 
     <select id="findAuditList" resultType="Map" parameterType="Audit">
         SELECT
-        a.id as id , a.username as username ,a.audit_content AS auditContent ,
+        a.id as id , a.user_name as userName ,a.audit_content AS auditContent ,
         date_format(a.submit_time,'%Y年%m月%d日 %T') AS submitTime ,a.audit_status AS auditStatus
         FROM t_audit a
         <where>
             1=1
-            <if test="username != null and username != ''">
-                and username LIKE '%${username}%'
+            <if test="userName != null and userName != ''">
+                and user_name LIKE '%${userName}%'
             </if>
             <if test="auditStatus == 0 or auditStatus ==1">
                 and audit_status = #{auditStatus}
