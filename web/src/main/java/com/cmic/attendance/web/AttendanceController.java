@@ -4,8 +4,10 @@ import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Employee;
 import com.cmic.attendance.model.GroupAddress;
+import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.service.AttendanceService;
 import com.cmic.attendance.service.GroupAddressService;
+import com.cmic.attendance.service.GroupRuleService;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceEndVo;
 import com.cmic.attendance.vo.AttendanceVo;
@@ -51,6 +53,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     private RedisTemplate redisTemplate;
     @Autowired
     private GroupAddressService groupAddressService;
+    @Autowired
+    private GroupRuleService groupRuleService;
 
     @ApiOperation(value = "查询", notes = "查询考勤表列表", httpMethod = "GET")
     @ApiImplicitParams({
@@ -181,6 +185,15 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         //返回用户组信息(预留业务)
         //attendanceVo.setAttendanceGroup(attendanceGroup);
         attendanceVo.setAttendanceGroup("odc");
+        /*读取规则表
+         *跟考勤组已经启用在状态来获取考勤组信息
+         */
+        int attanceMaxdistance = 0;
+        GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
+        if(groupRule !=null){
+            attanceMaxdistance = groupRule.getGroupAttendanceScope();
+        }
+        attendanceVo.setAttanceMaxdistance(attanceMaxdistance);
         attendanceVo.setAddressList(allGroupAddress);
         attendanceVo.setPhone(phone);
         attendanceVo.setDate(serverDate);
