@@ -28,7 +28,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -732,7 +731,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             while(iterator.hasNext()){
                 AttendanceResultPojo arp = iterator.next();
                 Float workHour = arp.getWorkHour();
-                System.out.println("=================="+String.format("0.2f",workHour)+"===============");
                 Float hour = 0f;
                 //没打下班卡，并且提了审批（审批那边同意后会把下班时间更新为默认下班时间，否则下班时间为空,即13:00）
                 if(0.0 == workHour){
@@ -753,9 +751,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     }
                     workHour = hour - startTimeSeconds;
                 }
-                DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
-                String f=decimalFormat.format(workHour);//format 返回的是字符串
-                workHour = Float.parseFloat(f);
+                String format = String.format("%.2f", workHour);
+                workHour = Float.parseFloat(format);
                 arp.setWorkHour(workHour);
             }
 
@@ -853,9 +850,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     }
                     workHour = hour - startTimeSeconds;
                 }
-                DecimalFormat decimalFormat=new DecimalFormat(".00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
-                String f=decimalFormat.format(workHour);//format 返回的是字符串
-                workHour = Float.parseFloat(f);
+                String format = String.format("%.2f", workHour);
+                workHour = Float.parseFloat(format);
                 arp.setWorkHour(workHour);
 
                 if(pageInfo != null && pageInfo.size() >0) {
@@ -863,7 +859,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                         AttendanceResultPojo arp2 = pageInfo.get(j);
                         String phone = arp2.getPhone();
                         if(arp.getPhone().equals(phone)){
-                            arp2.setWorkHour(arp2.getWorkHour() + arp.getWorkHour());
+                            String f = String.format("%.2f", arp2.getWorkHour() + arp.getWorkHour());
+                            workHour = Float.parseFloat(f);
+                            arp2.setWorkHour(workHour);
                         }else if(j == pageInfo.size()-1){
                             pageInfo.add(arp);
                         }
