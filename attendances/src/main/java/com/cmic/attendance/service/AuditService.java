@@ -185,12 +185,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("suggestionRemarksvarchar",audit.getSuggestionRemarksvarchar());
         paraMap.put("id", audit.getId());
         dao.updateAudit(paraMap);
+/*
 
-       /* // 测试数据
+        // 测试数据
         paraMap.put("updateBy", "陈华龙");// 测试数据
         paraMap.put("auditUserId", "666");// 测试数据
         paraMap.put("auditUsername", "陈华龙");// 测试数据
-        dao.updateAudit(paraMap);// 测试数据*/
+        dao.updateAudit(paraMap);// 测试数据
+*/
 
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);

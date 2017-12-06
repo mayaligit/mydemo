@@ -286,10 +286,10 @@
 
     <update id="updateAudit" parameterType="map">
         UPDATE t_audit SET
-        <if test="auditStatus != null and auditStatus != ''">
+        <if test="auditStatus ==0 or  auditStatus ==1">
             audit_status = #{auditStatus},
         </if>
-        <if test="auditSuggestion != null and auditSuggestion != ''">
+        <if test="auditSuggestion ==0 or auditSuggestion ==1">
             audit_suggestion=#{auditSuggestion},
         </if>
         <if test="auditTime != null and auditTime != ''">
