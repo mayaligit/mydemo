@@ -336,7 +336,6 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
                         paraMap.put("updateDate",updateDate);
                         paraMap.put("addressid", adds[5]);
                         //检查当前用户是否已经打卡
-                        //String username = (String)redisTemplate.boundValueOps("username").get();
                         paraMap.put("updateBy", groupRuleVo.getGroupRule().getUpdateBy());
                         groupAddressDao.updateGroupAddressById(paraMap);
                     }else if(adds.length==4){
