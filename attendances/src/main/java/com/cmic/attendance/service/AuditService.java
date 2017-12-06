@@ -181,16 +181,16 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
         paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
-        //paraMap.put("suggestionRemarks",audit.getSuggestionRemarks());
+        paraMap.put("suggestionRemarksvarchar",audit.getSuggestionRemarksvarchar());
         paraMap.put("id", audit.getId());
 
       /*  // 测试数据
         paraMap.put("updateBy", "陈华龙");// 测试数据
         paraMap.put("auditUserId", "666");// 测试数据
         paraMap.put("auditUsername", "陈华龙");// 测试数据
-        paraMap.put("id", "1aedeb5b1800000");// 测试数据
+       // paraMap.put("id", "1aedeb5b1800000");// 测试数据
         dao.updateAudit(paraMap);// 测试数据
-        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime("152406537870", "2017-12-4");// 测试数据
+       // Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime("152406537870", "2017-12-4");// 测试数据
 */
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
@@ -203,14 +203,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         }
 
         //获取数据库当天打卡数据
-        String phone = audit.getCreateBy().getId();
+        String phoneNumber = audit.getPhoneNumber();
         Date submitTime = audit.getSubmitTime();
         String createTime = DateUtils.getDateToYearMonthDay(submitTime);
-        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime(phone, createTime);
+        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime(phoneNumber, createTime);
 
         //将手机号码放到session中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
-        adminEntity.setId(phone);
+        adminEntity.setId(phoneNumber);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO", adminEntity);
 
 
@@ -296,13 +296,13 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         //创建封装数据
         Map<String, Object> dataMap = new HashMap<>();
         //验证登陆信息
-       /* Object obj = WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
+        Object obj = WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
         if (null == obj ) {
             dataMap.put("flag", "1");
             return dataMap;
         } else {
             dataMap.put("flag", "0");
-        }*/
+        }
 
         if (page.getPageNum() == 0) {
             page.setPageNum(1);
