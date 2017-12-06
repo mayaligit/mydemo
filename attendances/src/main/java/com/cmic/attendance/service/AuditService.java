@@ -34,6 +34,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
     @Autowired
     private AttendanceDao attendanceDao;
+    @Autowired
     private GroupRuleService groupRuleService;
 
     public Audit get(String id) {
@@ -65,7 +66,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             return map;
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
-        audit.setUsername(user.getName());
+        audit.setUserName(user.getName());
 
         //audit.setUsername("陈志豪");// 测试数据
 
@@ -183,15 +184,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
         paraMap.put("suggestionRemarksvarchar",audit.getSuggestionRemarksvarchar());
         paraMap.put("id", audit.getId());
+        dao.updateAudit(paraMap);
 
-      /*  // 测试数据
+       /* // 测试数据
         paraMap.put("updateBy", "陈华龙");// 测试数据
         paraMap.put("auditUserId", "666");// 测试数据
         paraMap.put("auditUsername", "陈华龙");// 测试数据
-       // paraMap.put("id", "1aedeb5b1800000");// 测试数据
-        dao.updateAudit(paraMap);// 测试数据
-       // Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime("152406537870", "2017-12-4");// 测试数据
-*/
+        dao.updateAudit(paraMap);// 测试数据*/
+
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
         String startTime = DateUtils.getDateToYearMonthDay(new Date()) + " " + groupRule.getGroupAttendanceStart() + ":00";
@@ -228,7 +228,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 //缺卡 分为有打卡和没有打卡情况   所以外勤和缺卡是一样的
                 if (DBattendance == null) {
                     attendance.preInsert();
-                    attendance.setAttendanceUser(audit.getUsername());
+                    attendance.setAttendanceUser(audit.getUserName());
                     attendance.setAttendanceStatus("0");
                     attendance.setAttendanceMonth(DateUtils.getCurrMonth());
                     attendance.setDailyStatus(0);
@@ -259,7 +259,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 //缺卡 分为有打卡和没有打卡情况   所以外勤和缺卡是一样的
                 if (DBattendance == null) {
                     attendance.preInsert();
-                    attendance.setAttendanceUser(audit.getUsername());
+                    attendance.setAttendanceUser(audit.getUserName());
                     attendance.setStartTime(DateUtils.getStringsToDates(startTime));
                     attendance.setEndTime(DateUtils.getStringsToDates(endTime));
                     attendance.setAttendanceStatus("0");
