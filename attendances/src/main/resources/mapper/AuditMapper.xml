@@ -172,7 +172,8 @@
         update_date,
         start_date,
         end_date,
-        holiday_days
+        holiday_days,
+        phone_number
         ) VALUES (
         #{id},
         #{userName},
@@ -194,7 +195,8 @@
         #{updateDate},
         #{startDate},
         #{endDate},
-        #{holidayDays}
+        #{holidayDays},
+        #{phoneNumber}
         )
     </insert>
 
@@ -284,17 +286,17 @@
 
     <update id="updateAudit" parameterType="map">
         UPDATE t_audit SET
-        <if test="auditStatus != null and auditStatus != ''">
+        <if test="auditStatus ==0 or  auditStatus ==1">
             audit_status = #{auditStatus},
         </if>
-        <if test="auditSuggestion != null and auditSuggestion != ''">
+        <if test="auditSuggestion ==0 or auditSuggestion ==1">
             audit_suggestion=#{auditSuggestion},
         </if>
         <if test="auditTime != null and auditTime != ''">
             audit_time=#{auditTime},
         </if>
-        <if test="suggestionRemarks != null and suggestionRemarks != ''">
-            suggestion_remarks=#{suggestionRemarks},
+        <if test="suggestionRemarksvarchar != null and suggestionRemarksvarchar != ''">
+            suggestion_remarksvarchar=#{suggestionRemarksvarchar},
         </if>
         <if test="auditUserId != null and auditUserId != ''">
             audit_user_id=#{auditUserId},

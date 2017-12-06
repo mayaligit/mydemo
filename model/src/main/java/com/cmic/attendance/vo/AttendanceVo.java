@@ -68,6 +68,8 @@ public class AttendanceVo{
     private String attendanceLongitude;
     //考勤的维度
     private String attendanceDimension;
+    //考勤的范围
+    private int attanceMaxdistance;
 
     public String getAttendanceId() {
         return attendanceId;
@@ -267,5 +269,13 @@ public class AttendanceVo{
 
     public void setAttendanceDimension(String attendanceDimension) {
         this.attendanceDimension = attendanceDimension;
+    }
+
+    public int getAttanceMaxdistance() {
+        return attanceMaxdistance;
+    }
+
+    public void setAttanceMaxdistance(int attanceMaxdistance) {
+        this.attanceMaxdistance = attanceMaxdistance;
     }
 }
