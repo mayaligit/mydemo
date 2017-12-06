@@ -6,6 +6,7 @@ import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Audit;
 import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.utils.DateUtils;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
@@ -173,23 +174,23 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         Attendance attendance = new Attendance();
         Map<String, Object> paraMap = new HashMap<String, Object>();
         //获取审批人信息,更新审批表
-        //AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
-        //paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
+        paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
         paraMap.put("updateDate", new Date());
         paraMap.put("auditTime", DateUtils.getDateToStrings(new Date()));
         paraMap.put("auditStatus", "0"); //设置审批意见状态为 已处理
-        //paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
-       // paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
+        paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
+        paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
         paraMap.put("suggestionRemarksvarchar",audit.getSuggestionRemarksvarchar());
         paraMap.put("id", audit.getId());
-        //dao.updateAudit(paraMap);
+        dao.updateAudit(paraMap);
 
-        // 测试数据
+       /* // 测试数据
         paraMap.put("updateBy", "陈华龙");// 测试数据
         paraMap.put("auditUserId", "666");// 测试数据
         paraMap.put("auditUsername", "陈华龙");// 测试数据
-        dao.updateAudit(paraMap);// 测试数据
+        dao.updateAudit(paraMap);// 测试数据*/
 
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);

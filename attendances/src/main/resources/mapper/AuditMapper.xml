@@ -172,7 +172,8 @@
         update_date,
         start_date,
         end_date,
-        holiday_days
+        holiday_days,
+        phone_number
         ) VALUES (
         #{id},
         #{userName},
@@ -194,7 +195,8 @@
         #{updateDate},
         #{startDate},
         #{endDate},
-        #{holidayDays}
+        #{holidayDays},
+        #{phoneNumber},
         )
     </insert>
 
