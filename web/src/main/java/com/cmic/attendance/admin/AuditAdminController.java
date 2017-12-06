@@ -58,11 +58,11 @@ public class AuditAdminController extends BaseRestController<AuditService> {
         PageInfo<Audit> page = new PageInfo();
 
         if (parmMap != null && parmMap.size() > 0) {
-            String pageNum = (String)parmMap.get("pageNum");
+            Integer pageNum = (Integer)parmMap.get("pageNum");
             Integer pageSize = (Integer)parmMap.get("pageSize");
             String UserName = (String) parmMap.get("username");
             String auditStatus = (String) parmMap.get("auditStatus");
-            if(pageNum!=null || pageNum!=""){
+            if(pageNum!=0){
                 page.setPageNum(Integer.valueOf(pageNum));
             }
             if(pageSize!=0){
