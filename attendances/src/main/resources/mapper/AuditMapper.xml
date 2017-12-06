@@ -196,7 +196,7 @@
         #{startDate},
         #{endDate},
         #{holidayDays},
-        #{phoneNumber},
+        #{phoneNumber}
         )
     </insert>
 
