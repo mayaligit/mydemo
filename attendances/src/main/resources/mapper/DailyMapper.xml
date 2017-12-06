@@ -229,6 +229,7 @@
         FROM t_daily a
         <where>
             1 = 1
+            and DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
             <if test="attendanceId != null and attendanceId != ''">
                 and attendance_id = #{attendanceId}
             </if>

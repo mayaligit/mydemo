@@ -13,7 +13,7 @@ import java.util.Date;
 public class Audit extends DataEntity<Audit> {
 
     @ApiModelProperty(value = "提交审批用户名")
-    protected String username;
+    protected String userName;
     @ApiModelProperty(value = "审批提交时间")
     protected Date submitTime;
     @ApiModelProperty(value = "申请的审批的内容")
@@ -42,18 +42,20 @@ public class Audit extends DataEntity<Audit> {
     protected Date endDate;
     @ApiModelProperty(value = "请假或外勤时长 1/1天 0.5/半天")
     protected Double holidayDays;
+    @ApiModelProperty(value = "申请人手机号码")
+    protected String phoneNumber;
 
 
     public Audit() {
 
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Date getSubmitTime() {
@@ -167,5 +169,13 @@ public class Audit extends DataEntity<Audit> {
 
     public void setHolidayDays(Double holidayDays) {
         this.holidayDays = holidayDays;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

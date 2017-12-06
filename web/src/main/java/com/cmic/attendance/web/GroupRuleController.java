@@ -4,6 +4,7 @@ import com.cmic.attendance.exception.GroupRuleExeption;
 import com.cmic.attendance.model.*;
 import com.cmic.attendance.service.*;
 import com.cmic.attendance.vo.AttendanceUserVo;
+import com.cmic.attendance.vo.AttendanceVo;
 import com.cmic.attendance.vo.GroupRuleVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
@@ -109,9 +110,10 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         String username = (String)redisTemplate.boundValueOps("username").get();
         String phone = (String)redisTemplate.boundValueOps("phone").get();
 
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
         BaseAdminEntity adminEntity = new BaseAdminEntity();
-        adminEntity.setId(phone);
-        adminEntity.setName(username);
+        //adminEntity.setId(phone);
+        adminEntity.setName(attendanceUserVo.getAttendanceUsername());
         groupRuleVo.getGroupRule().setUpdateBy(adminEntity);
         groupRuleVo.getGroupPersonnel().setUpdateBy(adminEntity);
 
