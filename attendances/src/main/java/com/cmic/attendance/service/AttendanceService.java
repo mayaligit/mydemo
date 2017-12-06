@@ -732,6 +732,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             while(iterator.hasNext()){
                 AttendanceResultPojo arp = iterator.next();
                 Float workHour = arp.getWorkHour();
+                System.out.println("=================="+String.format("0.2f",workHour)+"===============");
                 Float hour = 0f;
                 //没打下班卡，并且提了审批（审批那边同意后会把下班时间更新为默认下班时间，否则下班时间为空,即13:00）
                 if(0.0 == workHour){
