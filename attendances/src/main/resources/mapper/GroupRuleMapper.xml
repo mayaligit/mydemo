@@ -170,7 +170,7 @@
         <if test="groupAttendanceScope != null ">
             group_attendance_scope = #{groupAttendanceScope},
         </if>
-        update_by = #{updateBy.id},
+        update_by = #{updateBy.name},
         update_date = #{updateDate}
         WHERE id = #{id}
     </update>
