@@ -13,7 +13,7 @@ import java.util.Date;
 public class Audit extends DataEntity<Audit> {
 
     @ApiModelProperty(value = "提交审批用户名")
-    protected String username;
+    protected String userName;
     @ApiModelProperty(value = "审批提交时间")
     protected Date submitTime;
     @ApiModelProperty(value = "申请的审批的内容")
@@ -50,12 +50,12 @@ public class Audit extends DataEntity<Audit> {
 
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public Date getSubmitTime() {

@@ -69,7 +69,7 @@ public class AuditAdminController extends BaseRestController<AuditService> {
                 page.setPageSize(pageSize);
             }
             if(StringUtils.isNotBlank(UserName)){
-                audit.setUsername(UserName);
+                audit.setUserName(UserName);
             }
             if(StringUtils.isNotBlank(auditStatus)){
                 audit.setAuditStatus(Integer.valueOf(auditStatus));

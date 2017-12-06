@@ -66,7 +66,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             return map;
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
-        audit.setUsername(user.getName());
+        audit.setUserName(user.getName());
 
         //audit.setUsername("陈志豪");// 测试数据
 
@@ -186,7 +186,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("id", audit.getId());
         dao.updateAudit(paraMap);
 
-      /*  // 测试数据
+       /* // 测试数据
         paraMap.put("updateBy", "陈华龙");// 测试数据
         paraMap.put("auditUserId", "666");// 测试数据
         paraMap.put("auditUsername", "陈华龙");// 测试数据
@@ -228,7 +228,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 //缺卡 分为有打卡和没有打卡情况   所以外勤和缺卡是一样的
                 if (DBattendance == null) {
                     attendance.preInsert();
-                    attendance.setAttendanceUser(audit.getUsername());
+                    attendance.setAttendanceUser(audit.getUserName());
                     attendance.setAttendanceStatus("0");
                     attendance.setAttendanceMonth(DateUtils.getCurrMonth());
                     attendance.setDailyStatus(0);
@@ -259,7 +259,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 //缺卡 分为有打卡和没有打卡情况   所以外勤和缺卡是一样的
                 if (DBattendance == null) {
                     attendance.preInsert();
-                    attendance.setAttendanceUser(audit.getUsername());
+                    attendance.setAttendanceUser(audit.getUserName());
                     attendance.setStartTime(DateUtils.getStringsToDates(startTime));
                     attendance.setEndTime(DateUtils.getStringsToDates(endTime));
                     attendance.setAttendanceStatus("0");
