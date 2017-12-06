@@ -714,7 +714,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             map.put("flag",1);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
