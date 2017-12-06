@@ -127,7 +127,6 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
      */
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceByDay",method = RequestMethod.POST)
-//    @ResponseBody
     public Map<String,Object> checkAttendanceByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
         Map<String, Object> map = service.checkAttendanceByDay(queryAttendanceVo);
@@ -167,9 +166,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
      * @return
      * 考勤统计,按日统计勤奋榜
      */
-    @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceHardworkingByDay",method = RequestMethod.POST)
-    @ResponseBody
     public Map<String,Object> checkAttendanceHardworkingByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
         System.out.print("=======按日统计勤奋榜=========="+queryAttendanceVo.getDate()+"=========="+queryAttendanceVo.getPageInfo()+"==========");
