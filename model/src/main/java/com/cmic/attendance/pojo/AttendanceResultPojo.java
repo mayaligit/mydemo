@@ -14,7 +14,7 @@ public class AttendanceResultPojo implements Serializable,Comparable<Object> {
     private String workStartTime;
     private String workEndTime;
     private float workHour;
-    private String username;
+    private String userName;
     private String phone;
 
     public float getWorkHour() {
@@ -41,12 +41,12 @@ public class AttendanceResultPojo implements Serializable,Comparable<Object> {
         this.workHour = workHour;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPhone() {

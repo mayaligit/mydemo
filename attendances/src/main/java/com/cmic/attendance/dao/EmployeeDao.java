@@ -10,4 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface EmployeeDao extends CrudDao<Employee> {
 
+    public Employee findEmployeeByTelephone(String telephone);
 }

@@ -19,6 +19,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +48,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     private GroupAddressService groupAddressService;
     @Autowired
     private GroupRuleService groupRuleService;
-
+    @Autowired
+    private EmployeeService employeeService;
 
     public Attendance get(String id) {
         return super.get(id);
@@ -95,6 +97,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             listGroupAddress.add(groupAddressVo);
         }
         return listGroupAddress;
+    }
+
+    public Employee findEmployeeByTelephone(@Param("telephone") String telephone){
+        Employee employee = employeeService.findEmployeeByTelephone(telephone);
+        return employee;
     }
 
 //#TODO 判断当前用户是否存在
@@ -707,7 +714,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             map.put("flag",1);
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
         }

@@ -39,6 +39,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
         SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
+        SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(" HH:mm");
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤
         //int Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
@@ -135,11 +136,11 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         }
         List<String> LateData = new ArrayList<>();//迟到详情
         for (Attendance attendance : Late) {
-            LateData.add(simpleDateFormat3.format(attendance.getStartTime()) + strdate.format(attendance.getStartTime()));
+            LateData.add(simpleDateFormat3.format(attendance.getEndTime()) + strdate.format(attendance.getEndTime())+simpleDateFormat4.format(attendance.getEndTime()));
         }
         List<String> leaveEarlyData = new ArrayList<>();//早退详情
         for (Attendance attendance : leaveEarly) {
-            leaveEarlyData.add(simpleDateFormat3.format(attendance.getStartTime()) + strdate.format(attendance.getStartTime()));
+            leaveEarlyData.add(simpleDateFormat3.format(attendance.getStartTime()) + strdate.format(attendance.getStartTime())+simpleDateFormat4.format(attendance.getStartTime()));
         }
         List<String> fieldPersonnelData = new ArrayList<>();//外勤详情
         for (Audit audit : fieldPersonnel) {
