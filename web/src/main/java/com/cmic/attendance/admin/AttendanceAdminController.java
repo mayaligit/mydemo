@@ -11,6 +11,8 @@ import com.cmic.saas.utils.WebUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/attendance/adminAttendance")
 public class AttendanceAdminController extends BaseRestController<AttendanceService> {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * 查询考勤列表分页
      * @param paramMap
@@ -127,7 +131,6 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
      */
     @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceByDay",method = RequestMethod.POST)
-//    @ResponseBody
     public Map<String,Object> checkAttendanceByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
         Map<String, Object> map = service.checkAttendanceByDay(queryAttendanceVo);
@@ -167,11 +170,10 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
      * @return
      * 考勤统计,按日统计勤奋榜
      */
-    @ApiOperation(value = "考勤统计", notes = "考勤统计", httpMethod = "POST")
     @RequestMapping(value="/checkAttendanceHardworkingByDay",method = RequestMethod.POST)
-    @ResponseBody
     public Map<String,Object> checkAttendanceHardworkingByDay(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
+        System.out.print("=======按日统计勤奋榜=========="+queryAttendanceVo.getDate()+"=========="+queryAttendanceVo.getPageInfo()+"==========");
         Map<String, Object> map = service.checkAttendanceHardworkingByDay(queryAttendanceVo);
         return map;
     }
@@ -186,6 +188,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     @ResponseBody
     public Map<String,Object> checkAttendanceHardworkingByMonth(@RequestBody QueryAttendanceVo queryAttendanceVo) {
 
+        System.out.print("=======按月统计勤奋榜=========="+queryAttendanceVo.getDate()+"=========="+queryAttendanceVo.getPageInfo()+"==========");
         Map<String, Object> map = service.checkAttendanceHardworkingByMonth(queryAttendanceVo);
         return map;
     }
@@ -216,6 +219,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        logger.debug(">>>>>>>>>>>>>>>>>>>>>>>登录成功session"+attendanceUserVo.getAttendanceUsername()+"<<<<<<<<<<<<<<<<<<<<<");
         Map map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){

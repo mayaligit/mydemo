@@ -612,7 +612,7 @@
 
         SELECT
         SUM(attendance_work_time/60) workHour,
-        a.`attendance_user` username,
+        a.`attendance_user` userName,
         DATE_FORMAT(a.`start_time`,'%H:%i:%s') workStartTime,
         DATE_FORMAT(a.`end_time`,'%H:%i:%s') workEndTime
         FROM t_attendance a
@@ -626,7 +626,7 @@
             resultType="com.cmic.attendance.pojo.AttendanceResultPojo">
 
         SELECT SUM(a.attendance_work_time/60) workHour,
-	    a.`attendance_user` "username",a.`create_by` phone
+	    a.`attendance_user` "userName",a.`create_by` phone
         FROM t_attendance a
         WHERE a.`attendance_work_time` IS NOT NULL
         AND DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
@@ -652,7 +652,7 @@
             resultType="com.cmic.attendance.pojo.AttendanceResultPojo">
 
         SELECT
-        a.`attendance_user` username,a.`create_by` phone,
+        a.`attendance_user` userName,a.`create_by` phone,
         DATE_FORMAT(a.`start_time`,'%H:%i:%s') workStartTime,
         DATE_FORMAT(a.`end_time`,'%H:%i:%s') workEndTime
         FROM t_attendance a
