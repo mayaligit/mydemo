@@ -7,6 +7,8 @@ saas:
 server:
   port: 12111
   contextPath: /attendance2
+  session:
+      timeout: 3600
 
 logging:
   file: /app/jenkins_deploy/logs_test/saas-${spring.profiles.active}/${spring.application.name}.log  #日志地址
@@ -78,7 +80,7 @@ certify:
     path: http://192.168.185.250:9010/certify  # 获取用户信息的接口路径
     userInfo: /user/info
 index:
-  server: /attendance2.0/index.html  # 手机端前端远程入口
+  server: /biz_attendance2.0/index.html  # 手机端前端远程入口
 indexs:
   login: /admin_attendance/login.html  # PC端远程入口
 
