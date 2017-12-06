@@ -27,6 +27,10 @@ public class EmployeeService extends CrudService<EmployeeDao, Employee> {
         return super.findList(employee);
     }
 
+    public Employee findEmployeeByTelephone(String telephone){
+        return dao.findEmployeeByTelephone(telephone);
+    }
+
     public PageInfo<Employee> findPage(PageInfo<Employee> page, Employee employee) {
         return super.findPage(page, employee);
     }

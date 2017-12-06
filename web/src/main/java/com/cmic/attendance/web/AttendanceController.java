@@ -2,6 +2,7 @@ package com.cmic.attendance.web;
 
 import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.Attendance;
+import com.cmic.attendance.model.Employee;
 import com.cmic.attendance.model.GroupAddress;
 import com.cmic.attendance.service.AttendanceService;
 import com.cmic.attendance.service.GroupAddressService;
@@ -107,6 +108,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
          HttpServletRequest request = WebUtils.getRequest();
+
+        /*BaseAdminEntity adminEntity = new BaseAdminEntity();
+        adminEntity.setId("15240653787");
+        adminEntity.setName("梁渝");
+        //测试数据结束
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
+
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
@@ -167,7 +175,11 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceVo.setUsername(username);
         //返回多地址打卡数据
         ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
+        //根据登录手机号获取入职人员信息
+        Employee employee = service.findEmployeeByTelephone(phone);
+        String attendanceGroup = employee.getAttendanceName();
         //返回用户组信息(预留业务)
+        //attendanceVo.setAttendanceGroup(attendanceGroup);
         attendanceVo.setAttendanceGroup("odc");
         attendanceVo.setAddressList(allGroupAddress);
         attendanceVo.setPhone(phone);

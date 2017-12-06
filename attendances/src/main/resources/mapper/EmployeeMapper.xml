@@ -1,0 +1,163 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.EmployeeDao">
+    <sql id="employeeColumns">
+        a.id AS "id",
+        a.sex AS "sex",
+        a.employee_name AS "employeeName",
+        a.telephone AS "telephone",
+        a.enter_name AS "enterName",
+        a.enter_id AS "enterId",
+        a.enterprise_department AS "enterpriseDepartment",
+        a.attendance_name AS "attendanceName",
+        a.personal_id AS "personalId",
+        a.highest_education AS "highestEducation",
+        a.job_name AS "jobName",
+        a.hiredate AS "hiredate",
+        a.create_date AS "createDate",
+        a.update_date AS "updateDate",
+        a.create_by AS "createBy.id",
+        a.update_by AS "updateBy.id",
+        a.remarks AS "remarks"
+    </sql>
+
+    <sql id="employeeJoins">
+    </sql>
+
+    <select id="get" resultType="Employee">
+        SELECT
+        <include refid="employeeColumns"/>
+        FROM t_employee a
+        <include refid="employeeJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Employee">
+        SELECT
+        <include refid="employeeColumns"/>
+        FROM t_employee a
+        <include refid="employeeJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="Employee">
+        SELECT
+        <include refid="employeeColumns"/>
+        FROM t_employee a
+        <include refid="employeeJoins"/>
+    </select>
+
+    <select id="findEmployeeByTelephone" resultType="Employee">
+        SELECT
+        <include refid="employeeColumns"/>
+        FROM t_employee a
+        <include refid="employeeJoins"/>
+        WHERE a.telephone = #{telephone}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_employee(
+            id,
+            sex,
+            employee_name,
+            telephone,
+            enter_name,
+            enter_id,
+            enterprise_department,
+            attendance_name,
+            personal_id,
+            highest_education,
+            job_name,
+            hiredate,
+            create_date,
+            update_date,
+            create_by,
+            update_by,
+            remarks
+        ) VALUES (
+            #{id},
+            #{sex},
+            #{employeeName},
+            #{telephone},
+            #{enterName},
+            #{enterId},
+            #{enterpriseDepartment},
+            #{attendanceName},
+            #{personalId},
+            #{highestEducation},
+            #{jobName},
+            #{hiredate},
+            #{createDate},
+            #{updateDate},
+            #{createBy.id},
+            #{updateBy.id},
+            #{remarks}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_employee SET
+        sex = #{sex},
+        employee_name = #{employeeName},
+        telephone = #{telephone},
+        enter_name = #{enterName},
+        enter_id = #{enterId},
+        enterprise_department = #{enterpriseDepartment},
+        attendance_name = #{attendanceName},
+        personal_id = #{personalId},
+        highest_education = #{highestEducation},
+        job_name = #{jobName},
+        hiredate = #{hiredate},
+        update_date = #{updateDate},
+        update_by = #{updateBy.id},
+        remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_employee SET
+        <if test="sex != null ">
+        sex = #{sex},
+        </if>
+        <if test="employeeName != null  and employeeName != ''">
+        employee_name = #{employeeName},
+        </if>
+        <if test="telephone != null  and telephone != ''">
+        telephone = #{telephone},
+        </if>
+        <if test="enterName != null  and enterName != ''">
+        enter_name = #{enterName},
+        </if>
+        <if test="enterId != null  and enterId != ''">
+        enter_id = #{enterId},
+        </if>
+        <if test="enterpriseDepartment != null  and enterpriseDepartment != ''">
+        enterprise_department = #{enterpriseDepartment},
+        </if>
+        <if test="attendanceName != null  and attendanceName != ''">
+        attendance_name = #{attendanceName},
+        </if>
+        <if test="personalId != null  and personalId != ''">
+        personal_id = #{personalId},
+        </if>
+        <if test="highestEducation != null  and highestEducation != ''">
+        highest_education = #{highestEducation},
+        </if>
+        <if test="jobName != null  and jobName != ''">
+        job_name = #{jobName},
+        </if>
+        <if test="hiredate != null ">
+        hiredate = #{hiredate},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_employee
+        WHERE id = #{id}
+    </delete>
+</mapper>
