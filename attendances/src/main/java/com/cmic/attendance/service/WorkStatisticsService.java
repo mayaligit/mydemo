@@ -136,7 +136,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         }
         List<String> LateData = new ArrayList<>();//迟到详情
         for (Attendance attendance : Late) {
-            LateData.add(simpleDateFormat3.format(attendance.getStartTime()) + strdate.format(attendance.getStartTime())+simpleDateFormat4.format(attendance.getStartTime()));
+            LateData.add(simpleDateFormat3.format(attendance.getEndTime()) + strdate.format(attendance.getEndTime())+simpleDateFormat4.format(attendance.getEndTime()));
         }
         List<String> leaveEarlyData = new ArrayList<>();//早退详情
         for (Attendance attendance : leaveEarly) {
