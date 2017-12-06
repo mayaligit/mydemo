@@ -697,6 +697,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        System.out.print("------"+attendanceUserVo+"------");
         Map<String, Object> map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
@@ -729,6 +730,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //没打下班卡，并且提了审批（审批那边同意后会把下班时间更新为默认下班时间，否则下班时间为空,即13:00）
                 if(0.0 == workHour){
                     String startTime = arp.getWorkStartTime();//打卡时间
+                    if(null == startTime){
+                        workHour = 0f;
+                        continue;
+                    }
                     float startTimeSeconds = getSeconds(startTime);
                     if(null == arp.getWorkEndTime()){
                         hour = getSeconds("13:00:00");
@@ -826,6 +831,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //没打下班卡，并且提了审批（审批那边同意后会把下班时间更新为默认下班时间，否则下班时间为空,即13:00）
                 if(0.0 == workHour){
                     String startTime = arp.getWorkStartTime();//打卡时间
+                    if(null == startTime){
+                        workHour = 0f;
+                        continue;
+                    }
                     float startTimeSeconds = getSeconds(startTime);
                     if(null == arp.getWorkEndTime()){
                         hour = getSeconds("13:00:00");

@@ -639,7 +639,7 @@
 
         SELECT
         COUNT(id) "lateTime",
-        a.`attendance_user` AS "userName"
+        a.`attendance_user` AS "username"
         FROM t_attendance a
         WHERE a.start_time_status = "1"
         AND DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
