@@ -6,7 +6,6 @@ import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Audit;
 import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.utils.DateUtils;
-import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
@@ -59,16 +58,16 @@ public class AuditService extends CrudService<AuditDao, Audit> {
          /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, String> map = new HashMap<>();
 
-        //设置用户名
+      /*  //设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if (null == obj || !(obj instanceof BaseAdminEntity)) {
             map.put("msg", "登陆超时,请重新登陆");
             return map;
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
-        audit.setUserName(user.getName());
+        audit.setUserName(user.getName());*/
 
-       /* audit.setUserName("梁永燊");// 测试数据*/
+        audit.setUserName("梁永燊");// 测试数据
 
         //查询数据库中申请了的请假或外勤时间是否存在
         Audit DBAudit = null;
@@ -156,7 +155,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         if (DBAudit==null){
             audit.setAuditStatus(1);  //设置审批状态为未处理
             audit.setCreateDate(new Date());
-            super.save(audit); map.put("msg", "提交成功");
+            super.save(audit);
+            map.put("msg", "提交成功");
         }else if(DBAudit.getAuditStatus()==1){
              //未处理的审批可以更新
             audit.setId(DBAudit.getId());
@@ -196,24 +196,24 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         Attendance attendance = new Attendance();
         Map<String, Object> paraMap = new HashMap<String, Object>();
         //获取审批人信息,更新审批表
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
-        paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
+       // AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
+        //paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
         paraMap.put("updateDate", new Date());
         paraMap.put("auditTime", DateUtils.getDateToStrings(new Date()));
         paraMap.put("auditStatus", "0"); //设置审批意见状态为 已处理
-        paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
-        paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
+        //paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
+       // paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
         paraMap.put("suggestionRemarksvarchar", audit.getSuggestionRemarksvarchar());
         paraMap.put("id", audit.getId());
         dao.updateAudit(paraMap);
-/*
+
         // 测试数据
         paraMap.put("updateBy", "陈华龙");// 测试数据
         paraMap.put("auditUserId", "666");// 测试数据
         paraMap.put("auditUsername", "陈华龙");// 测试数据
         dao.updateAudit(paraMap);// 测试数据
-*/
+
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
         String startTime = DateUtils.getDateToYearMonthDay(audit.getStartDate()) + " " + groupRule.getGroupAttendanceStart() + ":00";
