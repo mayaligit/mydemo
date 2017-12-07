@@ -145,7 +145,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String isForWeek = DateUtils.dayForWeek(startDate)+"";
         List<String> strings = Arrays.asList(attendanceWeek);
         boolean contains = strings.contains(isForWeek);
-
+        long l1 =System.currentTimeMillis();
         //不在考勤期内
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         if (!contains){
@@ -166,7 +166,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 throw new AttendanceException("节假日不用考勤!");
             }
         }
-
+        long l2 =System.currentTimeMillis();
+        long l = l2-l1;
+        log.debug("判断节假日"+l);
         if (contains){
             //开始读取考勤组考勤的方式
             Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
