@@ -59,6 +59,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
          /*response.setHeader("Access-Control-Allow-Origin", "*");*/
 
         Map<String, String> map = new HashMap<>();
+
         //设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if (null == obj || !(obj instanceof BaseAdminEntity)) {
@@ -67,8 +68,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
         audit.setUserName(user.getName());
+       //audit.setUserName("陈志豪");// 测试数据
 
-       // audit.setUserName("陈志豪");// 测试数据
+        //查询数据库中是否已经存在记录
+        Audit DBAudit = null;
+        if(audit.getAttendanceGroup()!=null && audit.getUserName()!=null){
+            audit.setDateStr(DateUtils.getDateToYearMonthDay(new Date()));
+             DBAudit=dao.getByUserNameDateAndAttendanceGroud(audit);
+        }
 
         //任何请况下都必须携带的参数
         if (StringUtils.isBlank(audit.getAuditContent()) || StringUtils.isBlank(audit.getAttendanceGroup())) {
@@ -78,7 +85,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
         //组规则信息
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
-
         double attendanceDuration = 0;
         if (groupRule.getGroupAttendanceWay() == 0) {
             //自由模式时长
@@ -136,14 +142,20 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             }
         }
         audit.setSubmitTime(new Date());
-        audit.setAuditStatus(1);  //设置审批状态为未处理
-
-        audit.setCreateDate(audit.getSubmitTime());
-        audit.setUpdateDate(audit.getSubmitTime());
-
-        super.save(audit);
-
-        map.put("msg", "申请提交成功");
+        audit.setUpdateDate(new Date());
+        if (DBAudit==null){
+            audit.setAuditStatus(1);  //设置审批状态为未处理
+            audit.setCreateDate(new Date());
+            super.save(audit); map.put("msg", "申请提交成功");
+        }else if(DBAudit.getAuditStatus()==1){
+             //未处理的审批可以更新
+            audit.setId(DBAudit.getId());
+            dao.dynamicUpdate(audit);
+            map.put("msg", "申请提交成功");
+        }else {
+            //处理后的审批不能更新
+            map.put("msg", "处理后的审批不能更新,请联系考勤组");
+        }
         return map;
     }
 
@@ -182,7 +194,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
         paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
-        paraMap.put("suggestionRemarksvarchar",audit.getSuggestionRemarksvarchar());
+        paraMap.put("suggestionRemarksvarchar", audit.getSuggestionRemarksvarchar());
         paraMap.put("id", audit.getId());
         dao.updateAudit(paraMap);
 /*
@@ -299,7 +311,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         Map<String, Object> dataMap = new HashMap<>();
         //验证登陆信息
         Object obj = WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
-        if (null == obj ) {
+        if (null == obj) {
             dataMap.put("flag", "1");
             return dataMap;
         } else {
@@ -330,5 +342,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         dataMap.put("pageTotal", result.getTotal());
         return dataMap;
     }
+
+
 
 }

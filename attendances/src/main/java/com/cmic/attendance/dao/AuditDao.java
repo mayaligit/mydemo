@@ -1,8 +1,8 @@
 package com.cmic.attendance.dao;
 
+import com.cmic.attendance.model.Audit;
 import com.cmic.attendance.model.WorkStatistics;
 import com.cmic.saas.base.dao.CrudDao;
-import com.cmic.attendance.model.Audit;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -37,5 +37,9 @@ public interface AuditDao extends CrudDao<Audit> {
     List<Audit> getHolidayList(WorkStatistics workStatistics);
 
     List<Audit> getFieldPersonnel(WorkStatistics workStatistics);
+    //根据用户名 日期 所属组查询审批是否存在
+    Audit getByUserNameDateAndAttendanceGroud(Audit audit);
+
+
 
 }

@@ -127,7 +127,7 @@
             <if test="userName != null">
                 AND a.user_name = #{userName}
             </if>
-            AND a.business_type &lt;&gt;  2
+            AND a.business_type &lt;&gt; 2
             AND a.audit_suggestion=0
             AND DATE_FORMAT(a.submit_time,'%Y-%m')=#{month}
         </where>
@@ -203,25 +203,25 @@
     <update id="update">
         UPDATE t_audit
         <set>
-        user_name = #{userName},
-        submit_time = #{submitTime},
-        audit_content = #{auditContent},
-        audit_user_id = #{auditUserId},
-        audit_user_name = #{auditUserName},
-        audit_status = #{auditStatus},
-        audit_time = #{auditTime},
-        attendance_id = #{attendanceId},
-        audit_suggestion = #{auditSuggestion},
-        business_type = #{businessType},
-        suggestion_remarksvarchar = #{suggestionRemarksvarchar},
-        attendance_group = #{attendanceGroup},
-        remarks = #{remarks},
-        create_by = #{createBy.id},
-        update_by = #{updateBy.id},
-        update_date = #{updateDate},
-        start_date = #{startDate},
-        end_date = #{endDate},
-        holiday_days = #{holidayDays},
+            user_name = #{userName},
+            submit_time = #{submitTime},
+            audit_content = #{auditContent},
+            audit_user_id = #{auditUserId},
+            audit_user_name = #{auditUserName},
+            audit_status = #{auditStatus},
+            audit_time = #{auditTime},
+            attendance_id = #{attendanceId},
+            audit_suggestion = #{auditSuggestion},
+            business_type = #{businessType},
+            suggestion_remarksvarchar = #{suggestionRemarksvarchar},
+            attendance_group = #{attendanceGroup},
+            remarks = #{remarks},
+            create_by = #{createBy.id},
+            update_by = #{updateBy.id},
+            update_date = #{updateDate},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            holiday_days = #{holidayDays},
         </set>
         WHERE id = #{id}
     </update>
@@ -264,10 +264,18 @@
         <if test="attendanceGroup != null  and attendanceGroup != ''">
             attendance_group = #{attendanceGroup},
         </if>
-        <if test="auditSuggestion != null  and auditSuggestion != ''">
-            audit_suggestion = #{auditSuggestion},
+        <if test="startDate != null">
+            start_date = #{startDate},
         </if>
-        update_by = #{updateBy.id},
+        <if test="endDate != null">
+            end_date = #{endDate},
+        </if>
+        <if test="holidayDays != null and holidayDays!='' ">
+            holiday_days = #{holidayDays},
+        </if>
+        <if test="phoneNumber != null and phoneNumber!='' ">
+            phone_number = #{phoneNumber},
+        </if>
         update_date = #{updateDate}
         WHERE id = #{id}
     </update>
@@ -282,6 +290,21 @@
         <include refid="auditColumns"/>
         FROM t_audit a
         WHERE a.id = #{auditId}
+    </select>
+
+    <select id="getByUserNameDateAndAttendanceGroud" parameterType="Audit" resultType="Audit">
+        SELECT
+        <include refid="auditColumns"/>
+        FROM t_audit a WHERE 1=1
+        <if test="dateStr!=null and dateStr!=''">
+            and DATE(a.submit_time)=#{dateStr}
+        </if>
+        <if test="userName!=null and userName!=''">
+            and a.user_name=#{userName}
+        </if>
+        <if test="attendanceGroup!=null and attendanceGroup!=''">
+            and a.attendance_group=#{attendanceGroup}
+        </if>
     </select>
 
     <update id="updateAudit" parameterType="map">

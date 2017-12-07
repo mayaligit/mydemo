@@ -44,7 +44,7 @@ public class Audit extends DataEntity<Audit> {
     protected Double holidayDays;
     @ApiModelProperty(value = "申请人手机号码")
     protected String phoneNumber;
-
+    protected String dateStr;
 
     public Audit() {
 
@@ -162,7 +162,6 @@ public class Audit extends DataEntity<Audit> {
         this.endDate = endDate;
     }
 
-
     public Double getHolidayDays() {
         return holidayDays;
     }
@@ -173,6 +172,14 @@ public class Audit extends DataEntity<Audit> {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getDateStr() {
+        return dateStr;
+    }
+
+    public void setDateStr(String dateStr) {
+        this.dateStr = dateStr;
     }
 
     public void setPhoneNumber(String phoneNumber) {
