@@ -7,7 +7,7 @@ sleuth:
   enabled: false
 zipkin:
   enabled: false
-  
+
 spring:
   application:
     name: ${sys.module}-${sys.name}
