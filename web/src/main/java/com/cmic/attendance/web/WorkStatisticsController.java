@@ -52,7 +52,7 @@ public class WorkStatisticsController extends BaseRestController<WorkStatisticsS
     })*/
     @RequestMapping(value = "/workStatistics", method = RequestMethod.POST)
     public HashMap workStatistics(@RequestBody WorkStatistics workStatistics) {
-        System.out.println("abc");
+        //System.out.println("abc");
         HashMap workStatistics2 = null;
         try {
             workStatistics2 = workStatisticsService.workStatistics(workStatistics);
