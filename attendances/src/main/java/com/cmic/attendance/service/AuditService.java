@@ -150,7 +150,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
              //未处理的审批可以更新
             audit.setId(DBAudit.getId());
             dao.dynamicUpdate(audit);
-            map.put("msg", "申请提交成功");
+            map.put("msg", "更新提交成功");
         }else {
            //处理后的审批不能更新
             new RestException(audit.getStartDate()+"到"+audit.getEndDate()+"时间段已经被申请了,这次申请不成功,请联系考勤组管理员");
