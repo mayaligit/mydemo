@@ -119,19 +119,57 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
                 //获取输出流
                 out = response.getWriter();
                 out.write(data);
-
+                out.flush();
+                out.close();
             } catch (Exception e) {
                 e .printStackTrace();
                  throw new RestException("导出失败!");
-            }finally {
-                out.close();
             }
 
         }
 
     }
 
+    @RequestMapping("/attendanceExportExcel")
+    public void attendanceExportExcel( Attendance attendance,HttpServletResponse response){
+        //返回的是excel的临时
+        String data = service.exportExcel( attendance);
 
+        //判断
+        if (data != null){
+            //先建立一个文件读取流去读取这个临时excel文件
+            PrintWriter out = null;
+            try {
+
+                //这个一定要设定，告诉浏览器这次请求是一个下载的数据流
+                //response.setContentType("APPLICATION/OCTET-STREAM");
+                response.setContentType("application/vnd.ms-excel;charset=utf-8");
+                response.setHeader("Content-type", "text/html;charset=UTF-8");
+                response.setCharacterEncoding("UTF-8");
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + attendance.getAttendanceMonth()+".xls" + "\"");
+                //获取输出流
+                out = response.getWriter();
+                out.write(data);
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                e .printStackTrace();
+                throw new RestException("导出失败!");
+            }
+
+        }
+
+    }
+
+    @PostMapping("/selectAttendancesToExcel")
+    public void selectAttendancesToExcel( Attendance attendance,HttpServletRequest request,HttpServletResponse response){
+        try{
+            service.selectAttendancesToExcel(attendance,request,response);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RestException("考勤导出异常！");
+        }
+    }
 
 
     /**
