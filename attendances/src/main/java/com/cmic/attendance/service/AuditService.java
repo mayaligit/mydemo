@@ -59,15 +59,16 @@ public class AuditService extends CrudService<AuditDao, Audit> {
          /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, String> map = new HashMap<>();
 
-        //设置用户名
+        /*//设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if (null == obj || !(obj instanceof BaseAdminEntity)) {
             map.put("msg", "登陆超时,请重新登陆");
             return map;
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
-        audit.setUserName(user.getName());
-       //audit.setUserName("陈志豪");// 测试数据
+        audit.setUserName(user.getName());*/
+
+        audit.setUserName("陈志豪");// 测试数据
 
         //查询数据库中申请了的请假或外勤时间是否存在
         Audit DBAudit = null;
