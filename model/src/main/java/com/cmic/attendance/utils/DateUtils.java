@@ -172,6 +172,13 @@ public class DateUtils {
         return value;
     }
 
+    //根据请假 外勤 缺卡时间获取对应月份
+    public static String getMonth(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        return formatter.format(date);
+    }
+
+
     public static void main(String[] args) {
         System.out.println(dayForWeek(getStringsToDate("2017-11-26")));
     }

@@ -68,7 +68,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         BaseAdminEntity user = (BaseAdminEntity) obj;
         audit.setUserName(user.getName());
 
-        //audit.setUserName("梁永燊");// 测试数据
+       /* audit.setUserName("梁永燊");// 测试数据*/
 
         //查询数据库中申请了的请假或外勤时间是否存在
         Audit DBAudit = null;
@@ -138,6 +138,16 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     break;
                 case 2:
                     //缺卡
+                    if (null == audit.getStartDate() || null == audit.getEndDate()) {
+                        map.put("msg", "缺卡时间不能为空");
+                        return map;
+                    }
+                    startDateSecond = audit.getStartDate().getTime();
+                    endDateSecond = audit.getEndDate().getTime();
+                    if (startDateSecond > endDateSecond) {
+                        map.put("msg", "请正确选择开始和结束时间");
+                        return map;
+                    }
                     break;
             }
         }
@@ -146,15 +156,15 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         if (DBAudit==null){
             audit.setAuditStatus(1);  //设置审批状态为未处理
             audit.setCreateDate(new Date());
-            super.save(audit); map.put("msg", "申请提交成功");
+            super.save(audit); map.put("msg", "提交成功");
         }else if(DBAudit.getAuditStatus()==1){
              //未处理的审批可以更新
             audit.setId(DBAudit.getId());
             dao.dynamicUpdate(audit);
-            map.put("msg", "更新提交成功");
+            map.put("msg", "更新成功");
         }else {
            //处理后的审批不能更新
-            new RestException(audit.getStartDate()+"到"+audit.getEndDate()+"时间段已经被申请了,这次申请不成功,请联系考勤组管理员");
+            throw new RestException("该时间段已经被申请了,这次申请不成功,请联系考勤组管理员");
         }
         return map;
     }
@@ -180,7 +190,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         Audit audit = dao.getAuditById(auditId);
         return audit;
     }
-
+    //处理审批,更新审批表,维护考勤表
     @Transactional(readOnly = false)
     public void updateAudit(Audit audit, HttpServletRequest request) {
         Attendance attendance = new Attendance();
@@ -198,18 +208,16 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         paraMap.put("id", audit.getId());
         dao.updateAudit(paraMap);
 /*
-
         // 测试数据
         paraMap.put("updateBy", "陈华龙");// 测试数据
         paraMap.put("auditUserId", "666");// 测试数据
         paraMap.put("auditUsername", "陈华龙");// 测试数据
         dao.updateAudit(paraMap);// 测试数据
 */
-
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
-        String startTime = DateUtils.getDateToYearMonthDay(new Date()) + " " + groupRule.getGroupAttendanceStart() + ":00";
-        String endTime = DateUtils.getDateToYearMonthDay(new Date()) + " " + groupRule.getGroupAttendanceEnd() + ":00";
+        String startTime = DateUtils.getDateToYearMonthDay(audit.getStartDate()) + " " + groupRule.getGroupAttendanceStart() + ":00";
+        String endTime = DateUtils.getDateToYearMonthDay(audit.getEndDate()) + " " + groupRule.getGroupAttendanceEnd() + ":00";
 
         //如果审批同意 ,维护考勤表;如果不同意,无操作
         if (audit.getAuditSuggestion() == 1) {
@@ -243,22 +251,30 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 if (DBattendance == null) {
                     attendance.preInsert();
                     attendance.setAttendanceUser(audit.getUserName());
-                    attendance.setAttendanceStatus("0");
-                    attendance.setAttendanceMonth(DateUtils.getCurrMonth());
+                    attendance.setAttendanceMonth(DateUtils.getMonth(audit.getStartDate()));
                     attendance.setDailyStatus(0);
                     attendance.setAttendanceGroup(audit.getAttendanceGroup());
                     attendance.setEndTimeStatus("0");
                     attendance.setStartTimeStatus("0");
                     attendance.setCreateDate(new Date());
                     attendance.setUpdateDate(new Date());
+                    if(audit.getBusinessType()==1){
+                        attendance.setAttendanceStatus("2");
+                    }else {
+                        attendance.setAttendanceStatus("0");
+                    }
                     attendanceDao.insert(attendance);
                 } else {
                     attendance.setId(DBattendance.getId());
                     attendance.preUpdate();
-                    attendance.setAttendanceStatus("0");
                     attendance.setUpdateDate(new Date());
                     attendance.setStartTimeStatus("0");
                     attendance.setEndTimeStatus("0");
+                    if(audit.getBusinessType()==1){
+                        attendance.setAttendanceStatus("2");
+                    }else {
+                        attendance.setAttendanceStatus("0");
+                    }
                     attendanceDao.dynamicUpdate(attendance);
                 }
             }
@@ -276,10 +292,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     attendance.setAttendanceUser(audit.getUserName());
                     attendance.setStartTime(DateUtils.getStringsToDates(startTime));
                     attendance.setEndTime(DateUtils.getStringsToDates(endTime));
-                    attendance.setAttendanceStatus("0");
-                    attendance.setAttendanceMonth(DateUtils.getCurrMonth());
-                    attendance.setStartLocation(groupRule.getGroupAddress());
-                    attendance.setEndLocation(groupRule.getGroupAddress());
+                    attendance.setAttendanceMonth(DateUtils.getMonth(audit.getStartDate()));
                     attendance.setDailyStatus(0);
                     attendance.setAttendanceGroup(audit.getAttendanceGroup());
                     attendance.setEndTimeStatus("0");
@@ -287,19 +300,34 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     attendance.setAttendanceWorkTime(groupRule.getGroupAttendanceDuration());
                     attendance.setCreateDate(new Date());
                     attendance.setUpdateDate(new Date());
+                    if(audit.getBusinessType()==1){
+                        attendance.setAttendanceStatus("2");
+                        attendance.setStartLocation("审批维护数据");
+                        attendance.setEndLocation("审批维护数据");
+                    }else {
+                        attendance.setAttendanceStatus("0");
+                        attendance.setStartLocation(groupRule.getGroupAddress());
+                        attendance.setEndLocation(groupRule.getGroupAddress());
+                    }
                     attendanceDao.insert(attendance);
                 } else {
                     attendance.setId(DBattendance.getId());
                     attendance.preUpdate();
                     attendance.setStartTime(DateUtils.getStringsToDates(startTime));
                     attendance.setEndTime(DateUtils.getStringsToDates(endTime));
-                    attendance.setAttendanceStatus("0");
-                    attendance.setStartLocation(groupRule.getGroupAddress());
-                    attendance.setEndLocation(groupRule.getGroupAddress());
                     attendance.setStartTimeStatus("0");
                     attendance.setEndTimeStatus("0");
                     attendance.setAttendanceWorkTime(groupRule.getGroupAttendanceDuration());
                     attendance.setUpdateDate(new Date());
+                    if(audit.getBusinessType()==1){
+                        attendance.setAttendanceStatus("2");
+                        attendance.setStartLocation(groupRule.getGroupAddress());
+                        attendance.setEndLocation(groupRule.getGroupAddress());
+                    }else {
+                        attendance.setAttendanceStatus("0");
+                        attendance.setStartLocation(groupRule.getGroupAddress());
+                        attendance.setEndLocation(groupRule.getGroupAddress());
+                    }
                     attendanceDao.dynamicUpdate(attendance);
                 }
             }
@@ -309,14 +337,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     public Map<String, Object> findAuditList(PageInfo<Audit> page, Audit audit) {
         //创建封装数据
         Map<String, Object> dataMap = new HashMap<>();
-      /*  //验证登陆信息
+        //验证登陆信息
         Object obj = WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
         if (null == obj) {
             dataMap.put("flag", "1");
             return dataMap;
         } else {
             dataMap.put("flag", "0");
-        }*/
+        }
 
         if (page.getPageNum() == 0) {
             page.setPageNum(1);
