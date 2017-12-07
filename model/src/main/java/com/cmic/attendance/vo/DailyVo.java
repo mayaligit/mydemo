@@ -13,8 +13,28 @@ import java.io.Serializable;
  **/
 public class DailyVo extends Daily implements Serializable {
 
+
+    private String startDate;
+    private String endDate;
+
     private String date;
     private PageInfo pageInfo;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 
     public String getDate() {
         return date;

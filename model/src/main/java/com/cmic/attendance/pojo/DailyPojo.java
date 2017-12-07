@@ -15,7 +15,8 @@ public class DailyPojo extends Daily implements Serializable {
     private String date;
     private String attendanceGroup;
     private String phone;
-    private String username;
+    private String startDate;
+    private String endDate;
 
     public String getDate() {
         return date;
@@ -41,13 +42,20 @@ public class DailyPojo extends Daily implements Serializable {
         this.phone = phone;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
+    public String getStartDate() {
+        return startDate;
     }
 
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
 }
