@@ -10,7 +10,7 @@ import java.util.Date;
  */
 @ApiModel(value = "WorkStatistics", description = "")
 public class WorkStatistics extends DataEntity<WorkStatistics> {
-
+    protected String group;
     @ApiModelProperty(value = "手机号", example = "手机号")
     protected String phone;
     @ApiModelProperty(value = "用户名", example = "用户名")
@@ -129,5 +129,11 @@ public class WorkStatistics extends DataEntity<WorkStatistics> {
         this.month = month;
     }
 
+    public String getGroup() {
+        return group;
+    }
 
+    public void setGroup(String group) {
+        this.group = group;
+    }
 }

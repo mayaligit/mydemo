@@ -70,8 +70,18 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
             attendance.setDailyStatus(Integer.parseInt(paramMap.get("dailyStatus")));
         }
 
-        //设置后台管理者的所属组  todo 用false 把分组条件关了，要用的时候打开
-        if(false&&StringUtils.isNotBlank(attendance_group)){
+        //设置早退状态
+        if(StringUtils.isNotBlank(paramMap.get("endTimeStatus"))){
+            attendance.setEndTimeStatus(paramMap.get("endTimeStatus"));
+        }
+
+        //设置迟到状态
+        if(StringUtils.isNotBlank(paramMap.get("startTimeStatus"))){
+            attendance.setStartTimeStatus(paramMap.get("startTimeStatus"));
+        }
+
+        //设置后台管理者的所属组
+        if(StringUtils.isNotBlank(attendance_group)){
             attendance.setAttendanceGroup(attendance_group);
         }
 

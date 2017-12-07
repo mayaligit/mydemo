@@ -28,6 +28,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -144,9 +145,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String isForWeek = DateUtils.dayForWeek(startDate)+"";
         List<String> strings = Arrays.asList(attendanceWeek);
         boolean contains = strings.contains(isForWeek);
+        long l1 =System.currentTimeMillis();
         //不在考勤期内
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        if (!contains){
+        /*if (!contains){
             //不在考勤日期内直接返回预留业务
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
@@ -164,8 +166,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 throw new AttendanceException("节假日不用考勤!");
             }
         }
-
+        long l2 =System.currentTimeMillis();
+        long l = l2-l1;
+        log.debug("判断节假日"+l);*/
         if (contains){
+            long start=System.currentTimeMillis();
             //开始读取考勤组考勤的方式
             Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
             String groupAttendanceWays = groupAttendanceWay + "";
@@ -226,6 +231,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setAttendanceLongitudeStart(attendanceVo.getAttendanceLongitude());
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
+                long end = System.currentTimeMillis();
+                long time = end-start;
+                log.debug("固定时长打卡业务结束");
+                log.debug("打卡时间"+time);
                 /*try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
                     insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());
@@ -267,7 +276,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>考勤异常<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         return null;
     }
-
     //TODO 下班打卡业务
     /*
       @param  attendanceEndVo 封装下班业务的bean
@@ -297,6 +305,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入固定打卡业务<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             if (null==attendance){
                 saveAttendance= new Attendance();
+                saveAttendance.setDailyStatus(0);
             }else{
                 saveAttendance=attendance;
                 /*//插入数据 如果上班没打也算异常
@@ -304,6 +313,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                       attendance.setAttendanceStatus("1");
                       attendance.setAttendanceDesc("上班卡没打");
                 }*/
+                if(attendance.getDailyStatus() ==null){
+                    saveAttendance.setDailyStatus(0);
+                }
                 saveAttendance.setUpdateDate(startDate);
                 Date startTime = saveAttendance.getStartTime();
                 double timesBetween = endTime.getTime()-startTime.getTime();
@@ -342,8 +354,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             if (null==attendance){
                 saveAttendance= new Attendance();
+                saveAttendance.setDailyStatus(0);
             }else{
                 saveAttendance=attendance;
+                if(attendance.getDailyStatus() ==null){
+                    saveAttendance.setDailyStatus(0);
+                }
                 Date startTime = saveAttendance.getStartTime();
                 double timesBetween = endTime.getTime()-startTime.getTime();
                 double workTime=timesBetween/(60*60*1000);
@@ -388,10 +404,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
         saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
                 dateToYearMonthDayArry[1]);
-        saveAttendance.setAttendanceCardStatus("0");
         saveAttendance.setEndLocation(attendanceEndVo.getLocation());
         saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
-        saveAttendance.setDailyStatus(0);
+        saveAttendance.setAttendanceCardStatus("0");
         saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
         saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
         //保存数据

@@ -62,6 +62,7 @@ public class AuditAdminController extends BaseRestController<AuditService> {
             Integer pageSize = (Integer)parmMap.get("pageSize");
             String UserName = (String) parmMap.get("userName");
             String auditStatus = (String) parmMap.get("auditStatus");
+            String date = (String) parmMap.get("date");
             if(pageNum!=0){
                 page.setPageNum(Integer.valueOf(pageNum));
             }
@@ -74,8 +75,10 @@ public class AuditAdminController extends BaseRestController<AuditService> {
             if(StringUtils.isNotBlank(auditStatus)){
                 audit.setAuditStatus(Integer.valueOf(auditStatus));
             }
+            if(StringUtils.isNotBlank(date)){
+                audit.setDate(date);
+            }
         }
-
         return service.findAuditList(page, audit);
     }
 
