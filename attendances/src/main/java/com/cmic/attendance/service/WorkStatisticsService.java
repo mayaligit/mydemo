@@ -157,7 +157,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         }
         List<String> holidayDaysData = new ArrayList<>();//请假详情
         for (Audit audit : holidayDays) {
-            holidayDaysData.add(simpleDateFormat3.format(audit.getSubmitTime()) + strdate.format(audit.getSubmitTime())+" "+audit.getHolidayDays()+"小时");
+            holidayDaysData.add(simpleDateFormat3.format(audit.getStartDate()) + strdate.format(audit.getStartDate())+" "+audit.getHolidayDays()+"小时");
         }
         holidayDaysData.add("总时长:"+holidayDays_sum+"小时");
         List<String> overtimeData = new ArrayList<>();//加班详情

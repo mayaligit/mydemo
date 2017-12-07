@@ -113,7 +113,7 @@
             </if>
             AND a.business_type=0
             AND a.audit_suggestion=0
-            AND DATE_FORMAT(a.submit_time,'%Y-%m')=#{month}
+            AND DATE_FORMAT(a.start_date,'%Y-%m')=#{month}
         </where>
     </select>
 
@@ -129,7 +129,7 @@
             </if>
             AND a.business_type &lt;&gt; 2
             AND a.audit_suggestion=0
-            AND DATE_FORMAT(a.submit_time,'%Y-%m')=#{month}
+            AND DATE_FORMAT(a.start_date,'%Y-%m')=#{month}
         </where>
     </select>
 
