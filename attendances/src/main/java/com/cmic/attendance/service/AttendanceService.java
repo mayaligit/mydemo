@@ -148,7 +148,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         long l1 =System.currentTimeMillis();
         //不在考勤期内
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        if (!contains){
+        /*if (!contains){
             //不在考勤日期内直接返回预留业务
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
@@ -168,12 +168,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }
         long l2 =System.currentTimeMillis();
         long l = l2-l1;
-        log.debug("判断节假日"+l);
+        log.debug("判断节假日"+l);*/
         if (contains){
+            long start=System.currentTimeMillis();
             //开始读取考勤组考勤的方式
             Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
             String groupAttendanceWays = groupAttendanceWay + "";
-            long start=System.currentTimeMillis();
             //一、固定时长
             log.debug("进入固定时长打卡业务");
             if ("1".equals(groupAttendanceWays)) {
@@ -276,7 +276,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>考勤异常<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         return null;
     }
-
     //TODO 下班打卡业务
     /*
       @param  attendanceEndVo 封装下班业务的bean
