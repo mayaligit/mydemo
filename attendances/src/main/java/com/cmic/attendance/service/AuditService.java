@@ -57,7 +57,6 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     @Transactional(readOnly = false)
     public Map save(HttpServletResponse response, Audit audit) {
          /*response.setHeader("Access-Control-Allow-Origin", "*");*/
-
         Map<String, String> map = new HashMap<>();
 
         //设置用户名
@@ -68,12 +67,13 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
         audit.setUserName(user.getName());
-       //audit.setUserName("陈志豪");// 测试数据
 
-        //查询数据库中是否已经存在记录
+        //audit.setUserName("梁永燊");// 测试数据
+
+        //查询数据库中申请了的请假或外勤时间是否存在
         Audit DBAudit = null;
-        if(audit.getAttendanceGroup()!=null && audit.getUserName()!=null){
-            audit.setDateStr(DateUtils.getDateToYearMonthDay(new Date()));
+        if(audit.getAttendanceGroup()!=null && audit.getUserName()!=null&& audit.getStartDate()!=null){
+             audit.setDateStr(DateUtils.getDateToYearMonthDay(audit.getStartDate()));
              DBAudit=dao.getByUserNameDateAndAttendanceGroud(audit);
         }
 
@@ -151,10 +151,10 @@ public class AuditService extends CrudService<AuditDao, Audit> {
              //未处理的审批可以更新
             audit.setId(DBAudit.getId());
             dao.dynamicUpdate(audit);
-            map.put("msg", "申请提交成功");
+            map.put("msg", "更新提交成功");
         }else {
-            //处理后的审批不能更新
-            map.put("msg", "处理后的审批不能更新,请联系考勤组");
+           //处理后的审批不能更新
+            new RestException(audit.getStartDate()+"到"+audit.getEndDate()+"时间段已经被申请了,这次申请不成功,请联系考勤组管理员");
         }
         return map;
     }
@@ -309,14 +309,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     public Map<String, Object> findAuditList(PageInfo<Audit> page, Audit audit) {
         //创建封装数据
         Map<String, Object> dataMap = new HashMap<>();
-        //验证登陆信息
+      /*  //验证登陆信息
         Object obj = WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
         if (null == obj) {
             dataMap.put("flag", "1");
             return dataMap;
         } else {
             dataMap.put("flag", "0");
-        }
+        }*/
 
         if (page.getPageNum() == 0) {
             page.setPageNum(1);
@@ -335,14 +335,11 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         PageInfo<Map> result = new PageInfo(dao.findAuditList(audit));
 
         //考勤数据
-        dataMap.put("auditList", result.getList());
+       dataMap.put("auditList", result.getList());
         //总页数
         dataMap.put("pageCount", result.getPages());
         //总记录数
         dataMap.put("pageTotal", result.getTotal());
         return dataMap;
     }
-
-
-
 }

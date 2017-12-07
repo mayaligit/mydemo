@@ -45,6 +45,7 @@ public class Audit extends DataEntity<Audit> {
     @ApiModelProperty(value = "申请人手机号码")
     protected String phoneNumber;
     protected String dateStr;
+    protected String date;
 
     public Audit() {
 
@@ -174,6 +175,10 @@ public class Audit extends DataEntity<Audit> {
         return phoneNumber;
     }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getDateStr() {
         return dateStr;
     }
@@ -182,7 +187,11 @@ public class Audit extends DataEntity<Audit> {
         this.dateStr = dateStr;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
