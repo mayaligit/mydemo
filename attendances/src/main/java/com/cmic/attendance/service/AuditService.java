@@ -309,14 +309,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     public Map<String, Object> findAuditList(PageInfo<Audit> page, Audit audit) {
         //创建封装数据
         Map<String, Object> dataMap = new HashMap<>();
-        //验证登陆信息
+      /*  //验证登陆信息
         Object obj = WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
         if (null == obj) {
             dataMap.put("flag", "1");
             return dataMap;
         } else {
             dataMap.put("flag", "0");
-        }
+        }*/
 
         if (page.getPageNum() == 0) {
             page.setPageNum(1);
@@ -335,14 +335,11 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         PageInfo<Map> result = new PageInfo(dao.findAuditList(audit));
 
         //考勤数据
-        dataMap.put("auditList", result.getList());
+       dataMap.put("auditList", result.getList());
         //总页数
         dataMap.put("pageCount", result.getPages());
         //总记录数
         dataMap.put("pageTotal", result.getTotal());
         return dataMap;
     }
-
-
-
 }

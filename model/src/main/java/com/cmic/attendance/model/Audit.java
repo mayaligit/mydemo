@@ -175,12 +175,8 @@ public class Audit extends DataEntity<Audit> {
         return phoneNumber;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getDateStr() {
@@ -191,7 +187,11 @@ public class Audit extends DataEntity<Audit> {
         this.dateStr = dateStr;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
