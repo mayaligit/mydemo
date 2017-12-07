@@ -345,6 +345,9 @@
             <if test="auditStatus == 0 or auditStatus ==1">
                 and audit_status = #{auditStatus}
             </if>
+            <if test="date!=null">
+                and DATE_FORMAT(a.submit_time, '%Y-%m')= #{date}
+            </if>
         </where>
 
     </select>
