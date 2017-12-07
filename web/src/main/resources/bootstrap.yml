@@ -3,6 +3,11 @@ sys:
   module: biz  #模块
   name: attendance  #应用
 
+sleuth:
+  enabled: false
+zipkin:
+  enabled: false
+  
 spring:
   application:
     name: ${sys.module}-${sys.name}
