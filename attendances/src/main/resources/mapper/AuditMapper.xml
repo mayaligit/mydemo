@@ -297,7 +297,7 @@
         <include refid="auditColumns"/>
         FROM t_audit a WHERE 1=1
         <if test="dateStr!=null and dateStr!=''">
-            and DATE(a.start_time)=#{dateStr}
+            and DATE(a.start_date)=#{dateStr}
         </if>
         <if test="userName!=null and userName!=''">
             and a.user_name=#{userName}
