@@ -68,7 +68,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         BaseAdminEntity user = (BaseAdminEntity) obj;
         audit.setUserName(user.getName());
 
-        //audit.setUsername("陈志豪");// 测试数据
+       // audit.setUserName("陈志豪");// 测试数据
 
         //任何请况下都必须携带的参数
         if (StringUtils.isBlank(audit.getAuditContent()) || StringUtils.isBlank(audit.getAttendanceGroup())) {

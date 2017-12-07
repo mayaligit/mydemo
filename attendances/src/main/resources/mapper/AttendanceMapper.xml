@@ -373,6 +373,12 @@
             <if test="attendanceGroup != null and attendanceGroup != ''">
                 and a.attendance_group = #{attendanceGroup}
             </if>
+            <if test="startTimeStatus != null and startTimeStatus != ''">
+                and a.start_time_status = #{startTimeStatus}
+            </if>
+            <if test="endTimeStatus != null and endTimeStatus != ''">
+                and a.end_time_status = #{endTimeStatus}
+            </if>
         </where>
     </select>
 

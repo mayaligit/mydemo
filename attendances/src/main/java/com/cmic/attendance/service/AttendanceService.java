@@ -28,6 +28,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -144,6 +145,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String isForWeek = DateUtils.dayForWeek(startDate)+"";
         List<String> strings = Arrays.asList(attendanceWeek);
         boolean contains = strings.contains(isForWeek);
+
         //不在考勤期内
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         if (!contains){
@@ -169,6 +171,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             //开始读取考勤组考勤的方式
             Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
             String groupAttendanceWays = groupAttendanceWay + "";
+            long start=System.currentTimeMillis();
             //一、固定时长
             log.debug("进入固定时长打卡业务");
             if ("1".equals(groupAttendanceWays)) {
@@ -226,6 +229,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setAttendanceLongitudeStart(attendanceVo.getAttendanceLongitude());
                 /*saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());*/
                 this.save(saveAttendance);
+                long end = System.currentTimeMillis();
+                long time = end-start;
+                log.debug("固定时长打卡业务结束");
+                log.debug("打卡时间"+time);
                 /*try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
                     insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());
