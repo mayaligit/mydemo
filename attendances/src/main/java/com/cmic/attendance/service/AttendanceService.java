@@ -297,6 +297,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入固定打卡业务<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             if (null==attendance){
                 saveAttendance= new Attendance();
+                saveAttendance.setDailyStatus(0);
             }else{
                 saveAttendance=attendance;
                 /*//插入数据 如果上班没打也算异常
@@ -304,6 +305,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                       attendance.setAttendanceStatus("1");
                       attendance.setAttendanceDesc("上班卡没打");
                 }*/
+                if(attendance.getDailyStatus() ==null){
+                    saveAttendance.setDailyStatus(0);
+                }
                 saveAttendance.setUpdateDate(startDate);
                 Date startTime = saveAttendance.getStartTime();
                 double timesBetween = endTime.getTime()-startTime.getTime();
@@ -342,8 +346,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             if (null==attendance){
                 saveAttendance= new Attendance();
+                saveAttendance.setDailyStatus(0);
             }else{
                 saveAttendance=attendance;
+                if(attendance.getDailyStatus() ==null){
+                    saveAttendance.setDailyStatus(0);
+                }
                 Date startTime = saveAttendance.getStartTime();
                 double timesBetween = endTime.getTime()-startTime.getTime();
                 double workTime=timesBetween/(60*60*1000);
@@ -388,10 +396,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
         saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
                 dateToYearMonthDayArry[1]);
-        saveAttendance.setAttendanceCardStatus("0");
         saveAttendance.setEndLocation(attendanceEndVo.getLocation());
         saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
-        saveAttendance.setDailyStatus(0);
+        saveAttendance.setAttendanceCardStatus("0");
         saveAttendance.setAttendanceLongitudeEnd(attendanceEndVo.getAttendanceLongitude());
         saveAttendance.setAttendanceDimensionEnd(attendanceEndVo.getAttendanceDimension());
         //保存数据
