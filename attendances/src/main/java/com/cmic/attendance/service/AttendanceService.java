@@ -17,16 +17,18 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.log4j.Logger;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.StringWriter;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.*;
@@ -622,6 +624,35 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         dateMap.put("pageTotal",pageInfo.getTotal());
         return  dateMap;
     }
+
+    public void selectAttendancesToExcel( Attendance attendance,HttpServletRequest request,HttpServletResponse response){
+        String templateFileName= request.getServletContext().getRealPath("/") + "/resources/templateFileName.xls";
+        String destFileName= "Attendances "+System.currentTimeMillis()+".xls";
+        List<Map> attendances = dao.selectAttendances(attendance);
+        Map<String,Object> beans = new HashMap<String,Object>();
+        beans.put("attendances",attendances);
+        XLSTransformer transformer = new XLSTransformer();
+        InputStream in=null;
+        OutputStream out=null;
+        //设置响应  
+        response.setHeader("Content-Disposition", "attachment;filename=" + destFileName);
+        response.setContentType("application/vnd.ms-excel");
+        try {
+            in=new BufferedInputStream(new FileInputStream(templateFileName));
+            Workbook workbook=transformer.transformXLS(in, beans);
+            out=response.getOutputStream();
+            //将内容写入输出流并把缓存的内容全部发出去  
+            workbook.write(out);
+            out.flush();
+        } catch (InvalidFormatException e) {
+             e.printStackTrace();
+        } catch (IOException e) {
+             e.printStackTrace();
+        } finally {
+        if (in!=null){try {in.close();} catch (IOException e) {}}
+        if (out!=null){try {out.close();} catch (IOException e) {}}
+    }
+ }
 
 
     /**

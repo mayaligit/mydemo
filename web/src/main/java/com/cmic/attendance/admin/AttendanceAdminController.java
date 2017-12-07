@@ -131,7 +131,15 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
 
     }
 
-
+    @PostMapping("/selectAttendancesToExcel")
+    public void selectAttendancesToExcel( Attendance attendance,HttpServletRequest request,HttpServletResponse response){
+        try{
+            service.selectAttendancesToExcel(attendance,request,response);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RestException("考勤导出异常！");
+        }
+    }
 
 
     /**
