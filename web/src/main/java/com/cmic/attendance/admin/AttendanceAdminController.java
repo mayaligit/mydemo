@@ -80,8 +80,8 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
             attendance.setStartTimeStatus(paramMap.get("startTimeStatus"));
         }
 
-        //设置后台管理者的所属组  todo 用false 把分组条件关了，要用的时候打开
-        if(false&&StringUtils.isNotBlank(attendance_group)){
+        //设置后台管理者的所属组
+        if(StringUtils.isNotBlank(attendance_group)){
             attendance.setAttendanceGroup(attendance_group);
         }
 
