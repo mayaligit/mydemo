@@ -92,9 +92,8 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         if(StringUtils.isNotBlank(attendance_group)){
             attendance.setAttendanceGroup(attendance_group);
         }
-
-        Integer pageNum = paramMap.get("pageNum") == null ? 1 : Integer.parseInt(paramMap.get("pageNum"));
-        Integer pageSize = paramMap.get("pageSize") == null ? 10 : Integer.parseInt(paramMap.get("pageSize"));
+        Integer pageNum = StringUtils.isBlank(paramMap.get("pageNum")) ? 1 : Integer.parseInt(paramMap.get("pageNum"));
+        Integer pageSize = StringUtils.isBlank(paramMap.get("pageSize")) ? 10 : Integer.parseInt(paramMap.get("pageSize"));
 
         Map<String,Object> dateMap = service.selectAttendances(pageNum,pageSize,attendance);
         dateMap.put("flag",flag);
