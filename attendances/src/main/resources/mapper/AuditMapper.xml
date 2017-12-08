@@ -255,7 +255,7 @@
         <if test="auditSuggestion != null ">
             audit_suggestion = #{auditSuggestion},
         </if>
-        <if test="businessType != null ">
+        <if test="businessType==0 or businessType==1 or businessType==2">
             business_type = #{businessType},
         </if>
         <if test="suggestionRemarksvarchar != null  and suggestionRemarksvarchar != ''">
