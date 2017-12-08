@@ -48,8 +48,16 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     public Map<String,Object> selectAttendances(@RequestBody Map<String,String> paramMap,
                                                 HttpSession session){
         //获取session中的用户信息
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)session.getAttribute("attendanceUserVo");
-        String attendance_group = attendanceUserVo.getAttendanceGroup();
+        //AttendanceUserVo attendanceUserVo = (AttendanceUserVo)session.getAttribute("attendanceUserVo");
+        Object sessionObject = session.getAttribute("attendanceUserVo");
+        int flag=1;
+        String attendance_group=null;
+        if(!(sessionObject==null)){
+            flag=0;
+            AttendanceUserVo attendanceUserVo = (AttendanceUserVo)sessionObject;
+            attendance_group = attendanceUserVo.getAttendanceGroup();
+        }
+
         Attendance attendance = new Attendance();
         //获取考勤月份
         if(StringUtils.isNotBlank(paramMap.get("attendanceMonth")) ){
@@ -89,6 +97,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         Integer pageSize = paramMap.get("pageSize") == null ? 10 : Integer.parseInt(paramMap.get("pageSize"));
 
         Map<String,Object> dateMap = service.selectAttendances(pageNum,pageSize,attendance);
+        dateMap.put("flag",flag);
         return dateMap;
     }
 
