@@ -58,7 +58,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     public Map save(HttpServletResponse response, Audit audit) {
          /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, String> map = new HashMap<>();
-
+/*
         //设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if (null == obj || !(obj instanceof BaseAdminEntity)) {
@@ -66,9 +66,9 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             return map;
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
-        audit.setUserName(user.getName());
+        audit.setUserName(user.getName());*/
 
-        //audit.setUserName("梁永燊");// 测试数据
+        audit.setUserName("梁永燊");// 测试数据
 
         //查询数据库中申请了的请假或外勤时间是否存在
         Audit DBAudit = null;
@@ -163,8 +163,13 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             audit.setId(DBAudit.getId());
             dao.dynamicUpdate(audit);
             map.put("msg", "更新成功");
+        }else if(DBAudit.getAuditSuggestion()==1){
+           //处理后拒绝的审批可以更新
+            audit.setId(DBAudit.getId());
+            dao.dynamicUpdate(audit);
+            map.put("msg", "更新成功");
         }else {
-           //处理后的审批不能更新
+            //处理后同意的审批不可以更新
             map.put("msg", "该时间段已经被申请了,这次申请不成功,请联系考勤组管理员");
         }
         return map;
