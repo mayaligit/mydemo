@@ -6,6 +6,7 @@ import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Audit;
 import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.utils.DateUtils;
+import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
@@ -58,16 +59,16 @@ public class AuditService extends CrudService<AuditDao, Audit> {
          /*response.setHeader("Access-Control-Allow-Origin", "*");*/
         Map<String, String> map = new HashMap<>();
 
-      /*  //设置用户名
+        //设置用户名
         Object obj = WebUtils.getRequest().getSession().getAttribute("_CURRENT_ADMIN_INFO");
         if (null == obj || !(obj instanceof BaseAdminEntity)) {
             map.put("msg", "登陆超时,请重新登陆");
             return map;
         }
         BaseAdminEntity user = (BaseAdminEntity) obj;
-        audit.setUserName(user.getName());*/
+        audit.setUserName(user.getName());
 
-        audit.setUserName("梁永燊");// 测试数据
+        //audit.setUserName("梁永燊");// 测试数据
 
         //查询数据库中申请了的请假或外勤时间是否存在
         Audit DBAudit = null;
@@ -196,28 +197,31 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         Attendance attendance = new Attendance();
         Map<String, Object> paraMap = new HashMap<String, Object>();
         //获取审批人信息,更新审批表
-       // AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
-        //paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
+        if(attendanceUserVo==null){
+            throw new RestException("登陆超时,请重新登陆");
+        }
+        paraMap.put("updateBy", attendanceUserVo.getAttendanceUsername());
         paraMap.put("updateDate", new Date());
         paraMap.put("auditTime", DateUtils.getDateToStrings(new Date()));
         paraMap.put("auditStatus", "0"); //设置审批意见状态为 已处理
-        //paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
-       // paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
+        paraMap.put("auditUserId", attendanceUserVo.getId());//审批人ID
+        paraMap.put("auditUsername", attendanceUserVo.getAttendanceUsername());
         paraMap.put("auditSuggestion", audit.getAuditSuggestion());
         paraMap.put("suggestionRemarksvarchar", audit.getSuggestionRemarksvarchar());
         paraMap.put("id", audit.getId());
         dao.updateAudit(paraMap);
 
-        // 测试数据
+       /* // 测试数据
         paraMap.put("updateBy", "陈华龙");// 测试数据
         paraMap.put("auditUserId", "666");// 测试数据
         paraMap.put("auditUsername", "陈华龙");// 测试数据
-        dao.updateAudit(paraMap);// 测试数据
+        dao.updateAudit(paraMap);// 测试数据*/
 
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
-        String startTime = DateUtils.getDateToYearMonthDay(audit.getStartDate()) + " " + groupRule.getGroupAttendanceStart() + ":00";
-        String endTime = DateUtils.getDateToYearMonthDay(audit.getEndDate()) + " " + groupRule.getGroupAttendanceEnd() + ":00";
+        String startTime = DateUtils.getDateToYearMonthDay(audit.getStartDate()) + " " + groupRule.getGroupAttendanceStart();
+        String endTime = DateUtils.getDateToYearMonthDay(audit.getEndDate()) + " " + groupRule.getGroupAttendanceEnd();
 
         //如果审批同意 ,维护考勤表;如果不同意,无操作
         if (audit.getAuditSuggestion() == 1) {
@@ -226,9 +230,9 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
         //获取数据库当天打卡数据
         String phoneNumber = audit.getPhoneNumber();
-        Date submitTime = audit.getSubmitTime();
-        String createTime = DateUtils.getDateToYearMonthDay(submitTime);
-        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime(phoneNumber, createTime);
+        Date  startDate= audit.getStartDate();
+        String StartTime = DateUtils.getDateToYearMonthDay(startDate);
+        Attendance DBattendance = attendanceDao.getAttendanceByCreatebyAndCreateTime(phoneNumber, StartTime);
 
         //将手机号码放到session中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
