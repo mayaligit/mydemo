@@ -358,8 +358,9 @@
         t_attendance a
         LEFT JOIN t_daily b ON a.id=b.attendance_id
         <where>
+            1=1
             <if test="attendanceUser != null and attendanceUser != ''">
-                attendance_user = #{attendanceUser}
+                and attendance_user = #{attendanceUser}
             </if>
             <if test="attendanceStatus != null and attendanceStatus != ''">
                 and attendance_status = #{attendanceStatus}
@@ -419,17 +420,27 @@
         FROM
         t_attendance a
         <where>
+            1=1
             <if test="attendanceUser != null and attendanceUser != ''">
-                attendance_user = #{attendanceUser}
+                and a.attendance_user = #{attendanceUser}
             </if>
             <if test="attendanceStatus != null and attendanceStatus != ''">
-                and attendance_status = #{attendanceStatus}
+                and a.attendance_status = #{attendanceStatus}
             </if>
             <if test="attendanceMonth != null and attendanceMonth != ''">
-                and attendance_month = #{attendanceMonth}
+                and a.attendance_month = #{attendanceMonth}
             </if>
             <if test="dailyStatus != null and dailyStatus != ''">
-                and daily_status = #{dailyStatus}
+                and a.daily_status = #{dailyStatus}
+            </if>
+            <if test="attendanceGroup != null and attendanceGroup != ''">
+                and a.attendance_group = #{attendanceGroup}
+            </if>
+            <if test="startTimeStatus != null and startTimeStatus != ''">
+                and a.start_time_status = #{startTimeStatus}
+            </if>
+            <if test="endTimeStatus != null and endTimeStatus != ''">
+                and a.end_time_status = #{endTimeStatus}
             </if>
         </where>
     </select>

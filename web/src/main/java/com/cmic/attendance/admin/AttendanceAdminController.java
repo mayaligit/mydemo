@@ -139,7 +139,19 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     }
 
     @RequestMapping("/attendanceExportExcel")
-    public void attendanceExportExcel( Attendance attendance,HttpServletResponse response){
+    public void attendanceExportExcel( Attendance attendance,HttpServletResponse response,HttpSession session){
+        Object sessionObject = session.getAttribute("attendanceUserVo");
+        int flag=1;
+        String attendance_group=null;
+        if(!(sessionObject==null)){
+            flag=0;
+            AttendanceUserVo attendanceUserVo = (AttendanceUserVo)sessionObject;
+            attendance_group = attendanceUserVo.getAttendanceGroup();
+        }
+        //设置后台管理者的所属组
+        if(StringUtils.isNotBlank(attendance_group)){
+            attendance.setAttendanceGroup(attendance_group);
+        }
         //返回的是excel的临时
         String data = service.exportExcel( attendance);
 
