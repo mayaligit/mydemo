@@ -92,9 +92,8 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         if(StringUtils.isNotBlank(attendance_group)){
             attendance.setAttendanceGroup(attendance_group);
         }
-
-        Integer pageNum = paramMap.get("pageNum") == null ? 1 : Integer.parseInt(paramMap.get("pageNum"));
-        Integer pageSize = paramMap.get("pageSize") == null ? 10 : Integer.parseInt(paramMap.get("pageSize"));
+        Integer pageNum = StringUtils.isBlank(paramMap.get("pageNum")) ? 1 : Integer.parseInt(paramMap.get("pageNum"));
+        Integer pageSize = StringUtils.isBlank(paramMap.get("pageSize")) ? 10 : Integer.parseInt(paramMap.get("pageSize"));
 
         Map<String,Object> dateMap = service.selectAttendances(pageNum,pageSize,attendance);
         dateMap.put("flag",flag);
@@ -140,7 +139,19 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
     }
 
     @RequestMapping("/attendanceExportExcel")
-    public void attendanceExportExcel( Attendance attendance,HttpServletResponse response){
+    public void attendanceExportExcel( Attendance attendance,HttpServletResponse response,HttpSession session){
+        Object sessionObject = session.getAttribute("attendanceUserVo");
+        int flag=1;
+        String attendance_group=null;
+        if(!(sessionObject==null)){
+            flag=0;
+            AttendanceUserVo attendanceUserVo = (AttendanceUserVo)sessionObject;
+            attendance_group = attendanceUserVo.getAttendanceGroup();
+        }
+        //设置后台管理者的所属组
+        if(StringUtils.isNotBlank(attendance_group)){
+            attendance.setAttendanceGroup(attendance_group);
+        }
         //返回的是excel的临时
         String data = service.exportExcel( attendance);
 
