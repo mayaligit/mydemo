@@ -165,6 +165,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             map.put("msg", "更新成功");
         }else if(DBAudit.getAuditSuggestion()==1){
            //处理后拒绝的审批可以更新
+            audit.setAuditStatus(1);
             audit.setId(DBAudit.getId());
             dao.dynamicUpdate(audit);
             map.put("msg", "更新成功");
