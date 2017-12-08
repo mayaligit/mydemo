@@ -165,7 +165,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             map.put("msg", "更新成功");
         }else {
            //处理后的审批不能更新
-            throw new RestException("该时间段已经被申请了,这次申请不成功,请联系考勤组管理员");
+            map.put("msg", "该时间段已经被申请了,这次申请不成功,请联系考勤组管理员");
         }
         return map;
     }
