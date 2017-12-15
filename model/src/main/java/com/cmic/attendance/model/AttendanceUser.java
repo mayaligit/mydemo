@@ -13,6 +13,8 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
 
     @ApiModelProperty(value = "账号")
     protected String attendanceUsername;
+    @ApiModelProperty(value = "手机号")
+    protected String attendancePhone;
     @ApiModelProperty(value = "密码")
     protected String attendancePassword;
     @ApiModelProperty(value = "管理所属组")
@@ -39,6 +41,14 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
 
     public void setAttendanceUsername(String attendanceUsername) {
         this.attendanceUsername = attendanceUsername;
+    }
+
+    public String getAttendancePhone() {
+        return attendancePhone;
+    }
+
+    public void setAttendancePhone(String attendancePhone) {
+        this.attendancePhone = attendancePhone;
     }
 
     public String getAttendancePassword() {
