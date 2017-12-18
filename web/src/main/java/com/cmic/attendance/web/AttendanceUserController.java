@@ -204,6 +204,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     public Map<String, Object> findAttendanceUserList(@RequestBody AttendanceUserVo attendanceUserVo) {
         Integer pageNum=attendanceUserVo.getPageNum();
         Integer pageSize=attendanceUserVo.getPageSize();
+        
         return service.findAttendanceUserList(pageNum, pageSize, attendanceUserVo.getAttendanceUsername());
 
     }
