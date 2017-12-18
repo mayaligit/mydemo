@@ -180,11 +180,11 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         //返回多地址打卡数据
         ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
         //根据登录手机号获取入职人员信息
-        //Employee employee = service.findEmployeeByTelephone(phone);
-        //String attendanceGroup = employee.getAttendanceName();
+        Employee employee = service.findEmployeeByTelephone(phone);
+        String attendanceGroup = employee.getAttendanceName();
         //返回用户组信息(预留业务)
-        //attendanceVo.setAttendanceGroup(attendanceGroup);
-        attendanceVo.setAttendanceGroup("odc");
+        attendanceVo.setAttendanceGroup(attendanceGroup);
+       /* attendanceVo.setAttendanceGroup("odc");*/
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
@@ -212,7 +212,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         String phone = user.getId();
         String username=user.getName();
-        attendanceVo.setAttendanceGroup("odc");
+       /* attendanceVo.setAttendanceGroup("odc");*/
         attendanceVo.setUsername(username);
         attendanceVo.setPhone(phone);;
         Attendance attendanceBo = null;
@@ -253,7 +253,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         String username=user.getName();
         /*String phone = (String)redisTemplate.boundValueOps("phone").get();
         String username = (String)redisTemplate.boundValueOps("username").get();*/
-        attendanceEndVo.setAttendanceGroup("odc");
+       /* attendanceEndVo.setAttendanceGroup("odc");*/
         attendanceEndVo.setUsername(username);
         attendanceEndVo.setPhone(phone);
         AttendanceEndVo resultAttendanceVo=new AttendanceEndVo();
