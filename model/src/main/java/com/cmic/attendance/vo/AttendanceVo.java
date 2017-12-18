@@ -70,6 +70,8 @@ public class AttendanceVo{
     private String attendanceDimension;
     //考勤的范围
     private int attanceMaxdistance;
+    //考勤权限
+    private String authority;
 
     public String getAttendanceId() {
         return attendanceId;
@@ -277,5 +279,13 @@ public class AttendanceVo{
 
     public void setAttanceMaxdistance(int attanceMaxdistance) {
         this.attanceMaxdistance = attanceMaxdistance;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 }

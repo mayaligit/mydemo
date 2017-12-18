@@ -181,6 +181,12 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
         //根据登录手机号获取入职人员信息
         Employee employee = service.findEmployeeByTelephone(phone);
+        if (null ==employee){
+            //0 是正常状态
+            attendanceVo.setAuthority("1");
+        }else {
+            attendanceVo.setAuthority("0");
+        }
         String attendanceGroup = employee.getAttendanceName();
         //返回用户组信息(预留业务)
         attendanceVo.setAttendanceGroup(attendanceGroup);
