@@ -198,6 +198,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
         if(groupRule !=null){
             attanceMaxdistance = groupRule.getGroupAttendanceScope();
+            //固定组打卡下班时间
+            attendanceVo.setGroupAttendanceEnd(groupRule.getGroupAttendanceEnd());
         }
         attendanceVo.setAttanceMaxdistance(attanceMaxdistance);
         attendanceVo.setAddressList(allGroupAddress);
