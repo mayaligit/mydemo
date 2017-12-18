@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -52,6 +53,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     private GroupRuleService groupRuleService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private HolidaysService holidaysService;
 
     public Attendance get(String id) {
         return super.get(id);
@@ -147,6 +150,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String isForWeek = DateUtils.dayForWeek(startDate)+"";
         List<String> strings = Arrays.asList(attendanceWeek);
         boolean contains = strings.contains(isForWeek);
+        String year = DateUtils.getDateToYearMonthDay(startDate).substring(0,4);
+        List<String> monthDayList = holidaysService.findMonthDayByYear(year);
+        String monthDay = DateUtils.getMonthAndDay(startDate);
+        boolean isHoliday = monthDayList.contains(monthDay);
         long l1 =System.currentTimeMillis();
         //不在考勤期内
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
@@ -154,8 +161,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             //不在考勤日期内直接返回预留业务
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
-            String workDay = DateUtils.getWorkDays(startDate);
-            if(!"0".equals(workDay)){
+            //String workDay = DateUtils.getWorkDays(startDate);
+            if(isHoliday){
                 throw new AttendanceException("当前考勤时间不是工作日!");
             }
         }

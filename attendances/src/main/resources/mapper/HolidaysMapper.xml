@@ -1,0 +1,61 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.HolidaysDao">
+    <sql id="holidaysColumns">
+        a.id AS "id",
+        a.year AS "year",
+        a.month_day AS "monthDay",
+        a.day_status AS "dayStatus",
+        a.remarks AS "remarks",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate"
+    </sql>
+
+    <sql id="holidaysJoins">
+    </sql>
+
+    <select id="get" resultType="Holidays">
+        SELECT
+        <include refid="holidaysColumns"/>
+        FROM t_holidays a
+        <include refid="holidaysJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findAllList" resultType="Holidays">
+        SELECT
+        <include refid="holidaysColumns"/>
+        FROM t_holidays a
+        <include refid="holidaysJoins"/>
+    </select>
+
+    <select id="findMonthDayByYear" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT a.month_day FROM t_holidays a WHERE a.year = #{year}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_holidays(
+        id,
+        year,
+        month_day,
+        day_status,
+        remarks,
+        create_by,
+        create_date,
+        update_by,
+        update_date
+        ) VALUES (
+        #{id},
+        #{year},
+        #{monthDay},
+        #{dayStatus},
+        #{remarks},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate}
+        )
+    </insert>
+</mapper>

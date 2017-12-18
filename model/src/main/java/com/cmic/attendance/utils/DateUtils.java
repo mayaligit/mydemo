@@ -164,17 +164,22 @@ public class DateUtils {
      */
     public static String getWorkDays(Date time){
         String date = getDateToYearMonthDay(time);
-        String httpUrl = "http://api.goseek.cn/Tools/holiday";
-        String fdate = "date=" + date.replace("-","");
+        String httpUrl = "http://tool.bitefu.net/jiari/";
+        String fdate = "d=" + date.replace("-","");
         String jsonResult = request(httpUrl, fdate);
-        JSONObject jsonObject = JSON.parseObject(jsonResult);
-        String value = jsonObject.get("data").toString();
-        return value;
+        //JSONObject jsonObject = JSON.parseObject(jsonResult);
+        //String value = jsonObject.get("data").toString();
+        return jsonResult;
     }
 
     //根据请假 外勤 缺卡时间获取对应月份
     public static String getMonth(Date date){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        return formatter.format(date);
+    }
+
+    public static String getMonthAndDay(Date date){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMdd");
         return formatter.format(date);
     }
 
