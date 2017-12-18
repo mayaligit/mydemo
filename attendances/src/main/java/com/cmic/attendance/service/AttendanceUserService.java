@@ -4,6 +4,7 @@ import com.cmic.attendance.dao.AttendanceUserDao;
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.utils.MD5Util;
 import com.cmic.attendance.vo.AttendanceUserVo;
+import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
@@ -70,7 +71,6 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
 
         String attendancePassword = attendanceUserVo.getAttendancePassword();
         String md5Password = MD5Util.md5(attendancePassword);
-        System.out.println("md5Password"+md5Password);
         if (!checkUser.getAttendancePassword().equals(md5Password)){
             result.put("msg","密码错误");
             result.put("status","2");
@@ -84,6 +84,11 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         attendanceUserVo.setId(checkUser.getId());
         //服务器session
         request.getSession().setAttribute("attendanceUserVo",attendanceUserVo);
+        //系统架构session
+        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        adminEntity.setId(checkUser.getAttendancePhone());
+        adminEntity.setName(checkUser.getAttendanceUsername());
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
         return result;
     }
 
