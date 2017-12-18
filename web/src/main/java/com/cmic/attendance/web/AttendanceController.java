@@ -214,8 +214,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         String username=user.getName();
         attendanceVo.setAttendanceGroup("odc");
         attendanceVo.setUsername(username);
-        attendanceVo.setPhone(phone);
-        log.debug("测试是否传地址"+attendanceVo.getAttendanceDimension()+attendanceVo.getAttendanceLongitude());
+        attendanceVo.setPhone(phone);;
         Attendance attendanceBo = null;
         AttendanceVo resultAttendanceVo =new AttendanceVo();
         try {

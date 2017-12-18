@@ -188,6 +188,8 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         adminEntity.setName("梁渝");
         //测试数据结束
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
+        BaseAdminEntity current_admin_info = (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        System.out.println("当前session信息"+current_admin_info.getId());
         HashMap<String,String> resultHash =new HashMap<String,String>();
         try {
             service.insertGroupRule(groupRuleVo);
