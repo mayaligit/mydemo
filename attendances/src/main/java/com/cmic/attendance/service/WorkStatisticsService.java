@@ -117,9 +117,13 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
             calendar2.set(Calendar.DAY_OF_MONTH, m);
             //如果日期m不是工作日,即休息日或者节假日
             try {
-                if (!("0".equals(DateUtils.getWorkDays(calendar2.getTime())))) {
+                String check=DateUtils.getWorkDays(calendar2.getTime());
+                if((check!=null)&&(!check.contains("0"))){
                     miss.remove(m);//除去休息日和节假日即为旷工日期
                 }
+                /*if (!("0/r/n".equals(DateUtils.getWorkDays(calendar2.getTime())))) {
+                    miss.remove(m);//除去休息日和节假日即为旷工日期
+                }*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
