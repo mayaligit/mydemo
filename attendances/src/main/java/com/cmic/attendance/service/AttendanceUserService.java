@@ -2,19 +2,27 @@ package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.AttendanceUserDao;
 import com.cmic.attendance.model.AttendanceUser;
+import com.cmic.attendance.model.Audit;
+import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.utils.MD5Util;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
+import com.cmic.saas.utils.WebUtils;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -95,6 +103,35 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
     //检查当前用户是否存在
     public AttendanceUser checkUserByName(String userName){
         return this.dao.checkUserByName(userName);
+    }
+
+    //查询用户列表信息
+    public Map<String, Object> findAttendanceUserList(int pageNum,int pageSize,String attendanceUsername) {
+        //创建封装数据
+        Map<String,Object> paramMap = new HashMap<>();
+        if(pageNum==0){
+            pageNum=1;
+        }
+        paramMap.put("pageNum",pageNum);
+        paramMap.put("pageSize",pageSize);
+        if(attendanceUsername!=null) {
+            paramMap.put("attendanceUsername", "%" + attendanceUsername + "%");
+        }
+        //设置查询参数和排序条件
+        PageHelper.startPage(pageNum,pageSize);
+
+        //分页查询并获取分页信息
+        List<Map> attendanceUserList = dao.findAttendanceUserList(paramMap);
+        PageInfo<AttendanceUser> pageInfo =  new PageInfo(attendanceUserList);
+        //创建对象对相应数据进行封装
+        Map<String,Object> responseMap = new HashMap<String,Object>();
+        List< Map<String,Object>> ruleList = new ArrayList<>();
+
+        //获取总页数和总记录数
+        responseMap.put("totalPages",pageInfo.getPages());
+        responseMap.put("totalCount",pageInfo.getTotal());
+        responseMap.put("ruleList",pageInfo.getList());
+        return responseMap;
     }
 
 }

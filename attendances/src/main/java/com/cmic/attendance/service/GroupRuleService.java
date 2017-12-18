@@ -357,5 +357,9 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         }
     }
 
+    public List<GroupRule> findAllGroupNameList(){
+        return dao.findAllGroupNameList();
+    }
+
 }
 
