@@ -339,6 +339,9 @@
         FROM t_audit a
         <where>
             1=1
+            <if test="attendanceGroup != null and attendanceGroup != ''">
+                and attendance_group = #{attendanceGroup}
+            </if>
             <if test="userName != null and userName != ''">
                 and user_name LIKE '%${userName}%'
             </if>

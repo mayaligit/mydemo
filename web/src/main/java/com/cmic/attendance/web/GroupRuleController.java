@@ -90,6 +90,19 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
 
     }
 
+    @RequestMapping(value="/findGroupNameList", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> findAttendanceGroupList(){
+
+        //HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+        //response.setHeader("Access-Control-Allow-Origin", "*")
+
+        List<GroupRule> list = service.findAllGroupNameList();
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", list);
+        return map;
+    }
+
 
     @ApiOperation(value = "获取", notes = "获取", httpMethod = "GET")
     @RequestMapping(value="/getGroupRuleById/{id}", method = RequestMethod.GET)
