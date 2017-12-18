@@ -355,6 +355,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         } else {
             dataMap.put("flag", "0");
         }
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) obj;
+        audit.setAttendanceGroup(attendanceUserVo.getAttendanceGroup());
 
         if (page.getPageNum() == 0) {
             page.setPageNum(1);
