@@ -16,6 +16,10 @@ public class AttendanceUserVo implements Serializable {
 
     protected  String checkCode;
 
+    private Integer pageNum;
+
+    private Integer pageSize;
+
     public String getId() {
         return id;
     }
@@ -56,5 +60,11 @@ public class AttendanceUserVo implements Serializable {
         this.attendanceGroup = attendanceGroup;
     }
 
+    public Integer getPageNum() {return pageNum;}
 
+    public void setPageNum(Integer pageNum) {this.pageNum = pageNum;}
+
+    public Integer getPageSize() {return pageSize;}
+
+    public void setPageSize(Integer pageSize) {this.pageSize = pageSize;}
 }

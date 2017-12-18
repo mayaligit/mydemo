@@ -204,4 +204,12 @@
         WHERE a.group_name=#{groupName} AND a.group_status=#{groupStatus}
     </select>
 
+    <select id="findAllGroupNameList" resultType="GroupRule">
+        SELECT
+        a.id AS "id",
+        a.group_name AS "groupName"
+        FROM t_group_rule a
+        <include refid="groupRuleJoins"/>
+    </select>
+
 </mapper>

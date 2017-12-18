@@ -57,7 +57,7 @@
         INSERT INTO t_attendance_user(
         id,
         attendance_username,
-        a.attendance_phone,
+        attendance_phone,
         attendance_password,
         attendance_group,
         enterprise_id,
@@ -109,6 +109,9 @@
         <if test="attendanceUsername != null  and attendanceUsername != ''">
             attendance_username = #{attendanceUsername},
         </if>
+        <if test="attendancePhone != null  and attendancePhone != ''">
+            attendance_phone = #{attendancePhone},
+        </if>
         <if test="attendancePassword != null  and attendancePassword != ''">
             attendance_password = #{attendancePassword},
         </if>
@@ -136,4 +139,34 @@
         DELETE FROM t_attendance_user
         WHERE id = #{id}
     </delete>
+
+    <select id="findAttendanceUserList" resultType="Map" parameterType="Map">
+        SELECT
+        a.id as id , a.attendance_username as attendanceUsername ,
+        a.attendance_phone AS attendancePhone ,
+        a.attendance_password as attendancePassword,
+        attendance_group as attendanceGroup,
+        user_type as userType,
+        actived as actived
+       FROM t_attendance_user a
+        <where>
+            1=1
+            <if test="attendanceUsername != null and attendanceUsername != ''">
+                and attendance_username LIKE '%${attendanceUsername}%'
+            </if>
+            <if test="attendancePhone != null and attendancePhone != ''">
+                and attendance_phone LIKE '%${attendancePhone}%'
+            </if>
+            <if test="attendancePassword != null and attendancePassword != ''">
+                and attendance_password LIKE '%${attendancePassword}%'
+            </if>
+            <if test="attendanceGroup != null and attendanceGroup != ''">
+                and attendance_group LIKE '%${attendanceGroup}%'
+            </if>
+        </where>
+
+    </select>
+
+
+
 </mapper>
