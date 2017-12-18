@@ -135,8 +135,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>上传的组名"+attendanceVo.getAttendanceGroup()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
-        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>进入打卡业务>>方式"+groupRule.getGroupAttendanceWay()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         //服务器时间
         Date startDate = new Date();
         String compareTime = DateUtils.getDateToHourMinuteS(startDate);
