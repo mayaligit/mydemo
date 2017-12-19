@@ -33,6 +33,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -103,6 +104,34 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public void delete(@ApiParam(value = "考勤表ID") @PathVariable String id){
         service.delete(id);
     }*/
+
+    @ApiOperation(value = "获取自由打卡数据", notes = "获取自由打卡时间", httpMethod = "POST")
+    @RequestMapping(value="/getFreedomMesg",method =RequestMethod.POST)
+    @ResponseBody
+    public String getFreedomMesg(String phone, GroupRule attendanceGroup){
+        String attancesStaus = "1";
+        Date serverTime=new Date();
+        String serverDate=DateUtils.getDateToYearMonthDay(serverTime);
+        Attendance attendance = service.checkAttendance(phone,serverDate);
+        if(attendance !=null && attendance.getStartTime() != null){
+            Date sartTime = attendance.getStartTime();
+            double timesBetween = serverTime.getTime()-sartTime.getTime();
+            double workTime=timesBetween/(60*60*1000);
+            BigDecimal bd = new BigDecimal(workTime);
+            //四舍五入保留一位小数
+            workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+            //上班时长
+            float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
+            //获取考勤的时长
+            double groupAttendanceDuration = Double.parseDouble(String.valueOf(attendanceGroup.getGroupAttendanceDuration()));
+            //比较实际考勤时长与规则考勤时长
+            if(workTime - groupAttendanceDuration > 0){
+                attancesStaus = "0";
+            }
+        }
+        return attancesStaus;
+    }
+
 //TODO 上班卡初始化业务需要的数据
     /**
      * 上班打卡页面初始化需要的是数据

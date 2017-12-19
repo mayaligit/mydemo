@@ -12,6 +12,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -22,6 +23,7 @@ import java.util.logging.Filter;
 @SpringBootApplication
 @EnableCircuitBreaker
 @ServletComponentScan
+@EnableScheduling
 public class BizAttendanceApplication implements ExitCodeGenerator{
 
     /**
