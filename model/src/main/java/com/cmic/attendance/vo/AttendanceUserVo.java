@@ -20,6 +20,8 @@ public class AttendanceUserVo implements Serializable {
 
     private Integer pageSize;
 
+    private String userType;
+
     public String getId() {
         return id;
     }
@@ -67,4 +69,12 @@ public class AttendanceUserVo implements Serializable {
     public Integer getPageSize() {return pageSize;}
 
     public void setPageSize(Integer pageSize) {this.pageSize = pageSize;}
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 }
