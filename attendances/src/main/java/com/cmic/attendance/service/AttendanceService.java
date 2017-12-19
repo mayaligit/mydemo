@@ -454,10 +454,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
         }
-        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
-            map.put("userType","0");
-            return map;
-        }
 
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -495,10 +491,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
-        }
-        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
-            map.put("userType","0");
-            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -542,10 +534,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
-        }
-        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
-            map.put("userType","0");
-            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -776,10 +764,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
         }
-        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
-            map.put("userType","0");
-            return map;
-        }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -874,10 +858,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
-        }
-        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
-            map.put("userType","0");
-            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -975,10 +955,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
-        }
-        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
-            map.put("userType","0");
-            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
