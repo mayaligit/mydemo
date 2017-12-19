@@ -1,15 +1,13 @@
 package com.cmic.attendance.service;
 
-import com.cmic.attendance.dao.*;
+import com.cmic.attendance.dao.GroupAddressDao;
+import com.cmic.attendance.dao.GroupPersonnelDao;
+import com.cmic.attendance.dao.GroupRuleDao;
 import com.cmic.attendance.exception.GroupRuleExeption;
 import com.cmic.attendance.model.*;
-import com.cmic.attendance.vo.AttendanceUserVo;
-import com.cmic.attendance.vo.AttendanceVo;
 import com.cmic.attendance.vo.GroupRuleVo;
-import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
-import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
@@ -361,5 +359,11 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         return dao.findAllGroupNameList();
     }
 
+    public  int startWork(String attendanceGroup) {
+        return dao.startWork(attendanceGroup);
+    }
+    public  int endWork(String attendanceGroup) {
+        return dao.endWork(attendanceGroup);
+    }
 }
 

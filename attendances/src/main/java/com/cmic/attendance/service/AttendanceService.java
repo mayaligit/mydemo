@@ -30,8 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.*;
 
 /**
@@ -43,8 +41,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
     private static Logger log = Logger.getLogger(AttendanceService.class);
 
-    @Autowired
-    private ClazzesService clazzesService;
     @Autowired
     private StatisticsService statisticsService;
     @Autowired
@@ -456,12 +452,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
         }
-        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
+        String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);//日期格式:2017-11-11
         attendancePojo.setAttendanceGroup(attendanceGroup);//所属考勤组名
+
 
         List<Map> pageInfo = (List<Map>)dao.checkAttendanceByDay(attendancePojo);
         Page pi = (Page)pageInfo;
@@ -538,14 +535,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
-//        获取班次信息
-        Clazzes clazzes = clazzesService.getByGroupName(attendanceGroup);
-        if(clazzes==null){
-            return null;
-        }
-
-        int startWork = clazzesService.startWork(attendanceGroup);
-        int endWork = clazzesService.endWork(attendanceGroup);
+        int startWork = groupRuleService.startWork(attendanceGroup);
+        int endWork = groupRuleService.endWork(attendanceGroup);
         if(startWork>0){
             map.put("startWorkFlag","1");
         }else{
@@ -557,8 +548,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }else{
             map.put("endWorkFlag","0");
         }
-
-        int total = clazzes.getTotal();
+//      应该打卡人数
+        int total = employeeService.getTotal(attendanceGroup);
         map.put("total",total);
 
         AttendancePojo attendancePojo = new AttendancePojo();

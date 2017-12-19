@@ -212,4 +212,21 @@
         <include refid="groupRuleJoins"/>
     </select>
 
+    <select id="startWork" parameterType="String" resultType="int">
+        SELECT
+        COUNT(id)
+        FROM t_group_rule a
+        WHERE 1=1
+        AND a.group_name = #{attendanceGroup}
+        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), a.group_attendance_start)  &gt;= "00:00:00"
+    </select>
+    <select id="endWork" parameterType="String"  resultType="int">
+        SELECT
+        COUNT(id)
+        FROM t_group_rule a
+        WHERE 1=1
+        AND a.group_name = #{attendanceGroup}
+        AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), group_attendance_end)  &gt;= "00:00:00"
+    </select>
+
 </mapper>
