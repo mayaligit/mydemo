@@ -358,7 +358,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo) obj;
         if(attendanceUserVo.getUserType()=="0"){
-            attendanceUserVo.setAttendanceGroup(null);
+            audit.setAttendanceGroup(null);
         }else {
             audit.setAttendanceGroup(attendanceUserVo.getAttendanceGroup());
         }
