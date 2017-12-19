@@ -41,6 +41,10 @@ public interface AttendanceDao extends CrudDao<Attendance> {
 
     List<Attendance> getAttendanceDays(WorkStatistics workStatistics);
 
+    List<Attendance> getAttendanceDaysFree(WorkStatistics workStatistics);
+
+    List<Attendance> getLeaveEarlyFree(WorkStatistics workStatistics);
+
     List<Attendance> getLates(WorkStatistics workStatistics);
 
     List<Attendance> getLeaveEarly(WorkStatistics workStatistics);
