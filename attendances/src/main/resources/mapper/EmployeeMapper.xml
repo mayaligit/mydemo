@@ -160,4 +160,13 @@
         DELETE FROM t_employee
         WHERE id = #{id}
     </delete>
+
+    <select id="getTotal" resultType="int">
+     SELECT COUNT(id) "total"
+     FROM t_employee
+     WHERE attendance_name = #{attendanceGroup}
+    </select>
+
+
+
 </mapper>

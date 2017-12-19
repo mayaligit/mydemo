@@ -184,7 +184,12 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         }
         DailyPojo dailyPojo = new DailyPojo();
         BeanUtils.copyProperties(dailyVo,dailyPojo);
-        dailyPojo.setAttendanceGroup(attendanceGroup);
+        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
+            dailyPojo.setAttendanceGroup("");
+        }else{
+            dailyPojo.setAttendanceGroup(attendanceGroup);
+        }
+
 
         PageHelper.startPage(page.getPageNum(), page.getPageSize() > 0?page.getPageSize():10, page.getOrderBy());
         PageInfo<Map> result=  new PageInfo(dao.findDailyList(dailyPojo));
