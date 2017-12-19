@@ -56,4 +56,10 @@ public class EmployeeService extends CrudService<EmployeeDao, Employee> {
         logger.info("删除入职人员信息表：" + employee.toJSONString());
     }
 
+    public int getTotal(String attendanceGroup) {
+
+        return dao.getTotal(attendanceGroup);
+    }
+
+
 }
