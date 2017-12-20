@@ -169,6 +169,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
+            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 

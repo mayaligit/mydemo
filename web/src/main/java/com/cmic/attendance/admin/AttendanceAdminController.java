@@ -292,6 +292,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         map.put("flag",0);
         if(null == attendanceUserVo){
             map.put("flag",1);
+            return map;
         }
 
         Date date = new Date();

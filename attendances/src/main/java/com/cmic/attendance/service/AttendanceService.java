@@ -451,6 +451,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
+            return map;
         }
 
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
@@ -489,6 +490,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
+            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -532,6 +534,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
+            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -755,6 +758,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
+            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
         if(page.getPageNum() <= 0) {
@@ -850,6 +854,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
+            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
@@ -947,6 +952,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
             map.put("flag",1);
+            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
