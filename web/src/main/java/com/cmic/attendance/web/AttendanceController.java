@@ -214,11 +214,11 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             //0 是正常状态
             attendanceVo.setAuthority("1");
         }else {
+            String attendanceGroup = employee.getAttendanceName();
+            //返回用户组信息(预留业务)
+            attendanceVo.setAttendanceGroup(attendanceGroup);
             attendanceVo.setAuthority("0");
         }
-        String attendanceGroup = employee.getAttendanceName();
-        //返回用户组信息(预留业务)
-        attendanceVo.setAttendanceGroup(attendanceGroup);
        /* attendanceVo.setAttendanceGroup("odc");*/
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息

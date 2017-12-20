@@ -74,6 +74,8 @@ public class AttendanceVo{
     private String authority;
     //考勤
     private String groupAttendanceEnd;
+    //考勤时长
+   private float attendanceWorkTime;
 
     public String getAttendanceId() {
         return attendanceId;
@@ -297,5 +299,13 @@ public class AttendanceVo{
 
     public void setGroupAttendanceEnd(String groupAttendanceEnd) {
         this.groupAttendanceEnd = groupAttendanceEnd;
+    }
+
+    public float getAttendanceWorkTime() {
+        return attendanceWorkTime;
+    }
+
+    public void setAttendanceWorkTime(float attendanceWorkTime) {
+        this.attendanceWorkTime = attendanceWorkTime;
     }
 }
