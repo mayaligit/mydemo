@@ -50,11 +50,12 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         //获取session中的用户信息
         //AttendanceUserVo attendanceUserVo = (AttendanceUserVo)session.getAttribute("attendanceUserVo");
         Object sessionObject = session.getAttribute("attendanceUserVo");
+        AttendanceUserVo attendanceUserVo = null;
         int flag=1;
         String attendance_group=null;
         if(!(sessionObject==null)){
             flag=0;
-            AttendanceUserVo attendanceUserVo = (AttendanceUserVo)sessionObject;
+            attendanceUserVo = (AttendanceUserVo)sessionObject;
             attendance_group = attendanceUserVo.getAttendanceGroup();
         }
 
@@ -89,7 +90,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         }
 
         //设置后台管理者的所属组
-        if(StringUtils.isNotBlank(attendance_group)){
+        if(!"0".equals(attendanceUserVo.getUserType())&& StringUtils.isNotBlank(attendance_group)){
             attendance.setAttendanceGroup(attendance_group);
         }
         Integer pageNum = StringUtils.isBlank(paramMap.get("pageNum")) ? 1 : Integer.parseInt(paramMap.get("pageNum"));

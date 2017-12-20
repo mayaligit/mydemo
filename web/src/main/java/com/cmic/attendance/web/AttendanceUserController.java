@@ -45,7 +45,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @Autowired
     private AttendanceUserService attendanceUserService;
 
-    @ApiOperation(value = "查询", notes = "查询考勤后台管理表列表", httpMethod = "GET")
+    @ApiOperation(value = "查询", notes = "查询用户管理表列表", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderBy", value = "排序", defaultValue = "createDate desc", paramType = "query"),
             @ApiImplicitParam(name = "pageSize", value = "分页大小", defaultValue = "10", paramType = "query"),
@@ -69,12 +69,14 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
             //测试数据
             HttpServletRequest request = WebUtils.getRequest();
             HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
+            BaseAdminEntity adminEntity = (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+            attendanceUser.setCreateBy(adminEntity);
             //response.setHeader("Access-Control-Allow-Origin", "*");
-            BaseAdminEntity adminEntity = new BaseAdminEntity();
-            adminEntity.setId("15240653787");
-            adminEntity.setName("梁渝");
+            //BaseAdminEntity adminEntity = new BaseAdminEntity();
+            //adminEntity.setId("15240653787");
+            //adminEntity.setName("梁渝");
             //测试数据结束
-            request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
+            //request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
 
             service.save(attendanceUser);
             resultMap.put("code","0");
@@ -94,7 +96,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
         return attendanceUser;
     }
 
-    @ApiOperation(value = "新增/更新", notes = "新增/更新考勤后台管理表", httpMethod = "PUT")
+    @ApiOperation(value = "新增/更新", notes = "新增/更新用户管理表", httpMethod = "PUT")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public AttendanceUser put(@PathVariable String id, @Validated @RequestBody AttendanceUser attendanceUser) {
         attendanceUser.setId(id);
@@ -112,17 +114,18 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
         HttpServletRequest request = WebUtils.getRequest();
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
         //response.setHeader("Access-Control-Allow-Origin", "*");
-        //BaseAdminEntity adminEntity = (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
-        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        BaseAdminEntity adminEntity = (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+       /* BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
-        adminEntity.setName("梁渝");
+        adminEntity.setName("梁渝");*/
         attendanceUser.setUpdateBy(adminEntity);
-
+        //request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
         try {
-            String password = MD5Util.md5(attendanceUser.getAttendancePassword());
-            attendanceUser.setAttendancePassword(password);
-            attendanceUserService.dynamicUpdate(attendanceUser);
-            //service.dynamicUpdate(attendanceUser);
+            String password = attendanceUser.getAttendancePassword();
+            if(password!=null && password!="") {
+                attendanceUser.setAttendancePassword(MD5Util.md5(password));
+            }
+            service.dynamicUpdate(attendanceUser);
             resultHash.put("code","0");
             resultHash.put("msg","更新成功");
             return resultHash;
@@ -210,5 +213,12 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
         return service.findAttendanceUserList(pageNum, pageSize, attendanceUserVo.getAttendanceUsername());
 
+    }
+
+    @ApiOperation(value = "查找当前用户", notes = "显示当前用户信息")
+    @RequestMapping(value = "/findUserByName", method = RequestMethod.POST)
+    public AttendanceUser findUserByName(@RequestBody AttendanceUser attendanceUser) {
+        AttendanceUser user = service.checkUserByName(attendanceUser.getAttendanceUsername());
+        return user;
     }
 }
