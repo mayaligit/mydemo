@@ -154,15 +154,6 @@
             <if test="attendanceUsername != null and attendanceUsername != ''">
                 and attendance_username LIKE '%${attendanceUsername}%'
             </if>
-            <if test="attendancePhone != null and attendancePhone != ''">
-                and attendance_phone LIKE '%${attendancePhone}%'
-            </if>
-            <if test="attendancePassword != null and attendancePassword != ''">
-                and attendance_password LIKE '%${attendancePassword}%'
-            </if>
-            <if test="attendanceGroup != null and attendanceGroup != ''">
-                and attendance_group LIKE '%${attendanceGroup}%'
-            </if>
         </where>
 
     </select>

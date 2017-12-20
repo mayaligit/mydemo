@@ -129,19 +129,21 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
         try {
             //分割考勤人员输入，获取各值
             String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
-            String person[] = persons.split(",");
-            if(person!=null && person.length!=0) {
-                for (int i = 0; i < person.length; i++) {
-                    String[] p = person[i].split("-");
-                    String personnelName = p[0];
-                    String personnelPhone = p[1];
-                    String groupEnterId = p[2];
-                    GroupPersonnel groupPersonnel = new GroupPersonnel();
-                    groupPersonnel.setPersonnelName(personnelName);
-                    groupPersonnel.setPersonnelPhone(personnelPhone);
-                    groupPersonnel.setEnterpriseId(groupEnterId);
-                    groupPersonnel.setAttendanceGroupId(attendanceGroupId);
-                    groupPersonnelService.save(groupPersonnel);
+            if(persons!=null){
+                String person[] = persons.split(",");
+                if(person!=null && person.length!=0) {
+                    for (int i = 0; i < person.length; i++) {
+                        String[] p = person[i].split("-");
+                        String personnelName = p[0];
+                        String personnelPhone = p[1];
+                        String groupEnterId = p[2];
+                        GroupPersonnel groupPersonnel = new GroupPersonnel();
+                        groupPersonnel.setPersonnelName(personnelName);
+                        groupPersonnel.setPersonnelPhone(personnelPhone);
+                        groupPersonnel.setEnterpriseId(groupEnterId);
+                        groupPersonnel.setAttendanceGroupId(attendanceGroupId);
+                        groupPersonnelService.save(groupPersonnel);
+                    }
                 }
             }
         }catch (Exception e){
