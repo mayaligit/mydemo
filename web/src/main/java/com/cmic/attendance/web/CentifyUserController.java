@@ -60,14 +60,11 @@ public class CentifyUserController {
      */
     @RequestMapping("/info")
     public ModelAndView info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
-        long start = System.currentTimeMillis();
         String id = request.getSession().getId();
         this.certifyToken(request, rcsToken);
         //判断session中是否有登陆用户
         UserBo user = this.getSessionUser(request);
         ModelAndView mav = new ModelAndView();
-        long end = System.currentTimeMillis();
-        log.debug("认证用户信息花费时间>>>: "+(end-start));
         mav.setViewName("redirect:" + index);
         return mav;
     }
@@ -77,13 +74,11 @@ public class CentifyUserController {
         paramMap.add("token", rcsToken.getToken());
         paramMap.add("contactId", rcsToken.getContactId());
         paramMap.add("enterId", rcsToken.getEnterId());
-        long start = System.currentTimeMillis();
         //发送请求调用接口
         log.debug("连接开始 connect begin    token="+rcsToken.getToken()+" ;time="+ DateUtils.dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss SSS"));
         String userStr = this.restTemplate.postForObject(Constant.certifyServicePath + Constant.userINfo, paramMap, String.class);
         long end = System.currentTimeMillis();
         log.debug("连接结束 connect begin    token="+rcsToken.getToken()+" ;time="+ DateUtils.dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss SSS"));
-        log.debug("连接花费时间>>>: "+(end-start));
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
