@@ -15,4 +15,5 @@ public interface EmployeeDao extends CrudDao<Employee> {
     int getTotal(String attendanceGroup);
 
 
+    Employee getEmployee(Employee employee);
 }

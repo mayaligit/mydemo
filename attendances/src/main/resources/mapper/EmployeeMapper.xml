@@ -164,8 +164,18 @@
     <select id="getTotal" resultType="int">
      SELECT COUNT(id) "total"
      FROM t_employee
-     WHERE attendance_name = #{attendanceGroup}
+     WHERE 1=1
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
     </select>
+
+    <select id="getEmployee" resultType="Employee">
+        SELECT *
+        FROM t_employee
+        WHERE telephone = #{telephone}
+    </select>
+
 
 
 

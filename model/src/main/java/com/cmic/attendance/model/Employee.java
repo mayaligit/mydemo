@@ -1,37 +1,35 @@
 package com.cmic.attendance.model;
 
 import com.cmic.saas.base.model.DataEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
  * 入职人员信息表实体
  */
-@ApiModel(value = "Employee", description = "入职人员信息表")
+//@ApiModel(value = "Employee", description = "入职人员信息表")
 public class Employee extends DataEntity<Employee> {
 
-    @ApiModelProperty(value = "性别 : 0/女 1男")
+//    @ApiModelProperty(value = "性别 : 0/女 1男")
     protected Integer sex;
-    @ApiModelProperty(value = "入职人员姓名")
+//    @ApiModelProperty(value = "入职人员姓名")
     protected String employeeName;
-    @ApiModelProperty(value = "入职人员电话号码")
+//    @ApiModelProperty(value = "入职人员电话号码")
     protected String telephone;
-    @ApiModelProperty(value = "所属企业")
+//    @ApiModelProperty(value = "所属企业")
     protected String enterName;
-    @ApiModelProperty(value = "所属企业ID")
+//    @ApiModelProperty(value = "所属企业ID")
     protected String enterId;
-    @ApiModelProperty(value = "入职部门/项目组")
+//    @ApiModelProperty(value = "入职部门/项目组")
     protected String enterpriseDepartment;
-    @ApiModelProperty(value = "所属考勤组名称")
+//    @ApiModelProperty(value = "所属考勤组名称")
     protected String attendanceName;
-    @ApiModelProperty(value = "个人身份证号码")
+//    @ApiModelProperty(value = "个人身份证号码")
     protected String personalId;
-    @ApiModelProperty(value = "最高学历")
+//    @ApiModelProperty(value = "最高学历")
     protected String highestEducation;
-    @ApiModelProperty(value = "入职岗位名称")
+//    @ApiModelProperty(value = "入职岗位名称")
     protected String jobName;
-    @ApiModelProperty(value = "入职时间")
+//    @ApiModelProperty(value = "入职时间")
     protected Date hiredate;
 
     public Employee(){

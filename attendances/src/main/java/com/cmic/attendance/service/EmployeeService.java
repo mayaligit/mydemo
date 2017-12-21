@@ -61,5 +61,11 @@ public class EmployeeService extends CrudService<EmployeeDao, Employee> {
         return dao.getTotal(attendanceGroup);
     }
 
+    public Employee getEmployee(Employee employee){
+
+        return dao.getEmployee(employee);
+    }
+
+
 
 }

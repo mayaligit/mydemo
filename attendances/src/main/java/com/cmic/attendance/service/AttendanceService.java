@@ -456,6 +456,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);//日期格式:2017-11-11
         attendancePojo.setAttendanceGroup(attendanceGroup);//所属考勤组名
@@ -493,6 +496,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -537,6 +543,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
 
         int startWork = groupRuleService.startWork(attendanceGroup);
         int endWork = groupRuleService.endWork(attendanceGroup);
@@ -761,6 +770,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
@@ -857,6 +869,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -955,6 +970,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);

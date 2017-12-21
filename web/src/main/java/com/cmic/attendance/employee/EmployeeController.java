@@ -1,18 +1,27 @@
 package com.cmic.attendance.employee;
 
-import com.github.pagehelper.PageInfo;
-import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.attendance.model.Employee;
 import com.cmic.attendance.service.EmployeeService;
-import io.swagger.annotations.*;
+import com.cmic.saas.base.model.BaseAdminEntity;
+import com.cmic.saas.base.web.BaseRestController;
+import com.cmic.saas.utils.WebUtils;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
 * 入职人员信息表Controller
 */
-@Api(description = "入职人员信息表管理")
+//@Api(description = "入职人员信息表管理")
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController extends BaseRestController<EmployeeService> {
@@ -59,10 +68,30 @@ public class EmployeeController extends BaseRestController<EmployeeService> {
         return get(id);
     }
 
-    @ApiOperation(value = "删除", notes = "删除入职人员信息表", httpMethod = "DELETE")
+    //@ApiOperation(value = "删除", notes = "删除入职人员信息表", httpMethod = "DELETE")
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "入职人员信息表ID") @PathVariable String id){
         service.delete(id);
+    }
+
+//    @ApiOperation(value = "新增", notes = "新增入职人员信息表", httpMethod = "POST")
+    @RequestMapping(value="/save"/*, method = RequestMethod.POST*/)
+    public Map save(@RequestBody Employee employee){
+        Map map = new HashMap<>();
+        Employee e = service.getEmployee(employee);
+        map.put("flag",0);
+        if(null != e){
+            map.put("flag",1);
+            return map;
+        }
+        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        adminEntity.setId(employee.getTelephone());
+        adminEntity.setName(employee.getEmployeeName());
+
+        HttpServletRequest request = WebUtils.getRequest();
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
+        service.insert(employee);
+        return map;
     }
 
 }
