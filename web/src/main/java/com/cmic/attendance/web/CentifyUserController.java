@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -58,11 +59,14 @@ public class CentifyUserController {
      */
     @RequestMapping("/info")
     public ModelAndView info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
+        long start = System.currentTimeMillis();
         String id = request.getSession().getId();
         this.certifyToken(request, rcsToken);
         //判断session中是否有登陆用户
         UserBo user = this.getSessionUser(request);
         ModelAndView mav = new ModelAndView();
+        long end = System.currentTimeMillis();
+        log.debug("认证用户信息花费时间>>>: "+(end-start));
         mav.setViewName("redirect:" + index);
         return mav;
     }
