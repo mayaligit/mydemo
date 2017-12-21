@@ -14,7 +14,7 @@ public class HolidaysSchedule {
     @Autowired
     private HolidaysService holidaysService;
 
-    @Scheduled(cron="0 0 23 1 1 ?")//每年一月一日23:00:00执行
+    @Scheduled(cron="0 0 23 10 12 ?")//每年十二月十日23:00:00执行
     public void cronJob(){
         holidaysService.saveHolidys();
     }
