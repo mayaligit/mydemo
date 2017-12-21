@@ -201,10 +201,10 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         List<Attendance> missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
         List<Audit> holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，小时为单位
         List<Audit> holidayList = auditDao.getHolidayList(workStatistics);//某个月的请假审批和外勤通过记录
-        List<Attendance> overtime = attendanceDao.getOverTimeList(workStatistics);//某个月总的加班。
-        double overtime_second = attendanceDao.getOverTime(workStatistics);//某个月总的加班时间，秒为单位。
+        //List<Attendance> overtime = attendanceDao.getOverTimeList(workStatistics);//某个月总的加班。
+        //double overtime_second = attendanceDao.getOverTime(workStatistics);//某个月总的加班时间，秒为单位。
         //加班时间转换为小时为单位，取2位小数
-        double overtime_hour = new BigDecimal(overtime_second / (60 * 60)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        //double overtime_hour = new BigDecimal(overtime_second / (60 * 60)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         //List<Integer> miss = new ArrayList<>();//没有打卡的日期
         CopyOnWriteArrayList<Integer> miss = new CopyOnWriteArrayList<>();//没有打卡的日期
         Calendar calendar = Calendar.getInstance();
@@ -308,14 +308,14 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         }
         holidayDaysData.add("总时长:"+holidayDays_sum+"小时");
         List<String> overtimeData = new ArrayList<>();//加班详情
-        for (Attendance attendance : overtime) {
+        /*for (Attendance attendance : overtime) {
             overtimeData.add(simpleDateFormat3.format(attendance.getStartTime()) + strdate.format(attendance.getStartTime()));
-        }
+        }*/
         map.put("Late", Late.size());//迟到
         map.put("leaveEarly", leaveEarly.size());//早退
         map.put("fieldPersonnel", fieldPersonnel.size());//外勤
         map.put("missingCard", missingCard.size());//缺卡
-        map.put("overtime", overtime_hour);//加班时长，小时为单位
+        map.put("overtime", 0/*overtime_hour*/);//加班时长，小时为单位
         map.put("Absenteeism", miss.size());//旷工天数
         map.put("holidayDays", holidayDays.size());//某个月的请假时长，小时为单位
         //以下为详情的数据
