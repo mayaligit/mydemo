@@ -57,8 +57,8 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
     public HashMap workStatisticsFree(WorkStatistics workStatistics) {//自由模式
         SimpleDateFormat strdate = new SimpleDateFormat("E", Locale.SIMPLIFIED_CHINESE);
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
-        SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
+        SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ", Locale.SIMPLIFIED_CHINESE);
+        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
         SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(" HH:mm");
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDaysFree(workStatistics);//某个月的出勤
@@ -190,7 +190,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         //SimpleDateFormat strdate = new SimpleDateFormat("EEEE");
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
         SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
+        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
         SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(" HH:mm");
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤
