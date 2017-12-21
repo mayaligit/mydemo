@@ -293,7 +293,10 @@
         WHERE
             1=1 AND a.start_time IS NOT NULL
             and  date_format(a.start_time, '%Y-%m-%d') = #{date}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
             AND a.attendance_group = #{attendanceGroup}
+        </if>
+
     </select>
     <select id="getAttendanceByCreatebyAndCreateTime" resultType="Attendance">
         SELECT
@@ -310,7 +313,9 @@
         FROM t_attendance a
         WHERE a.start_time_status = "1"
         AND DATE(a.update_date) = #{date}
-        AND a.attendance_group = #{attendanceGroup}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
     </select>
 
     <select id="getWorkCount" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="int">
@@ -319,7 +324,9 @@
         FROM t_attendance a
         WHERE a.`start_time` IS NOT NULL
         and DATE(a.`start_time`) = #{date}
-        AND a.attendance_group = #{attendanceGroup}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
     </select>
 
 
@@ -328,7 +335,9 @@
         FROM t_attendance a
         WHERE 1=1 AND a.start_time_status  = 1
         AND DATE(a.update_date) = #{date}
-        AND a.attendance_group = #{attendanceGroup}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
     </select>
 
     <select id="getOutworkCount" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="int">
@@ -338,7 +347,9 @@
         WHERE 1 = 1
         and a.attendance_status = "2"
         and DATE(a.`update_date`) = #{date}
-        AND a.attendance_group = #{attendanceGroup}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
     </select>
 
     <select id="selectAttendances" parameterType="attendance" resultType="map">
@@ -673,7 +684,9 @@
         FROM t_attendance a
         WHERE
         1=1 AND DATE_FORMAT(a.update_date,'%Y-%m-%d') = #{date}
-        AND a.attendance_group = #{attendanceGroup}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
         GROUP BY a.create_by
     </select>
 
@@ -685,7 +698,9 @@
         FROM t_attendance a
         WHERE a.`attendance_work_time` IS NOT NULL
         AND DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
-        AND a.attendance_group = #{attendanceGroup}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
         GROUP BY a.create_by
     </select>
 
@@ -698,7 +713,9 @@
         FROM t_attendance a
         WHERE a.start_time_status = "1"
         AND DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
-        AND a.attendance_group = #{attendanceGroup}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
         GROUP BY a.create_by ,a.`attendance_user`;
     </select>
 
@@ -713,7 +730,9 @@
         FROM t_attendance a
         WHERE a.`end_time` is null or a.`attendance_work_time` is null
         AND DATE_FORMAT(a.update_date,'%Y-%m') = #{date}
-        AND a.attendance_group = #{attendanceGroup}
+        <if test="attendanceGroup != null  and attendanceGroup != ''">
+            AND a.attendance_group = #{attendanceGroup}
+        </if>
     </select>
 
 </mapper>
