@@ -530,6 +530,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      */
     public Map<String,Object> checkAttendanceData(QueryAttendanceVo queryAttendanceVo) {
 
+        System.out.print("============进入按日统计出勤=================");
+
         String date = queryAttendanceVo.getDate();
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
@@ -544,10 +546,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
-        System.out.print("=======================666=====================================");
+        System.out.print("=======================1111111=====================================");
 
         int startWork = groupRuleService.startWork(attendanceGroup);
         int endWork = groupRuleService.endWork(attendanceGroup);
+        System.out.print("=======================222222=====================================");
         if(startWork>0){
             map.put("startWorkFlag","1");
         }else{
