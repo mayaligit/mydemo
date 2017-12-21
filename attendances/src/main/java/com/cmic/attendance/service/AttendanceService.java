@@ -565,20 +565,24 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         int total = employeeService.getTotal(attendanceGroup);
         map.put("total",total);
 
+        System.out.print("=====================应打卡人数==============="+total);
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);
         attendancePojo.setAttendanceGroup(attendanceGroup);
 //       获取当天打卡人数
         int workCount = this.dao.getWorkCount(attendancePojo);
+        System.out.print("=====================当天打卡人数==============="+workCount);
         map.put("workCount",workCount);
         map.put("noWorkCount",total-workCount);
 
 //        获取外勤人数
         int outworkCount = this.dao.getOutworkCount(attendancePojo);
+        System.out.print("=====================外勤人数==============="+outworkCount);
         map.put("outworkCount",outworkCount);
 
 //       当天迟到人数
         int latterCount = this.dao.getLatterCount(attendancePojo);
+        System.out.print("=====================迟到人数==============="+latterCount);
         map.put("latterCount",latterCount);
 
         return map;
