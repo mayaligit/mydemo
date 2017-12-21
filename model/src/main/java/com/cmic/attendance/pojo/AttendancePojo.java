@@ -15,8 +15,8 @@ public class AttendancePojo extends Attendance implements Serializable {
     private String date;
     private String workStartTime;
     private String workEndTime;
-
     private float workHour;
+    private String userType;
 
     public String getDate() {
         return date;
@@ -48,5 +48,13 @@ public class AttendancePojo extends Attendance implements Serializable {
 
     public void setWorkHour(float workHour) {
         this.workHour = workHour;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }
