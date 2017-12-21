@@ -11,7 +11,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
+@WebFilter(urlPatterns = "/*", filterName = "loginFilter")
 public class LogFilter implements Filter {
 
     private static Logger log = Logger.getLogger(LogFilter.class);
@@ -59,7 +59,7 @@ public class LogFilter implements Filter {
         } else {
             //进行拦截转发到登录页面接口
                 //电脑端转发
-                request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
+            request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
             response.sendRedirect("/attendance/user/noLogint");
 
         }
