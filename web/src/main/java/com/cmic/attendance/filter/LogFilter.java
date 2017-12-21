@@ -60,7 +60,7 @@ public class LogFilter implements Filter {
             //进行拦截转发到登录页面接口
                 //电脑端转发
             request.getRequestDispatcher("/attendance/user/noLogint").forward(request, response);
-            response.sendRedirect("/attendance/user/noLogint");
+            //response.sendRedirect("/attendance/user/noLogint");
 
         }
     }
