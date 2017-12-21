@@ -543,9 +543,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(attendanceUserVo.getUserType().equals("0")){
-            attendanceGroup = "";
-        }
+
 
         int startWork = groupRuleService.startWork(attendanceGroup);
         int endWork = groupRuleService.endWork(attendanceGroup);
@@ -559,6 +557,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             map.put("startWorkFlag","0");
         }else{
             map.put("endWorkFlag","0");
+        }
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
         }
 //      应该打卡人数
         int total = employeeService.getTotal(attendanceGroup);
