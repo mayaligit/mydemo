@@ -544,6 +544,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
+        System.out.print("=======================666=====================================");
 
         int startWork = groupRuleService.startWork(attendanceGroup);
         int endWork = groupRuleService.endWork(attendanceGroup);
