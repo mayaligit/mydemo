@@ -61,7 +61,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(" HH:mm");
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDaysFree(workStatistics);//某个月的出勤
-        List<Attendance> leaveEarly = attendanceDao.getLeaveEarlyFree(workStatistics);//某个月的早退次数
+        //List<Attendance> leaveEarly = attendanceDao.getLeaveEarlyFree(workStatistics);//某个月的早退次数
         //List<Audit> fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
         List<Attendance> missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
         //List<Audit> holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，小时为单位
@@ -76,7 +76,12 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
                 fieldPersonnel.add(audit);
             }
         }
-
+        List<Attendance> leaveEarly = new ArrayList<>();//早退
+        for(Attendance attendance : attendanceDays){
+            if("1".equals(attendance.getEndTimeStatus())){
+                leaveEarly.add(attendance);
+            }
+        }
         Calendar calendar = Calendar.getInstance();
         int dayOfMonth = 0;
         String str = simpleDateFormat2.format(calendar.getTime());
