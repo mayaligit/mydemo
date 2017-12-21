@@ -127,6 +127,9 @@
             <if test="userName != null">
                 AND a.user_name = #{userName}
             </if>
+            <if test="phone != null">
+                AND a.phone_number = #{phone}
+            </if>
             AND a.business_type &lt;&gt; 2
             AND a.audit_suggestion=0
             AND DATE_FORMAT(a.start_date,'%Y-%m')=#{month}
