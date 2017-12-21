@@ -57,8 +57,8 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
     public HashMap workStatisticsFree(WorkStatistics workStatistics) {//自由模式
         SimpleDateFormat strdate = new SimpleDateFormat("E", Locale.SIMPLIFIED_CHINESE);
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
-        SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ", Locale.SIMPLIFIED_CHINESE);
-        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
+        SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
+        SimpleDateFormat simpleDateFormat5 = new SimpleDateFormat("yyyy年MM月d日 ");
         SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(" HH:mm");
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDaysFree(workStatistics);//某个月的出勤
@@ -131,7 +131,7 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         }
         for (Integer m : miss) {//封装旷工详情
             calendar2.set(Calendar.DAY_OF_MONTH, m);
-            AbsenteeismData.add(simpleDateFormat3.format(calendar2.getTime()) + strdate.format(calendar2.getTime()));
+            AbsenteeismData.add(simpleDateFormat5.format(calendar2.getTime()) + strdate.format(calendar2.getTime()));
         }
         //组装 map 返回
         double holidayDays_sum = 0;//请假总时长
