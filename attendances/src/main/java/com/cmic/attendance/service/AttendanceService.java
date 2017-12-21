@@ -864,11 +864,11 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
-            attendanceUserVo = new AttendanceUserVo();
+          /*  attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");
-            attendanceUserVo.setUserType("0");
-           /* map.put("flag",1);
-            return map;*/
+            attendanceUserVo.setUserType("0");*/
+            map.put("flag",1);
+            return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
         if(attendanceUserVo.getUserType().equals("0")){
