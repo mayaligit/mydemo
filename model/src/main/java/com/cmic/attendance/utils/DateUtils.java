@@ -16,7 +16,16 @@ public class DateUtils {
     //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     //SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd HHmmss");
     //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static String dateFormat(Date date, String dateFormat) {
+        if(date != null) {
+            SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+            if(date != null) {
+                return format.format(date);
+            }
+        }
 
+        return "";
+    }
     /**
      * 获取年月日  yyyy-MM-dd HH:mm:ss 的字符串
      * @param date

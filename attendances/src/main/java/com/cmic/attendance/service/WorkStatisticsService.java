@@ -62,10 +62,21 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDaysFree(workStatistics);//某个月的出勤
         List<Attendance> leaveEarly = attendanceDao.getLeaveEarlyFree(workStatistics);//某个月的早退次数
-        List<Audit> fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
+        //List<Audit> fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
         List<Attendance> missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
-        List<Audit> holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，小时为单位
+        //List<Audit> holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，小时为单位
         List<Audit> holidayList = auditDao.getHolidayList(workStatistics);//某个月的请假审批和外勤通过记录
+
+        List<Audit> fieldPersonnel = new ArrayList<>();//外勤
+        List<Audit> holidayDays = new ArrayList<>();//请假
+        for(Audit audit : holidayList){
+            if(audit.getBusinessType()==0){
+                holidayDays.add(audit);
+            }else {
+                fieldPersonnel.add(audit);
+            }
+        }
+
         Calendar calendar = Calendar.getInstance();
         int dayOfMonth = 0;
         String str = simpleDateFormat2.format(calendar.getTime());
@@ -90,13 +101,8 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         List<Integer> holidays = new ArrayList<>();//请假的日期集合
         //System.out.println("请假开始时间和结束时间：");
         for (Audit audit : holidayList) {
-            System.out.println(audit.getStartDate().getDate());
-            System.out.println(audit.getEndDate().getDate());
             int start = audit.getStartDate().getDate();
-            int end = audit.getEndDate().getDate();
-            for (int j = start; j <= end; j++) {
-                holidays.add(j);//请假的日期  集合
-            }
+            holidays.add(start);//请假的日期  集合
         }
         for (Integer t : holidays) {
             if (miss.contains(t)) {
@@ -182,15 +188,33 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(" HH:mm");
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤
-        List<Attendance> Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
-        List<Attendance> leaveEarly = attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
-        List<Audit> fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
+        //List<Attendance> Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
+        //List<Attendance> leaveEarly = attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
+        //List<Audit> fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
         List<Attendance> missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
-        List<Audit> holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，小时为单位
+        //List<Audit> holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，小时为单位
         List<Audit> holidayList = auditDao.getHolidayList(workStatistics);//某个月的请假审批和外勤通过记录
         CopyOnWriteArrayList<Integer> miss = new CopyOnWriteArrayList<>();//没有打卡的日期
         Calendar calendar = Calendar.getInstance();
-
+        List<Audit> fieldPersonnel = new ArrayList<>();//外勤
+        List<Audit> holidayDays = new ArrayList<>();//请假
+        for(Audit audit : holidayList){
+            if(audit.getBusinessType()==0){
+                holidayDays.add(audit);
+            }else {
+                fieldPersonnel.add(audit);
+            }
+        }
+        List<Attendance> Late = new ArrayList<>();//迟到
+        List<Attendance> leaveEarly = new ArrayList<>();//早退
+        for(Attendance attendance : attendanceDays){
+            if("1".equals(attendance.getEndTimeStatus())){
+                leaveEarly.add(attendance);
+            }
+            if("1".equals(attendance.getStartTimeStatus())){
+                Late.add(attendance);
+            }
+        }
         int dayOfMonth = 0;
         String str = simpleDateFormat2.format(calendar.getTime());
         if (workStatistics.getMonth().equals(str)) {//传进来的参数是本月
@@ -215,13 +239,8 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         List<Integer> holidays = new ArrayList<>();//请假的日期集合
         //System.out.println("请假开始时间和结束时间：");
         for (Audit audit : holidayList) {
-            System.out.println(audit.getStartDate().getDate());
-            System.out.println(audit.getEndDate().getDate());
             int start = audit.getStartDate().getDate();
-            int end = audit.getEndDate().getDate();
-            for (int j = start; j <= end; j++) {
-                holidays.add(j);//请假的日期  集合
-            }
+            holidays.add(start);//请假的日期  集合
         }
         for (Integer t : holidays) {
             if (miss.contains(t)) {

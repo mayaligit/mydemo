@@ -3,6 +3,7 @@ package com.cmic.attendance.web;
 import com.cmic.attendance.Constant.Constant;
 import com.cmic.attendance.model.RcsToken;
 import com.cmic.attendance.model.UserBo;
+import com.cmic.attendance.utils.DateUtils;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.JSONUtils;
@@ -40,8 +41,8 @@ public class CentifyUserController {
 
     private static Logger log = Logger.getLogger(CentifyUserController.class);
 
-    @Autowired
-    private RedisTemplate redisTemplate;
+    /*@Autowired
+    private RedisTemplate redisTemplate;*/
 
     @Autowired
     private RestTemplate restTemplate;
@@ -76,9 +77,13 @@ public class CentifyUserController {
         paramMap.add("token", rcsToken.getToken());
         paramMap.add("contactId", rcsToken.getContactId());
         paramMap.add("enterId", rcsToken.getEnterId());
-        log.debug("token信息"+rcsToken.getToken());
+        long start = System.currentTimeMillis();
         //发送请求调用接口
+        log.debug("连接开始 connect begin    token="+rcsToken.getToken()+" ;time="+ DateUtils.dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss SSS"));
         String userStr = this.restTemplate.postForObject(Constant.certifyServicePath + Constant.userINfo, paramMap, String.class);
+        long end = System.currentTimeMillis();
+        log.debug("连接结束 connect begin    token="+rcsToken.getToken()+" ;time="+ DateUtils.dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss SSS"));
+        log.debug("连接花费时间>>>: "+(end-start));
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
