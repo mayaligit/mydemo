@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -58,13 +59,14 @@ public class CentifyUserController {
      */
     @RequestMapping("/info")
     public ModelAndView info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
+        long start = System.currentTimeMillis();
         String id = request.getSession().getId();
-        /*response.setHeader("Access-Control-Allow-Origin", "*");*/
-        //校验token , 并将获取到的用户信息放到session域中
         this.certifyToken(request, rcsToken);
         //判断session中是否有登陆用户
         UserBo user = this.getSessionUser(request);
         ModelAndView mav = new ModelAndView();
+        long end = System.currentTimeMillis();
+        log.debug("认证用户信息花费时间>>>: "+(end-start));
         mav.setViewName("redirect:" + index);
         return mav;
     }
@@ -74,8 +76,8 @@ public class CentifyUserController {
         paramMap.add("token", rcsToken.getToken());
         paramMap.add("contactId", rcsToken.getContactId());
         paramMap.add("enterId", rcsToken.getEnterId());
-        //用户名的获取;
         log.debug("token信息"+rcsToken.getToken());
+        //发送请求调用接口
         String userStr = this.restTemplate.postForObject(Constant.certifyServicePath + Constant.userINfo, paramMap, String.class);
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
@@ -85,25 +87,20 @@ public class CentifyUserController {
         JsonObject jsonObject = (JsonObject) parser.parse(userStr);
         String phone = jsonObject.get("msisdn").getAsString();
         String username = jsonObject.get("username").getAsString();
-//        String phone = "15240653787";
-//        String username = "liangyu";
         //获取用户所属企业ID 和 企业名称
         String sessionId = request.getSession().getId();
         String enterId = rcsToken.getEnterId();
         String enterName = rcsToken.getEnterName();
-
         //将用户信息封装到实体类中,并放入session域中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
         adminEntity.setName(username);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
-        log.debug("登录信息放到session>>>>>"+adminEntity.getId()+adminEntity.getName());
         //拦截器不拦截，这个session无其他作用
       /*  redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set("_CURRENT_ADMIN_INFO");
         redisTemplate.expire("_CURRENT_ADMIN_INFO", 30,TimeUnit.MINUTES);*/
-
-        redisTemplate.boundValueOps("username").set(username);
-        redisTemplate.expire("username", 30, TimeUnit.MINUTES);
+    /*    redisTemplate.boundValueOps("username").set(username);
+        redisTemplate.expire("username", 30, TimeUnit.MINUTES);*/
         return adminEntity;
     }
 

@@ -456,6 +456,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);//日期格式:2017-11-11
         attendancePojo.setAttendanceGroup(attendanceGroup);//所属考勤组名
@@ -493,6 +496,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -531,8 +537,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
-         /*   attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");*/
+           /* attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+            attendanceUserVo.setUserType("0");*/
             map.put("flag",1);
             return map;
         }
@@ -551,13 +558,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }else{
             map.put("endWorkFlag","0");
         }
-//      应该打卡人数
-        int total = employeeService.getTotal(attendanceGroup);
-        map.put("total",total);
-
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);
         attendancePojo.setAttendanceGroup(attendanceGroup);
+//      应该打卡人数
+        int total = employeeService.getTotal(attendancePojo);
+        map.put("total",total);
+
 //       获取当天打卡人数
         int workCount = this.dao.getWorkCount(attendancePojo);
         map.put("workCount",workCount);
@@ -761,6 +771,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
@@ -851,12 +864,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
-         /*   attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",1);
-            return map;
+            attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+            attendanceUserVo.setUserType("0");
+           /* map.put("flag",1);
+            return map;*/
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);
@@ -873,7 +890,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         attendancePojo.setDate(substring);
         attendancePojo.setAttendanceGroup(attendanceGroup);
 
-        List<AttendanceResultPojo> pageInfo = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
+        List<AttendanceResultPojo> attendanceList = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
 
         List<AttendanceResultPojo> list = (List<AttendanceResultPojo>)this.dao.checkNoEndTime(attendancePojo);
 
@@ -903,16 +920,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 workHour = Float.parseFloat(format);
                 arp.setWorkHour(workHour);
 
-                if(pageInfo != null && pageInfo.size() >0) {
-                    for(int j=0; j<pageInfo.size(); j++) {
-                        AttendanceResultPojo arp2 = pageInfo.get(j);
+                if(attendanceList != null && attendanceList.size() >0) {
+                    for(int j=0; j<attendanceList.size(); j++) {
+                        AttendanceResultPojo arp2 = attendanceList.get(j);
                         String phone = arp2.getPhone();
                         if(arp.getPhone().equals(phone)){
                             String f = String.format("%.2f", arp2.getWorkHour() + arp.getWorkHour());
                             workHour = Float.parseFloat(f);
                             arp2.setWorkHour(workHour);
-                        }else if(j == pageInfo.size()-1){
-                            pageInfo.add(arp);
+                        }else if(j == attendanceList.size()-1){
+                            attendanceList.add(arp);
                         }
 
                     }
@@ -925,7 +942,14 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }
         };
 
-        Collections.sort(pageInfo, COMPARATOR);//用我们写好的Comparator对pageInfo进行排序（工作时长）
+        Collections.sort(attendanceList, COMPARATOR);//用我们写好的Comparator对pageInfo进行排序（工作时长）
+
+        List<AttendanceResultPojo> pageInfo = new ArrayList<>();
+        if(attendanceList.size()>10){
+            for(int j = 0; j<=9;j++){
+                pageInfo.add(attendanceList.get(j));
+            }
+        }
 
         map.put("pageInfo",pageInfo);
         map.put("total",pageInfo.size());
@@ -955,6 +979,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
+        if(attendanceUserVo.getUserType().equals("0")){
+            attendanceGroup = "";
+        }
 
         if(page.getPageNum() <= 0) {
             page.setPageNum(1);

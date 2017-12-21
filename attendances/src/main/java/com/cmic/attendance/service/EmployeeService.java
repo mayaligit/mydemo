@@ -1,11 +1,12 @@
 package com.cmic.attendance.service;
 
-import com.github.pagehelper.PageInfo;
+import com.cmic.attendance.dao.EmployeeDao;
+import com.cmic.attendance.model.Employee;
+import com.cmic.attendance.pojo.AttendancePojo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
-import com.cmic.attendance.dao.EmployeeDao;
-import com.cmic.attendance.model.Employee;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,10 +57,16 @@ public class EmployeeService extends CrudService<EmployeeDao, Employee> {
         logger.info("删除入职人员信息表：" + employee.toJSONString());
     }
 
-    public int getTotal(String attendanceGroup) {
+    public int getTotal(AttendancePojo attendancePojo) {
 
-        return dao.getTotal(attendanceGroup);
+        return dao.getTotal(attendancePojo);
     }
+
+    public Employee getEmployee(Employee employee){
+
+        return dao.getEmployee(employee);
+    }
+
 
 
 }

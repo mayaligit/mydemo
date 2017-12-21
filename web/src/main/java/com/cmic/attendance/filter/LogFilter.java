@@ -47,7 +47,8 @@ public class LogFilter implements Filter {
         }else if (url.equals("/attendance/user/login")){
             //电脑端登录放行
             filterChain.doFilter(servletRequest,servletResponse);
-        }else if (url.equals("/attendence/user/getCheckCode")){
+        }else if (url.equals("/attendance/user/getCheckCode")){
+
             //验证码端放行
             filterChain.doFilter(servletRequest,servletResponse);
         }else if(null!=attendanceUserVo){
