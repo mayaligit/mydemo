@@ -58,7 +58,6 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         SimpleDateFormat strdate = new SimpleDateFormat("E", Locale.SIMPLIFIED_CHINESE);
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
         SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
         SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(" HH:mm");
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDaysFree(workStatistics);//某个月的出勤
@@ -122,9 +121,6 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
                 if((check!=null)&&(!check.contains("0"))){
                     miss.remove(m);//除去休息日和节假日即为旷工日期
                 }
-                /*if (!("0/r/n".equals(DateUtils.getWorkDays(calendar2.getTime())))) {
-                    miss.remove(m);//除去休息日和节假日即为旷工日期
-                }*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -180,32 +176,18 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
     }
 
     public HashMap workStatisticsConfirmed(WorkStatistics workStatistics) {//固定模式
-        //获取用户所属组的上班规则
-        /*GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(workStatistics.getGroup(), 0);
-        double groupAttendanceDuration = 8;//默认每天上班时长为8小时
-        if (!groupRule.equals(null)) {
-            groupAttendanceDuration = groupRule.getGroupAttendanceDuration();//规则非空，重置上班时长
-        }*/
         SimpleDateFormat strdate = new SimpleDateFormat("E", Locale.SIMPLIFIED_CHINESE);
-        //SimpleDateFormat strdate = new SimpleDateFormat("EEEE");
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM");
         SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy-MM-dd ");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-d HH:mm");
         SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat(" HH:mm");
 
         List<Attendance> attendanceDays = attendanceDao.getAttendanceDays(workStatistics);//某个月的出勤
-        //int Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
         List<Attendance> Late = attendanceDao.getLates(workStatistics);//某个月的迟到次数
         List<Attendance> leaveEarly = attendanceDao.getLeaveEarly(workStatistics);//某个月的早退次数
         List<Audit> fieldPersonnel = auditDao.getFieldPersonnel(workStatistics);//某个月的外勤次数
         List<Attendance> missingCard = attendanceDao.getMissingCard(workStatistics);//某个月的缺卡天数
         List<Audit> holidayDays = auditDao.getHolidayDays(workStatistics);//某个月的请假时长，小时为单位
         List<Audit> holidayList = auditDao.getHolidayList(workStatistics);//某个月的请假审批和外勤通过记录
-        List<Attendance> overtime = attendanceDao.getOverTimeList(workStatistics);//某个月总的加班。
-        double overtime_second = attendanceDao.getOverTime(workStatistics);//某个月总的加班时间，秒为单位。
-        //加班时间转换为小时为单位，取2位小数
-        double overtime_hour = new BigDecimal(overtime_second / (60 * 60)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        //List<Integer> miss = new ArrayList<>();//没有打卡的日期
         CopyOnWriteArrayList<Integer> miss = new CopyOnWriteArrayList<>();//没有打卡的日期
         Calendar calendar = Calendar.getInstance();
 
@@ -254,7 +236,6 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //System.out.println(simpleDateFormat.format(calendar2.getTime()));
         //除去工作日和节假日
         for (Integer m : miss) {
             calendar2.set(Calendar.DAY_OF_MONTH, m);
@@ -264,9 +245,6 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
                 if((check!=null)&&(!check.contains("0"))){
                     miss.remove(m);//除去休息日和节假日即为旷工日期
                 }
-                /*if (!("0/r/n".equals(DateUtils.getWorkDays(calendar2.getTime())))) {
-                    miss.remove(m);//除去休息日和节假日即为旷工日期
-                }*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -308,14 +286,11 @@ public class WorkStatisticsService extends CrudService<WorkStatisticsDao, WorkSt
         }
         holidayDaysData.add("总时长:"+holidayDays_sum+"小时");
         List<String> overtimeData = new ArrayList<>();//加班详情
-        for (Attendance attendance : overtime) {
-            overtimeData.add(simpleDateFormat3.format(attendance.getStartTime()) + strdate.format(attendance.getStartTime()));
-        }
         map.put("Late", Late.size());//迟到
         map.put("leaveEarly", leaveEarly.size());//早退
         map.put("fieldPersonnel", fieldPersonnel.size());//外勤
         map.put("missingCard", missingCard.size());//缺卡
-        map.put("overtime", overtime_hour);//加班时长，小时为单位
+        map.put("overtime", 0/*overtime_hour*/);//加班时长，小时为单位
         map.put("Absenteeism", miss.size());//旷工天数
         map.put("holidayDays", holidayDays.size());//某个月的请假时长，小时为单位
         //以下为详情的数据
