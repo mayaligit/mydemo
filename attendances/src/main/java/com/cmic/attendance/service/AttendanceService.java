@@ -530,8 +530,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      */
     public Map<String,Object> checkAttendanceData(QueryAttendanceVo queryAttendanceVo) {
 
-        System.out.print("============进入按日统计出勤=================");
-
         String date = queryAttendanceVo.getDate();
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
@@ -539,18 +537,16 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
-         /*   attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");*/
+           /* attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+            attendanceUserVo.setUserType("0");*/
             map.put("flag",1);
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
-        System.out.print("=======================1111111=====================================");
-
         int startWork = groupRuleService.startWork(attendanceGroup);
         int endWork = groupRuleService.endWork(attendanceGroup);
-        System.out.print("=======================222222=====================================");
         if(startWork>0){
             map.put("startWorkFlag","1");
         }else{
@@ -565,28 +561,24 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         if(attendanceUserVo.getUserType().equals("0")){
             attendanceGroup = "";
         }
-//      应该打卡人数
-        int total = employeeService.getTotal(attendanceGroup);
-        map.put("total",total);
-
-        System.out.print("=====================应打卡人数==============="+total);
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);
         attendancePojo.setAttendanceGroup(attendanceGroup);
+//      应该打卡人数
+        int total = employeeService.getTotal(attendancePojo);
+        map.put("total",total);
+
 //       获取当天打卡人数
         int workCount = this.dao.getWorkCount(attendancePojo);
-        System.out.print("=====================当天打卡人数==============="+workCount);
         map.put("workCount",workCount);
         map.put("noWorkCount",total-workCount);
 
 //        获取外勤人数
         int outworkCount = this.dao.getOutworkCount(attendancePojo);
-        System.out.print("=====================外勤人数==============="+outworkCount);
         map.put("outworkCount",outworkCount);
 
 //       当天迟到人数
         int latterCount = this.dao.getLatterCount(attendancePojo);
-        System.out.print("=====================迟到人数==============="+latterCount);
         map.put("latterCount",latterCount);
 
         return map;
