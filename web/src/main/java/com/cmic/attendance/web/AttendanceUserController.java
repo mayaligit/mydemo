@@ -180,7 +180,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @RequestMapping(value = "/noLogint", method = RequestMethod.POST)
     public HashMap<String, String> noLogint(HttpServletRequest request) {
        /* redisTemplate.delete("attendanceUser");*/
-        request.getSession().removeAttribute("attendanceUserVo");
+       /* request.getSession().removeAttribute("attendanceUserVo");*/
         log.debug(">>>>>>>用户没登录<<<<<<<<<");
         HashMap<String, String> reslutMap = new HashMap<String, String>();
         reslutMap.put("code", "2");
