@@ -22,4 +22,6 @@ public interface GroupRuleDao extends CrudDao<GroupRule> {
 
     int startWork(String attendanceGroup);
     int endWork(String attendanceGroup);
+
+    GroupRule getGroupRuleByName(String groupRuleName);
 }

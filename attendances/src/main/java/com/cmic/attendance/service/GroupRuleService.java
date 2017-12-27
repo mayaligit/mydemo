@@ -117,37 +117,13 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
                    place = place + places[3] + ",";
                }
             }
+
             groupRuleVo.getGroupRule().setGroupAddress(place);
             //插入规则主表数据
             this.save(groupRuleVo.getGroupRule());
             attendanceGroupId = groupRuleVo.getGroupRule().getId();
         }catch (Exception e){
             throw  new GroupRuleExeption("规则表插入失败");
-        }
-
-        //插入考勤人员
-        try {
-            //分割考勤人员输入，获取各值
-            String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
-            if(persons!=null){
-                String person[] = persons.split(",");
-                if(person!=null && person.length!=0) {
-                    for (int i = 0; i < person.length; i++) {
-                        String[] p = person[i].split("-");
-                        String personnelName = p[0];
-                        String personnelPhone = p[1];
-                        String groupEnterId = p[2];
-                        GroupPersonnel groupPersonnel = new GroupPersonnel();
-                        groupPersonnel.setPersonnelName(personnelName);
-                        groupPersonnel.setPersonnelPhone(personnelPhone);
-                        groupPersonnel.setEnterpriseId(groupEnterId);
-                        groupPersonnel.setAttendanceGroupId(attendanceGroupId);
-                        groupPersonnelService.save(groupPersonnel);
-                    }
-                }
-            }
-        }catch (Exception e){
-            throw  new GroupRuleExeption("考勤人员表插入失败");
         }
 
         //插入日报规则表
@@ -298,7 +274,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
             throw  new GroupRuleExeption("规则表更新失败");
         }
 
-        //更新考勤人员
+     /*   //更新考勤人员
         try {
             //分割考勤人员输入，获取各值
             String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
@@ -310,7 +286,7 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
             }
         }catch (Exception e){
             throw  new GroupRuleExeption("考勤人员表更新失败");
-        }
+        }*/
 
         //更新考勤地址信息
         try {
@@ -366,6 +342,11 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
     }
     public  int endWork(String attendanceGroup) {
         return dao.endWork(attendanceGroup);
+    }
+
+    public boolean checkGroupNameIsExist(String groupRuleName){
+        GroupRule groupRule = dao.getGroupRuleByName(groupRuleName);
+        return groupRule==null?false:true;
     }
 }
 

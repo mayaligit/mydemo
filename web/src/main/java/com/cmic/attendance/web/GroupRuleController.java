@@ -76,7 +76,7 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         @ApiImplicitParam(name = "pageSize", value="分页大小", defaultValue = "10", paramType = "query"),
         @ApiImplicitParam(name = "pageNum", value="页码", defaultValue = "1", paramType = "query")
     })
-    @RequestMapping(value="/findGroupRuleList", method = RequestMethod.POST)
+    @RequestMapping(value="/findGroupRuleList")
     @ResponseBody
     public Map<String,Object> findGroupList( @RequestBody GroupRuleVo GroupRuleVo){
 
@@ -126,9 +126,10 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         //adminEntity.setId(phone);
-        adminEntity.setName(attendanceUserVo.getAttendanceUsername());
+        //adminEntity.setName(attendanceUserVo.getAttendanceUsername());
+        adminEntity.setId("15240653787");
+        adminEntity.setName("梁渝");
         groupRuleVo.getGroupRule().setUpdateBy(adminEntity);
-        groupRuleVo.getGroupPersonnel().setUpdateBy(adminEntity);
 
         try {
             service.updateGroupRule(groupRuleVo);
@@ -151,20 +152,13 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         return service.get(id);
     }
 
-    @ApiOperation(value = "删除", notes = "删除", httpMethod = "DELETE")
-    @RequestMapping(value="/delGroupRuleById/{id}", method = RequestMethod.DELETE)
+   // @ApiOperation(value = "删除", notes = "删除", httpMethod = "DELETE")
+    @RequestMapping(value="/delGroupRuleById/{id}",method = RequestMethod.GET)
     public void delete(@ApiParam(value = "ID") @PathVariable String id) {
 
         //删除考勤规则主表
         service.delete(id);
-        if(id!=null) {
-            //删除考勤人员
-            List<GroupPersonnel> list = groupPersonnelService.findListByGroupRuleId(id);
-            for (GroupPersonnel groupPersonnel : list) {
-                String pid = groupPersonnel.getId();
-                groupPersonnelService.delete(pid);
-            }
-        }
+
         //删除日报规则表数据
         GroupDailyRule groupDailyRule = groupDailyRuleService.getDailyByGroupRuleId(id);
         String dailyRuleId = groupDailyRule.getId();
@@ -196,14 +190,16 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         HttpServletRequest request = WebUtils.getRequest();
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
         //response.setHeader("Access-Control-Allow-Origin", "*");
-       /* BaseAdminEntity adminEntity = new BaseAdminEntity();
+        BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
         //测试数据结束
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
         BaseAdminEntity current_admin_info = (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         System.out.println("当前session信息"+current_admin_info.getId());
+
         HashMap<String,String> resultHash =new HashMap<String,String>();
+
         try {
             service.insertGroupRule(groupRuleVo);
             resultHash.put("code","0");
@@ -215,6 +211,19 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
             resultHash.put("msg",g.getMessage());
             return resultHash;
         }
+    }
+
+    //验证考勤组名字是否已存在
+    @RequestMapping(value = "/checkIsExist")
+    public Map<String,String> checkGroupNameIsExist(@Validated @RequestBody GroupRuleVo groupRuleVo){
+
+        boolean b1 = service.checkGroupNameIsExist(groupRuleVo.getGroupName());
+        HashMap<String,String> resultHash =new HashMap<String,String>();
+        if(b1==true){
+            resultHash.put("code","1");
+            resultHash.put("msg","考勤组名字重复");
+        }
+        return resultHash;
     }
 
 }

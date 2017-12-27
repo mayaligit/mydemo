@@ -229,4 +229,12 @@
         AND TIMEDIFF(DATE_FORMAT(NOW(),"%T"), group_attendance_end)  &gt;= "00:00:00"
     </select>
 
+    <select id="getGroupRuleByName" resultType="GroupRule">
+        SELECT
+        <include refid="groupRuleColumns"/>
+        FROM t_group_rule a
+        <include refid="groupRuleJoins"/>
+        WHERE a.group_name = #{groupName}
+    </select>
+
 </mapper>
