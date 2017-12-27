@@ -97,7 +97,7 @@
                 <Cell ss:StyleID="s17"><Data ss:Type="String">${attendance.startLocation!}</Data></Cell>
                 <Cell ss:StyleID="s17"><Data ss:Type="String"><#if attendance.endTime ??>${attendance.endTime?string('yyyy年MM月dd日 HH:mm:ss')}</#if></Data></Cell>
                 <Cell ss:StyleID="s17"><Data ss:Type="String">${attendance.endLocation!}</Data></Cell>
-                <Cell ss:StyleID="s17"><Data ss:Type="String"><#if attendance.attendanceStatus == "0">正常<#elseif attendance.attendanceStatus == "1">异常<#elseif attendance.attendanceStatus == "2">外勤</#if></Data></Cell>
+                <Cell ss:StyleID="s17"><Data ss:Type="String"><#if (attendance??)||(attendance.attendanceStatus??)||(attendance.attendanceStatus == "0")>正常<#elseif attendance.attendanceStatus == "1">异常<#elseif attendance.attendanceStatus == "2">外勤</#if></Data></Cell>
                 <Cell ss:StyleID="s17"><Data ss:Type="String"><#if attendance.dailyStatus == 0>未完成<#elseif attendance.dailyStatus == 1>已完成</#if></Data></Cell>
             </Row>
         </#list>
