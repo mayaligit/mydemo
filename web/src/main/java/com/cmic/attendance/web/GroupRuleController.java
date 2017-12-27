@@ -126,9 +126,9 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo) WebUtils.getSession().getAttribute("attendanceUserVo");
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         //adminEntity.setId(phone);
-        //adminEntity.setName(attendanceUserVo.getAttendanceUsername());
-        adminEntity.setId("15240653787");
-        adminEntity.setName("梁渝");
+        adminEntity.setName(attendanceUserVo.getAttendanceUsername());
+        /*adminEntity.setId("15240653787");
+        adminEntity.setName("梁渝");*/
         groupRuleVo.getGroupRule().setUpdateBy(adminEntity);
 
         try {
@@ -190,12 +190,12 @@ public class GroupRuleController extends BaseRestController<GroupRuleService> {
         HttpServletRequest request = WebUtils.getRequest();
         HttpServletResponse response = WebUtils.getRequestAttributes().getResponse();
         //response.setHeader("Access-Control-Allow-Origin", "*");
-        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        /*BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
-        adminEntity.setName("梁渝");
+        adminEntity.setName("梁渝");*/
         //测试数据结束
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
         BaseAdminEntity current_admin_info = (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,current_admin_info);
         System.out.println("当前session信息"+current_admin_info.getId());
 
         HashMap<String,String> resultHash =new HashMap<String,String>();

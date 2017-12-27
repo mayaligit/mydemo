@@ -274,20 +274,6 @@ public class GroupRuleService extends CrudService<GroupRuleDao, GroupRule> {
             throw  new GroupRuleExeption("规则表更新失败");
         }
 
-     /*   //更新考勤人员
-        try {
-            //分割考勤人员输入，获取各值
-            String persons = groupRuleVo.getGroupPersonnel().getPersonnelName();
-            if(persons!=null && persons.length()!=0){
-                String person[] = persons.split("-");
-                for(int i=0;i<person.length;i++) {
-                    groupPersonnelService.delete(person[i]);
-                }
-            }
-        }catch (Exception e){
-            throw  new GroupRuleExeption("考勤人员表更新失败");
-        }*/
-
         //更新考勤地址信息
         try {
             if (resses != null) {
