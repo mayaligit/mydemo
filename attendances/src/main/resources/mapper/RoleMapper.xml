@@ -15,6 +15,11 @@
     <sql id="roleJoins">
     </sql>
 
+    <select id="supplierList" resultType="java.util.Map">
+        SELECT b.id as id,b.supplier_name as supplierName
+        FROM t_supplier b
+    </select>
+
     <select id="get" resultType="Role">
         SELECT
         <include refid="roleColumns"/>

@@ -1,16 +1,17 @@
 package com.cmic.attendance.service;
 
-import com.github.pagehelper.PageInfo;
+import com.cmic.attendance.dao.RoleDao;
+import com.cmic.attendance.model.Role;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
-import com.cmic.attendance.dao.RoleDao;
-import com.cmic.attendance.model.Role;
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+import java.util.Map;
 
 /**
 * 角色表Service
@@ -18,6 +19,8 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class RoleService extends CrudService<RoleDao, Role> {
+    @Autowired
+    private RoleDao roleDao;
 
     public Role get(String id) {
         return super.get(id);
@@ -51,5 +54,8 @@ public class RoleService extends CrudService<RoleDao, Role> {
         super.delete(id);
         logger.info("删除角色表：" + role.toJSONString());
     }
-
+    //返回供应商的id和名称
+    public List<Map> getSupplierList(){
+        return roleDao.supplierList();
+    }
 }

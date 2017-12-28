@@ -110,6 +110,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             groupAddressVo.setGroupAttendanceLongitude(String.valueOf(groupAddress.getGroupAttendanceLongitude()));
             groupAddressVo.setGroupAddress(groupAddress.getGroupAddress());
             groupAddressVo.setAttendanceGroupId(groupAddress.getAttendanceGroupId());
+            groupAddressVo.setGroupAttendanceScope(groupAddress.getGroupAttendanceScope());
             listGroupAddress.add(groupAddressVo);
         }
         return listGroupAddress;

@@ -1,13 +1,16 @@
 package com.cmic.attendance.web;
 
-import com.github.pagehelper.PageInfo;
-import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.attendance.model.Role;
 import com.cmic.attendance.service.RoleService;
+import com.cmic.saas.base.web.BaseRestController;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
+import java.util.Map;
 
 /**
 * 角色表Controller
@@ -65,4 +68,10 @@ public class RoleController extends BaseRestController<RoleService> {
         service.delete(id);
     }
 
+    //返回所有供应商id和名字
+    @ApiOperation(value = "查询", notes = "查询供应商", httpMethod = "POST")
+    @RequestMapping(value="getSupplierList", method = RequestMethod.POST)
+    public List<Map> getSupplierList() {
+        return service.getSupplierList();
+    }
 }
