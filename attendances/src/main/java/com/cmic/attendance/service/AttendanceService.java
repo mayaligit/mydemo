@@ -100,6 +100,21 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         return listGroupAddress;
     }
 
+    //#TODO 获取多地址数据
+    public ArrayList<GroupAddressVo> getGroupAddressList (@Param("attendanceGroupId") String attendanceGroupId){
+        List<GroupAddress> groupAddressList = groupAddressService.findListByGroupRuleId(attendanceGroupId);
+        ArrayList<GroupAddressVo> listGroupAddress = new ArrayList<GroupAddressVo>();
+        for (GroupAddress groupAddress : groupAddressList) {
+            GroupAddressVo groupAddressVo = new GroupAddressVo();
+            groupAddressVo.setGroupAttendanceDimension(String.valueOf(groupAddress.getGroupAttendanceDimension()));
+            groupAddressVo.setGroupAttendanceLongitude(String.valueOf(groupAddress.getGroupAttendanceLongitude()));
+            groupAddressVo.setGroupAddress(groupAddress.getGroupAddress());
+            groupAddressVo.setAttendanceGroupId(groupAddress.getAttendanceGroupId());
+            listGroupAddress.add(groupAddressVo);
+        }
+        return listGroupAddress;
+    }
+
     public Employee findEmployeeByTelephone(@Param("telephone") String telephone){
         Employee employee = employeeService.findEmployeeByTelephone(telephone);
         return employee;

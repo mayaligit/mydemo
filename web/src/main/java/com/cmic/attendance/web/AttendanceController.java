@@ -206,8 +206,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setIsAttendanceEnd("1");
         }
         attendanceVo.setUsername(username);
-        //返回多地址打卡数据
-        ArrayList<GroupAddressVo> allGroupAddress = service.getAllGroupAddress();
         //根据登录手机号获取入职人员信息
         Employee employee = service.findEmployeeByTelephone(phone);
         if (null ==employee){
@@ -219,7 +217,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setAttendanceGroup(attendanceGroup);
             attendanceVo.setAuthority("0");
         }
-       /* attendanceVo.setAttendanceGroup("odc");*/
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
@@ -229,9 +226,11 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attanceMaxdistance = groupRule.getGroupAttendanceScope();
             //固定组打卡下班时间
             attendanceVo.setGroupAttendanceEnd(groupRule.getGroupAttendanceEnd());
+            //返回多地址打卡数据
+            ArrayList<GroupAddressVo> groupAddressList = service.getGroupAddressList(groupRule.getId());
+            attendanceVo.setAddressList(groupAddressList);
         }
         attendanceVo.setAttanceMaxdistance(attanceMaxdistance);
-        attendanceVo.setAddressList(allGroupAddress);
         attendanceVo.setPhone(phone);
         attendanceVo.setDate(serverDate);
         attendanceVo.setServerTime(serverTimes.toString());
