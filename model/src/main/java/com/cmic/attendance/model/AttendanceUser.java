@@ -4,7 +4,6 @@ import com.cmic.saas.base.model.DataEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
 /**
  * 后台管理员实体
  */
@@ -27,6 +26,8 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
     protected String userType;
     @ApiModelProperty(value = "0/正常,1/停用")
     protected String actived;
+    @ApiModelProperty(value = "关联角色表的id")
+    protected String roleId;
 
     public AttendanceUser(){
 
@@ -99,5 +100,11 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
         this.actived = actived;
     }
 
+    public String getRoleId() {
+        return roleId;
+    }
 
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
 }
