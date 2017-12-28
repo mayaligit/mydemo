@@ -2,23 +2,19 @@ package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.AttendanceUserDao;
 import com.cmic.attendance.model.AttendanceUser;
-import com.cmic.attendance.model.Audit;
-import com.cmic.attendance.model.GroupRule;
+import com.cmic.attendance.model.Permission;
 import com.cmic.attendance.utils.MD5Util;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
-import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,9 +62,9 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
     }
 
     @Transactional(readOnly = false)
-    public HashMap<String, String> login(AttendanceUserVo attendanceUserVo,HttpServletRequest request){
+    public Map login(AttendanceUserVo attendanceUserVo,HttpServletRequest request){
         AttendanceUser checkUser = checkUserByName(attendanceUserVo.getAttendanceUsername());
-        HashMap<String,String> result=new HashMap<String,String>();
+        Map result=new HashMap<String,Object>();
 
         if (null==checkUser){
             //当前用户不存在
@@ -99,6 +95,10 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         adminEntity.setId(checkUser.getAttendancePhone());
         adminEntity.setName(checkUser.getAttendanceUsername());
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
+        //获取AttendanceUser 集合
+       List<Permission> permissionList= dao.givePermission(checkUser.getId());
+
+        result.put("permissionList", permissionList);
         return result;
     }
 
