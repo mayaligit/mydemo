@@ -12,6 +12,7 @@ public class GroupAddressVo {
     protected String groupAddress;
     @ApiModelProperty(value = "关联对应的考勤组")
     protected String attendanceGroupId;
+    protected Integer groupAttendanceScope;
 
     public String getGroupAttendanceLongitude() {
         return groupAttendanceLongitude;
@@ -43,5 +44,13 @@ public class GroupAddressVo {
 
     public void setAttendanceGroupId(String attendanceGroupId) {
         this.attendanceGroupId = attendanceGroupId;
+    }
+
+    public Integer getGroupAttendanceScope() {
+        return groupAttendanceScope;
+    }
+
+    public void setGroupAttendanceScope(Integer groupAttendanceScope) {
+        this.groupAttendanceScope = groupAttendanceScope;
     }
 }
