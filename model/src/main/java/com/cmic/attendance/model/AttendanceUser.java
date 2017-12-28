@@ -26,8 +26,6 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
     protected String userType;
     @ApiModelProperty(value = "0/正常,1/停用")
     protected String actived;
-    @ApiModelProperty(value = "关联角色表的id")
-    protected String roleId;
 
     public AttendanceUser(){
 
@@ -100,11 +98,4 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
         this.actived = actived;
     }
 
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
 }

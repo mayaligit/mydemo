@@ -12,7 +12,6 @@
         a.user_type AS "userType",
         a.actived AS "actived",
         a.remarks AS "remarks",
-        a.role_id AS "roleId",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
@@ -66,7 +65,6 @@
         user_type,
         actived,
         remarks,
-        role_id,
         create_by,
         create_date,
         update_by,
@@ -82,7 +80,6 @@
         #{userType},
         #{actived},
         #{remarks},
-        #{roleId},
         #{createBy.id},
         #{createDate},
         #{updateBy.id},
@@ -101,7 +98,6 @@
         user_type = #{userType},
         actived = #{actived},
         remarks = #{remarks},
-        role_id=#{roleId},
         create_by = #{createBy.id},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
@@ -134,9 +130,6 @@
         <if test="actived != null  and actived != ''">
             actived = #{actived},
         </if>
-        <if test="releId != null  and releId != ''">
-            role_id = #{releId},
-        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -154,7 +147,6 @@
         a.attendance_password as attendancePassword,
         attendance_group as attendanceGroup,
         user_type as userType,
-        a.role_id as roleId,
         actived as actived
        FROM t_attendance_user a
         <where>
@@ -192,9 +184,6 @@
         </if>
         <if test="actived != null  and actived != ''">
             actived = #{actived},
-        </if>
-        <if test="roleId != null  and roleId != ''">
-            role_id = #{roleId},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
