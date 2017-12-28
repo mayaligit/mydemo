@@ -75,10 +75,8 @@ public class CentifyUserController {
         paramMap.add("contactId", rcsToken.getContactId());
         paramMap.add("enterId", rcsToken.getEnterId());
         //发送请求调用接口
-        log.debug("连接开始 connect begin    token="+rcsToken.getToken()+" ;time="+ DateUtils.dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss SSS"));
         String userStr = this.restTemplate.postForObject(Constant.certifyServicePath + Constant.userINfo, paramMap, String.class);
         long end = System.currentTimeMillis();
-        log.debug("连接结束 connect begin    token="+rcsToken.getToken()+" ;time="+ DateUtils.dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss SSS"));
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
@@ -96,6 +94,7 @@ public class CentifyUserController {
         adminEntity.setId(phone);
         adminEntity.setName(username);
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
+        log.debug("");
         //拦截器不拦截，这个session无其他作用
       /*  redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set("_CURRENT_ADMIN_INFO");
         redisTemplate.expire("_CURRENT_ADMIN_INFO", 30,TimeUnit.MINUTES);*/

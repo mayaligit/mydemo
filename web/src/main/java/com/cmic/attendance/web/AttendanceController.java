@@ -140,14 +140,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
-         HttpServletRequest request = WebUtils.getRequest();
 
-        BaseAdminEntity adminEntity = new BaseAdminEntity();
+        HttpServletRequest request = WebUtils.getRequest();
+      /*  BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
         //测试数据结束
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
-
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
