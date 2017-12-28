@@ -142,11 +142,11 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
     public AttendanceVo getStartServerMesg() {
          HttpServletRequest request = WebUtils.getRequest();
 
-        /*BaseAdminEntity adminEntity = new BaseAdminEntity();
+        BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId("15240653787");
         adminEntity.setName("梁渝");
         //测试数据结束
-        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
 
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
@@ -223,11 +223,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         int attanceMaxdistance = 0;
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
         if(groupRule !=null){
-            attanceMaxdistance = groupRule.getGroupAttendanceScope();
             //固定组打卡下班时间
             attendanceVo.setGroupAttendanceEnd(groupRule.getGroupAttendanceEnd());
             //返回多地址打卡数据
             ArrayList<GroupAddressVo> groupAddressList = service.getGroupAddressList(groupRule.getId());
+            if(groupAddressList != null && groupAddressList.size() >0){
+                attanceMaxdistance = groupAddressList.get(0).getGroupAttendanceScope();
+            }
             attendanceVo.setAddressList(groupAddressList);
         }
         attendanceVo.setAttanceMaxdistance(attanceMaxdistance);
