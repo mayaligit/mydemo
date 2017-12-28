@@ -1,0 +1,92 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.RoleUserDao">
+    <sql id="roleUserColumns">
+        a.id AS "id",
+        a.user_id AS "userId",
+        a.role_id AS "roleId",
+        a.create_date AS "createDate",
+        a.update_date AS "updateDate",
+        a.create_by AS "createBy.id",
+        a.update_by AS "updateBy.id",
+        a.remarks AS "remarks"
+    </sql>
+
+    <sql id="roleUserJoins">
+    </sql>
+
+    <select id="get" resultType="RoleUser">
+        SELECT
+        <include refid="roleUserColumns"/>
+        FROM t_role_user a
+        <include refid="roleUserJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="RoleUser">
+        SELECT
+        <include refid="roleUserColumns"/>
+        FROM t_role_user a
+        <include refid="roleUserJoins"/>
+        <where>
+            1 = 1
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="RoleUser">
+        SELECT
+        <include refid="roleUserColumns"/>
+        FROM t_role_user a
+        <include refid="roleUserJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_role_user(
+            id,
+            user_id,
+            role_id,
+            create_date,
+            update_date,
+            create_by,
+            update_by,
+            remarks
+        ) VALUES (
+            #{id},
+            #{userId},
+            #{roleId},
+            #{createDate},
+            #{updateDate},
+            #{createBy.id},
+            #{updateBy.id},
+            #{remarks}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_role_user SET
+        user_id = #{userId},
+        role_id = #{roleId},
+        update_date = #{updateDate},
+        update_by = #{updateBy.id},
+        remarks = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_role_user SET
+        <if test="userId != null  and userId != ''">
+        user_id = #{userId},
+        </if>
+        <if test="roleId != null  and roleId != ''">
+        role_id = #{roleId},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_role_user
+        WHERE id = #{id}
+    </delete>
+</mapper>
