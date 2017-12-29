@@ -70,8 +70,14 @@ public class RoleController extends BaseRestController<RoleService> {
 
     //返回所有供应商id和名字
     @ApiOperation(value = "查询", notes = "查询供应商", httpMethod = "GET")
-    @RequestMapping(value="getSupplierList", method = RequestMethod.GET)
+    @RequestMapping(value="/getSupplierList", method = RequestMethod.GET)
     public List<Map> getSupplierList() {
         return service.getSupplierList();
     }
+
+    @RequestMapping(value="getRoleList", method = RequestMethod.GET)
+    public List<Map> getRoleList() {
+        return service.getRoleList();
+    }
+
 }
