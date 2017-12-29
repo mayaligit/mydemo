@@ -43,6 +43,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @Autowired
     private AttendanceUserService attendanceUserService;
 
+
     @ApiOperation(value = "查询", notes = "查询用户管理表列表", httpMethod = "GET")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "orderBy", value = "排序", defaultValue = "createDate desc", paramType = "query"),
@@ -219,4 +220,5 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
         AttendanceUser user = service.checkUserByName(attendanceUser.getAttendanceUsername());
         return user;
     }
+
 }
