@@ -56,7 +56,7 @@ public class CentifyUserController {
     public ModelAndView info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getSession().getId();
         this.certifyToken(request, rcsToken);
-        log.debug("==========token============="+this.certifyToken(request, rcsToken));
+        log.debug("==========token============="+rcsToken.getToken());
         //判断session中是否有登陆用户
         UserBo user = this.getSessionUser(request);
         ModelAndView mav = new ModelAndView();
@@ -75,6 +75,9 @@ public class CentifyUserController {
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
+
+		 log.debug("==========统一认证,获取用户信息成功=============");
+
 //        解析请求数据 , 获取用户电话和用户名
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject) parser.parse(userStr);
