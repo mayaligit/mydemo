@@ -15,6 +15,8 @@ public class Role extends DataEntity<Role> {
     protected Integer status;
     @ApiModelProperty(value = "角色类型:1/考勤系统角色 2/招聘系统角色", example = "角色类型:1/考勤系统角色 2/招聘系统角色")
     protected Integer roleType;
+    @ApiModelProperty(value = "角色名称", example = "角色名称")
+    protected String roleName;
 
     public Role(){
 
@@ -46,5 +48,13 @@ public class Role extends DataEntity<Role> {
 
     public void setRoleType(Integer roleType) {
         this.roleType = roleType;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

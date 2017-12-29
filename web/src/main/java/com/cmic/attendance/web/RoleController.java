@@ -75,7 +75,7 @@ public class RoleController extends BaseRestController<RoleService> {
         return service.getSupplierList();
     }
 
-    @RequestMapping(value="getRoleList", method = RequestMethod.GET)
+    @RequestMapping(value="/getRoleList", method = RequestMethod.GET)
     public List<Map> getRoleList() {
         return service.getRoleList();
     }

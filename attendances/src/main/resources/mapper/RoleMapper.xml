@@ -6,6 +6,7 @@
         a.role AS "role",
         a.status AS "status",
         a.role_type AS "roleType",
+        a.role_name AS "roleName",
         a.create_date AS "createDate",
         a.update_date AS "updateDate",
         a.create_by AS "createBy.id",
@@ -52,6 +53,7 @@
             role,
             status,
             role_type,
+            role_name,
             create_date,
             update_date,
             create_by,
@@ -62,6 +64,7 @@
             #{role},
             #{status},
             #{roleType},
+            #{roleName},
             #{createDate},
             #{updateDate},
             #{createBy.id},
@@ -75,6 +78,7 @@
         role = #{role},
         status = #{status},
         role_type = #{roleType},
+        role_name = #{roleName},
         update_date = #{updateDate},
         update_by = #{updateBy.id},
         remarks = #{remarks}
@@ -90,7 +94,10 @@
         status = #{status},
         </if>
         <if test="roleType != null ">
-            status = #{roleType},
+            role_type = #{roleType},
+        </if>
+        <if test="roleName != null ">
+            role_name = #{roleName},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
@@ -103,7 +110,7 @@
     </delete>
 
     <select id="getRoleList" resultType="Map">
-      SELECT id , role , role_type AS 'roleType'
+      SELECT id , role , role_type AS 'roleType',role_name AS  'roleName'
       FROM t_role
     </select>
 
