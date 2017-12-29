@@ -228,7 +228,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     saveAttendance.setStartTimeStatus("0");
                 } else if (compareHour == groupAttendanceHour) {
                     //正常考勤
-                    if (compareMinute < groupAttendanceMinute) {
+                    if (compareMinute <= groupAttendanceMinute) {
                         saveAttendance.setStartTimeStatus("0");
                     } else {
                         saveAttendance.setStartTimeStatus("1");
@@ -362,7 +362,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             if (compareHour>groupAttendanceHour){
                 saveAttendance.setEndTimeStatus("0");
             }else if (compareHour==groupAttendanceHour){
-                if (compareMinute>groupAttendanceMinute){
+                if (compareMinute>=groupAttendanceMinute){
                     saveAttendance.setEndTimeStatus("0");
                 }else {
                     saveAttendance.setEndTimeStatus("1");
@@ -392,7 +392,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //获取考勤的时长
                 double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
                 //比较实际考勤时长与规则考勤时长
-                if(workTime - groupAttendanceDuration > 0){
+                if(workTime - groupAttendanceDuration >= 0){
                     saveAttendance.setEndTimeStatus("0");
                 }else {
                     saveAttendance.setEndTimeStatus("1");
