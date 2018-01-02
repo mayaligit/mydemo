@@ -160,7 +160,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         log.debug("登录者session数据》》》》》》》》》》"+user.getId()+user.getName()+"<<<<<<<<<<<<<<<<<");
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
-        if (null !=DBattendance && null !=DBattendance.getStartTime()){
+        if (null !=DBattendance){
             log.debug("用户已经打过卡了打卡时间"+DBattendance.getStartTime());
             //是否已经打卡;
             /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
@@ -182,7 +182,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             }
         }
 
-        if (null !=DBattendance && DBattendance.getEndTime()!=null){
+        if (null !=DBattendance){
             //打过下班卡
             /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
             Date dat= DBattendance.getEndTime();
