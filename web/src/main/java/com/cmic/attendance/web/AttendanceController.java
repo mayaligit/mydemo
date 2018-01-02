@@ -140,7 +140,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
      * 上班打卡页面初始化需要的是数据
      */
     @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "POST")
-//    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
+    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
 
