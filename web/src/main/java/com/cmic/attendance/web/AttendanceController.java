@@ -16,6 +16,7 @@ import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.JSONUtils;
+import com.cmic.saas.utils.StringUtils;
 import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -159,7 +160,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         log.debug("登录者session数据》》》》》》》》》》"+user.getId()+user.getName()+"<<<<<<<<<<<<<<<<<");
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
-        if (null !=DBattendance && null !=DBattendance.getStartTime() ){
+        if (null !=DBattendance && null !=DBattendance.getStartTime() && !DBattendance.getEndTime().equals("")){
             log.debug("用户已经打过卡了");
             //是否已经打卡;
             /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
@@ -173,7 +174,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setAttendanceStatus(DBattendance.getAttendanceStatus());
             attendanceVo.setStartTimeStatus(DBattendance.getStartTimeStatus());
             attendanceVo.setIsAttendanceStart("0");
-            //判断是否打过下班卡了
+            //判断是否打过下班卡了 0已经打卡，1没有打卡
             if ( DBattendance.getEndTime() !=null){
                 attendanceVo.setIsAttendanceEnd("0");
             }else {
@@ -181,7 +182,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             }
         }
 
-        if (null !=DBattendance && DBattendance.getEndTime()!=null){
+        if (null !=DBattendance && DBattendance.getEndTime()!=null && !DBattendance.getEndTime().equals("")){
             //打过下班卡
             /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
             Date dat= DBattendance.getEndTime();
