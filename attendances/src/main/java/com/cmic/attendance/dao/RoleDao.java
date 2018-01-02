@@ -23,4 +23,8 @@ public interface RoleDao extends CrudDao<Role> {
 
     // 向供应商负责人表中插入一条数据
     void insertPrincipalUser(Map<String, Object> paraMap);
+
+    void deletePrincipleInfo(String id);
+
+    void deleteInterviewerInfo(String id);
 }
