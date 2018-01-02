@@ -157,7 +157,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         String username = (String)redisTemplate.boundValueOps("username").get();*/
         String phone = user.getId();
         String username=user.getName();
-        log.debug("登录者session数据》》》》》》》》》》"+user.getId()+user.getName()+"<<<<<<<<<<<<<<<<<");
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime()){
@@ -239,6 +238,9 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceVo.setPhone(phone);
         attendanceVo.setDate(serverDate);
         attendanceVo.setServerTime(serverTimes.toString());
+        int a=0;
+        a=a++;
+        log.debug("初始化时间已经返回访问次数"+a+"》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
         return attendanceVo;
     }
     /**
