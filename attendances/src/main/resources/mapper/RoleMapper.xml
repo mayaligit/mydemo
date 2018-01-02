@@ -5,6 +5,8 @@
         a.id AS "id",
         a.role AS "role",
         a.status AS "status",
+        a.role_type AS "roleType",
+        a.role_name AS "roleName",
         a.create_date AS "createDate",
         a.update_date AS "updateDate",
         a.create_by AS "createBy.id",
@@ -50,6 +52,8 @@
             id,
             role,
             status,
+            role_type,
+            role_name,
             create_date,
             update_date,
             create_by,
@@ -59,6 +63,8 @@
             #{id},
             #{role},
             #{status},
+            #{roleType},
+            #{roleName},
             #{createDate},
             #{updateDate},
             #{createBy.id},
@@ -71,6 +77,8 @@
         UPDATE t_role SET
         role = #{role},
         status = #{status},
+        role_type = #{roleType},
+        role_name = #{roleName},
         update_date = #{updateDate},
         update_by = #{updateBy.id},
         remarks = #{remarks}
@@ -85,6 +93,12 @@
         <if test="status != null ">
         status = #{status},
         </if>
+        <if test="roleType != null ">
+            role_type = #{roleType},
+        </if>
+        <if test="roleName != null ">
+            role_name = #{roleName},
+        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -94,4 +108,10 @@
         DELETE FROM t_role
         WHERE id = #{id}
     </delete>
+
+    <select id="getRoleList" resultType="Map">
+      SELECT id , role , role_type AS 'roleType',role_name AS  'roleName'
+      FROM t_role
+    </select>
+
 </mapper>

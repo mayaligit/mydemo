@@ -178,15 +178,15 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 throw new AttendanceException("当前考勤时间不是工作日!");
             }
         }
-        /*//在考勤期内，但是当前日期是法定节假日
+        //在考勤期内，但是当前日期是法定节假日
         if (contains){
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
-            String workDay = DateUtils.getWorkDays(startDate);
-            if(!"0".equals(workDay)){
+            //String workDay = DateUtils.getWorkDays(startDate);
+            if(isHoliday){
                 throw new AttendanceException("节假日不用考勤!");
             }
-        }*/
+        }
         long l2 =System.currentTimeMillis();
         long l = l2-l1;
         log.debug("判断节假日"+l);
@@ -228,7 +228,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     saveAttendance.setStartTimeStatus("0");
                 } else if (compareHour == groupAttendanceHour) {
                     //正常考勤
-                    if (compareMinute < groupAttendanceMinute) {
+                    if (compareMinute <= groupAttendanceMinute) {
                         saveAttendance.setStartTimeStatus("0");
                     } else {
                         saveAttendance.setStartTimeStatus("1");
@@ -362,7 +362,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             if (compareHour>groupAttendanceHour){
                 saveAttendance.setEndTimeStatus("0");
             }else if (compareHour==groupAttendanceHour){
-                if (compareMinute>groupAttendanceMinute){
+                if (compareMinute>=groupAttendanceMinute){
                     saveAttendance.setEndTimeStatus("0");
                 }else {
                     saveAttendance.setEndTimeStatus("1");
@@ -392,7 +392,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //获取考勤的时长
                 double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
                 //比较实际考勤时长与规则考勤时长
-                if(workTime - groupAttendanceDuration > 0){
+                if(workTime - groupAttendanceDuration >= 0){
                     saveAttendance.setEndTimeStatus("0");
                 }else {
                     saveAttendance.setEndTimeStatus("1");

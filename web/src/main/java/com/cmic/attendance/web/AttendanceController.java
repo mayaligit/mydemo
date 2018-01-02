@@ -227,7 +227,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setGroupAttendanceEnd(groupRule.getGroupAttendanceEnd());
             //返回多地址打卡数据
             ArrayList<GroupAddressVo> groupAddressList = service.getGroupAddressList(groupRule.getId());
-            if(groupAddressList != null && groupAddressList.size() >0){
+            if(groupAddressList != null && groupAddressList.size() >0 && groupAddressList.get(0).getGroupAttendanceScope() !=null){
                 attanceMaxdistance = groupAddressList.get(0).getGroupAttendanceScope();
             }
             attendanceVo.setAddressList(groupAddressList);

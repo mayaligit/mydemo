@@ -58,4 +58,8 @@ public class RoleService extends CrudService<RoleDao, Role> {
     public List<Map> getSupplierList(){
         return roleDao.supplierList();
     }
+
+    public List<Map> getRoleList() {
+        return roleDao.getRoleList();
+    }
 }

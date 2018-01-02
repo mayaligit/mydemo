@@ -1,6 +1,6 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace = "com.cmic.attendance.dao.AttendanceUserDao">
+<mapper namespace="com.cmic.attendance.dao.AttendanceUserDao">
     <sql id="attendanceUserColumns">
         a.id AS "id",
         a.attendance_username AS "attendanceUsername",
@@ -12,7 +12,6 @@
         a.user_type AS "userType",
         a.actived AS "actived",
         a.remarks AS "remarks",
-        a.role_id AS "roleId",
         a.create_by AS "createBy.id",
         a.create_date AS "createDate",
         a.update_by AS "updateBy.id",
@@ -51,7 +50,7 @@
         SELECT
         <include refid="attendanceUserColumns"/>
         FROM t_attendance_user a
-        WHERE  a.attendance_username=#{userName}
+        WHERE a.attendance_username=#{userName}
     </select>
 
     <insert id="insert">
@@ -66,7 +65,6 @@
         user_type,
         actived,
         remarks,
-        role_id,
         create_by,
         create_date,
         update_by,
@@ -82,7 +80,6 @@
         #{userType},
         #{actived},
         #{remarks},
-        #{roleId},
         #{createBy.id},
         #{createDate},
         #{updateBy.id},
@@ -101,7 +98,6 @@
         user_type = #{userType},
         actived = #{actived},
         remarks = #{remarks},
-        role_id=#{roleId},
         create_by = #{createBy.id},
         update_by = #{updateBy.id},
         update_date = #{updateDate}
@@ -134,9 +130,6 @@
         <if test="actived != null  and actived != ''">
             actived = #{actived},
         </if>
-        <if test="releId != null  and releId != ''">
-            role_id = #{releId},
-        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
@@ -154,9 +147,8 @@
         a.attendance_password as attendancePassword,
         attendance_group as attendanceGroup,
         user_type as userType,
-        a.role_id as roleId,
         actived as actived
-       FROM t_attendance_user a
+        FROM t_attendance_user a
         <where>
             1=1
             <if test="attendanceUsername != null and attendanceUsername != ''">
@@ -193,14 +185,18 @@
         <if test="actived != null  and actived != ''">
             actived = #{actived},
         </if>
-        <if test="roleId != null  and roleId != ''">
-            role_id = #{roleId},
-        </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
         WHERE id = #{id}
     </update>
 
-
+    <!--返回权限给前端-->
+    <select id="givePermission" parameterType="String" resultType="com.cmic.attendance.model.Permission">
+SELECT e.permission_name,e.url,e.pcode FROM t_permission e
+LEFT JOIN  t_role_permission d ON e.id=d.permission_id
+LEFT JOIN  t_role c ON d.role_id =c.id LEFT JOIN
+t_role_user b  ON c.id = b.role_id LEFT JOIN
+t_attendance_user a ON b.user_id = a.id WHERE a.id=#{attendanceUserId}
+    </select>
 
 </mapper>

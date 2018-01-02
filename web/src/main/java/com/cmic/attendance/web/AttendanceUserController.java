@@ -1,10 +1,8 @@
 package com.cmic.attendance.web;
 
 
-import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.service.AttendanceUserService;
-import com.cmic.attendance.service.GroupRuleService;
 import com.cmic.attendance.utils.MD5Util;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
@@ -44,6 +42,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
     @Autowired
     private AttendanceUserService attendanceUserService;
+
 
     @ApiOperation(value = "查询", notes = "查询用户管理表列表", httpMethod = "GET")
     @ApiImplicitParams({
@@ -139,8 +138,11 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @ApiOperation(value = "删除", notes = "删除考勤用户管理表", httpMethod = "DELETE")
     @RequestMapping(value = "/delectById/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "考勤用户管理表ID") @PathVariable String id) {
-        AttendanceUser attendanceUser = attendanceUserService.get(id);
-        if("0".equals(attendanceUser.getUserType())){
+        AttendanceUserVo attendanceUserVo= (AttendanceUserVo)WebUtils.getSession().getAttribute("attendanceUserVo");
+            if(attendanceUserVo==null){
+                return;
+            }
+        if("0".equals(attendanceUserVo.getUserType())){
             service.delete(id);
         }
     }
@@ -149,8 +151,8 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public HashMap<String, String> login(@RequestBody AttendanceUserVo attendanceUserVo, HttpServletRequest request) {
-        HashMap<String, String> map = new HashMap<>();
+    public Map login(@RequestBody AttendanceUserVo attendanceUserVo, HttpServletRequest request) {
+        HashMap<String, Object> map = new HashMap<>();
 //        验证码是否为空
         if (StringUtils.isBlank(attendanceUserVo.getCheckCode())) {
             map.put("status", "4");
@@ -166,7 +168,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
                 return map;
             }
         }
-        HashMap<String, String> login = service.login(attendanceUserVo, request);
+        Map login = service.login(attendanceUserVo, request);
 
         /*if ("0".equals(login.get("status"))){
             redisTemplate.boundValueOps("attendanceUser").set("attendanceUser");
@@ -221,4 +223,5 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
         AttendanceUser user = service.checkUserByName(attendanceUser.getAttendanceUsername());
         return user;
     }
+
 }

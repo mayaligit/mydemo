@@ -3,18 +3,14 @@ package com.cmic.attendance.web;
 import com.cmic.attendance.Constant.Constant;
 import com.cmic.attendance.model.RcsToken;
 import com.cmic.attendance.model.UserBo;
-import com.cmic.attendance.utils.DateUtils;
 import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.RestException;
-import com.cmic.saas.utils.JSONUtils;
-import com.cmic.saas.utils.WebUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,8 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author 何荣
@@ -62,6 +56,7 @@ public class CentifyUserController {
     public ModelAndView info(RcsToken rcsToken, HttpServletRequest request, HttpServletResponse response) {
         String id = request.getSession().getId();
         this.certifyToken(request, rcsToken);
+        log.debug("==========token============="+rcsToken.getToken());
         //判断session中是否有登陆用户
         UserBo user = this.getSessionUser(request);
         ModelAndView mav = new ModelAndView();
@@ -80,6 +75,9 @@ public class CentifyUserController {
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
+
+		 log.debug("==========统一认证,获取用户信息成功=============");
+
 //        解析请求数据 , 获取用户电话和用户名
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject) parser.parse(userStr);

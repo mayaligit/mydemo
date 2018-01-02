@@ -14,4 +14,7 @@ import java.util.Map;
 public interface RoleDao extends CrudDao<Role> {
     //查询供应商的id和名字
     List<Map> supplierList();
+
+    //查询角色的集合
+    List<Map> getRoleList();
 }
