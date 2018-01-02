@@ -51,6 +51,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
 
     private static Logger log = Logger.getLogger(AttendanceController.class);
 
+    int a=0;
+
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -132,7 +134,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }
         return attancesStaus;
     }
-    int a=0;
+
 //TODO 上班卡初始化业务需要的数据
     /**
      * 上班打卡页面初始化需要的是数据
@@ -242,7 +244,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceVo.setPhone(phone);
         attendanceVo.setDate(serverDate);
         attendanceVo.setServerTime(serverTimes.toString());
-        a=a++;
+        a++;
         log.debug("初始化时间已经返回访问次数"+a+"》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
         return attendanceVo;
     }
