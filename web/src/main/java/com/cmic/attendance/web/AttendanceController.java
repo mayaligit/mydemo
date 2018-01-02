@@ -150,6 +150,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         adminEntity.setName("梁渝");
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
         //测试数据结束
+
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
