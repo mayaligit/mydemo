@@ -204,6 +204,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 //判断当前地点是否异常
                 if (null==attendance) {
                     saveAttendance = new Attendance();
+                    //设置日报状态
+                    saveAttendance.setDailyStatus(0);
                 }else {
                     saveAttendance = attendance;
                 }
@@ -254,7 +256,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                         dateToYearMonthDayArry[1]);
                 saveAttendance.setAttendanceCardStatus("2");
                 saveAttendance.setStartLocation(attendanceVo.getLocation());
-                saveAttendance.setDailyStatus(0);
                 saveAttendance.setAttendanceDimensionStart(attendanceVo.getAttendanceDimension());
                 saveAttendance.setAttendanceLongitudeStart(attendanceVo.getAttendanceLongitude());
                 saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());
