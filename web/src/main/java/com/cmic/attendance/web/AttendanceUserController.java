@@ -138,8 +138,11 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @ApiOperation(value = "删除", notes = "删除考勤用户管理表", httpMethod = "DELETE")
     @RequestMapping(value = "/delectById/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "考勤用户管理表ID") @PathVariable String id) {
-        AttendanceUser attendanceUser = attendanceUserService.get(id);
-        if("0".equals(attendanceUser.getUserType())){
+        AttendanceUserVo attendanceUserVo= (AttendanceUserVo)WebUtils.getSession().getAttribute("attendanceUserVo");
+            if(attendanceUserVo==null){
+                return;
+            }
+        if("0".equals(attendanceUserVo.getUserType())){
             service.delete(id);
         }
     }
