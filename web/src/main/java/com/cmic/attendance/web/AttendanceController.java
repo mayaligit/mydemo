@@ -132,7 +132,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }
         return attancesStaus;
     }
-
+    int a=0;
 //TODO 上班卡初始化业务需要的数据
     /**
      * 上班打卡页面初始化需要的是数据
@@ -148,7 +148,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         adminEntity.setName("梁渝");
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
         //测试数据结束
-        int a=0;
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
