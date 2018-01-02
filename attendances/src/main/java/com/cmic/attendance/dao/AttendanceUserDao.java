@@ -17,4 +17,6 @@ public interface AttendanceUserDao extends CrudDao<AttendanceUser> {
 
     //登陆成功后返回权限给前端
     List<Permission> givePermission(String attendanceUserId);
+
+    Integer getCountByAttendanceUsername(String attendanceUsername);
 }
