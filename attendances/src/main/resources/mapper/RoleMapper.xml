@@ -131,4 +131,12 @@
             #{createDate},#{updateDate},#{createBy},#{updateBy})
     </insert>
 
+    <delete id="deletePrincipleInfo">
+        DELETE FROM  t_principal WHERE id =#{id}
+    </delete>
+
+    <delete id="deleteInterviewerInfo">
+        DELETE FROM  t_interviewer WHERE id =#{id}
+    </delete>
+
 </mapper>
