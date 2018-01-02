@@ -1,6 +1,8 @@
 package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.AttendanceUserDao;
+import com.cmic.attendance.dao.RoleDao;
+import com.cmic.attendance.dao.RoleUserDao;
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.Permission;
 import com.cmic.attendance.utils.MD5Util;
@@ -11,6 +13,7 @@ import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,10 @@ import java.util.Map;
 @Service
 @Transactional(readOnly = true)
 public class AttendanceUserService extends CrudService<AttendanceUserDao, AttendanceUser> {
+    @Autowired
+    private RoleUserDao roleUserDao;
+    @Autowired
+    private RoleDao roleDao;
 
     public AttendanceUser get(String id) {
         return super.get(id);
@@ -135,4 +142,14 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         return responseMap;
     }
 
+    //删除考勤及其招聘宝用户
+    @Transactional(readOnly = false)
+    public void deleteUserInfo(String id) {
+        this.delete(id); //删除考勤用户表
+        roleUserDao.deleteByUserId(id); //删除用户角色中间表
+
+        //删除招聘用户
+        roleDao.deletePrincipleInfo(id); //删除供应商负责人表 ,如果有
+        roleDao.deleteInterviewerInfo(id); //删除面试官表 , 如果有
+    }
 }
