@@ -192,7 +192,7 @@
 
     <!--返回权限给前端-->
     <select id="givePermission" parameterType="String" resultType="com.cmic.attendance.model.Permission">
-SELECT e.permission_name,e.url,e.pcode FROM t_permission e
+SELECT e.permission_name permissionName,e.url url,e.pcode pcode FROM t_permission e
 LEFT JOIN  t_role_permission d ON e.id=d.permission_id
 LEFT JOIN  t_role c ON d.role_id =c.id LEFT JOIN
 t_role_user b  ON c.id = b.role_id LEFT JOIN
