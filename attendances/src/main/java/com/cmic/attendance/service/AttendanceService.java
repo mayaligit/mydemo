@@ -178,15 +178,15 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 throw new AttendanceException("当前考勤时间不是工作日!");
             }
         }
-        /*//在考勤期内，但是当前日期是法定节假日
+        //在考勤期内，但是当前日期是法定节假日
         if (contains){
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
-            String workDay = DateUtils.getWorkDays(startDate);
-            if(!"0".equals(workDay)){
+            //String workDay = DateUtils.getWorkDays(startDate);
+            if(isHoliday){
                 throw new AttendanceException("节假日不用考勤!");
             }
-        }*/
+        }
         long l2 =System.currentTimeMillis();
         long l = l2-l1;
         log.debug("判断节假日"+l);
