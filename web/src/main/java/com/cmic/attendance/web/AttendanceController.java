@@ -148,6 +148,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         adminEntity.setName("梁渝");
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);*/
         //测试数据结束
+        int a=0;
         BaseAdminEntity user= (BaseAdminEntity)request.getSession().getAttribute("_CURRENT_ADMIN_INFO");
         Date serverTime=new Date();
         Long serverTimes=serverTime.getTime();
@@ -238,7 +239,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceVo.setPhone(phone);
         attendanceVo.setDate(serverDate);
         attendanceVo.setServerTime(serverTimes.toString());
-        int a=0;
         a=a++;
         log.debug("初始化时间已经返回访问次数"+a+"》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
         return attendanceVo;
