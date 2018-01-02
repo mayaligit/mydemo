@@ -204,9 +204,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }else if (null ==DBattendance){
             attendanceVo.setIsAttendanceStart("1");
             attendanceVo.setIsAttendanceEnd("1");
-        }else if (null !=DBattendance && DBattendance.getStartTime() ==null || DBattendance.getEndTime()==null){
-            attendanceVo.setIsAttendanceStart("1");
-            attendanceVo.setIsAttendanceEnd("1");
+        }else if (null !=DBattendance){
+            if (DBattendance.getStartTime() ==null){
+                attendanceVo.setIsAttendanceStart("1");
+            }
+            if (DBattendance.getEndTime() == null){
+                attendanceVo.setIsAttendanceEnd("1");
+            }
         }
         attendanceVo.setUsername(username);
         //根据登录手机号获取入职人员信息
