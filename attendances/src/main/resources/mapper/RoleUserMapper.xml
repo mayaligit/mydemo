@@ -91,7 +91,7 @@
     </delete>
 
     <delete id="deleteByUserId">
-        DELETE FROM  t_role_user WHERE t_user_id =#{userId}
+        DELETE FROM  t_role_user WHERE user_id =#{userId}
     </delete>
 
 </mapper>
