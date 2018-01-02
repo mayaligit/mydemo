@@ -16,6 +16,7 @@ import com.cmic.saas.base.model.BaseAdminEntity;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.JSONUtils;
+import com.cmic.saas.utils.StringUtils;
 import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -49,6 +50,8 @@ import java.util.Map;
 public class AttendanceController extends BaseRestController<AttendanceService> {
 
     private static Logger log = Logger.getLogger(AttendanceController.class);
+
+    int a=0;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -137,7 +140,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
      * 上班打卡页面初始化需要的是数据
      */
     @ApiOperation(value = "获取服务器数据", notes = "获取服务器时间", httpMethod = "POST")
-    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
+//    @RequestMapping(value="/getStartServerMesg",method =RequestMethod.GET)
     @ResponseBody
     public AttendanceVo getStartServerMesg() {
 
@@ -156,11 +159,10 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         String username = (String)redisTemplate.boundValueOps("username").get();*/
         String phone = user.getId();
         String username=user.getName();
-        log.debug("登录者session数据》》》》》》》》》》"+user.getId()+user.getName()+"<<<<<<<<<<<<<<<<<");
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
-        if (null !=DBattendance && null !=DBattendance.getStartTime() ){
-            log.debug("用户已经打过卡了");
+        if (null !=DBattendance && null !=DBattendance.getStartTime()){
+            log.debug("用户已经打过卡了打卡时间"+DBattendance.getStartTime());
             //是否已经打卡;
             /**考勤UUID 打卡的时间 地址 日报状态0/未完成,1/已完成  是否异常 打卡状态 是否打卡*/
             Date dat= DBattendance.getStartTime();
@@ -173,7 +175,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setAttendanceStatus(DBattendance.getAttendanceStatus());
             attendanceVo.setStartTimeStatus(DBattendance.getStartTimeStatus());
             attendanceVo.setIsAttendanceStart("0");
-            //判断是否打过下班卡了
+            //判断是否打过下班卡了 0已经打卡，1没有打卡
             if ( DBattendance.getEndTime() !=null){
                 attendanceVo.setIsAttendanceEnd("0");
             }else {
@@ -203,6 +205,13 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         }else if (null ==DBattendance){
             attendanceVo.setIsAttendanceStart("1");
             attendanceVo.setIsAttendanceEnd("1");
+        }else if (null !=DBattendance){
+            if (DBattendance.getStartTime() ==null){
+                attendanceVo.setIsAttendanceStart("1");
+            }
+            if (DBattendance.getEndTime() == null){
+                attendanceVo.setIsAttendanceEnd("1");
+            }
         }
         attendanceVo.setUsername(username);
         //根据登录手机号获取入职人员信息
@@ -235,6 +244,8 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
         attendanceVo.setPhone(phone);
         attendanceVo.setDate(serverDate);
         attendanceVo.setServerTime(serverTimes.toString());
+        a++;
+        log.debug("初始化时间已经返回访问次数"+a+"》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
         return attendanceVo;
     }
     /**

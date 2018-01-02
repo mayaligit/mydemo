@@ -155,7 +155,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String[] compareTimeArry = compareTime.split(":");
         Integer compareHour = Integer.parseInt(compareTimeArry[0]);
         Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
-
+        //查询当前考勤数据是否存在
+        String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
+        Attendance saveAttendance = null;
+        Attendance attendance = checkAttendance(attendanceVo.getPhone(),dateToYearMonthDay2);
         //考勤的周 日期格式1-2-3-4-5-6-7
         String groupAttendanceWeek = groupRule.getGroupAttendanceWeek();
         String[] attendanceWeek = groupAttendanceWeek.split("-");
@@ -199,7 +202,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             log.debug("进入固定时长打卡业务");
             if ("1".equals(groupAttendanceWays)) {
                 //判断当前地点是否异常
-                Attendance saveAttendance = new Attendance();
+                if (null==attendance) {
+                    saveAttendance = new Attendance();
+                    //设置日报状态
+                    saveAttendance.setDailyStatus(0);
+                }else {
+                    saveAttendance = attendance;
+                }
                 String distance2 = attendanceVo.getDistance();
                 if (distance2 ==null || "".equals(distance2)){
                     distance2="0.0";
@@ -247,7 +256,6 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                         dateToYearMonthDayArry[1]);
                 saveAttendance.setAttendanceCardStatus("2");
                 saveAttendance.setStartLocation(attendanceVo.getLocation());
-                saveAttendance.setDailyStatus(0);
                 saveAttendance.setAttendanceDimensionStart(attendanceVo.getAttendanceDimension());
                 saveAttendance.setAttendanceLongitudeStart(attendanceVo.getAttendanceLongitude());
                 saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());
@@ -267,7 +275,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             } else {
                 //2、预留自由打卡业务 插入数据
                 log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>进入自由打卡模式<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-                Attendance saveAttendance = new Attendance();
+
                 saveAttendance.setAttendanceUser(attendanceVo.getUsername());
                 Date startTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
                 saveAttendance.setStartTime(startTime);
