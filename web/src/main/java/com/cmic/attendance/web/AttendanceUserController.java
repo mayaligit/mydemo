@@ -2,7 +2,9 @@ package com.cmic.attendance.web;
 
 
 import com.cmic.attendance.model.AttendanceUser;
+import com.cmic.attendance.pojo.AttendanceUserPojo;
 import com.cmic.attendance.service.AttendanceUserService;
+import com.cmic.attendance.service.RoleService;
 import com.cmic.attendance.utils.MD5Util;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
@@ -12,6 +14,7 @@ import com.cmic.saas.utils.WebUtils;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -42,6 +45,8 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
     @Autowired
     private AttendanceUserService attendanceUserService;
+    @Autowired
+    private RoleService roleService;
 
 
     @ApiOperation(value = "查询", notes = "查询用户管理表列表", httpMethod = "GET")
@@ -58,8 +63,11 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
     @ApiOperation(value = "新增", notes = "新增用户管理表", httpMethod = "POST")
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
-    public Map<String,Object> post(@Validated @RequestBody AttendanceUser attendanceUser) {
+    public Map<String,Object> post(@Validated @RequestBody AttendanceUserPojo attendanceUserPojo) {
         //service.insert(attendanceUser);
+        AttendanceUser attendanceUser = new AttendanceUser();
+        BeanUtils.copyProperties(attendanceUserPojo,attendanceUser);
+
         Map<String,Object> resultMap = new HashMap<>();
         try {
             String password = MD5Util.md5(attendanceUser.getAttendancePassword());
@@ -77,10 +85,14 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
             //测试数据结束
             //request.getSession().setAttribute("_CURRENT_ADMIN_INFO"    ,adminEntity);
 
-            service.save(attendanceUser);
+            roleService.saveRole(attendanceUser,attendanceUserPojo);
+
+           // service.save(attendanceUser);
+
             resultMap.put("code","0");
             resultMap.put("msg","新增成功");
         }catch (Exception e){
+            e.printStackTrace();
             resultMap.put("code","1");
             resultMap.put("msg","新增失败");
         }

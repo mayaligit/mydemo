@@ -114,4 +114,21 @@
       FROM t_role
     </select>
 
+    <insert id="insertInterviewerUser">
+        INSERT INTO  t_interviewer
+          (id,interviewer_name,department,interviewer_phone ,interviewer_email,
+            create_date,update_date,create_by,update_by)
+        VALUES (#{id},#{interviewerName},#{department},#{interviewerPhone},#{interviewerEmail},
+            #{createDate},#{updateDate},#{createBy},#{updateBy})
+    </insert>
+
+    <insert id="insertPrincipalUser" >
+        INSERT INTO  t_principal
+            (id,principal_name,project_name,supplier_id ,principal_phone,principal_email,
+             create_date,update_date,create_by,update_by)
+        VALUES
+          (#{id},#{principalName},#{projectName},#{supplierId},#{principalPhone},#{principalEmail},
+            #{createDate},#{updateDate},#{createBy},#{updateBy})
+    </insert>
+
 </mapper>

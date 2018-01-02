@@ -17,4 +17,10 @@ public interface RoleDao extends CrudDao<Role> {
 
     //查询角色的集合
     List<Map> getRoleList();
+
+    //向面试官表中插入一条数据
+    void insertInterviewerUser(Map<String, Object> paraMap);
+
+    // 向供应商负责人表中插入一条数据
+    void insertPrincipalUser(Map<String, Object> paraMap);
 }
