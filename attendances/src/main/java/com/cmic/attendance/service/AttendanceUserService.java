@@ -152,4 +152,13 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         roleDao.deletePrincipleInfo(id); //删除供应商负责人表 ,如果有
         roleDao.deleteInterviewerInfo(id); //删除面试官表 , 如果有
     }
+
+    public boolean getByAttendanceUsername(String attendanceUsername) {
+        Integer count = dao.getCountByAttendanceUsername(attendanceUsername);
+        if (count == 0){
+            return  false;
+        }else {
+            return true ;
+        }
+    }
 }
