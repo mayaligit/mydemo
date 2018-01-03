@@ -1,6 +1,5 @@
 package com.cmic.attendance.web;
 
-
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.pojo.AttendanceUserPojo;
 import com.cmic.attendance.service.AttendanceUserService;
@@ -25,7 +24,10 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.cmic.saas.utils.WebUtils.getSession;
 
 /**
  * 考勤后台管理表Controller
@@ -156,10 +158,9 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @ApiOperation(value = "删除", notes = "删除考勤用户管理表", httpMethod = "DELETE")
     @RequestMapping(value = "/delectById/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "考勤用户管理表ID") @PathVariable String id) {
-
-        AttendanceUser attendanceUser = service.get(id);
-
-        if(!"0".equals(attendanceUser.getUserType())){ //被删除的不能是超级管理员
+        List<Integer> roleList=(List<Integer>)WebUtils.getSession().getAttribute("roleList");
+        log.debug("getsessionroleList"+roleList+"++++++++++++++++++");
+        if(!roleList.contains(1)){ //被删除的不能是超级管理员
             service.deleteUserInfo(id);
         }
     }
@@ -175,7 +176,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
             map.put("status", "4");
             return map;
         }
-        String checkCode = (String) WebUtils.getSession().getAttribute("checkCode");
+        String checkCode = (String) getSession().getAttribute("checkCode");
 
         if (StringUtils.isNotBlank(checkCode)) {
 //            验证码是否不正在正确

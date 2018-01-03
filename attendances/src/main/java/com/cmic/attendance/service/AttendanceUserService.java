@@ -89,13 +89,12 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         result.put("msg", "登录成功");
         result.put("status", "0");
         result.put("phone", checkUser.getAttendancePhone());
-        result.put("userType", checkUser.getUserType());
         //result.put("attendance_group",checkUser.getAttendanceGroup());
         attendanceUserVo.setAttendanceGroup(checkUser.getAttendanceGroup());
         attendanceUserVo.setId(checkUser.getId());
-        attendanceUserVo.setUserType(checkUser.getUserType());
         //通过attendanceuserid关联role获取用户对应的角色集合
         List<Integer> roleList= dao.getUserRoleNumber(checkUser.getId());
+        logger.debug("setsessionroleList"+roleList+"++++++++++++++++++");
         //服务器session
         request.getSession().setAttribute("attendanceUserVo", attendanceUserVo);
         request.getSession().setAttribute("roleList",roleList);

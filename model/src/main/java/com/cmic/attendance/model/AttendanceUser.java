@@ -22,8 +22,6 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
     protected String enterpriseId;
     @ApiModelProperty(value = "企业名称-备用字段")
     protected String enterpriseName;
-    @ApiModelProperty(value = "0/超级管理员,1/考勤组管理员")
-    protected String userType;
     @ApiModelProperty(value = "0/正常,1/停用")
     protected String actived;
 
@@ -80,14 +78,6 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
 
     public void setEnterpriseName(String enterpriseName) {
         this.enterpriseName = enterpriseName;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
     }
 
     public String getActived() {
