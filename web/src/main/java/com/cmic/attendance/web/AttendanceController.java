@@ -227,6 +227,7 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             attendanceVo.setUsername(username);
             user.setName(username);
         }
+        request.getSession().setAttribute("_CURRENT_ADMIN_INFO",user);
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
