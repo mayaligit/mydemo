@@ -88,4 +88,16 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
         this.actived = actived;
     }
 
+    @Override
+    public String toString() {
+        return "AttendanceUser{" +
+                "attendanceUsername='" + attendanceUsername + '\'' +
+                ", attendancePhone='" + attendancePhone + '\'' +
+                ", attendancePassword='" + attendancePassword + '\'' +
+                ", attendanceGroup='" + attendanceGroup + '\'' +
+                ", enterpriseId='" + enterpriseId + '\'' +
+                ", enterpriseName='" + enterpriseName + '\'' +
+                ", actived='" + actived + '\'' +
+                '}';
+    }
 }

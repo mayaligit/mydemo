@@ -78,7 +78,9 @@ public class RoleService extends CrudService<RoleDao, Role> {
         Integer role = attendanceUserPojo.getRole();
 
         //考勤用户表中插入数据
+        logger.debug("=====插入用户的信息start====="+attendanceUser.toString());
         attendanceUserService.save(attendanceUser);
+        logger.debug("=====插入用户的信息end====="+attendanceUser.toString());
 
         //====维护角色中间表===
         RoleUser roleUser = new RoleUser();
