@@ -735,4 +735,47 @@
         </if>
     </select>
 
+
+
+    <select id="selectAttendance" parameterType="com.cmic.attendance.pojo.AttendancePojo" resultType="com.cmic.attendance.pojo.AttendancePojo">
+        SELECT
+        a.attendance_user AS "attendanceUser",
+        a.create_by AS "telephone",
+        a.start_time AS "startTime",
+        a.end_time AS "endTime",
+        a.start_location AS "startLocation",
+        a.end_location AS "endLocation",
+        a.attendance_group AS "attendanceGroup"
+        FROM
+        t_attendance a
+        <where>
+            1=1
+            <if test="attendanceUser != null and attendanceUser != ''">
+                and a.attendance_user = #{attendanceUser}
+            </if>
+            <if test="attendanceStatus != null and attendanceStatus != ''">
+                and a.attendance_status = #{attendanceStatus}
+            </if>
+            <if test="attendanceMonth != null and attendanceMonth != ''">
+                and a.attendance_month = #{attendanceMonth}
+            </if>
+            <if test="dailyStatus != null and dailyStatus != ''">
+                and a.daily_status = #{dailyStatus}
+            </if>
+            <if test="attendanceGroup != null and attendanceGroup != ''">
+                and a.attendance_group = #{attendanceGroup}
+            </if>
+            <if test="startTimeStatus != null and startTimeStatus != ''">
+                and a.start_time_status = #{startTimeStatus}
+            </if>
+            <if test="endTimeStatus != null and endTimeStatus != ''">
+                and a.end_time_status = #{endTimeStatus}
+            </if>
+            <if test="date != null and date != ''">
+                and date(a.create_date) = #{date}
+            </if>
+        </where>
+        order by attendanceGroup
+    </select>
+
 </mapper>

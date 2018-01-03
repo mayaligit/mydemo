@@ -205,6 +205,20 @@
         WHERE attendance_username=#{attendanceUsername}
     </select>
 
+    <select id="getUserRoleNumber" parameterType="String" resultType="int">
+    SELECT r.role FROM t_attendance_user u
+    LEFT JOIN t_role_user ru ON u.id=ru.user_id
+    LEFT JOIN t_role r ON r.id=ru.role_id
+    WHERE u.id=#{attendanceUserId}
+    </select>
+
+    <select id="getAttendanceUser" parameterType="String" resultType="AttendanceUser">
+    SELECT attendance_username AS "attendanceUsername"
+    FROM t_employee,t_attendance_user
+    WHERE attendance_name = attendance_group
+    AND telephone = #{telephone}
+</select>
+
     <select id="getCountByAttendancePhone" resultType="int">
         SELECT COUNT(id)
         FROM t_attendance_user

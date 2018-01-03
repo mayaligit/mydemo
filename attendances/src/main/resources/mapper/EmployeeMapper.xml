@@ -178,5 +178,24 @@
 
 
 
+    <select id="selectNoAttendance" parameterType="com.cmic.attendance.pojo.EmployeePojo" resultType="Employee">
+        SELECT employee_name employeeName ,telephone,enter_name enterName,enterprise_department enterpriseDepartment
+        FROM t_employee
+        WHERE 1 = 1
+        and telephone NOT IN(
+        SELECT
+        create_by telephone
+        FROM t_attendance a
+        WHERE a.`start_time` IS NOT NULL
+        AND DATE(a.`start_time`) = #{date})
+        <if test="attendanceName != null  and attendanceName != ''">
+            and attendance_name = #{attendanceName}
+        </if>
+        ORDER BY enterName
+
+    </select>
+
+
+
 
 </mapper>

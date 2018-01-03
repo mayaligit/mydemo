@@ -67,22 +67,19 @@ public class CentifyUserController {
     private BaseAdminEntity certifyToken(HttpServletRequest request, RcsToken rcsToken) {
         MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
         paramMap.add("token", rcsToken.getToken());
-        paramMap.add("contactId", rcsToken.getContactId());
-        paramMap.add("enterId", rcsToken.getEnterId());
+//        paramMap.add("contactId", rcsToken.getContactId());
+//        paramMap.add("enterId", rcsToken.getEnterId());
         //发送请求调用接口
         String userStr = this.restTemplate.postForObject(Constant.certifyServicePath + Constant.userINfo, paramMap, String.class);
         long end = System.currentTimeMillis();
         if (null == userStr) {
             throw new RestException("统一认证,获取用户信息失败");
         }
-
-		 log.debug("==========统一认证,获取用户信息成功=============");
-
 //        解析请求数据 , 获取用户电话和用户名
         JsonParser parser = new JsonParser();
         JsonObject jsonObject = (JsonObject) parser.parse(userStr);
         String phone = jsonObject.get("msisdn").getAsString();
-        String username = jsonObject.get("username").getAsString();
+      /*  String username = jsonObject.get("username").getAsString();*/
         //获取用户所属企业ID 和 企业名称
         String sessionId = request.getSession().getId();
         String enterId = rcsToken.getEnterId();
@@ -90,14 +87,14 @@ public class CentifyUserController {
         //将用户信息封装到实体类中,并放入session域中
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(phone);
-        adminEntity.setName(username);
+       /* adminEntity.setName(username);*/
         request.getSession().setAttribute("_CURRENT_ADMIN_INFO",adminEntity);
-        log.debug("");
         //拦截器不拦截，这个session无其他作用
       /*  redisTemplate.boundValueOps("_CURRENT_ADMIN_INFO").set("_CURRENT_ADMIN_INFO");
         redisTemplate.expire("_CURRENT_ADMIN_INFO", 30,TimeUnit.MINUTES);*/
     /*    redisTemplate.boundValueOps("username").set(username);
         redisTemplate.expire("username", 30, TimeUnit.MINUTES);*/
+        log.debug("==========统一认证,获取用户信息成功=============");
         return adminEntity;
     }
 
