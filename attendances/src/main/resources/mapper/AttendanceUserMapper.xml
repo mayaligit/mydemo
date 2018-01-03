@@ -205,4 +205,10 @@
         WHERE attendance_username=#{attendanceUsername}
     </select>
 
+    <select id="getCountByAttendancePhone" resultType="int">
+        SELECT COUNT(id)
+        FROM t_attendance_user
+        WHERE attendance_phone=#{attendancePhone}
+    </select>
+
 </mapper>

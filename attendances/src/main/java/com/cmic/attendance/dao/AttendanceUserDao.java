@@ -19,4 +19,6 @@ public interface AttendanceUserDao extends CrudDao<AttendanceUser> {
     List<Permission> givePermission(String attendanceUserId);
 
     Integer getCountByAttendanceUsername(String attendanceUsername);
+
+    Integer getCountByAttendancePhone(String attendancePhone);
 }
