@@ -4,6 +4,7 @@ import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.service.AttendanceService;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceUserVo;
+import com.cmic.attendance.vo.EmployeeVo;
 import com.cmic.attendance.vo.QueryAttendanceVo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.saas.base.web.RestException;
@@ -306,6 +307,55 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
         map.put("nowDate",nowDate);
         map.put("weekday",weekDays[weekday]);
         return map;
+    }
+
+
+    /**
+     * @author hjl
+     * 进行条件导出excel
+     * @param
+     */
+    @RequestMapping("/exportAttendanceExcel")
+    public void exportAttendanceExcel(String date, HttpServletResponse response){
+        //返回的是excel的临时
+        EmployeeVo employeeVo = new EmployeeVo();
+        employeeVo.setDate(date);
+        employeeVo.setAttFlag("0");
+        String data = service.exportAttendanceExcel(employeeVo);
+
+        String fileName = null;
+        StringBuffer sb = new StringBuffer();
+        String[] split = date.split("-");
+        for(String a:split){
+            sb.append(a);
+        }
+        if("1".equals(employeeVo.getAttFlag())){
+            fileName = sb.toString()+"打卡员工信息";
+        }else{
+            fileName = sb.toString()+"未打卡员工信息";
+        }
+        //判断
+        if (data != null){
+            //先建立一个文件读取流去读取这个临时excel文件
+            PrintWriter out = null;
+            try {
+                //这个一定要设定，告诉浏览器这次请求是一个下载的数据流
+                response.setContentType("APPLICATION/OCTET-STREAM");
+                response.setHeader("Content-type", "text/html;charset=UTF-8");
+
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(fileName.getBytes(),"iso-8859-1")+".xls" + "\"");
+                //获取输出流
+                out = response.getWriter();
+                out.write(data);
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                e .printStackTrace();
+                throw new RestException("导出失败!");
+            }
+
+        }
+
     }
 
 }
