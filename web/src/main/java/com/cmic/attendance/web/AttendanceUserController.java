@@ -68,10 +68,11 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     public Map<String,Object> post(@Validated @RequestBody AttendanceUserPojo attendanceUserPojo) {
         //service.insert(attendanceUser);
         Map<String,Object> resultMap = new HashMap<>();
-        boolean flag = service.getByAttendanceUsername(attendanceUserPojo.getAttendanceUsername());
-        if (flag){
+        String message = service.getByAttendanceUsername(attendanceUserPojo);
+        if (message != null){
             resultMap.put("code","2");
-            resultMap.put("msg","账号已注册,请重新输入");
+            resultMap.put("msg",message);
+            return resultMap ;
         }
 
         AttendanceUser attendanceUser = new AttendanceUser();
@@ -212,6 +213,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     public HashMap<String, String> loginOut(HttpServletRequest request) {
        /* redisTemplate.delete("attendanceUser");*/
         request.getSession().removeAttribute("attendanceUserVo");
+        request.getSession().removeAttribute("roleList");
         log.debug(">>>>>>>系统管理员退出<<<<<<<<<");
         HashMap<String, String> reslutMap = new HashMap<String, String>();
         reslutMap.put("status", "0");
