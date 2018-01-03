@@ -66,5 +66,7 @@ public interface AttendanceDao extends CrudDao<Attendance> {
     List<Integer> getAttendanceDaysList(WorkStatistics workStatistics);
 
     List<AttendanceResultPojo> checkNoEndTime(AttendancePojo attendancePojo);
+
+    List<AttendancePojo> selectAttendance(AttendancePojo attendancePojo);
 }
 

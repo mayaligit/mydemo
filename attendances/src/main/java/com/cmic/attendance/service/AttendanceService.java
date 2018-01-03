@@ -5,6 +5,7 @@ import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.*;
 import com.cmic.attendance.pojo.AttendancePojo;
 import com.cmic.attendance.pojo.AttendanceResultPojo;
+import com.cmic.attendance.pojo.EmployeePojo;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.*;
 import com.cmic.saas.base.service.CrudService;
@@ -21,6 +22,7 @@ import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -1032,8 +1034,72 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         return map;
     }
+    /**
+     * 数据导出
+     * @param
+     */
+    public String exportAttendanceExcel(EmployeeVo employeeVo){
 
+        StringWriter stringWriter = null;
+        BufferedWriter bufferedWriter = null ;
+        try {
 
+            List<Employee> employeeList = null;
+            List<AttendancePojo> attendanceList = null;
+            Configuration configuration = null;
+
+            /** 创建Configuration配置信息对象,需要指定版本号 */
+            configuration = new Configuration(Configuration.VERSION_2_3_25);
+            /** 通过Configuration设置模版文件的基础路径 */
+            configuration.setClassForTemplateLoading(this.getClass(), "/templates");
+            Template template = null;
+            /** 定义模版中需要的数据模型 */
+            Map<String, Object> dataModel = new HashMap<>();
+            if("0".equals(employeeVo.getAttFlag())){
+                EmployeePojo employeePojo = new EmployeePojo();
+                BeanUtils.copyProperties(employeeVo,employeePojo);
+                //获取数据,查询未打卡数据
+                employeeList = employeeService.selectNoAttendance(employeePojo);
+                /** 设置数据 */
+                dataModel.put("employeeList", employeeList);
+                /** 通过Configuration获取指定模版文件对应的模版对象 */
+                template = configuration.getTemplate("excelNo.ftl");
+            }else{
+                //获取数据,查询打卡数据
+                AttendancePojo attendancePojo = new AttendancePojo();
+                BeanUtils.copyProperties(employeeVo,attendancePojo);
+                attendancePojo.setAttendanceGroup(employeeVo.getAttendanceName());
+                attendanceList = dao.selectAttendance(attendancePojo);
+                /** 设置数据 */
+                dataModel.put("attendanceList", attendanceList);
+                /** 通过Configuration获取指定模版文件对应的模版对象 */
+                template = configuration.getTemplate("excelYes.ftl");
+            }
+
+            stringWriter = new StringWriter();
+            bufferedWriter = new BufferedWriter(stringWriter);
+            template.process(dataModel,bufferedWriter);
+
+            return stringWriter.toString() ;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RestException("导出失败!");
+        }finally {
+            try {
+                bufferedWriter.flush();
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                try {
+                    stringWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
    /* //统计正常下班数据 只更新数据不做迟到计算
     public void  insetEndMStatic(InsetEndStaticBo insetEndStaticBo) {
         Statistics DBstatistics =
