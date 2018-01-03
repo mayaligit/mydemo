@@ -23,4 +23,5 @@ public interface AttendanceUserDao extends CrudDao<AttendanceUser> {
     //后台用户关联角色,查出每个用户对应的角色
     List<Integer> getUserRoleNumber(String attendanceUserId);
 
+    AttendanceUser getAttendanceUser(String telephone);
 }

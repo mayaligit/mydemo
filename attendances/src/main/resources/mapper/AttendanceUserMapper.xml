@@ -212,4 +212,11 @@
     WHERE u.id=#{attendanceUserId}
     </select>
 
+    <select id="getAttendanceUser" parameterType="String" resultType="AttendanceUser">
+    SELECT attendance_username AS "attendanceUsername"
+    FROM t_employee,t_attendance_user
+    WHERE attendance_name = attendance_group
+    AND telephone = #{telephone}
+</select>
+
 </mapper>

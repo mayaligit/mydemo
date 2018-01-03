@@ -164,4 +164,8 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
             return true ;
         }
     }
+
+    public AttendanceUser getAttendanceUser(String telephone) {
+        return dao.getAttendanceUser(telephone);
+    }
 }

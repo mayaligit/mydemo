@@ -312,20 +312,17 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
 
     /**
      * @author hjl
-     * 进行条件导出excel
+     * 进行条件导出,今日打卡和未打卡数据excel
      * @param
      */
     @RequestMapping("/exportAttendanceExcel")
-    public void exportAttendanceExcel(String date, HttpServletResponse response){
+    public void exportAttendanceExcel(EmployeeVo employeeVo, HttpServletResponse response){
         //返回的是excel的临时
-        EmployeeVo employeeVo = new EmployeeVo();
-        employeeVo.setDate(date);
-        employeeVo.setAttFlag("0");
         String data = service.exportAttendanceExcel(employeeVo);
 
         String fileName = null;
         StringBuffer sb = new StringBuffer();
-        String[] split = date.split("-");
+        String[] split = employeeVo.getDate().split("-");
         for(String a:split){
             sb.append(a);
         }
