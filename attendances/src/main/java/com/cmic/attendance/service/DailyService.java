@@ -168,6 +168,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
@@ -191,7 +192,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         }
         DailyPojo dailyPojo = new DailyPojo();
         BeanUtils.copyProperties(dailyVo,dailyPojo);
-        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
+        if(roleList.contains(1)){//超级管理员
             dailyPojo.setAttendanceGroup("");
         }else{
             dailyPojo.setAttendanceGroup(attendanceGroup);
