@@ -3,7 +3,6 @@ package com.cmic.attendance.web;
 import com.cmic.attendance.exception.AttendanceException;
 import com.cmic.attendance.model.Attendance;
 import com.cmic.attendance.model.Employee;
-import com.cmic.attendance.model.GroupAddress;
 import com.cmic.attendance.model.GroupRule;
 import com.cmic.attendance.service.AttendanceService;
 import com.cmic.attendance.service.GroupAddressService;
@@ -158,7 +157,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
       /*  String phone = (String)redisTemplate.boundValueOps("phone").get();
         String username = (String)redisTemplate.boundValueOps("username").get();*/
         String phone = user.getId();
-        String username=user.getName();
         Attendance DBattendance=service.checkAttendance(user.getId(),serverDate);
         AttendanceVo attendanceVo = new AttendanceVo();
         if (null !=DBattendance && null !=DBattendance.getStartTime()){
@@ -213,7 +211,6 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
                 attendanceVo.setIsAttendanceEnd("1");
             }
         }
-        attendanceVo.setUsername(username);
         //根据登录手机号获取入职人员信息
         Employee employee = service.findEmployeeByTelephone(phone);
         if (null ==employee){
@@ -224,6 +221,10 @@ public class AttendanceController extends BaseRestController<AttendanceService> 
             //返回用户组信息(预留业务)
             attendanceVo.setAttendanceGroup(attendanceGroup);
             attendanceVo.setAuthority("0");
+            //获取打卡人员的用户名
+            String username=employee.getEmployeeName();
+            attendanceVo.setUsername(username);
+            user.setName(username);
         }
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
