@@ -78,7 +78,7 @@ spring:
 certify:
   server:
     path: http://192.168.185.250:9010/certify  # 获取用户信息的接口路径
-    userInfo: /user/info
+    userInfo: /token #/user/info
 index:
   server: /attendance2.0/index.html  # 手机端前端远程入口
 indexs:

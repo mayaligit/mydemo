@@ -67,8 +67,8 @@ public class CentifyUserController {
     private BaseAdminEntity certifyToken(HttpServletRequest request, RcsToken rcsToken) {
         MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
         paramMap.add("token", rcsToken.getToken());
-        paramMap.add("contactId", rcsToken.getContactId());
-        paramMap.add("enterId", rcsToken.getEnterId());
+//        paramMap.add("contactId", rcsToken.getContactId());
+//        paramMap.add("enterId", rcsToken.getEnterId());
         //发送请求调用接口
         String userStr = this.restTemplate.postForObject(Constant.certifyServicePath + Constant.userINfo, paramMap, String.class);
         long end = System.currentTimeMillis();
