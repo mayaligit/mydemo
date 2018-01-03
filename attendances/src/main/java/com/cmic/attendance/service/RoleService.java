@@ -75,6 +75,16 @@ public class RoleService extends CrudService<RoleDao, Role> {
 
     @Transactional(readOnly = false)
     public void saveRole(AttendanceUser attendanceUser, AttendanceUserPojo attendanceUserPojo) {
+        Integer role = attendanceUserPojo.getRole();
+
+        if(role==1){
+            attendanceUser.setUserType("0");  //设置用户类型为超级管理员
+        }else if (role==5){
+            attendanceUser.setUserType("2");  //设置用户类型为部门管理员
+        }else {
+            attendanceUser.setUserType("1");  //设置用户类型为考勤组管理员
+        }
+
         //考勤用户表中插入数据
         attendanceUserService.save(attendanceUser);
 
@@ -85,7 +95,6 @@ public class RoleService extends CrudService<RoleDao, Role> {
         roleUserService.save(roleUser);
 
         //判断是否是 考勤的角色
-        Integer role = attendanceUserPojo.getRole();
         Map<String ,Object> paraMap = new HashMap<String,Object>();
         if (role == 2){ //招聘需求方
             //维护 面试官表
@@ -125,8 +134,6 @@ public class RoleService extends CrudService<RoleDao, Role> {
             interviewerRoleUser.setUserId(attendanceUser.getId());
             interviewerRoleUser.setRoleId(attendanceUserPojo.getRoleId());
             roleUserService.save(interviewerRoleUser);
-
-            //删除方法也要对应删除表
 
         }
 

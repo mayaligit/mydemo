@@ -65,10 +65,16 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @RequestMapping(value = "/saveUser", method = RequestMethod.POST)
     public Map<String,Object> post(@Validated @RequestBody AttendanceUserPojo attendanceUserPojo) {
         //service.insert(attendanceUser);
+        Map<String,Object> resultMap = new HashMap<>();
+        boolean flag = service.getByAttendanceUsername(attendanceUserPojo.getAttendanceUsername());
+        if (flag){
+            resultMap.put("code","2");
+            resultMap.put("msg","账号已注册,请重新输入");
+        }
+
         AttendanceUser attendanceUser = new AttendanceUser();
         BeanUtils.copyProperties(attendanceUserPojo,attendanceUser);
 
-        Map<String,Object> resultMap = new HashMap<>();
         try {
             String password = MD5Util.md5(attendanceUser.getAttendancePassword());
             attendanceUser.setAttendancePassword(password);
@@ -87,7 +93,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
 
             roleService.saveRole(attendanceUser,attendanceUserPojo);
 
-           // service.save(attendanceUser);
+            //service.save(attendanceUser);
 
             resultMap.put("code","0");
             resultMap.put("msg","新增成功");
@@ -150,12 +156,11 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @ApiOperation(value = "删除", notes = "删除考勤用户管理表", httpMethod = "DELETE")
     @RequestMapping(value = "/delectById/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "考勤用户管理表ID") @PathVariable String id) {
-        AttendanceUserVo attendanceUserVo= (AttendanceUserVo)WebUtils.getSession().getAttribute("attendanceUserVo");
-            if(attendanceUserVo==null){
-                return;
-            }
-        if("0".equals(attendanceUserVo.getUserType())){
-            service.delete(id);
+
+        AttendanceUser attendanceUser = service.get(id);
+
+        if(!"0".equals(attendanceUser.getUserType())){ //被删除的不能是超级管理员
+            service.deleteUserInfo(id);
         }
     }
 
