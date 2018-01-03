@@ -3,6 +3,7 @@ package com.cmic.attendance.service;
 import com.cmic.attendance.dao.EmployeeDao;
 import com.cmic.attendance.model.Employee;
 import com.cmic.attendance.pojo.AttendancePojo;
+import com.cmic.attendance.pojo.EmployeePojo;
 import com.cmic.saas.base.service.CrudService;
 import com.cmic.saas.base.web.RestException;
 import com.cmic.saas.utils.StringUtils;
@@ -68,5 +69,7 @@ public class EmployeeService extends CrudService<EmployeeDao, Employee> {
     }
 
 
-
+    public List<Employee> selectNoAttendance(EmployeePojo employeePojo) {
+        return dao.selectNoAttendance(employeePojo);
+    }
 }
