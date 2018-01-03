@@ -159,7 +159,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @RequestMapping(value = "/delectById/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "考勤用户管理表ID") @PathVariable String id) {
         List<Integer> roleList=(List<Integer>)WebUtils.getSession().getAttribute("roleList");
-        log.debug("---------------"+roleList+"++++++++++++++++++");
+        log.debug("getsessionroleList"+roleList+"++++++++++++++++++");
         if(!roleList.contains(1)){ //被删除的不能是超级管理员
             service.deleteUserInfo(id);
         }
