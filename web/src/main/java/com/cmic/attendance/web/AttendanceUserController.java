@@ -212,6 +212,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     public HashMap<String, String> loginOut(HttpServletRequest request) {
        /* redisTemplate.delete("attendanceUser");*/
         request.getSession().removeAttribute("attendanceUserVo");
+        request.getSession().removeAttribute("roleList");
         log.debug(">>>>>>>系统管理员退出<<<<<<<<<");
         HashMap<String, String> reslutMap = new HashMap<String, String>();
         reslutMap.put("status", "0");
