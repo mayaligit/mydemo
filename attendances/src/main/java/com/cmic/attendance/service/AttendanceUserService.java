@@ -5,6 +5,7 @@ import com.cmic.attendance.dao.RoleDao;
 import com.cmic.attendance.dao.RoleUserDao;
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.Permission;
+import com.cmic.attendance.pojo.AttendanceUserPojo;
 import com.cmic.attendance.utils.MD5Util;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
@@ -155,12 +156,21 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         roleDao.deleteInterviewerInfo(id); //删除面试官表 , 如果有
     }
 
-    public boolean getByAttendanceUsername(String attendanceUsername) {
-        Integer count = dao.getCountByAttendanceUsername(attendanceUsername);
+    public String getByAttendanceUsername(AttendanceUserPojo attendanceUserPojo) {
+        Integer count = dao.getCountByAttendanceUsername(attendanceUserPojo.getAttendanceUsername());
         if (count == 0){
-            return  false;
+            if (dao.getCountByAttendancePhone(attendanceUserPojo.getAttendancePhone())==0){
+                return null ;
+            }else {
+                return "电话号码已经被使用了";
+            }
         }else {
-            return true ;
+            return "账号已注册,请重新输入" ;
         }
+
+    }
+
+    public AttendanceUser getAttendanceUser(String telephone) {
+        return dao.getAttendanceUser(telephone);
     }
 }
