@@ -35,6 +35,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
     @Autowired
     private AttendanceDao attendanceDao;
     @Autowired
+    private AttendanceService attendanceService;
+    @Autowired
     private GroupRuleService groupRuleService;
 
     public Audit get(String id) {
@@ -73,8 +75,8 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         //查询数据库中申请了的请假或外勤时间是否存在
         Audit DBAudit = null;
         if(audit.getAttendanceGroup()!=null && audit.getUserName()!=null&& audit.getStartDate()!=null){
-             audit.setDateStr(DateUtils.getDateToYearMonthDay(audit.getStartDate()));
-             DBAudit=dao.getByUserNameDateAndAttendanceGroud(audit);
+            audit.setDateStr(DateUtils.getDateToYearMonthDay(audit.getStartDate()));
+            DBAudit=dao.getByUserNameDateAndAttendanceGroud(audit);
         }
 
         //任何请况下都必须携带的参数
@@ -159,12 +161,12 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             super.save(audit);
             map.put("msg", "提交成功");
         }else if(DBAudit.getAuditStatus()==1){
-             //未处理的审批可以更新
+            //未处理的审批可以更新
             audit.setId(DBAudit.getId());
             dao.dynamicUpdate(audit);
             map.put("msg", "更新成功");
         }else if(DBAudit.getAuditSuggestion()==1){
-           //处理后拒绝的审批可以更新
+            //处理后拒绝的审批可以更新
             audit.setAuditStatus(1);
             audit.setId(DBAudit.getId());
             dao.dynamicUpdate(audit);
@@ -226,9 +228,14 @@ public class AuditService extends CrudService<AuditDao, Audit> {
 
         //获取考勤规则
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(audit.getAttendanceGroup(), 0);
-        String startTime = DateUtils.getDateToYearMonthDay(audit.getStartDate()) + " " + groupRule.getGroupAttendanceStart();
-        String endTime = DateUtils.getDateToYearMonthDay(audit.getEndDate()) + " " + groupRule.getGroupAttendanceEnd();
+        //获取缺卡,外出时间
+        String startHHSSMM = DateUtils.getDateToHourMinuteS(audit.getStartDate()) ;
+        String endHHSSMM = DateUtils.getDateToHourMinuteS(audit.getEndDate());
 
+        //算出每人上班的时长,用下班时间减去上班时间
+        float startTimeSeconds = attendanceService.getSeconds(startHHSSMM);
+        float endTimeSeconds = attendanceService.getSeconds(endHHSSMM);
+        float differTime = endTimeSeconds - startTimeSeconds;
         //如果审批同意 ,维护考勤表;如果不同意,无操作
         if (audit.getAuditSuggestion() == 1) {
             return;
@@ -268,6 +275,9 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     attendance.setStartTimeStatus("0");
                     attendance.setCreateDate(new Date());
                     attendance.setUpdateDate(new Date());
+                    attendance.setStartTime(audit.getStartDate());
+                    attendance.setEndTime(audit.getEndDate());
+                    attendance.setAttendanceWorkTime(differTime);
                     if(audit.getBusinessType()==1){
                         attendance.setAttendanceStatus("2");
                     }else {
@@ -280,6 +290,9 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     attendance.setUpdateDate(new Date());
                     attendance.setStartTimeStatus("0");
                     attendance.setEndTimeStatus("0");
+                    attendance.setStartTime(audit.getStartDate());
+                    attendance.setEndTime(audit.getEndDate());
+                    attendance.setAttendanceWorkTime(differTime);
                     if(audit.getBusinessType()==1){
                         attendance.setAttendanceStatus("2");
                     }else {
@@ -297,17 +310,18 @@ public class AuditService extends CrudService<AuditDao, Audit> {
             } else if (audit.getBusinessType() == 1 || audit.getBusinessType() == 2) {
                 //外勤  如果提交多次外勤,则除了第一次提交,其他都按照更新处理
                 //缺卡 分为有打卡和没有打卡情况   所以外勤和缺卡是一样的
+
                 if (DBattendance == null) {
                     attendance.preInsert();
                     attendance.setAttendanceUser(audit.getUserName());
-                    attendance.setStartTime(DateUtils.getStringsToDates(startTime));
-                    attendance.setEndTime(DateUtils.getStringsToDates(endTime));
+                    attendance.setStartTime(audit.getStartDate());
+                    attendance.setEndTime(audit.getEndDate());
                     attendance.setAttendanceMonth(DateUtils.getMonth(audit.getStartDate()));
                     attendance.setDailyStatus(0);
                     attendance.setAttendanceGroup(audit.getAttendanceGroup());
                     attendance.setEndTimeStatus("0");
                     attendance.setStartTimeStatus("0");
-                    attendance.setAttendanceWorkTime(groupRule.getGroupAttendanceDuration());
+                    attendance.setAttendanceWorkTime(differTime);
                     attendance.setCreateDate(new Date());
                     attendance.setUpdateDate(new Date());
                     if(audit.getBusinessType()==1){
@@ -323,11 +337,11 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                 } else {
                     attendance.setId(DBattendance.getId());
                     attendance.preUpdate();
-                    attendance.setStartTime(DateUtils.getStringsToDates(startTime));
-                    attendance.setEndTime(DateUtils.getStringsToDates(endTime));
+                    attendance.setStartTime(audit.getStartDate());
+                    attendance.setEndTime(audit.getEndDate());
                     attendance.setStartTimeStatus("0");
                     attendance.setEndTimeStatus("0");
-                    attendance.setAttendanceWorkTime(groupRule.getGroupAttendanceDuration());
+                    attendance.setAttendanceWorkTime(differTime);
                     attendance.setUpdateDate(new Date());
                     if(audit.getBusinessType()==1){
                         attendance.setAttendanceStatus("2");
@@ -348,16 +362,17 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         //创建封装数据
         Map<String, Object> dataMap = new HashMap<>();
         //验证登陆信息
-        Object obj = WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
-        if (null == obj) {
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)WebUtils.getRequest().getSession().getAttribute("attendanceUserVo");
+        if (null == attendanceUserVo) {
             dataMap.put("flag", "1");
             return dataMap;
         } else {
             dataMap.put("flag", "0");
         }
 
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) obj;
-        if("0".equals(attendanceUserVo.getUserType())){
+        //分配不同权限,查看不同东西内容
+        List<Integer> roleList =(List<Integer> ) WebUtils.getRequest().getSession().getAttribute("roleList");
+        if(roleList.contains(1)){
             audit.setAttendanceGroup(null);
         }else {
             audit.setAttendanceGroup(attendanceUserVo.getAttendanceGroup());
@@ -380,7 +395,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
         PageInfo<Map> result = new PageInfo(dao.findAuditList(audit));
 
         //考勤数据
-       dataMap.put("auditList", result.getList());
+        dataMap.put("auditList", result.getList());
         //总页数
         dataMap.put("pageCount", result.getPages());
         //总记录数

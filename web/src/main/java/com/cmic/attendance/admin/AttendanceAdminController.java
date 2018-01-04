@@ -20,10 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 何荣
@@ -90,10 +87,14 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
             attendance.setStartTimeStatus(paramMap.get("startTimeStatus"));
         }
 
-        //设置后台管理者的所属组
-        if(!"0".equals(attendanceUserVo.getUserType())&& StringUtils.isNotBlank(attendance_group)){
+        //分配不同权限,查看不同东西内容
+        List<Integer> roleList =(List<Integer> ) WebUtils.getRequest().getSession().getAttribute("roleList");
+        if(roleList.contains(1)){
+            attendance.setAttendanceGroup(null);
+        }else {
             attendance.setAttendanceGroup(attendance_group);
         }
+
         Integer pageNum = StringUtils.isBlank(paramMap.get("pageNum")) ? 1 : Integer.parseInt(paramMap.get("pageNum"));
         Integer pageSize = StringUtils.isBlank(paramMap.get("pageSize")) ? 10 : Integer.parseInt(paramMap.get("pageSize"));
 

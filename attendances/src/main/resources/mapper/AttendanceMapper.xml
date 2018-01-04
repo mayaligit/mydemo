@@ -371,7 +371,7 @@
         <where>
             1=1
             <if test="attendanceUser != null and attendanceUser != ''">
-                and attendance_user = #{attendanceUser}
+                and attendance_user LIKE '%${attendanceUser}%'
             </if>
             <if test="attendanceStatus != null and attendanceStatus != ''">
                 and attendance_status = #{attendanceStatus}
