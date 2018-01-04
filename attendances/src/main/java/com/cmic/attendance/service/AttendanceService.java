@@ -167,25 +167,28 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String isForWeek = DateUtils.dayForWeek(startDate)+"";
         List<String> strings = Arrays.asList(attendanceWeek);
         boolean contains = strings.contains(isForWeek);*/
-        int isForWeek = DateUtils.dayForWeek(startDate);
+        String isForWeek = DateUtils.dayForWeek(startDate)+"";
         String year = DateUtils.getDateToYearMonthDay(startDate).substring(0,4);
         List<String> monthDayList = holidaysService.findMonthDayByYear(year);
         String monthDay = DateUtils.getMonthAndDay(startDate);
         boolean isHoliday = monthDayList.contains(monthDay);
         long l1 =System.currentTimeMillis();
         //不在考勤期内
+
         //log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        if (isForWeek == 6 || isForWeek == 7){
+        if ("6".equals(isForWeek) || "7".equals(isForWeek)){
             //不在考勤日期内直接返回预留业务
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
             //String workDay = DateUtils.getWorkDays(startDate);
             if(!isHoliday){
                 throw new AttendanceException("当前考勤时间不是工作日!");
+            }else{
+                throw new AttendanceException("节假日不用考勤!");
             }
         }
         //在考勤期内，但是当前日期是法定节假日
-        if (isForWeek != 6 && isForWeek != 7){
+        if (!"6".equals(isForWeek) && !"7".equals(isForWeek)){
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
             //String workDay = DateUtils.getWorkDays(startDate);
@@ -196,7 +199,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         long l2 =System.currentTimeMillis();
         long l = l2-l1;
         log.debug("判断节假日"+l);
-        if (isForWeek != 6 && isForWeek != 7){
+        if (!"6".equals(isForWeek) && !"7".equals(isForWeek)){
             long start=System.currentTimeMillis();
             //开始读取考勤组考勤的方式
             Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
