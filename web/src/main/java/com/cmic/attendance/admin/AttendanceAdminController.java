@@ -316,7 +316,7 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
      * @param
      */
     @RequestMapping("/exportAttendanceExcel")
-    public void exportAttendanceExcel(EmployeeVo employeeVo, HttpServletResponse response){
+    public void exportAttendanceExcel(@RequestBody EmployeeVo employeeVo, HttpServletResponse response){
         //返回的是excel的临时
         String data = service.exportAttendanceExcel(employeeVo);
 
