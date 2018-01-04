@@ -943,6 +943,17 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         attendancePojo.setAttendanceGroup(attendanceGroup);
 
         List<AttendanceResultPojo> attendanceList = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
+        if(attendanceList != null && attendanceList.size() >0){
+            Iterator<AttendanceResultPojo> iterator = attendanceList.iterator();
+            while(iterator.hasNext()){
+                AttendanceResultPojo arp = iterator.next();
+                Float workHour = arp.getWorkHour();
+                String format = String.format("%.2f", workHour);
+                workHour = Float.parseFloat(format);
+                arp.setWorkHour(workHour);
+            }
+
+        }
 
        /* List<AttendanceResultPojo> list = (List<AttendanceResultPojo>)this.dao.checkNoEndTime(attendancePojo);
 
