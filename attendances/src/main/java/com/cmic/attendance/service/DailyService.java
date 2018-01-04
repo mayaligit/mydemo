@@ -2,6 +2,7 @@ package com.cmic.attendance.service;
 
 import com.cmic.attendance.dao.DailyDao;
 import com.cmic.attendance.model.Attendance;
+import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.Daily;
 import com.cmic.attendance.pojo.DailyPojo;
 import com.cmic.attendance.utils.DateUtils;
@@ -65,6 +66,8 @@ public class DailyService extends CrudService<DailyDao, Daily> {
 
     @Autowired
     private AttendanceService attendanceService;
+    @Autowired
+    private AttendanceUserService attendanceUserService;
 
     @Transactional(readOnly = false)
     public String insertDailyAndAttendance(DailyVo dailyVo){
@@ -89,8 +92,11 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         String dateToHourMinuteS = DateUtils.getDateToHourMinuteS(new Date());//获取当前时间的时分秒：格式：HH:mm:ss
         Date date1 = DateUtils.getStringsToDates(date+ " "+dateToHourMinuteS);//拼接时间，格式为：yyyy-MM-dd HH:mm:ss
 
+        //获取审批人
+        AttendanceUser attendanceUser = attendanceUserService.getAttendanceUser(user.getId());
+
         dailyVo.setSuggestionStatus(1);//意见状态设置为未阅
-        dailyVo.setExaminer("陈华龙");
+        dailyVo.setExaminer(attendanceUser.getAttendanceUsername());
         dailyVo.preInsert();
         dailyVo.setSubmitTime(date1);
         dailyVo.setCreateDate(date1);
@@ -162,6 +168,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
@@ -185,7 +192,7 @@ public class DailyService extends CrudService<DailyDao, Daily> {
         }
         DailyPojo dailyPojo = new DailyPojo();
         BeanUtils.copyProperties(dailyVo,dailyPojo);
-        if(attendanceUserVo.getUserType().equals("0")){//超级管理员
+        if(roleList.contains(1)){//超级管理员
             dailyPojo.setAttendanceGroup("");
         }else{
             dailyPojo.setAttendanceGroup(attendanceGroup);

@@ -77,16 +77,10 @@ public class RoleService extends CrudService<RoleDao, Role> {
     public void saveRole(AttendanceUser attendanceUser, AttendanceUserPojo attendanceUserPojo) {
         Integer role = attendanceUserPojo.getRole();
 
-        if(role==1){
-            attendanceUser.setUserType("0");  //设置用户类型为超级管理员
-        }else if (role==5){
-            attendanceUser.setUserType("2");  //设置用户类型为部门管理员
-        }else {
-            attendanceUser.setUserType("1");  //设置用户类型为考勤组管理员
-        }
-
         //考勤用户表中插入数据
+        logger.debug("=====插入用户的信息start====="+attendanceUser.toString());
         attendanceUserService.save(attendanceUser);
+        logger.debug("=====插入用户的信息end====="+attendanceUser.toString());
 
         //====维护角色中间表===
         RoleUser roleUser = new RoleUser();

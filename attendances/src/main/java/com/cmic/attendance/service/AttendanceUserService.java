@@ -5,6 +5,7 @@ import com.cmic.attendance.dao.RoleDao;
 import com.cmic.attendance.dao.RoleUserDao;
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.model.Permission;
+import com.cmic.attendance.pojo.AttendanceUserPojo;
 import com.cmic.attendance.utils.MD5Util;
 import com.cmic.attendance.vo.AttendanceUserVo;
 import com.cmic.saas.base.model.BaseAdminEntity;
@@ -89,16 +90,17 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         result.put("msg", "登录成功");
         result.put("status", "0");
         result.put("phone", checkUser.getAttendancePhone());
-        result.put("userType", checkUser.getUserType());
         //result.put("attendance_group",checkUser.getAttendanceGroup());
         attendanceUserVo.setAttendanceGroup(checkUser.getAttendanceGroup());
         attendanceUserVo.setId(checkUser.getId());
-        attendanceUserVo.setUserType(checkUser.getUserType());
         //通过attendanceuserid关联role获取用户对应的角色集合
         List<Integer> roleList= dao.getUserRoleNumber(checkUser.getId());
+        logger.debug("setsessionroleList"+roleList+"++++++++++++++++++");
         //服务器session
         request.getSession().setAttribute("attendanceUserVo", attendanceUserVo);
         request.getSession().setAttribute("roleList",roleList);
+        //返回后台管理用户的类型给前端
+        result.put("roleList", roleList);
         //系统架构session
         BaseAdminEntity adminEntity = new BaseAdminEntity();
         adminEntity.setId(checkUser.getAttendancePhone());
@@ -156,12 +158,21 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         roleDao.deleteInterviewerInfo(id); //删除面试官表 , 如果有
     }
 
-    public boolean getByAttendanceUsername(String attendanceUsername) {
-        Integer count = dao.getCountByAttendanceUsername(attendanceUsername);
+    public String getByAttendanceUsername(AttendanceUserPojo attendanceUserPojo) {
+        Integer count = dao.getCountByAttendanceUsername(attendanceUserPojo.getAttendanceUsername());
         if (count == 0){
-            return  false;
+            if (dao.getCountByAttendancePhone(attendanceUserPojo.getAttendancePhone())==0){
+                return null ;
+            }else {
+                return "电话号码已经被使用了";
+            }
         }else {
-            return true ;
+            return "账号已注册,请重新输入" ;
         }
+
+    }
+
+    public AttendanceUser getAttendanceUser(String telephone) {
+        return dao.getAttendanceUser(telephone);
     }
 }

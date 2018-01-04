@@ -1,6 +1,5 @@
 package com.cmic.attendance.web;
 
-
 import com.cmic.attendance.model.AttendanceUser;
 import com.cmic.attendance.pojo.AttendanceUserPojo;
 import com.cmic.attendance.service.AttendanceUserService;
@@ -26,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.cmic.saas.utils.WebUtils.getSession;
 
 /**
  * 考勤后台管理表Controller
@@ -66,10 +67,11 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     public Map<String,Object> post(@Validated @RequestBody AttendanceUserPojo attendanceUserPojo) {
         //service.insert(attendanceUser);
         Map<String,Object> resultMap = new HashMap<>();
-        boolean flag = service.getByAttendanceUsername(attendanceUserPojo.getAttendanceUsername());
-        if (flag){
+        String message = service.getByAttendanceUsername(attendanceUserPojo);
+        if (message != null){
             resultMap.put("code","2");
-            resultMap.put("msg","账号已注册,请重新输入");
+            resultMap.put("msg",message);
+            return resultMap ;
         }
 
         AttendanceUser attendanceUser = new AttendanceUser();
@@ -156,9 +158,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @ApiOperation(value = "删除", notes = "删除考勤用户管理表", httpMethod = "DELETE")
     @RequestMapping(value = "/delectById/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "考勤用户管理表ID") @PathVariable String id) {
-
         AttendanceUser attendanceUser = service.get(id);
-
         if(!"0".equals(attendanceUser.getUserType())){ //被删除的不能是超级管理员
             service.deleteUserInfo(id);
         }
@@ -175,7 +175,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
             map.put("status", "4");
             return map;
         }
-        String checkCode = (String) WebUtils.getSession().getAttribute("checkCode");
+        String checkCode = (String) getSession().getAttribute("checkCode");
 
         if (StringUtils.isNotBlank(checkCode)) {
 //            验证码是否不正在正确
@@ -211,6 +211,7 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     public HashMap<String, String> loginOut(HttpServletRequest request) {
        /* redisTemplate.delete("attendanceUser");*/
         request.getSession().removeAttribute("attendanceUserVo");
+        request.getSession().removeAttribute("roleList");
         log.debug(">>>>>>>系统管理员退出<<<<<<<<<");
         HashMap<String, String> reslutMap = new HashMap<String, String>();
         reslutMap.put("status", "0");

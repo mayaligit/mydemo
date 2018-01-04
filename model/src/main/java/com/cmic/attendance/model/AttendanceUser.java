@@ -20,10 +20,10 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
     protected String attendanceGroup;
     @ApiModelProperty(value = "企业id-备用字段")
     protected String enterpriseId;
+    @ApiModelProperty(value = "0/超级管理员 1/考勤组管理员")
+    protected String userType;
     @ApiModelProperty(value = "企业名称-备用字段")
     protected String enterpriseName;
-    @ApiModelProperty(value = "0/超级管理员,1/考勤组管理员")
-    protected String userType;
     @ApiModelProperty(value = "0/正常,1/停用")
     protected String actived;
 
@@ -82,14 +82,6 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
         this.enterpriseName = enterpriseName;
     }
 
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
-
     public String getActived() {
         return actived;
     }
@@ -98,4 +90,24 @@ public class AttendanceUser extends DataEntity<AttendanceUser> {
         this.actived = actived;
     }
 
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    @Override
+    public String toString() {
+        return "AttendanceUser{" +
+                "attendanceUsername='" + attendanceUsername + '\'' +
+                ", attendancePhone='" + attendancePhone + '\'' +
+                ", attendancePassword='" + attendancePassword + '\'' +
+                ", attendanceGroup='" + attendanceGroup + '\'' +
+                ", enterpriseId='" + enterpriseId + '\'' +
+                ", enterpriseName='" + enterpriseName + '\'' +
+                ", actived='" + actived + '\'' +
+                '}';
+    }
 }

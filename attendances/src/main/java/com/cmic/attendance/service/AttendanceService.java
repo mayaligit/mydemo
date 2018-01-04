@@ -478,6 +478,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
+
         Map<String, Object> map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
@@ -490,7 +492,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
-        if(attendanceUserVo.getUserType().equals("0")){
+        if(roleList.contains(1)){
             attendanceGroup = "";
         }
         AttendancePojo attendancePojo = new AttendancePojo();
@@ -520,6 +522,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map<String, Object> map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
@@ -530,7 +533,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(attendanceUserVo.getUserType().equals("0")){
+        if(roleList.contains(1)){
             attendanceGroup = "";
         }
 
@@ -567,6 +570,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String date = queryAttendanceVo.getDate();
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map<String, Object> map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
@@ -592,7 +596,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }else{
             map.put("endWorkFlag","0");
         }
-        if(attendanceUserVo.getUserType().equals("0")){
+        if(roleList.contains(1)){
             attendanceGroup = "";
         }
         AttendancePojo attendancePojo = new AttendancePojo();
@@ -794,6 +798,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         System.out.print("------"+attendanceUserVo+"------");
         Map<String, Object> map = new HashMap<>();
         map.put("flag",0);
@@ -805,7 +810,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(attendanceUserVo.getUserType().equals("0")){
+        if(roleList.contains(1)){
             attendanceGroup = "";
         }
         if(page.getPageNum() <= 0) {
@@ -894,6 +899,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map<String, Object> map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
@@ -905,7 +911,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(attendanceUserVo.getUserType().equals("0")){
+        if(roleList.contains(1)){
             attendanceGroup = "";
         }
 
@@ -1003,6 +1009,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         HttpServletRequest request = WebUtils.getRequest();
         AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map<String, Object> map = new HashMap<>();
         map.put("flag",0);
         if(null == attendanceUserVo){
@@ -1013,7 +1020,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(attendanceUserVo.getUserType().equals("0")){
+        if(roleList.contains(1)){
             attendanceGroup = "";
         }
 
@@ -1048,6 +1055,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
      */
     public String exportAttendanceExcel(EmployeeVo employeeVo){
 
+        HttpServletRequest request = WebUtils.getRequest();
+        List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
+
         StringWriter stringWriter = null;
         BufferedWriter bufferedWriter = null ;
         try {
@@ -1066,6 +1076,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             if("0".equals(employeeVo.getAttFlag())){
                 EmployeePojo employeePojo = new EmployeePojo();
                 BeanUtils.copyProperties(employeeVo,employeePojo);
+                if(roleList.contains(1)){
+                    employeePojo.setAttendanceName("");
+                }
                 //获取数据,查询未打卡数据
                 employeeList = employeeService.selectNoAttendance(employeePojo);
                 /** 设置数据 */
@@ -1077,6 +1090,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 AttendancePojo attendancePojo = new AttendancePojo();
                 BeanUtils.copyProperties(employeeVo,attendancePojo);
                 attendancePojo.setAttendanceGroup(employeeVo.getAttendanceName());
+                if(roleList.contains(1)){
+                    attendancePojo.setAttendanceGroup("");
+                }
                 attendanceList = dao.selectAttendance(attendancePojo);
                 /** 设置数据 */
                 dataModel.put("attendanceList", attendanceList);
