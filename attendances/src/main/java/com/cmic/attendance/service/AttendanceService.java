@@ -796,8 +796,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         map.put("flag",0);
         if(null == attendanceUserVo){
             //测试使用，写死
-         /*   attendanceUserVo = new AttendanceUserVo();
-            attendanceUserVo.setAttendanceGroup("odc");*/
+           /* attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("odc");
+            roleList = new ArrayList<>();
+            roleList.add(1);*/
             map.put("flag",1);
             return map;
         }
@@ -811,12 +813,19 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         if(page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
-        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workHour DESC");
+
 
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);
         attendancePojo.setAttendanceGroup(attendanceGroup);
-        
+
+        int endWork = groupRuleService.endWork(attendanceGroup);
+        if(endWork>0){
+            PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workHour DESC");
+        }else{
+            PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workStartTime ");
+        }
+
         List<AttendanceResultPojo> pageInfo = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByDay(attendancePojo);
         if(pageInfo != null && pageInfo.size() >0){
             Iterator<AttendanceResultPojo> iterator = pageInfo.iterator();
@@ -833,7 +842,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                     }
                     float startTimeSeconds = getSeconds(startTime);
                     if(null == arp.getWorkEndTime()){
-                        hour = getSeconds("13:00:00");
+                        String dateToHourMinuteS = DateUtils.getDateToHourMinuteS(new Date());
+//                        hour = getSeconds("13:00:00");
+                        hour = getSeconds(dateToHourMinuteS);
                         if(startTimeSeconds >= hour){//如果上班打卡时间大于13:00:00，并且又没打下班卡，又没提审批,不算进勤奋榜
                             iterator.remove();
                             continue;
@@ -898,7 +909,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             //测试使用，写死
           /*  attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");
-            attendanceUserVo.setUserType("0");*/
+            roleList = new ArrayList<>();
+            roleList.add(1);*/
             map.put("flag",1);
             return map;
         }
@@ -924,7 +936,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
         List<AttendanceResultPojo> attendanceList = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
 
-        List<AttendanceResultPojo> list = (List<AttendanceResultPojo>)this.dao.checkNoEndTime(attendancePojo);
+       /* List<AttendanceResultPojo> list = (List<AttendanceResultPojo>)this.dao.checkNoEndTime(attendancePojo);
 
         if(list != null && list.size() >0){
             for(AttendanceResultPojo arp : list){
@@ -981,11 +993,13 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             for(int j = 0; j<=9;j++){
                 pageInfo.add(attendanceList.get(j));
             }
-        }
+        }*/
 
-        map.put("pageInfo",pageInfo);
-        map.put("total",pageInfo.size());
-        map.put("pageCount",pageInfo.size()%page.getPageSize()==0 ? pageInfo.size()/page.getPageSize() : pageInfo.size()/page.getPageSize()+1);
+        Page pi = (Page)attendanceList;
+        long total = pi.getTotal();
+        map.put("pageInfo",attendanceList);
+        map.put("total",total);
+        map.put("pageCount",pi.getPages());
         return  map;
     }
 
