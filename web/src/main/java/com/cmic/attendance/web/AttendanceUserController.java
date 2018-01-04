@@ -24,7 +24,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.cmic.saas.utils.WebUtils.getSession;
@@ -159,9 +158,8 @@ public class AttendanceUserController extends BaseRestController<AttendanceUserS
     @ApiOperation(value = "删除", notes = "删除考勤用户管理表", httpMethod = "DELETE")
     @RequestMapping(value = "/delectById/{id}", method = RequestMethod.DELETE)
     public void delete(@ApiParam(value = "考勤用户管理表ID") @PathVariable String id) {
-        List<Integer> roleList=(List<Integer>)WebUtils.getSession().getAttribute("roleList");
-        log.debug("getsessionroleList"+roleList+"++++++++++++++++++");
-        if(!roleList.contains(1)){ //被删除的不能是超级管理员
+        AttendanceUser attendanceUser = service.get(id);
+        if(!"0".equals(attendanceUser.getUserType())){ //被删除的不能是超级管理员
             service.deleteUserInfo(id);
         }
     }
