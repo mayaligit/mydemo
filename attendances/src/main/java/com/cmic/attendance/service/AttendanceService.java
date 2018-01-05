@@ -1084,7 +1084,20 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     public String exportAttendanceExcel(EmployeeVo employeeVo){
 
         HttpServletRequest request = WebUtils.getRequest();
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        if(null == attendanceUserVo){
+            //测试使用，写死
+           /* attendanceUserVo = new AttendanceUserVo();
+            attendanceUserVo.setAttendanceGroup("中软国际");*/
+            return null;
+        }
+        employeeVo.setAttendanceName(attendanceUserVo.getAttendanceGroup());
         List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
+//     测试数据
+    /*    if(roleList == null || roleList.size() <= 0){
+            roleList = new ArrayList<Integer>();
+            roleList.add(1);
+        }*/
 
         StringWriter stringWriter = null;
         BufferedWriter bufferedWriter = null ;
