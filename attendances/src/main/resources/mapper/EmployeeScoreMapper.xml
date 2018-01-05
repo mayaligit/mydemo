@@ -1,0 +1,140 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.cmic.attendance.dao.EmployeeScoreDao">
+    <sql id="employeeScoreColumns">
+        a.id AS "id",
+        a.username AS "username",
+        a.phone AS "phone",
+        a.month AS "month",
+        a.total AS "total",
+        a.timeliness AS "timeliness",
+        a.specification AS "specification",
+        a.code_quality AS "codeQuality",
+        a.workload AS "workload",
+        a.Quality_management AS "qualityManagement",
+        a.attendance AS "attendance",
+        a.responsibility AS "responsibility"
+    </sql>
+
+    <sql id="employeeScoreJoins">
+    </sql>
+
+    <select id="get" resultType="EmployeeScore">
+        SELECT
+        <include refid="employeeScoreColumns"/>
+        FROM t_employee_score a
+        <include refid="employeeScoreJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="EmployeeScore">
+        SELECT
+        <include refid="employeeScoreColumns"/>
+        FROM t_employee_score a
+        <include refid="employeeScoreJoins"/>
+        <where>
+            1 = 1
+        <if test="id != null">
+                AND a.id = #{id}
+        </if>
+        <if test="phone != null">
+                AND a.phone = #{phone}
+        </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="EmployeeScore">
+        SELECT
+        <include refid="employeeScoreColumns"/>
+        FROM t_employee_score a
+        <include refid="employeeScoreJoins"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO t_employee_score(
+            id,
+            username,
+            phone,
+            month,
+            total,
+            timeliness,
+            specification,
+            code_quality,
+            workload,
+            Quality_management,
+            attendance,
+            responsibility
+        ) VALUES (
+            #{id},
+            #{username},
+            #{phone},
+            #{month},
+            #{total},
+            #{timeliness},
+            #{specification},
+            #{codeQuality},
+            #{workload},
+            #{qualityManagement},
+            #{attendance},
+            #{responsibility}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE t_employee_score SET
+        total = #{total},
+        timeliness = #{timeliness},
+        specification = #{specification},
+        code_quality = #{codeQuality},
+        workload = #{workload},
+        Quality_management = #{qualityManagement},
+        attendance = #{attendance},
+        responsibility = #{responsibility}
+        WHERE id = #{id}
+    </update>
+
+    <update id="dynamicUpdate">
+        UPDATE t_employee_score SET
+        <if test="username != null  and username != ''">
+        username = #{username},
+        </if>
+        <if test="phone != null  and phone != ''">
+        phone = #{phone},
+        </if>
+        <if test="month != null  and month != ''">
+        month = #{month},
+        </if>
+        <if test="total != null ">
+        total = #{total},
+        </if>
+        <if test="timeliness != null ">
+        timeliness = #{timeliness},
+        </if>
+        <if test="specification != null ">
+        specification = #{specification},
+        </if>
+        <if test="codeQuality != null ">
+        code_quality = #{codeQuality},
+        </if>
+        <if test="workload != null ">
+        workload = #{workload},
+        </if>
+        <if test="qualityManagement != null ">
+        Quality_management = #{qualityManagement},
+        </if>
+        <if test="attendance != null ">
+        attendance = #{attendance},
+        </if>
+        <if test="responsibility != null ">
+        responsibility = #{responsibility},
+        </if>
+        update_by = #{updateBy.id},
+        update_date = #{updateDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM t_employee_score
+        WHERE id = #{id}
+    </delete>
+</mapper>
