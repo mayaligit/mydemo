@@ -477,6 +477,18 @@
         </where>
     </select>
 
+    <!--统计某月份每个人的出勤天数和请假总时长-->
+    <select id="statisticsHolidayAndAttendance" resultType="com.cmic.attendance.model.HolidayAndAttendance">
+        SELECT number,NAME,SUM(attendanceDay) AS sumattendanceDay,SUM(holiday) AS sumholiday FROM (
+
+	SELECT * FROM (SELECT a.`create_by` AS number  , a.attendance_user AS NAME, COUNT(*) AS attendanceDay,0 AS holiday FROM t_attendance a WHERE  a.attendance_month=#{month}  GROUP BY a.`create_by`  UNION
+SELECT phone_number AS number,user_name AS NAME,0 AS attendanceDay, SUM(holiday_days) AS holiday FROM t_audit WHERE DATE_FORMAT(start_date, '%Y-%c' )=#{month} AND audit_suggestion=0 AND business_type=0 GROUP BY phone_number )
+
+	AS total
+
+)  AS b GROUP BY number
+    </select>
+
     <!--外勤次数-->
     <select id="getFieldPersonnel" resultType="Integer">
         SELECT

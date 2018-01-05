@@ -1,6 +1,7 @@
 package com.cmic.attendance.dao;
 
 import com.cmic.attendance.model.Attendance;
+import com.cmic.attendance.model.HolidayAndAttendance;
 import com.cmic.attendance.model.WorkStatistics;
 import com.cmic.attendance.pojo.AttendancePojo;
 import com.cmic.attendance.pojo.AttendanceResultPojo;
@@ -12,15 +13,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* 考勤表Dao
-*/
+ * 考勤表Dao
+ */
 @Mapper
 public interface AttendanceDao extends CrudDao<Attendance> {
 
     Attendance getAttendanceByCreatebyAndCreateTime(@Param("createBy") String createBy,
-                                                    @Param("createDate")String createDate);
-    void updateByAttendance(@Param("id")Attendance updateByAttendance);
+                                                    @Param("createDate") String createDate);
+
+    void updateByAttendance(@Param("id") Attendance updateByAttendance);
+
     void updateAttendances(Attendance attendance);
+
     void updateAttendan(Attendance attendance);
 
     List<Map> checkAttendanceByDay(AttendancePojo attendancePojo);
@@ -35,7 +39,7 @@ public interface AttendanceDao extends CrudDao<Attendance> {
 
     List<Map> selectAttendances(Attendance attendance);
 
-    List<Map> findAttendanceList(Map<String,Object> paramMap);
+    List<Map> findAttendanceList(Map<String, Object> paramMap);
 
     List<Attendance> selectExportAttendanceData(Attendance attendance);
 
@@ -68,5 +72,7 @@ public interface AttendanceDao extends CrudDao<Attendance> {
     List<AttendanceResultPojo> checkNoEndTime(AttendancePojo attendancePojo);
 
     List<AttendancePojo> selectAttendance(AttendancePojo attendancePojo);
+
+    List<HolidayAndAttendance> statisticsHolidayAndAttendance(String month);
 }
 

@@ -86,13 +86,14 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         super.delete(id);
         logger.info("删除考勤表：" + attendance.toJSONString());
     }
-//#TODO 获取多地址数据
-    public ArrayList<GroupAddressVo> getAllGroupAddress (){
+
+    //#TODO 获取多地址数据
+    public ArrayList<GroupAddressVo> getAllGroupAddress() {
 
         List<GroupAddress> addressList = groupAddressService.findAll();
         ArrayList<GroupAddressVo> listGroupAddress = new ArrayList<GroupAddressVo>();
-        for (GroupAddress groupAddress:addressList) {
-            GroupAddressVo groupAddressVo =new GroupAddressVo();
+        for (GroupAddress groupAddress : addressList) {
+            GroupAddressVo groupAddressVo = new GroupAddressVo();
             groupAddressVo.setGroupAttendanceDimension(String.valueOf(groupAddress.getGroupAttendanceDimension()));
             groupAddressVo.setGroupAttendanceLongitude(String.valueOf(groupAddress.getGroupAttendanceLongitude()));
             groupAddressVo.setGroupAddress(groupAddress.getGroupAddress());
@@ -103,7 +104,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     }
 
     //#TODO 获取多地址数据
-    public ArrayList<GroupAddressVo> getGroupAddressList (@Param("attendanceGroupId") String attendanceGroupId){
+    public ArrayList<GroupAddressVo> getGroupAddressList(@Param("attendanceGroupId") String attendanceGroupId) {
         List<GroupAddress> groupAddressList = groupAddressService.findListByGroupRuleId(attendanceGroupId);
         ArrayList<GroupAddressVo> listGroupAddress = new ArrayList<GroupAddressVo>();
         for (GroupAddress groupAddress : groupAddressList) {
@@ -118,27 +119,29 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         return listGroupAddress;
     }
 
-    public Employee findEmployeeByTelephone(@Param("telephone") String telephone){
+    public Employee findEmployeeByTelephone(@Param("telephone") String telephone) {
         Employee employee = employeeService.findEmployeeByTelephone(telephone);
         return employee;
     }
 
 //#TODO 判断当前用户是否存在
+
     /**
      * @param phone
      * @param createDate
      * @return Attendance
      */
-    public Attendance checkAttendance(String phone,String createDate) {
-        log.debug("检验唯一性考勤数据手机号："+phone +" 考勤日期："+createDate);
-        Attendance attendance = dao.getAttendanceByCreatebyAndCreateTime(phone,createDate);
-        if ( null ==attendance ) {
+    public Attendance checkAttendance(String phone, String createDate) {
+        log.debug("检验唯一性考勤数据手机号：" + phone + " 考勤日期：" + createDate);
+        Attendance attendance = dao.getAttendanceByCreatebyAndCreateTime(phone, createDate);
+        if (null == attendance) {
             return null;
         } else {
             return attendance;
         }
     }
 //#TODO 早上打卡业务
+
     /**
      * @param attendanceVo 封装前台数据的bean
      * @return AttendanceVo 封装统一返回信息的bean
@@ -149,7 +152,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
          */
-        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>上传的组名"+attendanceVo.getAttendanceGroup()+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>上传的组名" + attendanceVo.getAttendanceGroup() + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         GroupRule groupRule = groupRuleService.findGroupNameAndGroupStatus(attendanceVo.getAttendanceGroup(), 0);
         //服务器时间
         Date startDate = new Date();
@@ -160,72 +163,72 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         //查询当前考勤数据是否存在
         String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
         Attendance saveAttendance = null;
-        Attendance attendance = checkAttendance(attendanceVo.getPhone(),dateToYearMonthDay2);
+        Attendance attendance = checkAttendance(attendanceVo.getPhone(), dateToYearMonthDay2);
         /*//考勤的周 日期格式1-2-3-4-5-6-7
         String groupAttendanceWeek = groupRule.getGroupAttendanceWeek();
         String[] attendanceWeek = groupAttendanceWeek.split("-");
         String isForWeek = DateUtils.dayForWeek(startDate)+"";
         List<String> strings = Arrays.asList(attendanceWeek);
         boolean contains = strings.contains(isForWeek);*/
-        String isForWeek = DateUtils.dayForWeek(startDate)+"";
-        String year = DateUtils.getDateToYearMonthDay(startDate).substring(0,4);
+        String isForWeek = DateUtils.dayForWeek(startDate) + "";
+        String year = DateUtils.getDateToYearMonthDay(startDate).substring(0, 4);
         List<String> monthDayList = holidaysService.findMonthDayByYear(year);
         String monthDay = DateUtils.getMonthAndDay(startDate);
         boolean isHoliday = monthDayList.contains(monthDay);
-        long l1 =System.currentTimeMillis();
+        long l1 = System.currentTimeMillis();
         //不在考勤期内
 
         //log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>1"+contains+"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-        if ("6".equals(isForWeek) || "7".equals(isForWeek)){
+        if ("6".equals(isForWeek) || "7".equals(isForWeek)) {
             //不在考勤日期内直接返回预留业务
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
             //String workDay = DateUtils.getWorkDays(startDate);
-            if(!isHoliday){
+            if (!isHoliday) {
                 throw new AttendanceException("当前考勤时间不是工作日!");
-            }else{
+            } else {
                 throw new AttendanceException("节假日不用考勤!");
             }
         }
         //在考勤期内，但是当前日期是法定节假日
-        if (!"6".equals(isForWeek) && !"7".equals(isForWeek)){
+        if (!"6".equals(isForWeek) && !"7".equals(isForWeek)) {
             //判断是否为工作日
             //工作日对应结果为0, 休息日对应结果为1, 节假日对应的结果为2
             //String workDay = DateUtils.getWorkDays(startDate);
-            if(isHoliday){
+            if (isHoliday) {
                 throw new AttendanceException("节假日不用考勤!");
             }
         }
-        long l2 =System.currentTimeMillis();
-        long l = l2-l1;
-        log.debug("判断节假日"+l);
-        if (!"6".equals(isForWeek) && !"7".equals(isForWeek)){
-            long start=System.currentTimeMillis();
+        long l2 = System.currentTimeMillis();
+        long l = l2 - l1;
+        log.debug("判断节假日" + l);
+        if (!"6".equals(isForWeek) && !"7".equals(isForWeek)) {
+            long start = System.currentTimeMillis();
             //开始读取考勤组考勤的方式
-            Integer groupAttendanceWay= groupRule.getGroupAttendanceWay();
+            Integer groupAttendanceWay = groupRule.getGroupAttendanceWay();
             String groupAttendanceWays = groupAttendanceWay + "";
             //一、固定时长
             log.debug("进入固定时长打卡业务");
             if ("1".equals(groupAttendanceWays)) {
                 //判断当前地点是否异常
-                if (null==attendance) {
+                if (null == attendance) {
                     saveAttendance = new Attendance();
                     //设置日报状态
                     saveAttendance.setDailyStatus(0);
-                }else {
+                } else {
                     saveAttendance = attendance;
                 }
                 String distance2 = attendanceVo.getDistance();
-                if (distance2 ==null || "".equals(distance2)){
-                    distance2="0.0";
+                if (distance2 == null || "".equals(distance2)) {
+                    distance2 = "0.0";
                 }
                 String[] split = distance2.split("\\.");
-                String distances=split[0];
+                String distances = split[0];
                 Integer groupAttendanceScope = 0;
-                if(groupRule !=null){
+                if (groupRule != null) {
                     //返回多地址打卡数据
                     ArrayList<GroupAddressVo> groupAddressList = this.getGroupAddressList(groupRule.getId());
-                    if(groupAddressList != null && groupAddressList.size() >0 && groupAddressList.get(0).getGroupAttendanceScope() !=null){
+                    if (groupAddressList != null && groupAddressList.size() > 0 && groupAddressList.get(0).getGroupAttendanceScope() != null) {
                         groupAttendanceScope = groupAddressList.get(0).getGroupAttendanceScope();
                     }
                 }
@@ -274,9 +277,9 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 saveAttendance.setAttendanceGroup(attendanceVo.getAttendanceGroup());
                 this.save(saveAttendance);
                 long end = System.currentTimeMillis();
-                long time = end-start;
+                long time = end - start;
                 log.debug("固定时长打卡业务结束");
-                log.debug("打卡时间"+time);
+                log.debug("打卡时间" + time);
                 /*try {
                     //向统计表插入数据 String CreateBy,String createTime,String userName
                     insetStartStatic(attendanceVo.getPhone(), dateToYearMonthDay, attendanceVo.getUsername());
@@ -318,13 +321,14 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>考勤异常<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         return null;
     }
+
     //TODO 下班打卡业务
     /*
       @param  attendanceEndVo 封装下班业务的bean
       @return AttendanceEndVo 返回Controller的bean
      */
     @Transactional(readOnly = false)
-    public Attendance punchCardEnd(AttendanceEndVo attendanceEndVo ) throws AttendanceException {
+    public Attendance punchCardEnd(AttendanceEndVo attendanceEndVo) throws AttendanceException {
 
         /*读取规则表
          *跟考勤组已经启用在状态来获取考勤组信息
@@ -336,42 +340,42 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String[] compareTimeArry = compareTime.split(":");
         Integer compareHour = Integer.parseInt(compareTimeArry[0]);
         Integer compareMinute = Integer.parseInt(compareTimeArry[1]);
-        String groupAttendanceWay = groupRule.getGroupAttendanceWay()+"";
-        Attendance saveAttendance=null;
+        String groupAttendanceWay = groupRule.getGroupAttendanceWay() + "";
+        Attendance saveAttendance = null;
         String dateToYearMonthDay2 = DateUtils.getDateToYearMonthDay(startDate);
         Date endTime = DateUtils.getStringsToDates(DateUtils.getDateToStrings(startDate));
         //查询当前用户数据是否存在
-        Attendance attendance = checkAttendance(attendanceEndVo.getPhone(),dateToYearMonthDay2);
+        Attendance attendance = checkAttendance(attendanceEndVo.getPhone(), dateToYearMonthDay2);
         //一、固定时长
-        if ("1".equals(groupAttendanceWay)){
+        if ("1".equals(groupAttendanceWay)) {
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入固定打卡业务<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            if (null==attendance){
-                saveAttendance= new Attendance();
+            if (null == attendance) {
+                saveAttendance = new Attendance();
                 saveAttendance.setDailyStatus(0);
-            }else{
-                saveAttendance=attendance;
+            } else {
+                saveAttendance = attendance;
                 /*//插入数据 如果上班没打也算异常
                 if (null ==attendance.getStartTime()){
                       attendance.setAttendanceStatus("1");
                       attendance.setAttendanceDesc("上班卡没打");
                 }*/
-                if(attendance.getDailyStatus() ==null){
+                if (attendance.getDailyStatus() == null) {
                     saveAttendance.setDailyStatus(0);
                 }
                 saveAttendance.setUpdateDate(startDate);
                 Date startTime = saveAttendance.getStartTime();
-                double timesBetween = endTime.getTime()-startTime.getTime();
-                double workTime=timesBetween/(60*60*1000);
+                double timesBetween = endTime.getTime() - startTime.getTime();
+                double workTime = timesBetween / (60 * 60 * 1000);
                 BigDecimal bd = new BigDecimal(workTime);
                 //四舍五入保留一位小数
-                workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+                workTime = bd.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
                 //上班时长
                 float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
                 saveAttendance.setAttendanceWorkTime(attendanceWorkTime);
             }
             //设计考勤时间
             /*String groupAttendanceStart = groupRule.getGroupAttendanceStart();*/
-            String groupAttendanceEnd = groupRule.getGroupAttendanceEnd()+"";
+            String groupAttendanceEnd = groupRule.getGroupAttendanceEnd() + "";
             String[] AttendanceStartArry = groupAttendanceEnd.split(":");
             Integer groupAttendanceHour = Integer.parseInt(AttendanceStartArry[0]);
             Integer groupAttendanceMinute = Integer.parseInt(AttendanceStartArry[1]);
@@ -380,42 +384,42 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
              * 0为打卡正常
              * 1为迟到
              */
-            if (compareHour>groupAttendanceHour){
+            if (compareHour > groupAttendanceHour) {
                 saveAttendance.setEndTimeStatus("0");
-            }else if (compareHour==groupAttendanceHour){
-                if (compareMinute>=groupAttendanceMinute){
+            } else if (compareHour == groupAttendanceHour) {
+                if (compareMinute >= groupAttendanceMinute) {
                     saveAttendance.setEndTimeStatus("0");
-                }else {
+                } else {
                     saveAttendance.setEndTimeStatus("1");
                 }
-            }else {
-                    saveAttendance.setEndTimeStatus("1");
+            } else {
+                saveAttendance.setEndTimeStatus("1");
             }
-        }else {
+        } else {
             //二、自由模式。预留业务
             log.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>进入自由模式打卡<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            if (null==attendance){
-                saveAttendance= new Attendance();
+            if (null == attendance) {
+                saveAttendance = new Attendance();
                 saveAttendance.setDailyStatus(0);
-            }else{
-                saveAttendance=attendance;
-                if(attendance.getDailyStatus() ==null){
+            } else {
+                saveAttendance = attendance;
+                if (attendance.getDailyStatus() == null) {
                     saveAttendance.setDailyStatus(0);
                 }
                 Date startTime = saveAttendance.getStartTime();
-                double timesBetween = endTime.getTime()-startTime.getTime();
-                double workTime=timesBetween/(60*60*1000);
+                double timesBetween = endTime.getTime() - startTime.getTime();
+                double workTime = timesBetween / (60 * 60 * 1000);
                 BigDecimal bd = new BigDecimal(workTime);
                 //四舍五入保留一位小数
-                workTime = bd.setScale(1,BigDecimal.ROUND_HALF_UP).doubleValue();
+                workTime = bd.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
                 //上班时长
                 float attendanceWorkTime = Float.parseFloat(String.valueOf(workTime));
                 //获取考勤的时长
                 double groupAttendanceDuration = Double.parseDouble(String.valueOf(groupRule.getGroupAttendanceDuration()));
                 //比较实际考勤时长与规则考勤时长
-                if(workTime - groupAttendanceDuration >= 0){
+                if (workTime - groupAttendanceDuration >= 0) {
                     saveAttendance.setEndTimeStatus("0");
-                }else {
+                } else {
                     saveAttendance.setEndTimeStatus("1");
                 }
                 saveAttendance.setUpdateDate(startDate);
@@ -444,7 +448,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         //年月日
         String dateToYearMonthDay = DateUtils.getDateToYearMonthDay(startDate);
         String[] dateToYearMonthDayArry = dateToYearMonthDay.split("-");
-        saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0]+"-"+
+        saveAttendance.setAttendanceMonth(dateToYearMonthDayArry[0] + "-" +
                 dateToYearMonthDayArry[1]);
         saveAttendance.setEndLocation(attendanceEndVo.getLocation());
         saveAttendance.setAttendanceGroup(attendanceEndVo.getAttendanceGroup());
@@ -460,9 +464,8 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
     }
 
     /**
+     * @return 考勤统计, 按日统计早到榜
      * @author 何家来
-     * @return
-     * 考勤统计,按日统计早到榜
      */
     @Transactional(readOnly = false)
     public Map<String, Object> checkAttendanceByDay(QueryAttendanceVo queryAttendanceVo) {
@@ -471,31 +474,31 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         String date = queryAttendanceVo.getDate();
         PageInfo page = queryAttendanceVo.getPageInfo();
 
-        if(page.getPageNum() <= 0) {
+        if (page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
-        if(page.getPageSize() <= 0) {
+        if (page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
-        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"start_time");
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(), "start_time");
 
         HttpServletRequest request = WebUtils.getRequest();
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) request.getSession().getAttribute("attendanceUserVo");
         List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
 
         Map<String, Object> map = new HashMap<>();
-        map.put("flag",0);
-        if(null == attendanceUserVo){
+        map.put("flag", 0);
+        if (null == attendanceUserVo) {
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",1);
+            map.put("flag", 1);
             return map;
         }
 
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
-        if(roleList.contains(1)){
+        if (roleList.contains(1)) {
             attendanceGroup = "";
         }
         AttendancePojo attendancePojo = new AttendancePojo();
@@ -503,20 +506,19 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         attendancePojo.setAttendanceGroup(attendanceGroup);//所属考勤组名
 
 
-        List<Map> pageInfo = (List<Map>)dao.checkAttendanceByDay(attendancePojo);
-        Page pi = (Page)pageInfo;
+        List<Map> pageInfo = (List<Map>) dao.checkAttendanceByDay(attendancePojo);
+        Page pi = (Page) pageInfo;
         long total = pi.getTotal();
 
-        map.put("pageInfo",pageInfo);
-        map.put("total",total);
-        map.put("pageCount",pi.getPages());
+        map.put("pageInfo", pageInfo);
+        map.put("total", total);
+        map.put("pageCount", pi.getPages());
         return map;
     }
 
     /**
+     * @return 考勤统计, 按日统计迟到榜
      * @author 何家来
-     * @return
-     * 考勤统计,按日统计迟到榜
      */
     public Map<String, Object> checkAttendanceLatterByDay(QueryAttendanceVo queryAttendanceVo) {
 
@@ -524,82 +526,81 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         PageInfo page = queryAttendanceVo.getPageInfo();
 
         HttpServletRequest request = WebUtils.getRequest();
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) request.getSession().getAttribute("attendanceUserVo");
         List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map<String, Object> map = new HashMap<>();
-        map.put("flag",0);
-        if(null == attendanceUserVo){
+        map.put("flag", 0);
+        if (null == attendanceUserVo) {
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",1);
+            map.put("flag", 1);
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(roleList.contains(1)){
+        if (roleList.contains(1)) {
             attendanceGroup = "";
         }
 
-        if(page.getPageNum() <= 0) {
+        if (page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
-        if(page.getPageSize() <= 0) {
+        if (page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
 
         AttendancePojo attendancePojo = new AttendancePojo();
         attendancePojo.setDate(date);
         attendancePojo.setAttendanceGroup(attendanceGroup);
-        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"start_time DESC");
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(), "start_time DESC");
 
-        List<Map> pageInfo = (List<Map>)this.dao.checkAttendanceLatterByDay(attendancePojo);
-        Page pi = (Page)pageInfo;
+        List<Map> pageInfo = (List<Map>) this.dao.checkAttendanceLatterByDay(attendancePojo);
+        Page pi = (Page) pageInfo;
         long total = pi.getTotal();
 
-        map.put("pageInfo",pageInfo);
-        map.put("total",total);
-        map.put("pageCount",pi.getPages());
+        map.put("pageInfo", pageInfo);
+        map.put("total", total);
+        map.put("pageCount", pi.getPages());
         return map;
     }
 
 
     /**
+     * @return 考勤统计, 按日统计出勤率
      * @author 何家来
-     * @return
-     * 考勤统计,按日统计出勤率
      */
-    public Map<String,Object> checkAttendanceData(QueryAttendanceVo queryAttendanceVo) {
+    public Map<String, Object> checkAttendanceData(QueryAttendanceVo queryAttendanceVo) {
 
         String date = queryAttendanceVo.getDate();
         HttpServletRequest request = WebUtils.getRequest();
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) request.getSession().getAttribute("attendanceUserVo");
         List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map<String, Object> map = new HashMap<>();
-        map.put("flag",0);
-        if(null == attendanceUserVo){
+        map.put("flag", 0);
+        if (null == attendanceUserVo) {
             //测试使用，写死
            /* attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");
             attendanceUserVo.setUserType("0");*/
-            map.put("flag",1);
+            map.put("flag", 1);
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
 
         int startWork = groupRuleService.startWork(attendanceGroup);
         int endWork = groupRuleService.endWork(attendanceGroup);
-        if(startWork>0){
-            map.put("startWorkFlag","1");
-        }else{
-            map.put("startWorkFlag","0");
+        if (startWork > 0) {
+            map.put("startWorkFlag", "1");
+        } else {
+            map.put("startWorkFlag", "0");
         }
-        if(endWork>0){
-            map.put("endWorkFlag","1");
-            map.put("startWorkFlag","0");
-        }else{
-            map.put("endWorkFlag","0");
+        if (endWork > 0) {
+            map.put("endWorkFlag", "1");
+            map.put("startWorkFlag", "0");
+        } else {
+            map.put("endWorkFlag", "0");
         }
-        if(roleList.contains(1)){
+        if (roleList.contains(1)) {
             attendanceGroup = "";
         }
         AttendancePojo attendancePojo = new AttendancePojo();
@@ -607,55 +608,55 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         attendancePojo.setAttendanceGroup(attendanceGroup);
 //      应该打卡人数
         int total = employeeService.getTotal(attendancePojo);
-        map.put("total",total);
+        map.put("total", total);
 
 //       获取当天打卡人数
         int workCount = this.dao.getWorkCount(attendancePojo);
-        map.put("workCount",workCount);
-        map.put("noWorkCount",total-workCount);
+        map.put("workCount", workCount);
+        map.put("noWorkCount", total - workCount);
 
 //        获取外勤人数
         int outworkCount = this.dao.getOutworkCount(attendancePojo);
-        map.put("outworkCount",outworkCount);
+        map.put("outworkCount", outworkCount);
 
 //       当天迟到人数
         int latterCount = this.dao.getLatterCount(attendancePojo);
-        map.put("latterCount",latterCount);
+        map.put("latterCount", latterCount);
 
         return map;
     }
 
     //记录上班时间数据
-    public void  insetStartStatic(String CreateBy,String createTime,String userName){
+    public void insetStartStatic(String CreateBy, String createTime, String userName) {
         Statistics DBstatistics =
                 statisticsService.checkAttendanceByCreateByAndCreateTime(CreateBy, createTime);
-        if (null==DBstatistics){
+        if (null == DBstatistics) {
             Statistics saveStatistics = new Statistics();
             saveStatistics.setLateTime(1);
             saveStatistics.setUsername(userName);
             statisticsService.save(saveStatistics);
-        }else {
-            if (0==DBstatistics.getLateTime()){
+        } else {
+            if (0 == DBstatistics.getLateTime()) {
                 DBstatistics.setLateTime(1);
-            }else {
+            } else {
                 int lateTime = DBstatistics.getLateTime();
-                lateTime=lateTime+1;
+                lateTime = lateTime + 1;
                 statisticsService.save(DBstatistics);
             }
         }
     }
 
 
-
- /**
+    /**
      * 查询考勤列表数据分页
-     * @param pageNum 当前页
-     * @param pageSize 显示条数
-     * @param attendance  人名 状态  开始时间 结束时间
+     *
+     * @param pageNum    当前页
+     * @param pageSize   显示条数
+     * @param attendance 人名 状态  开始时间 结束时间
      * @return map集合
      */
-    public Map<String, Object> selectAttendances(Integer pageNum , Integer pageSize, Attendance attendance){
-        PageInfo<Map> pageInfo = PageHelper.startPage(pageNum, pageSize,"a.create_date DESC").doSelectPageInfo(new ISelect() {
+    public Map<String, Object> selectAttendances(Integer pageNum, Integer pageSize, Attendance attendance) {
+        PageInfo<Map> pageInfo = PageHelper.startPage(pageNum, pageSize, "a.create_date DESC").doSelectPageInfo(new ISelect() {
             @Override
             public void doSelect() {
                 dao.selectAttendances(attendance);
@@ -664,61 +665,72 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         //创建封装数据
         Map<String, Object> dateMap = new HashMap<>();
         //考勤数据
-        dateMap.put("attendances",pageInfo.getList());
+        dateMap.put("attendances", pageInfo.getList());
         //当前页
-        dateMap.put("pageNum",pageNum);
+        dateMap.put("pageNum", pageNum);
         //显示条数
-        dateMap.put("pageSize",pageSize);
+        dateMap.put("pageSize", pageSize);
         //总页数
-        dateMap.put("pageCount",pageInfo.getPages());
+        dateMap.put("pageCount", pageInfo.getPages());
         //总记录数
-        dateMap.put("pageTotal",pageInfo.getTotal());
-        return  dateMap;
+        dateMap.put("pageTotal", pageInfo.getTotal());
+        return dateMap;
     }
 
-    public void selectAttendancesToExcel( Attendance attendance,HttpServletRequest request,HttpServletResponse response){
-        String templateFileName= request.getServletContext().getRealPath("/") + "/resources/templateFileName.xls";
-        String destFileName= "Attendances "+System.currentTimeMillis()+".xls";
+    public void selectAttendancesToExcel(Attendance attendance, HttpServletRequest request, HttpServletResponse response) {
+        String templateFileName = request.getServletContext().getRealPath("/") + "/resources/templateFileName.xls";
+        String destFileName = "Attendances " + System.currentTimeMillis() + ".xls";
         List<Map> attendances = dao.selectAttendances(attendance);
-        Map<String,Object> beans = new HashMap<String,Object>();
-        beans.put("attendances",attendances);
+        Map<String, Object> beans = new HashMap<String, Object>();
+        beans.put("attendances", attendances);
         XLSTransformer transformer = new XLSTransformer();
-        InputStream in=null;
-        OutputStream out=null;
+        InputStream in = null;
+        OutputStream out = null;
         //设置响应  
         response.setHeader("Content-Disposition", "attachment;filename=" + destFileName);
         response.setContentType("application/vnd.ms-excel");
         try {
-            in=new BufferedInputStream(new FileInputStream(templateFileName));
-            Workbook workbook=transformer.transformXLS(in, beans);
-            out=response.getOutputStream();
+            in = new BufferedInputStream(new FileInputStream(templateFileName));
+            Workbook workbook = transformer.transformXLS(in, beans);
+            out = response.getOutputStream();
             //将内容写入输出流并把缓存的内容全部发出去  
             workbook.write(out);
             out.flush();
         } catch (InvalidFormatException e) {
-             e.printStackTrace();
+            e.printStackTrace();
         } catch (IOException e) {
-             e.printStackTrace();
+            e.printStackTrace();
         } finally {
-        if (in!=null){try {in.close();} catch (IOException e) {}}
-        if (out!=null){try {out.close();} catch (IOException e) {}}
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                }
+            }
+        }
     }
- }
 
 
     /**
      * 查询考勤数据导出
-     * @param attendance   人名 状态  开始时间 结束时间
-     *          filePath   保存的路径
+     *
+     * @param attendance 人名 状态  开始时间 结束时间
+     *                   filePath   保存的路径
      * @return 状态码 0
      */
-    public String exportExcel( Attendance attendance){
+    public String exportExcel(Attendance attendance) {
         //获取数据
         List<Attendance> attendanceList = dao.selectExportAttendanceData(attendance);
         Configuration configuration = null;
 
         StringWriter stringWriter = null;
-        BufferedWriter bufferedWriter = null ;
+        BufferedWriter bufferedWriter = null;
         try {
 
             /** 创建Configuration配置信息对象,需要指定版本号 */
@@ -731,23 +743,23 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             Map<String, Object> dataModel = new HashMap<>();
             /** 设置数据 */
             dataModel.put("attendanceList", attendanceList);
-            dataModel.put("currMonth",attendance.getAttendanceMonth());
+            dataModel.put("currMonth", attendance.getAttendanceMonth());
 
             stringWriter = new StringWriter();
             bufferedWriter = new BufferedWriter(stringWriter);
-            template.process(dataModel,bufferedWriter);
+            template.process(dataModel, bufferedWriter);
 
-            return stringWriter.toString() ;
-        }catch (Exception e){
+            return stringWriter.toString();
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RestException("导出失败!");
-        }finally {
+        } finally {
             try {
                 bufferedWriter.flush();
                 bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 try {
                     stringWriter.close();
                 } catch (IOException e) {
@@ -760,39 +772,39 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
     /**
      * 通过考勤月份查询当月的考勤数据
+     *
      * @param paramMap 封装 attaendanceMonth考勤月份,pageSize分页显示条数,pageNum第几页 三个参数
-     * @param phone 用户电话号码
+     * @param phone    用户电话号码
      * @return 考勤数据集合
      */
-    public Map<String,Object> getMonthAttendanceData(Map<String,Object> paramMap ,String phone){
+    public Map<String, Object> getMonthAttendanceData(Map<String, Object> paramMap, String phone) {
         //设置查询参数和排序条件
-        int pageSize = (int)paramMap.get("pageSize");
-        int pageNum = (int)paramMap.get("pageNum");
-        PageHelper.startPage(pageNum,pageSize,"a.create_date ASC");
-        paramMap.put("createBy",phone);
+        int pageSize = (int) paramMap.get("pageSize");
+        int pageNum = (int) paramMap.get("pageNum");
+        PageHelper.startPage(pageNum, pageSize, "a.create_date ASC");
+        paramMap.put("createBy", phone);
 
-        String attaendanceMonth = (String)paramMap.get("attaendanceMonth");
-        paramMap.put("attaendanceMonth",attaendanceMonth.replace("/","-"));
+        String attaendanceMonth = (String) paramMap.get("attaendanceMonth");
+        paramMap.put("attaendanceMonth", attaendanceMonth.replace("/", "-"));
         //分页查询并获取分页信息
         List<Map> attendanceList = dao.findAttendanceList(paramMap);
-        PageInfo<Attendance> pageInfo =  new PageInfo(attendanceList);
+        PageInfo<Attendance> pageInfo = new PageInfo(attendanceList);
 
         //创建对象对相应数据进行封装
-        Map<String,Object> responseMap = new HashMap<String,Object>();
-        List< Map<String,Object>> attendList = new ArrayList<>();
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        List<Map<String, Object>> attendList = new ArrayList<>();
 
         //获取总页数和总记录数
-        responseMap.put("totalPages",pageInfo.getPages());
-        responseMap.put("totalCount",pageInfo.getTotal());
-        responseMap.put("attendanceList",pageInfo.getList());
+        responseMap.put("totalPages", pageInfo.getPages());
+        responseMap.put("totalCount", pageInfo.getTotal());
+        responseMap.put("attendanceList", pageInfo.getList());
         return responseMap;
 
     }
 
     /**
+     * @return 考勤统计, 按日统计勤奋榜
      * @author 何家来
-     * @return
-     * 考勤统计,按日统计勤奋榜
      */
     public Map<String, Object> checkAttendanceHardworkingByDay(QueryAttendanceVo queryAttendanceVo) {
 
@@ -800,28 +812,28 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         PageInfo page = queryAttendanceVo.getPageInfo();
 
         HttpServletRequest request = WebUtils.getRequest();
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) request.getSession().getAttribute("attendanceUserVo");
         List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
-        System.out.print("------"+attendanceUserVo+"------");
+        System.out.print("------" + attendanceUserVo + "------");
         Map<String, Object> map = new HashMap<>();
-        map.put("flag",0);
-        if(null == attendanceUserVo){
+        map.put("flag", 0);
+        if (null == attendanceUserVo) {
             //测试使用，写死
            /* attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");
             roleList = new ArrayList<>();
             roleList.add(1);*/
-            map.put("flag",1);
+            map.put("flag", 1);
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(roleList.contains(1)){
+        if (roleList.contains(1)) {
             attendanceGroup = "";
         }
-        if(page.getPageNum() <= 0) {
+        if (page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
-        if(page.getPageSize() <= 0) {
+        if (page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
 
@@ -831,36 +843,36 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         attendancePojo.setAttendanceGroup(attendanceGroup);
 
         int endWork = groupRuleService.endWork(attendanceGroup);
-        if(endWork>0){
-            PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workHour DESC");
-        }else{
-            PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workStartTime ");
+        if (endWork > 0) {
+            PageHelper.startPage(page.getPageNum(), page.getPageSize(), "workHour DESC");
+        } else {
+            PageHelper.startPage(page.getPageNum(), page.getPageSize(), "workStartTime ");
         }
 
-        List<AttendanceResultPojo> pageInfo = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByDay(attendancePojo);
-        if(pageInfo != null && pageInfo.size() >0){
+        List<AttendanceResultPojo> pageInfo = (List<AttendanceResultPojo>) this.dao.checkAttendanceHardworkingByDay(attendancePojo);
+        if (pageInfo != null && pageInfo.size() > 0) {
             Iterator<AttendanceResultPojo> iterator = pageInfo.iterator();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
                 AttendanceResultPojo arp = iterator.next();
                 Float workHour = arp.getWorkHour();
                 Float hour = 0f;
                 //没打下班卡，并且提了审批（审批那边同意后会把下班时间更新为默认下班时间，否则下班时间为空,即13:00）
-                if(0.0 == workHour){
+                if (0.0 == workHour) {
                     String startTime = arp.getWorkStartTime();//打卡时间
-                    if(null == startTime){
+                    if (null == startTime) {
                         workHour = 0f;
                         continue;
                     }
                     float startTimeSeconds = getSeconds(startTime);
-                    if(null == arp.getWorkEndTime()){
+                    if (null == arp.getWorkEndTime()) {
                         String dateToHourMinuteS = DateUtils.getDateToHourMinuteS(new Date());
 //                        hour = getSeconds("13:00:00");
                         hour = getSeconds(dateToHourMinuteS);
-                        if(startTimeSeconds >= hour){//如果上班打卡时间大于13:00:00，并且又没打下班卡，又没提审批,不算进勤奋榜
+                        if (startTimeSeconds >= hour) {//如果上班打卡时间大于13:00:00，并且又没打下班卡，又没提审批,不算进勤奋榜
                             iterator.remove();
                             continue;
                         }
-                    }else{
+                    } else {
                         hour = getSeconds(arp.getWorkEndTime());
                     }
                     workHour = hour - startTimeSeconds;
@@ -878,16 +890,17 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         };
 
         Collections.sort(pageInfo, COMPARATOR);//用我们写好的Comparator对pageInfo进行排序（工作时长）
-        Page pi = (Page)pageInfo;
+        Page pi = (Page) pageInfo;
         long total = pi.getTotal();
 
-        map.put("pageInfo",pageInfo);
-        map.put("total",total);
-        map.put("pageCount",pi.getPages());
+        map.put("pageInfo", pageInfo);
+        map.put("total", total);
+        map.put("pageCount", pi.getPages());
 
         return map;
     }
-    public float getSeconds(String time){
+
+    public float getSeconds(String time) {
         String[] split = time.split(":");
         int h1 = Integer.parseInt(split[0].charAt(0) + "");
         int h2 = Integer.parseInt(split[0].charAt(1) + "");
@@ -895,48 +908,47 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         int m2 = Integer.parseInt(split[1].charAt(1) + "");
         int s1 = Integer.parseInt(split[2].charAt(0) + "");
         int s2 = Integer.parseInt(split[2].charAt(1) + "");
-        Integer startTimeSeconds = h1*10*60*60+h2*60*60+m1*10*60+m2*60+s1*10+s2;
+        Integer startTimeSeconds = h1 * 10 * 60 * 60 + h2 * 60 * 60 + m1 * 10 * 60 + m2 * 60 + s1 * 10 + s2;
         float a = startTimeSeconds / 3600f;
         return a;
     }
 
 
     /**
+     * @return 考勤统计, 按月统计勤奋榜
      * @author 何家来
-     * @return
-     * 考勤统计,按月统计勤奋榜
      */
-    public Map<String,Object> checkAttendanceHardworkingByMonth(QueryAttendanceVo queryAttendanceVo) {
+    public Map<String, Object> checkAttendanceHardworkingByMonth(QueryAttendanceVo queryAttendanceVo) {
 
         String date = queryAttendanceVo.getDate();
         PageInfo page = queryAttendanceVo.getPageInfo();
 
         HttpServletRequest request = WebUtils.getRequest();
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) request.getSession().getAttribute("attendanceUserVo");
         List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map<String, Object> map = new HashMap<>();
-        map.put("flag",0);
-        if(null == attendanceUserVo){
+        map.put("flag", 0);
+        if (null == attendanceUserVo) {
             //测试使用，写死
           /*  attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");
             roleList = new ArrayList<>();
             roleList.add(1);*/
-            map.put("flag",1);
+            map.put("flag", 1);
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(roleList.contains(1)){
+        if (roleList.contains(1)) {
             attendanceGroup = "";
         }
 
-        if(page.getPageNum() <= 0) {
+        if (page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
-        if(page.getPageSize() <= 0) {
+        if (page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
-        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"workHour DESC");
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(), "workHour DESC");
 
         int i = date.lastIndexOf("-");
         String substring = date.substring(0, i);
@@ -945,10 +957,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         attendancePojo.setDate(substring);
         attendancePojo.setAttendanceGroup(attendanceGroup);
 
-        List<AttendanceResultPojo> attendanceList = (List<AttendanceResultPojo>)this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
-        if(attendanceList != null && attendanceList.size() >0){
+        List<AttendanceResultPojo> attendanceList = (List<AttendanceResultPojo>) this.dao.checkAttendanceHardworkingByMonth(attendancePojo);
+        if (attendanceList != null && attendanceList.size() > 0) {
             Iterator<AttendanceResultPojo> iterator = attendanceList.iterator();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
                 AttendanceResultPojo arp = iterator.next();
                 Float workHour = arp.getWorkHour();
                 String format = String.format("%.2f", workHour);
@@ -1017,18 +1029,17 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             }
         }*/
 
-        Page pi = (Page)attendanceList;
+        Page pi = (Page) attendanceList;
         long total = pi.getTotal();
-        map.put("pageInfo",attendanceList);
-        map.put("total",total);
-        map.put("pageCount",pi.getPages());
-        return  map;
+        map.put("pageInfo", attendanceList);
+        map.put("total", total);
+        map.put("pageCount", pi.getPages());
+        return map;
     }
 
     /**
+     * @return 考勤统计, 按月统计迟到榜
      * @author 何家来
-     * @return
-     * 考勤统计,按月统计迟到榜
      */
     public Map<String, Object> checkAttendanceLatterByMonth(QueryAttendanceVo queryAttendanceVo) {
 
@@ -1036,29 +1047,29 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         PageInfo page = queryAttendanceVo.getPageInfo();
 
         HttpServletRequest request = WebUtils.getRequest();
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) request.getSession().getAttribute("attendanceUserVo");
         List<Integer> roleList = (List<Integer>) request.getSession().getAttribute("roleList");
         Map<String, Object> map = new HashMap<>();
-        map.put("flag",0);
-        if(null == attendanceUserVo){
+        map.put("flag", 0);
+        if (null == attendanceUserVo) {
             //测试使用，写死
          /*   attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("odc");*/
-            map.put("flag",1);
+            map.put("flag", 1);
             return map;
         }
         String attendanceGroup = attendanceUserVo.getAttendanceGroup();
-        if(roleList.contains(1)){
+        if (roleList.contains(1)) {
             attendanceGroup = "";
         }
 
-        if(page.getPageNum() <= 0) {
+        if (page.getPageNum() <= 0) {
             page.setPageNum(1);
         }
-        if(page.getPageSize() <= 0) {
+        if (page.getPageSize() <= 0) {
             page.setPageSize(10);
         }
-        PageHelper.startPage(page.getPageNum(), page.getPageSize(),"lateTime DESC");
+        PageHelper.startPage(page.getPageNum(), page.getPageSize(), "lateTime DESC");
 
         int i = date.lastIndexOf("-");
         String substring = date.substring(0, i);
@@ -1068,24 +1079,26 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         attendancePojo.setAttendanceGroup(attendanceGroup);
 
         List<Map> pageInfo = (List<Map>) this.dao.checkAttendanceLatterByMonth(attendancePojo);
-        Page pi = (Page)pageInfo;
+        Page pi = (Page) pageInfo;
         long total = pi.getTotal();
 
-        map.put("pageInfo",pageInfo);
-        map.put("total",total);
-        map.put("pageCount",pi.getPages());
+        map.put("pageInfo", pageInfo);
+        map.put("total", total);
+        map.put("pageCount", pi.getPages());
 
         return map;
     }
+
     /**
      * 数据导出
+     *
      * @param
      */
-    public String exportAttendanceExcel(EmployeeVo employeeVo){
+    public String exportAttendanceExcel(EmployeeVo employeeVo) {
 
         HttpServletRequest request = WebUtils.getRequest();
-        AttendanceUserVo attendanceUserVo = (AttendanceUserVo)request.getSession().getAttribute("attendanceUserVo");
-        if(null == attendanceUserVo){
+        AttendanceUserVo attendanceUserVo = (AttendanceUserVo) request.getSession().getAttribute("attendanceUserVo");
+        if (null == attendanceUserVo) {
             //测试使用，写死
            /* attendanceUserVo = new AttendanceUserVo();
             attendanceUserVo.setAttendanceGroup("中软国际");*/
@@ -1100,7 +1113,7 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
         }*/
 
         StringWriter stringWriter = null;
-        BufferedWriter bufferedWriter = null ;
+        BufferedWriter bufferedWriter = null;
         try {
 
             List<Employee> employeeList = null;
@@ -1114,10 +1127,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             Template template = null;
             /** 定义模版中需要的数据模型 */
             Map<String, Object> dataModel = new HashMap<>();
-            if("0".equals(employeeVo.getAttFlag())){
+            if ("0".equals(employeeVo.getAttFlag())) {
                 EmployeePojo employeePojo = new EmployeePojo();
-                BeanUtils.copyProperties(employeeVo,employeePojo);
-                if(roleList.contains(1)){
+                BeanUtils.copyProperties(employeeVo, employeePojo);
+                if (roleList.contains(1)) {
                     employeePojo.setAttendanceName("");
                 }
                 //获取数据,查询未打卡数据
@@ -1126,12 +1139,12 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
                 dataModel.put("employeeList", employeeList);
                 /** 通过Configuration获取指定模版文件对应的模版对象 */
                 template = configuration.getTemplate("excelNo.ftl");
-            }else{
+            } else {
                 //获取数据,查询打卡数据
                 AttendancePojo attendancePojo = new AttendancePojo();
-                BeanUtils.copyProperties(employeeVo,attendancePojo);
+                BeanUtils.copyProperties(employeeVo, attendancePojo);
                 attendancePojo.setAttendanceGroup(employeeVo.getAttendanceName());
-                if(roleList.contains(1)){
+                if (roleList.contains(1)) {
                     attendancePojo.setAttendanceGroup("");
                 }
                 attendanceList = dao.selectAttendance(attendancePojo);
@@ -1143,19 +1156,19 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
 
             stringWriter = new StringWriter();
             bufferedWriter = new BufferedWriter(stringWriter);
-            template.process(dataModel,bufferedWriter);
+            template.process(dataModel, bufferedWriter);
 
-            return stringWriter.toString() ;
-        }catch (Exception e){
+            return stringWriter.toString();
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RestException("导出失败!");
-        }finally {
+        } finally {
             try {
                 bufferedWriter.flush();
                 bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 try {
                     stringWriter.close();
                 } catch (IOException e) {
@@ -1232,5 +1245,10 @@ public class AttendanceService extends CrudService<AttendanceDao, Attendance> {
             statisticsService.save(DBstatistics);
         }
     }*/
+
+    public List<HolidayAndAttendance> statisticsHolidayAndAttendance(String month) {
+        List<HolidayAndAttendance> list = dao.statisticsHolidayAndAttendance(month);
+        return list;
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.cmic.attendance.admin;
 
 import com.cmic.attendance.model.Attendance;
+import com.cmic.attendance.model.HolidayAndAttendance;
+import com.cmic.attendance.model.WorkStatistics;
 import com.cmic.attendance.service.AttendanceService;
 import com.cmic.attendance.utils.DateUtils;
 import com.cmic.attendance.vo.AttendanceUserVo;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -354,6 +357,28 @@ public class AttendanceAdminController extends BaseRestController<AttendanceServ
 
         }
 
+    }
+
+    /**
+     * @author 陈志豪
+     * @return
+     * 考勤统计,统计某个月每个人的请假总时长和总的出勤天数
+     */
+    @RequestMapping(value="/statisticsHolidayAndAttendance",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> statisticsHolidayAndAttendance(@RequestBody WorkStatistics workStatistics) {
+        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMM");
+        try{
+            StringBuilder sb = new StringBuilder();
+            String month=sb.append(workStatistics.getMonth()).insert(4,"-").toString();
+            List<HolidayAndAttendance> list=service.statisticsHolidayAndAttendance(month);
+            HashMap<String,Object> map =new HashMap();
+            map.put("list",list);
+            return map;
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RestException("统计异常");
+        }
     }
 
 }
