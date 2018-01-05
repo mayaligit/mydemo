@@ -273,7 +273,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     attendance.setAttendanceGroup(audit.getAttendanceGroup());
                     attendance.setEndTimeStatus("0");
                     attendance.setStartTimeStatus("0");
-                    attendance.setCreateDate(new Date());
+                    attendance.setCreateDate(startDate);
                     attendance.setUpdateDate(new Date());
                     attendance.setStartTime(audit.getStartDate());
                     attendance.setEndTime(audit.getEndDate());
@@ -322,7 +322,7 @@ public class AuditService extends CrudService<AuditDao, Audit> {
                     attendance.setEndTimeStatus("0");
                     attendance.setStartTimeStatus("0");
                     attendance.setAttendanceWorkTime(differTime);
-                    attendance.setCreateDate(new Date());
+                    attendance.setCreateDate(startDate);
                     attendance.setUpdateDate(new Date());
                     if(audit.getBusinessType()==1){
                         attendance.setAttendanceStatus("2");
