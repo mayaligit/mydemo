@@ -61,4 +61,8 @@ public class EmployeeScoreService extends CrudService<EmployeeScoreDao, Employee
         return employeeScoreDao.getEmployeeByGroup(employeeScore);
     }
 
+    public EmployeeScore getEmployeeScoreByPhoneAndMonth(EmployeeScore employeeScore){
+        return employeeScoreDao.getEmployeeScoreByPhoneAndMonth(employeeScore);
+    }
+
 }

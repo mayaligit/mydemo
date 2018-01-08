@@ -13,4 +13,6 @@ import java.util.List;
 @Mapper
 public interface EmployeeScoreDao extends CrudDao<EmployeeScore> {
     List<HashMap> getEmployeeByGroup(EmployeeScore employeeScore);
+
+    EmployeeScore getEmployeeScoreByPhoneAndMonth(EmployeeScore employeeScore);
 }

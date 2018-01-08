@@ -65,8 +65,18 @@ public class EmployeeScoreController extends BaseRestController<EmployeeScoreSer
         return employeeScore;
     }
 
-    @ApiOperation(value = "新增/更新", notes = "新增/更新", httpMethod = "PUT")
-    @RequestMapping(value="/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value="/getEmployeeScoreByPhoneAndMonth", method = RequestMethod.POST)
+    public EmployeeScore getEmployeeScoreByPhoneAndMonth(@RequestBody EmployeeScore employeeScore){
+        try{
+            return service.getEmployeeScoreByPhoneAndMonth(employeeScore);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RestException("查询打分详情异常！");
+        }
+    }
+
+    @ApiOperation(value = "新增/更新", notes = "新增/更新", httpMethod = "POST")
+    @RequestMapping(value="/save/{id}", method = RequestMethod.POST)
     public EmployeeScore put(@PathVariable String id, @Validated @RequestBody EmployeeScore employeeScore){
         employeeScore.setId(id);
         service.save(employeeScore);

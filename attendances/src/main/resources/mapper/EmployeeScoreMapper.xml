@@ -36,6 +36,15 @@
         WHERE a.id = #{id}
     </select>
 
+    <select id="getEmployeeScoreByPhoneAndMonth" resultType="EmployeeScore">
+        SELECT
+        <include refid="employeeScoreColumns"/>
+        FROM t_employee_score a
+        <include refid="employeeScoreJoins"/>
+        WHERE a.phone = #{phone}
+        and a.month = #{month}
+    </select>
+
     <select id="getEmployeeByGroup" parameterType="com.cmic.attendance.model.EmployeeScore"
             resultType="java.util.HashMap" >
         SELECT * FROM t_employee a
@@ -46,6 +55,8 @@
         WHERE a.`project_name`=#{group}
         </if>
     </select>
+
+
 
     <select id="findList" resultType="EmployeeScore">
         SELECT
