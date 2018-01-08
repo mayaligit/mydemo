@@ -6,9 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 /**
- * 雇员分数实体
+ * 实体
  */
-@ApiModel(value = "EmployeeScore", description = "雇员分数")
+@ApiModel(value = "EmployeeScore", description = "")
 public class EmployeeScore extends DataEntity<EmployeeScore> {
 
     @ApiModelProperty(value = "姓名", example = "姓名")
@@ -33,6 +33,14 @@ public class EmployeeScore extends DataEntity<EmployeeScore> {
     protected Integer attendance;
     @ApiModelProperty(value = "责任感和积极性", example = "责任感和积极性")
     protected Integer responsibility;
+    @ApiModelProperty(value = "0可以修改，1不可以修改", example = "0可以修改，1不可以修改")
+    protected Integer flag;
+    @ApiModelProperty(value = "所属企业ID", example = "所属企业ID")
+    protected String enterId;
+    @ApiModelProperty(value = "入职部门", example = "入职部门")
+    protected String enterpriseDepartment;
+    @ApiModelProperty(value = "备用字段,用户所属考勤组", example = "备用字段,用户所属考勤组")
+    protected String group;
 
     public EmployeeScore(){
 
@@ -127,6 +135,38 @@ public class EmployeeScore extends DataEntity<EmployeeScore> {
 
     public void setResponsibility(Integer responsibility) {
         this.responsibility = responsibility;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
+    }
+
+    public String getEnterId() {
+        return enterId;
+    }
+
+    public void setEnterId(String enterId) {
+        this.enterId = enterId;
+    }
+
+    public String getEnterpriseDepartment() {
+        return enterpriseDepartment;
+    }
+
+    public void setEnterpriseDepartment(String enterpriseDepartment) {
+        this.enterpriseDepartment = enterpriseDepartment;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
 

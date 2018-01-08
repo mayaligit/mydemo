@@ -13,7 +13,16 @@
         a.workload AS "workload",
         a.Quality_management AS "qualityManagement",
         a.attendance AS "attendance",
-        a.responsibility AS "responsibility"
+        a.responsibility AS "responsibility",
+        a.flag AS "flag",
+        a.enter_id AS "enterId",
+        a.enterprise_department AS "enterpriseDepartment",
+        a.create_date AS "createDate",
+        a.update_date AS "updateDate",
+        a.create_by AS "createBy.id",
+        a.update_by AS "updateBy.id",
+        a.remarks AS "remarks",
+        a.group AS "group"
     </sql>
 
     <sql id="employeeScoreJoins">
@@ -27,6 +36,17 @@
         WHERE a.id = #{id}
     </select>
 
+    <select id="getEmployeeByGroup" parameterType="com.cmic.attendance.model.EmployeeScore"
+            resultType="java.util.HashMap" >
+        SELECT * FROM t_employee a
+        LEFT JOIN
+        (SELECT * FROM ( SELECT * FROM t_employee_score WHERE  `month`=#{month}) temp) list_B
+        ON a.telephone = list_B.`phone`
+        <if test="group != null  and group != ''">
+        WHERE a.`project_name`=#{group}
+        </if>
+    </select>
+
     <select id="findList" resultType="EmployeeScore">
         SELECT
         <include refid="employeeScoreColumns"/>
@@ -34,12 +54,12 @@
         <include refid="employeeScoreJoins"/>
         <where>
             1 = 1
-        <if test="id != null">
+            <if test="id != null">
                 AND a.id = #{id}
-        </if>
-        <if test="phone != null">
+            </if>
+            <if test="phone != null">
                 AND a.phone = #{phone}
-        </if>
+            </if>
         </where>
     </select>
 
@@ -52,31 +72,49 @@
 
     <insert id="insert">
         INSERT INTO t_employee_score(
-            id,
-            username,
-            phone,
-            month,
-            total,
-            timeliness,
-            specification,
-            code_quality,
-            workload,
-            Quality_management,
-            attendance,
-            responsibility
+        id,
+        username,
+        phone,
+        month,
+        total,
+        timeliness,
+        specification,
+        code_quality,
+        workload,
+        Quality_management,
+        attendance,
+        responsibility,
+        flag,
+        enter_id,
+        enterprise_department,
+        create_date,
+        update_date,
+        create_by,
+        update_by,
+        remarks,
+        group
         ) VALUES (
-            #{id},
-            #{username},
-            #{phone},
-            #{month},
-            #{total},
-            #{timeliness},
-            #{specification},
-            #{codeQuality},
-            #{workload},
-            #{qualityManagement},
-            #{attendance},
-            #{responsibility}
+        #{id},
+        #{username},
+        #{phone},
+        #{month},
+        #{total},
+        #{timeliness},
+        #{specification},
+        #{codeQuality},
+        #{workload},
+        #{qualityManagement},
+        #{attendance},
+        #{responsibility},
+        #{flag},
+        #{enterId},
+        #{enterpriseDepartment},
+        #{createDate},
+        #{updateDate},
+        #{createBy.id},
+        #{updateBy.id},
+        #{remarks},
+        #{group}
         )
     </insert>
 
@@ -89,44 +127,64 @@
         workload = #{workload},
         Quality_management = #{qualityManagement},
         attendance = #{attendance},
-        responsibility = #{responsibility}
+        responsibility = #{responsibility},
+        flag = #{flag},
+        enter_id = #{enterId},
+        enterprise_department = #{enterpriseDepartment},
+        create_date = #{createDate},
+        update_date = #{updateDate},
+        create_by = #{createBy.id},
+        update_by = #{updateBy.id},
+        remarks = #{remarks}
         WHERE id = #{id}
     </update>
 
     <update id="dynamicUpdate">
         UPDATE t_employee_score SET
         <if test="username != null  and username != ''">
-        username = #{username},
+            username = #{username},
         </if>
         <if test="phone != null  and phone != ''">
-        phone = #{phone},
+            phone = #{phone},
         </if>
         <if test="month != null  and month != ''">
-        month = #{month},
+            month = #{month},
         </if>
         <if test="total != null ">
-        total = #{total},
+            total = #{total},
         </if>
         <if test="timeliness != null ">
-        timeliness = #{timeliness},
+            timeliness = #{timeliness},
         </if>
         <if test="specification != null ">
-        specification = #{specification},
+            specification = #{specification},
         </if>
         <if test="codeQuality != null ">
-        code_quality = #{codeQuality},
+            code_quality = #{codeQuality},
         </if>
         <if test="workload != null ">
-        workload = #{workload},
+            workload = #{workload},
         </if>
         <if test="qualityManagement != null ">
-        Quality_management = #{qualityManagement},
+            Quality_management = #{qualityManagement},
         </if>
         <if test="attendance != null ">
-        attendance = #{attendance},
+            attendance = #{attendance},
         </if>
         <if test="responsibility != null ">
-        responsibility = #{responsibility},
+            responsibility = #{responsibility},
+        </if>
+        <if test="flag != null ">
+            flag = #{flag},
+        </if>
+        <if test="enterId != null  and enterId != ''">
+            enter_id = #{enterId},
+        </if>
+        <if test="enterpriseDepartment != null  and enterpriseDepartment != ''">
+            enterprise_department = #{enterpriseDepartment},
+        </if>
+        <if test="group != null  and group != ''">
+            group = #{group},
         </if>
         update_by = #{updateBy.id},
         update_date = #{updateDate}
