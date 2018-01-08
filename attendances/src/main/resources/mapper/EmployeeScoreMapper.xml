@@ -22,7 +22,7 @@
         a.create_by AS "createBy.id",
         a.update_by AS "updateBy.id",
         a.remarks AS "remarks",
-        a.group AS "group"
+        a.employ_group AS "group"
     </sql>
 
     <sql id="employeeScoreJoins">
@@ -103,7 +103,7 @@
         create_by,
         update_by,
         remarks,
-        group
+        employ_group
         ) VALUES (
         #{id},
         #{username},
@@ -194,11 +194,8 @@
         <if test="enterpriseDepartment != null  and enterpriseDepartment != ''">
             enterprise_department = #{enterpriseDepartment},
         </if>
-        <if test="group != null  and group != ''">
-            group = #{group},
-        </if>
-        update_by = #{updateBy.id},
-        update_date = #{updateDate}
+        phone = #{phone}
+
         WHERE id = #{id}
     </update>
 

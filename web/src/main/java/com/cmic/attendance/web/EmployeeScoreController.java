@@ -1,6 +1,7 @@
 package com.cmic.attendance.web;
 
 import com.cmic.saas.base.web.RestException;
+import com.cmic.saas.utils.StringUtils;
 import com.github.pagehelper.PageInfo;
 import com.cmic.saas.base.web.BaseRestController;
 import com.cmic.attendance.model.EmployeeScore;
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Controller
@@ -36,6 +38,8 @@ public class EmployeeScoreController extends BaseRestController<EmployeeScoreSer
             throw new RestException("分组查询雇员异常");
         }
     }
+
+
 
     @ApiOperation(value = "查询", notes = "查询列表", httpMethod = "GET")
     @ApiImplicitParams({
@@ -69,6 +73,26 @@ public class EmployeeScoreController extends BaseRestController<EmployeeScoreSer
     public EmployeeScore getEmployeeScoreByPhoneAndMonth(@RequestBody EmployeeScore employeeScore){
         try{
             return service.getEmployeeScoreByPhoneAndMonth(employeeScore);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RestException("查询打分详情异常！");
+        }
+    }
+
+    @RequestMapping(value="/insertOrUpdateEmployeeScore", method = RequestMethod.POST)
+    public String insertOrUpdateEmployeeScore(@RequestBody EmployeeScore employeeScore){
+        try{
+            String id=employeeScore.getId();
+            if((id!=null)&&(!"".equals(id.trim()))){
+                //修改打分
+                service.dynamicUpdate(employeeScore);
+            }else {
+                //插入打分
+                String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+                employeeScore.setId(uuid);
+                service.insert(employeeScore);
+            }
+            return "打分成功！";
         }catch (Exception e){
             e.printStackTrace();
             throw new RestException("查询打分详情异常！");
