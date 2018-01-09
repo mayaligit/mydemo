@@ -10,7 +10,7 @@ import java.util.Date;
  */
 @ApiModel(value = "EmployeeScore", description = "")
 public class EmployeeScore extends DataEntity<EmployeeScore> {
-    protected String id;
+    protected String scoreId;
     @ApiModelProperty(value = "姓名", example = "姓名")
     protected String username;
     @ApiModelProperty(value = "手机号", example = "手机号")
@@ -176,14 +176,12 @@ public class EmployeeScore extends DataEntity<EmployeeScore> {
         this.group = group;
     }
 
-    @Override
-    public String getId() {
-        return id;
+    public String getScoreId() {
+        return scoreId;
     }
 
-    @Override
-    public void setId(String id) {
-        this.id = id;
+    public void setScoreId(String scoreId) {
+        this.scoreId = scoreId;
     }
 
     public Integer getStatus() {

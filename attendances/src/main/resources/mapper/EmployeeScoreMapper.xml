@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace = "com.cmic.attendance.dao.EmployeeScoreDao">
     <sql id="employeeScoreColumns">
-        a.id AS "id",
+        a.score_id AS "scoreId",
         a.username AS "username",
         a.phone AS "phone",
         a.month AS "month",
@@ -33,7 +33,7 @@
         <include refid="employeeScoreColumns"/>
         FROM t_employee_score a
         <include refid="employeeScoreJoins"/>
-        WHERE a.id = #{id}
+        WHERE a.score_id = #{scoreId}
     </select>
 
     <select id="getEmployeeScoreByPhoneAndMonth" resultType="EmployeeScore">
@@ -72,8 +72,8 @@
         <include refid="employeeScoreJoins"/>
         <where>
             1 = 1
-            <if test="id != null">
-                AND a.id = #{id}
+            <if test="scoreId != null">
+                AND a.score_id = #{scoreId}
             </if>
             <if test="phone != null">
                 AND a.phone = #{phone}
@@ -90,7 +90,7 @@
 
     <insert id="insert">
         INSERT INTO t_employee_score(
-        id,
+        score_id,
         username,
         phone,
         month,
@@ -112,7 +112,7 @@
         remarks,
         employ_group
         ) VALUES (
-        #{id},
+        #{scoreId},
         #{username},
         #{phone},
         #{month},
@@ -154,7 +154,7 @@
         create_by = #{createBy.id},
         update_by = #{updateBy.id},
         remarks = #{remarks}
-        WHERE id = #{id}
+        WHERE score_id = #{scoreId}
     </update>
 
     <update id="dynamicUpdate">
@@ -203,11 +203,11 @@
         </if>
         phone = #{phone}
 
-        WHERE id = #{id}
+        WHERE score_id = #{scoreId}
     </update>
 
     <delete id="delete">
         DELETE FROM t_employee_score
-        WHERE id = #{id}
+        WHERE score_id = #{scoreId}
     </delete>
 </mapper>

@@ -90,7 +90,7 @@ public class EmployeeScoreController extends BaseRestController<EmployeeScoreSer
             }else {
                 //插入打分
                 String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-                employeeScore.setId(uuid);
+                employeeScore.setScoreId(uuid);
                 service.insert(employeeScore);
             }
             return "打分成功！";
