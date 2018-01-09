@@ -54,6 +54,13 @@
         <if test="group != null  and group != ''">
         WHERE a.`project_name`=#{group}
         </if>
+        <if test="status == 1">
+            AND list_B.total>0
+        </if>
+        <if test="status == 2">
+            AND list_B.total IS NULL
+        </if>
+        order by a.id
     </select>
 
 

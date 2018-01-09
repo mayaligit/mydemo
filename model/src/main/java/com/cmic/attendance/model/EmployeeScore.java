@@ -42,6 +42,13 @@ public class EmployeeScore extends DataEntity<EmployeeScore> {
     @ApiModelProperty(value = "备用字段,用户所属考勤组", example = "备用字段,用户所属考勤组")
     protected String group;
 
+    //0所有，1已打分，2未打分
+    protected Integer status;
+
+    protected Integer pageSize=10;
+    protected Integer pageNum=1;
+    protected Integer beginNum;
+
     public EmployeeScore(){
 
     }
@@ -177,5 +184,37 @@ public class EmployeeScore extends DataEntity<EmployeeScore> {
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public Integer getBeginNum() {
+        return beginNum;
+    }
+
+    public void setBeginNum(Integer beginNum) {
+        this.beginNum = beginNum;
     }
 }
