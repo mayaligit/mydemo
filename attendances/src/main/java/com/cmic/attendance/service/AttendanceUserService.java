@@ -109,7 +109,18 @@ public class AttendanceUserService extends CrudService<AttendanceUserDao, Attend
         //获取AttendanceUser 集合
         List<Permission> permissionList = dao.givePermission(checkUser.getId());
 
+        //返回用户所属项目组给前端
+        List<String> groupNames;
+        if("0".equals(checkUser.getUserType())){
+            groupNames=dao.getAttendanceGroupName(null);
+        }else {
+            attendanceUserVo.setAttendanceGroup(checkUser.getAttendanceGroup());
+            groupNames=dao.getAttendanceGroupName(attendanceUserVo);
+        }
+        result.put("groupNames", groupNames);
+
         result.put("permissionList", permissionList);
+        logger.debug("----------result----------"+result);
         return result;
     }
 

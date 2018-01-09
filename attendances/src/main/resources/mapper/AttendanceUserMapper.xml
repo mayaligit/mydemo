@@ -158,7 +158,12 @@
 
     </select>
 
-
+    <select id="getAttendanceUser" parameterType="String" resultType="AttendanceUser">
+        SELECT attendance_username AS "attendanceUsername"
+        FROM t_employee,t_attendance_user
+        WHERE attendance_name = attendance_group
+        AND telephone = #{telephone}
+    </select>
     <update id="updateUserById" parameterType="map">
         UPDATE t_attendance_user SET
         <if test="attendanceUsername != null  and attendanceUsername != ''">
