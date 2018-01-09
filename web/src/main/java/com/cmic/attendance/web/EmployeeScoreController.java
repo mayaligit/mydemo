@@ -28,6 +28,7 @@ public class EmployeeScoreController extends BaseRestController<EmployeeScoreSer
     @RequestMapping(value="/getEmployeeByGroup")
     public List<HashMap> getEmployeeByGroup(@RequestBody EmployeeScore employeeScore){
         try{
+            employeeScore.setBeginNum((employeeScore.getPageNum()-1)*employeeScore.getPageSize());
             SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM");
             String month=simpleDateFormat.format(new Date());
             employeeScore.setMonth(month);
@@ -89,7 +90,7 @@ public class EmployeeScoreController extends BaseRestController<EmployeeScoreSer
             }else {
                 //插入打分
                 String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-                employeeScore.setId(uuid);
+                employeeScore.setScoreId(uuid);
                 service.insert(employeeScore);
             }
             return "打分成功！";

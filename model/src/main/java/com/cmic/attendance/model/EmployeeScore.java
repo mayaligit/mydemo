@@ -10,7 +10,7 @@ import java.util.Date;
  */
 @ApiModel(value = "EmployeeScore", description = "")
 public class EmployeeScore extends DataEntity<EmployeeScore> {
-    protected String id;
+    protected String scoreId;
     @ApiModelProperty(value = "姓名", example = "姓名")
     protected String username;
     @ApiModelProperty(value = "手机号", example = "手机号")
@@ -41,6 +41,13 @@ public class EmployeeScore extends DataEntity<EmployeeScore> {
     protected String enterpriseDepartment;
     @ApiModelProperty(value = "备用字段,用户所属考勤组", example = "备用字段,用户所属考勤组")
     protected String group;
+
+    //0所有，1已打分，2未打分
+    protected Integer status;
+
+    protected Integer pageSize=10;
+    protected Integer pageNum=1;
+    protected Integer beginNum;
 
     public EmployeeScore(){
 
@@ -169,13 +176,43 @@ public class EmployeeScore extends DataEntity<EmployeeScore> {
         this.group = group;
     }
 
-    @Override
-    public String getId() {
-        return id;
+    public String getScoreId() {
+        return scoreId;
     }
 
-    @Override
-    public void setId(String id) {
-        this.id = id;
+    public void setScoreId(String scoreId) {
+        this.scoreId = scoreId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public Integer getBeginNum() {
+        return beginNum;
+    }
+
+    public void setBeginNum(Integer beginNum) {
+        this.beginNum = beginNum;
     }
 }
