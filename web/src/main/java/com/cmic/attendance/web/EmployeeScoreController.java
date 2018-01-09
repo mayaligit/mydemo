@@ -83,7 +83,7 @@ public class EmployeeScoreController extends BaseRestController<EmployeeScoreSer
     @RequestMapping(value="/insertOrUpdateEmployeeScore", method = RequestMethod.POST)
     public String insertOrUpdateEmployeeScore(@RequestBody EmployeeScore employeeScore){
         try{
-            String id=employeeScore.getId();
+            String id=employeeScore.getScoreId();
             if((id!=null)&&(!"".equals(id.trim()))){
                 //修改打分
                 service.dynamicUpdate(employeeScore);
