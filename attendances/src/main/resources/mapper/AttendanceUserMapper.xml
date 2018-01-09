@@ -158,7 +158,12 @@
 
     </select>
 
-
+    <select id="getAttendanceUser" parameterType="String" resultType="AttendanceUser">
+        SELECT attendance_username AS "attendanceUsername"
+        FROM t_employee,t_attendance_user
+        WHERE attendance_name = attendance_group
+        AND telephone = #{telephone}
+    </select>
     <update id="updateUserById" parameterType="map">
         UPDATE t_attendance_user SET
         <if test="attendanceUsername != null  and attendanceUsername != ''">
@@ -212,12 +217,14 @@
     WHERE u.id=#{attendanceUserId}
     </select>
 
-    <select id="getAttendanceUser" parameterType="String" resultType="AttendanceUser">
-    SELECT attendance_username AS "attendanceUsername"
-    FROM t_employee,t_attendance_user
-    WHERE attendance_name = attendance_group
-    AND telephone = #{telephone}
-</select>
+    <select id="getAttendanceGroupName" parameterType="com.cmic.attendance.vo.AttendanceUserVo"
+            resultType="java.lang.String">
+        SELECT  DISTINCT attendance_group AS attendanceGroup
+        from t_attendance_user where 1=1
+        <if test="attendanceGroup!=null and attendanceGroup!=''">
+            AND attendance_group =#{attendanceGroup}
+        </if>
+    </select>
 
     <select id="getCountByAttendancePhone" resultType="int">
         SELECT COUNT(id)
