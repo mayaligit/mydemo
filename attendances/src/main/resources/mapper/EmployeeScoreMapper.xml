@@ -52,7 +52,7 @@
         (SELECT * FROM ( SELECT * FROM t_employee_score WHERE  `month`=#{month}) temp) list_B
         ON a.telephone = list_B.`phone`
         <if test="group != null  and group != ''">
-        WHERE a.`project_name`=#{group}
+        WHERE a.attendance_name=#{group}
         </if>
         <if test="status == 1">
             AND list_B.total>0
