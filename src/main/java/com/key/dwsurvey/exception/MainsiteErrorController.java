@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller  
 public class MainsiteErrorController implements ErrorController {  
-    private static final String ERROR_PATH = "/error";  
-    @RequestMapping(value=ERROR_PATH)  
-    public String handleError(HttpServletRequest request, HttpServletResponse response){  
-           return "common/building";   
-    }  
-    @Override  
-    public String getErrorPath() {  
-        return ERROR_PATH;  
-    }  
+	 private static final String ERROR_PATH = "/error";  
+	 
+	    @RequestMapping(value=ERROR_PATH)  
+	    public String handleError(){  
+	        return "page/common/error";  
+	    }  
+	    @Override  
+	    public String getErrorPath() {  
+	        return ERROR_PATH;  
+	    }  
 } 
