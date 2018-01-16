@@ -41,16 +41,16 @@ public class Application {
         return builder.sources(Application.class);
     }*/
     //注册SessionInViewFilter 
-   /* @Bean
+    @Bean
     public FilterRegistrationBean filterRegistrationBean() {
        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
        OpenSessionInViewFilter openSessionInViewFilter =new OpenSessionInViewFilter();
        registrationBean.setFilter(openSessionInViewFilter);
        List<String> urlPatterns = new ArrayList<String>();
-       urlPatterns.add("*//*");
+       urlPatterns.add("/*");
        registrationBean.setUrlPatterns(urlPatterns);
        return registrationBean;
-    }*/
+    }
     
     /**
      * 注册hibernate工厂类
