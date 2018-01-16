@@ -41,7 +41,7 @@ public class Application {
         return builder.sources(Application.class);
     }*/
     //注册SessionInViewFilter 
-   /*@Bean
+   @Bean
     public FilterRegistrationBean filterRegistrationBean() {
        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
        OpenSessionInViewFilter openSessionInViewFilter =new OpenSessionInViewFilter();
@@ -50,7 +50,7 @@ public class Application {
        urlPatterns.add("/*");
        registrationBean.setUrlPatterns(urlPatterns);
        return registrationBean;
-    }*/
+    }
     
     /**
      * 注册hibernate工厂类
